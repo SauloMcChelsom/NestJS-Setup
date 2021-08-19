@@ -1,31 +1,19 @@
 import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, OneToOne, JoinColumn, UpdateDateColumn, } from 'typeorm';
 
-@Entity('user')
-export class UserEntity {
+@Entity('usuario')
+export class UsuarioEntity {
   @PrimaryGeneratedColumn()
   id: number;
-
-  @Column()
-  nome: string;
-
-  @Column()
-  sobreNome: string;
 
   @Column()
   email: string;
 
   @Column()
-  tipo: number;
+  nome: string;
 
   @Column()
-  ativo: boolean;
+  senha: string;
 
   @CreateDateColumn({ default: () => 'CURRENT_TIMESTAMP' })
-  lastChangedDateTime: Date;
-   
-  @Column()
-  cpfCnpj: string;
-
-  @Column()
-  rating: number;
+  data_de_cadastro: Date;
 }

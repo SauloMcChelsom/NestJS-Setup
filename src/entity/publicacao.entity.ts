@@ -1,0 +1,31 @@
+import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, OneToOne, JoinColumn, UpdateDateColumn, } from 'typeorm';
+import { PaginaEntity as Pagina } from './pagina.entity'
+
+@Entity('publicacao')
+export class PublicacaoEntity {
+  @PrimaryGeneratedColumn()
+  id: number;
+
+  @Column()
+  texto: string;
+
+  @CreateDateColumn({ default: () => 'CURRENT_TIMESTAMP' })
+  data_da_publicacao: Date;
+
+  /**
+    @JoinTable({
+      name: "products_categories",
+      joinColumn: {
+        name: "product",
+        referencedColumnName: "id"
+      },
+      inverseJoinColumn: {
+        name: "category",
+        referencedColumnName: "id"
+      }
+    })
+  */
+  @OneToOne(type => Pagina) 
+  @JoinColumn({name: "pagina_id"}) 
+  pagina_id: number;
+}
