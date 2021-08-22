@@ -9,36 +9,36 @@ import { RetornoDto  } from './dto/retorno.dto'
 @Injectable()
 export class IndexService {
 
-  constructor(@InjectRepository(IndexRepository) private readonly indexRepository: IndexRepository) {}
+  constructor(@InjectRepository(IndexRepository) private readonly repository: IndexRepository) {}
 
   public async save(values:CreateDto) {
-    const res = await this.indexRepository.save(values)
+    const res = await this.repository.save(values)
     return new RetornoDto(res)
   }
 
   public async findOne(id) {
-    const res = await this.indexRepository.findOne({ where:{ id: id }})
+    const res = await this.repository.findOne({ where:{ id: id }})
     return new RetornoDto(res)
   }
 
   public async findAll() {
-    const res = await this.indexRepository.find();
+    const res = await this.repository.find();
     return res.map((r)=> new RetornoDto(r))
   }
 
-  public async update(id, user:UpdateDto) {
-    await this.indexRepository.update(id, user);
-    const res = await this.indexRepository.findOne(id)
+  public async update(id, values:UpdateDto) {
+    await this.repository.update(id, values);
+    const res = await this.repository.findOne(id)
     return new RetornoDto(res)
   }
 
   public async delete(id) {
-    await this.indexRepository.delete(id);
-    return {"mensagem":"Usuario deletado"}
+    await this.repository.delete(id);
+    return {"mensagem":"deletado"}
   }
 
   public async deleteTodosUsuarios() {
-    await this.indexRepository.deleteTodosUsuarios();
+    await this.repository.deleteTodosUsuarios();
     return {"mensagem":"Todos usuarios deletados"}
   }
 }

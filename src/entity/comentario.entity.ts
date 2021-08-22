@@ -15,9 +15,11 @@ export class ComentarioEntity {
 
   @OneToOne(type => Publicacao) 
   @JoinColumn({name: "publicacao_id"}) 
+  @Column()
   publicacao_id: number;
 
   @OneToOne(type => Usuario) 
   @JoinColumn({name: "usuario_id"}) 
+  @Column()
   usuario_id: number;
 }

@@ -11,5 +11,6 @@ export class SeguidoresEntity {
 
   @OneToOne(type => Pagina) 
   @JoinColumn({name: "pagina_id"}) 
+  @Column()
   pagina_id: number;
 }

@@ -11,5 +11,6 @@ export class CurtidasEntity {
 
   @OneToOne(type => Publicacao) 
   @JoinColumn({name: "publicacao_id"})  
+  @Column()
   publicacao_id: number;
 }

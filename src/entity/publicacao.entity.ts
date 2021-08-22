@@ -12,6 +12,11 @@ export class PublicacaoEntity {
   @CreateDateColumn({ default: () => 'CURRENT_TIMESTAMP' })
   data_da_publicacao: Date;
 
+  @OneToOne(type => Pagina) 
+  @JoinColumn({name: "pagina_id"}) 
+  @Column()
+  pagina_id: number;
+
   /**
     @JoinTable({
       name: "products_categories",
@@ -25,7 +30,4 @@ export class PublicacaoEntity {
       }
     })
   */
-  @OneToOne(type => Pagina) 
-  @JoinColumn({name: "pagina_id"}) 
-  pagina_id: number;
 }

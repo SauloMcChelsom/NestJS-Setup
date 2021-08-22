@@ -13,9 +13,11 @@ export class PaginasQueSigoEntity {
 
   @OneToOne(type => Pagina) 
   @JoinColumn({name: "pagina_id"})
+  @Column()
   pagina_id: number;
 
   @OneToOne(type => Usuario) 
   @JoinColumn({name: "usuario_id"}) 
+  @Column()
   usuario_id: number;
 }
