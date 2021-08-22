@@ -3,8 +3,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { IndexRepository } from './index.repository'
 
 import { CreateDto } from './dto/create.dto'
-import { UpdateUserDto  } from './dto/update-user.dto'
-import { RetornoDto  } from './dto/retorno-user.dto'
+import { UpdateDto  } from './dto/update.dto'
+import { RetornoDto  } from './dto/retorno.dto'
 
 @Injectable()
 export class IndexService {
@@ -21,18 +21,20 @@ export class IndexService {
     return new RetornoDto(res)
   }
 
-  public async update(id, user:UpdateUserDto) {
+  public async findAll() {
+    const res = await this.indexRepository.find();
+    return res.map((r)=> new RetornoDto(r))
+  }
+
+  public async update(id, user:UpdateDto) {
     await this.indexRepository.update(id, user);
     const res = await this.indexRepository.findOne(id)
     return new RetornoDto(res)
   }
 
   public async delete(id) {
-    return await this.indexRepository.delete(id);
-  }
-
-  public async findAll() {
-    return await this.indexRepository.find();
+    await this.indexRepository.delete(id);
+    return {"mensagem":"Usuario deletado"}
   }
 
   public async deleteTodosUsuarios() {

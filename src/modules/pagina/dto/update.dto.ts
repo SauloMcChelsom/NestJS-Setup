@@ -1,16 +1,18 @@
 import { Contains, MinLength, MaxLength, IsDate, IsNumber, IsString, Length, IsNotEmpty, IsEmail, IsInt, Min,  Max, IsBoolean  } from 'class-validator';
 
-export class UpdateUserDto  {
-  @Length(10, 20)
-  nome: string;
+export class UpdateDto  {
+  @IsNotEmpty()
+  @IsString()
+  @MinLength(3)
+  descricao_da_pagina: string;
+
 
   @IsNotEmpty()
   @IsString()
-  @Contains('hello')
-  @MinLength(5)
-  sobreNome: string;
+  @MinLength(3)
+  nome_da_pagina: string;
 
-  @IsNotEmpty()
-  @IsEmail()
-  email: string;
+  @IsNotEmpty() 
+  @IsNumber()
+  usuario_id: number;
 }

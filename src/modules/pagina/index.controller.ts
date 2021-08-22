@@ -2,11 +2,11 @@ import { Controller, Res, Redirect, HttpStatus, Param, HttpCode, Header, Get, Qu
 
 import { CreateDto } from './dto/create.dto'
 
-import { UpdateUserDto  } from './dto/update-user.dto'
+import { UpdateDto  } from './dto/update.dto'
 
 import { IndexService } from './index.service'
 
-@Controller('cadastrar-novo-usuario')
+@Controller('pagina')
 export class IndexController {
 
   constructor(private readonly service: IndexService) {}
@@ -17,18 +17,13 @@ export class IndexController {
   }
 
   @Put(':id')
-  public async update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return await this.service.update(id, updateUserDto);
+  public async update(@Param('id') id: string, @Body() updateDto: UpdateDto) {
+    return await this.service.update(id, updateDto);
   }
 
   @Delete(':id')
   public async delete(@Param('id') id: string) {
     return await this.service.delete(id);
-  }
-
-  @Delete()
-  public async deleteTodosUsuarios() {
-    return await this.service.deleteTodosUsuarios();
   }
 
   @Get()

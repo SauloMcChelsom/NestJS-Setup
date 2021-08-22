@@ -18,5 +18,6 @@ export class PaginaEntity {
 
   @OneToOne(type => Usuario) 
   @JoinColumn({name: "usuario_id"}) 
+  @Column()
   usuario_id: number;
 }

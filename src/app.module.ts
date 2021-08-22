@@ -1,14 +1,14 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
-import { UsersModule } from './modules/user/users.module';
-import { IndexModule as CadastrarNovoUsuarioModule } from './modules/cadastrar-novo-usuario/index.module';
+import { IndexModule as UsuarioModule } from './modules/usuario/index.module';
+import { IndexModule as PaginaModule } from './modules/pagina/index.module';
 
 @Module({
   imports: [
     TypeOrmModule.forRoot(),
-    UsersModule,
-    CadastrarNovoUsuarioModule
+    UsuarioModule,
+    PaginaModule
   ],
   controllers: [],
   providers: [],
