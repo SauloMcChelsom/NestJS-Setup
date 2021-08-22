@@ -36,5 +36,11 @@ export class IndexService {
     await this.repository.delete(id);
     return {"mensagem":"deletado"}
   }
+
+  public async feedPublic() {
+    return await this.repository.feedPublic();
+  }
+
+  
 }
 

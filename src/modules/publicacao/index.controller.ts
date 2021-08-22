@@ -36,9 +36,9 @@ export class IndexController {
     return await this.service.findOne(id);
   }
 
-  @Get('feed')
-  public async feed() {
-    //return await this.service.findOne(id);
+  @Get('feed/public')
+  public async feedPublic() {
+    return await this.service.feedPublic();
   }
 
 }
