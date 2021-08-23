@@ -5,8 +5,9 @@ import { PublicacaoEntity } from '../../entity/publicacao.entity';
 export class IndexRepository extends Repository<PublicacaoEntity> {
   async feedPublic(): Promise<any[]> {
     return await this.createQueryBuilder('publicacao')
-    .leftJoinAndSelect("pagina", "pagina.id = publicacao.pagina_id")
-    .getMany();
+    .leftJoinAndSelect("pagina", "pagina", "pagina.id = publicacao.pagina_id")
+    .leftJoinAndSelect("usuario", "usuario", "usuario.id = pagina.usuario_id")
+    .getRawMany();
   }
 }
 
