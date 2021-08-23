@@ -3,16 +3,20 @@ import { PublicacaoEntity } from '../../entity/publicacao.entity';
 
 @EntityRepository(PublicacaoEntity)
 export class IndexRepository extends Repository<PublicacaoEntity> {
-    async feedPublic(): Promise<PublicacaoEntity> {
-        return await this.createQueryBuilder('publicacao')
-        .leftJoinAndSelect('publicacao.pagina_id', 'publicacao')
-        .where(`pagina.id = publicacao.pagina_id`)
-        .execute()
-      }
+  async feedPublic(): Promise<any[]> {
+    return await this.createQueryBuilder('publicacao')
+    .leftJoinAndSelect("pagina", "pagina.id = publicacao.pagina_id")
+    .getMany();
+  }
 }
 
 /**
- * 		select * from publicacao 
-		JOIN pagina pag ON
-			publicacao.pagina_id = pag.id
+  select
+    pagina.nome_da_pagina,
+    publicacao.texto,
+    publicacao.data_da_publicacao 
+  from
+    publicacao
+  join pagina on
+    publicacao.pagina_id = pagina.id
  */
