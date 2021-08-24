@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, OneToOne, JoinColumn, UpdateDateColumn, } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, OneToOne, ManyToOne, JoinColumn, UpdateDateColumn, } from 'typeorm';
 import { PaginaEntity as Pagina } from './pagina.entity'
 
 @Entity('publicacao')
@@ -12,7 +12,7 @@ export class PublicacaoEntity {
   @CreateDateColumn({ default: () => 'CURRENT_TIMESTAMP' })
   data_da_publicacao: Date;
 
-  @OneToOne(type => Pagina) 
+  @ManyToOne(type => Pagina) 
   @JoinColumn({name: "pagina_id"}) 
   @Column()
   pagina_id: number;

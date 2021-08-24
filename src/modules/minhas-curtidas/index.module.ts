@@ -5,13 +5,11 @@ import { IndexController } from './index.controller';
 import { IndexService } from './index.service';
 import { IndexRepository } from './index.repository'
 
-import { IndexModule as CurtidasModules } from '../curtidas/index.module'
-import { IndexService as CurtidasServices } from '../curtidas/index.service'
 @Module({
-  imports: [TypeOrmModule.forFeature([MinhasCurtidasEntity, IndexRepository, CurtidasModules, CurtidasServices]),CurtidasServices,CurtidasModules],
+  imports: [TypeOrmModule.forFeature([MinhasCurtidasEntity, IndexRepository])],
   controllers: [IndexController],
   providers: [IndexService],
-  exports: [IndexService, CurtidasModules, CurtidasServices]
+  exports: [IndexService]
 })
 export class IndexModule {}
 

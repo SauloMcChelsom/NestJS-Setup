@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { IndexRepository } from './index.repository'
 
-import { IndexService as CurtidasServices } from '../curtidas/index.service'
+//import { IndexService as CurtidasServices } from '../curtidas/index.service'
 
 import { CreateDto } from './dto/create.dto'
 import { UpdateDto  } from './dto/update.dto'
@@ -12,8 +12,10 @@ import { CurtirDto  } from './dto/curtir.dto'
 @Injectable()
 export class IndexService {
 
-  constructor(@InjectRepository(IndexRepository) private readonly repository: IndexRepository,
-  private curtidasServices:CurtidasServices) {}
+  constructor(
+    @InjectRepository(IndexRepository) private readonly repository: IndexRepository,
+    //private curtidasServices:CurtidasServices
+  ) {}
 
   public async save(values:CreateDto) {
     const res = await this.repository.save(values)
@@ -42,18 +44,18 @@ export class IndexService {
   }
 
   public async curtir(values:CurtirDto){
-   let curtida = await this.repository.findOne({ where:{ publicacao_id: values.publicacao_id }})
-       curtida = new RetornoDto(curtida)
-       if(curtida.eu_curti){
-        curtida.eu_curti = false
-        this.update(curtida.id, curtida)
-          this.curtidasServices.decrement(curtida.publicacao_id)
-       }else{
-        curtida.eu_curti = true
-        this.update(curtida.id, curtida)
-          this.curtidasServices.increment(curtida.publicacao_id)
-       }
-   return curtida
+    let curtida = await this.repository.findOne({ where:{ publicacao_id: values.publicacao_id }})
+        curtida = new RetornoDto(curtida)
+    if(curtida.eu_curti){
+      curtida.eu_curti = false
+      this.update(curtida.id, curtida)
+      //this.curtidasServices.decrement(curtida.publicacao_id)
+    }else{
+      curtida.eu_curti = true
+      this.update(curtida.id, curtida)
+      //this.curtidasServices.increment(curtida.publicacao_id)
+    }
+    return curtida
   }
   
 }
