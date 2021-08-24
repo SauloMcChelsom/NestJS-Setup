@@ -36,6 +36,18 @@ export class IndexService {
     await this.repository.delete(id);
     return {"mensagem":"deletado"}
   }
+
+  public async increment(publicacao_id) {
+    let curtidas = await this.repository.findOne({ where:{ publicacao_id: publicacao_id }})
+        curtidas.quantidade_de_curtidas++
+    await this.repository.update(curtidas.id, curtidas);
+  }
+
+  public async decrement(publicacao_id) {
+    let curtidas = await this.repository.findOne({ where:{ publicacao_id: publicacao_id }})
+        curtidas.quantidade_de_curtidas--
+    await this.repository.update(curtidas.id, curtidas);
+  }
   
 }
 

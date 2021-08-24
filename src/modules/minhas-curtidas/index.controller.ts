@@ -4,6 +4,8 @@ import { CreateDto } from './dto/create.dto'
 
 import { UpdateDto  } from './dto/update.dto'
 
+import { CurtirDto  } from './dto/curtir.dto'
+
 import { IndexService } from './index.service'
 
 @Controller('minhas-curtidas')
@@ -14,6 +16,11 @@ export class IndexController {
   @Post()
   public async save(@Body() create: CreateDto) {
     return await this.service.save(create);
+  }
+
+  @Post('/curtir')
+  public async curtir(@Body() curtir: CurtirDto) {
+    return await this.service.curtir(curtir);
   }
 
   @Put(':id')

@@ -1,8 +1,8 @@
 export class RetornoDto  {
-  private id: number;
-  private eu_curti: boolean
-  private publicacao_id: number;
-  private usuario_id: number;
+  public id: number;
+  public eu_curti: boolean
+  public publicacao_id: number;
+  public usuario_id: number;
 
   constructor(values:any) {
     this.id = values.id;
