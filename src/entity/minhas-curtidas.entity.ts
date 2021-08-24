@@ -11,7 +11,8 @@ export class MinhasCurtidasEntity {
   eu_curti: boolean
 
   @OneToOne(type => Publicacao) 
-  @JoinColumn({name: "publicacao_id"})   
+  @JoinColumn({name: "publicacao_id"})  
+  @Column() 
   publicacao_id: number;
 
   @OneToOne(type => Usuario) 
