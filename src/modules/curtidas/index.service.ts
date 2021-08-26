@@ -37,16 +37,39 @@ export class IndexService {
     return {"mensagem":"deletado"}
   }
 
-  public async increment(publicacao_id) {
-    let curtidas = await this.repository.findOne({ where:{ publicacao_id: publicacao_id }})
+  public async incrementCurtida(publicacao_id) {
+    /*let curtidas = await this.repository.findOne({ where:{ publicacao_id: publicacao_id }})
         curtidas.quantidade_de_curtidas++
-    await this.repository.update(curtidas.id, curtidas);
+    await this.repository.update(curtidas.id, curtidas);*/
   }
 
-  public async decrement(publicacao_id) {
-    let curtidas = await this.repository.findOne({ where:{ publicacao_id: publicacao_id }})
+  public async decrementCurtida(publicacao_id) {
+    /*let curtidas = await this.repository.findOne({ where:{ publicacao_id: publicacao_id }})
         curtidas.quantidade_de_curtidas--
-    await this.repository.update(curtidas.id, curtidas);
+    await this.repository.update(curtidas.id, curtidas);*/
+  }
+
+  public async curtir(values:CreateDto){
+    let publicacaoCurtidaPorUsuario = await this.repository.findOne({ where:{ usuario_id: values.usuario_id }})
+    
+    if(publicacaoCurtidaPorUsuario != undefined){
+     let curtida = new RetornoDto(publicacaoCurtidaPorUsuario)
+
+      if(curtida.eu_curti){
+        curtida.eu_curti = false
+      }else{
+        curtida.eu_curti = true
+      }
+      this.update(curtida.id, curtida)
+
+      return curtida
+    }else{
+      let criarPrimeiraCurtidaDoUsuarioDestaPublicacao = new RetornoDto(values)
+      criarPrimeiraCurtidaDoUsuarioDestaPublicacao.eu_curti = true
+      delete criarPrimeiraCurtidaDoUsuarioDestaPublicacao.id
+      return await this.repository.save(criarPrimeiraCurtidaDoUsuarioDestaPublicacao)
+    }
+  
   }
   
 }

@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, OneToOne, JoinColumn, UpdateDateColumn, } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, OneToOne, ManyToOne, JoinColumn, UpdateDateColumn, } from 'typeorm';
 import { UsuarioEntity as Usuario } from './usuario.entity'
 import { PaginaEntity as Pagina } from './pagina.entity'
 
@@ -11,12 +11,12 @@ export class PaginasQueSigoEntity {
   @Column()
   estou_seguindo: boolean;
 
-  @OneToOne(type => Pagina) 
+  @ManyToOne(type => Pagina)
   @JoinColumn({name: "pagina_id"})
   @Column()
   pagina_id: number;
 
-  @OneToOne(type => Usuario) 
+  @ManyToOne(type => Usuario) 
   @JoinColumn({name: "usuario_id"}) 
   @Column()
   usuario_id: number;

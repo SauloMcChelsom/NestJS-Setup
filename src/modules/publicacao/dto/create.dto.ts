@@ -8,6 +8,10 @@ export class CreateDto  {
 
   @IsNotEmpty() 
   @IsNumber()
+  quantidade_de_curtidas: number;
+
+  @IsNotEmpty() 
+  @IsNumber()
   pagina_id: number;
 }
 

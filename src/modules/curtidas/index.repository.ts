@@ -1,5 +1,5 @@
 import { EntityRepository, Repository } from 'typeorm';
-import { CurtidasEntity } from '../../entity/curtidas.entity';
+import { MinhasCurtidasEntity } from '../../entity/minhas-curtidas.entity';
 
-@EntityRepository(CurtidasEntity)
-export class IndexRepository extends Repository<CurtidasEntity> {}
+@EntityRepository(MinhasCurtidasEntity)
+export class IndexRepository extends Repository<MinhasCurtidasEntity> {}

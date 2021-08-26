@@ -2,6 +2,14 @@ import { Contains, MinLength, MaxLength, IsDate, IsNumber, IsString, Length, IsN
 
 export class UpdateDto  {
   @IsNotEmpty() 
+  @IsBoolean()
+  eu_curti: boolean
+
+  @IsNotEmpty() 
+  @IsNumber() 
+  publicacao_id: number;
+
+  @IsNotEmpty() 
   @IsNumber()
-  quantidade_de_curtidas: number;
+  usuario_id: number;
 }

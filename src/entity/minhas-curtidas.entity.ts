@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, OneToOne, JoinColumn, UpdateDateColumn, } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, OneToOne, ManyToOne, JoinColumn, UpdateDateColumn, } from 'typeorm';
 import { PublicacaoEntity as Publicacao } from './publicacao.entity'
 import { UsuarioEntity as Usuario } from './usuario.entity'
 
@@ -10,12 +10,12 @@ export class MinhasCurtidasEntity {
   @Column()
   eu_curti: boolean
 
-  @OneToOne(type => Publicacao) 
+  @ManyToOne(type => Publicacao)  
   @JoinColumn({name: "publicacao_id"})  
   @Column() 
   publicacao_id: number;
 
-  @OneToOne(type => Usuario) 
+  @ManyToOne(type => Usuario) 
   @JoinColumn({name: "usuario_id"})   
   @Column()
   usuario_id: number;

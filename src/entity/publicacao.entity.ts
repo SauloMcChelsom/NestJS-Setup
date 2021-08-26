@@ -9,6 +9,9 @@ export class PublicacaoEntity {
   @Column()
   texto: string;
 
+  @Column()
+  quantidade_de_curtidas: number;
+
   @CreateDateColumn({ default: () => 'CURRENT_TIMESTAMP' })
   data_da_publicacao: Date;
 

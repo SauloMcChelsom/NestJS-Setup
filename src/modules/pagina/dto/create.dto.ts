@@ -14,6 +14,10 @@ export class CreateDto  {
 
   @IsNotEmpty() 
   @IsNumber()
+  quantidade_de_seguidores
+
+  @IsNotEmpty() 
+  @IsNumber()
   usuario_id: number;
 }
 

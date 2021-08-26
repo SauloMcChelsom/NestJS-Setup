@@ -2,12 +2,12 @@ import { Contains, MinLength, MaxLength, ValidationOptions, IsDate, IsNumber, Is
 
 export class CreateDto  {
   @IsNotEmpty() 
-  @IsNumber()
-  quantidade_de_curtidas: number;
+  @IsNumber() 
+  publicacao_id: number;
 
   @IsNotEmpty() 
   @IsNumber()
-  publicacao_id: number;
+  usuario_id: number;
 }
 
 
