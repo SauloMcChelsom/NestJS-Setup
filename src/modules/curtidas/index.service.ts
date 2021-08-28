@@ -1,6 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Inject } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { IndexRepository } from './index.repository'
+
+import {  PublicacaoService } from '../publicacao/index.service'
 
 import { CreateDto } from './dto/create.dto'
 import { UpdateDto  } from './dto/update.dto'
@@ -9,7 +11,11 @@ import { RetornoDto  } from './dto/retorno.dto'
 @Injectable()
 export class IndexService {
 
-  constructor(@InjectRepository(IndexRepository) private readonly repository: IndexRepository) {}
+  constructor(
+    private readonly publicacaoRepository:PublicacaoService,
+    @InjectRepository(IndexRepository) private readonly repository: IndexRepository,
+
+  ) {}
 
   public async save(values:CreateDto) {
     const res = await this.repository.save(values)
@@ -37,28 +43,19 @@ export class IndexService {
     return {"mensagem":"deletado"}
   }
 
-  public async incrementCurtida(publicacao_id) {
-    /*let curtidas = await this.repository.findOne({ where:{ publicacao_id: publicacao_id }})
-        curtidas.quantidade_de_curtidas++
-    await this.repository.update(curtidas.id, curtidas);*/
-  }
-
-  public async decrementCurtida(publicacao_id) {
-    /*let curtidas = await this.repository.findOne({ where:{ publicacao_id: publicacao_id }})
-        curtidas.quantidade_de_curtidas--
-    await this.repository.update(curtidas.id, curtidas);*/
-  }
-
   public async curtir(values:CreateDto){
-    let publicacaoCurtidaPorUsuario = await this.repository.findOne({ where:{ usuario_id: values.usuario_id }})
-    
+
+    let publicacaoCurtidaPorUsuario = await this.repository.find({ where:{ usuario_id: values.usuario_id }})
+
     if(publicacaoCurtidaPorUsuario != undefined){
-     let curtida = new RetornoDto(publicacaoCurtidaPorUsuario)
+     let curtida = new RetornoDto(publicacaoCurtidaPorUsuario[0])
 
       if(curtida.eu_curti){
         curtida.eu_curti = false
+        await this.publicacaoRepository.decrementCurtida(curtida.publicacao_id)
       }else{
         curtida.eu_curti = true
+        await this.publicacaoRepository.incrementCurtida(curtida.publicacao_id)
       }
       this.update(curtida.id, curtida)
 
@@ -69,8 +66,14 @@ export class IndexService {
       delete criarPrimeiraCurtidaDoUsuarioDestaPublicacao.id
       return await this.repository.save(criarPrimeiraCurtidaDoUsuarioDestaPublicacao)
     }
-  
   }
-  
+
+  public async todasPublicacaoDoUsuario(id) {
+    return await this.repository.find({ where:{ usuario_id: id }})
+  }
+
+  public async todasPublicacaoDoUsuarioPorPublicacao(usuario, publicacao) {
+    return await this.repository.find({ where:{ usuario_id: usuario, publicacao_id:publicacao }})
+  }
 }
 
