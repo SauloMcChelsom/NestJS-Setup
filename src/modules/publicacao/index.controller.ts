@@ -4,12 +4,12 @@ import { CreateDto } from './dto/create.dto'
 
 import { UpdateDto  } from './dto/update.dto'
 
-import { IndexService } from './index.service'
+import { PublicacaoService } from './index.service'
 
 @Controller('publicacao')
 export class IndexController {
 
-  constructor(private readonly service: IndexService) {}
+  constructor(private readonly service: PublicacaoService) {}
 
   @Post()
   public async save(@Body() create: CreateDto) {

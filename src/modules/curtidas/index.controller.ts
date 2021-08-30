@@ -33,4 +33,14 @@ export class IndexController {
   public async findOne(@Param('id') id: string) {
     return await this.service.findOne(id);
   }
+
+  @Get('usuario/:id')
+  public async todasPublicacaoDoUsuario(@Param('id') id: string) {
+    return await this.service.todasPublicacaoDoUsuario(id);
+  }
+
+  @Get('usuario/:usuario/publicacao/:publicacao')
+  public async todasPublicacaoDoUsuarioPorPublicacao(@Param('usuario') usuario: string, @Param('publicacao') publicacao: string) {
+    return await this.service.todasPublicacaoDoUsuarioPorPublicacao(usuario, publicacao);
+  }
 }

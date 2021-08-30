@@ -7,7 +7,7 @@ import { UpdateDto  } from './dto/update.dto'
 import { RetornoDto  } from './dto/retorno.dto'
 
 @Injectable()
-export class IndexService {
+export class PublicacaoService {
 
   constructor(@InjectRepository(IndexRepository) private readonly repository: IndexRepository) {}
 
@@ -41,6 +41,21 @@ export class IndexService {
     return await this.repository.feedPublic();
   }
 
-  
+  public async incrementCurtida(id) {
+    let publicacao = await this.repository.findOne({ where:{ id: id }})
+    
+ 
+     publicacao.quantidade_de_curtidas++ 
+
+    await this.repository.update(publicacao.id, publicacao);
+  }
+
+  public async decrementCurtida(id) { 
+    let publicacao = await this.repository.findOne({ where:{ id: id }})
+    
+    publicacao.quantidade_de_curtidas--
+
+    await this.repository.update(publicacao.id, publicacao);
+  }
 }
 
