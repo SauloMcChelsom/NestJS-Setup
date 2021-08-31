@@ -1,8 +1,8 @@
-import { EntityRepository, Repository } from 'typeorm';
-import { PublicacaoEntity } from '../../entity/publicacao.entity';
+import { EntityRepository, Repository } from 'typeorm'
+import { PublicacaoEntity } from '../../entity/publicacao.entity'
 
 @EntityRepository(PublicacaoEntity)
-export class IndexRepository extends Repository<PublicacaoEntity> {
+export class PublicacoesRepository extends Repository<PublicacaoEntity> {
 
   async feedPublic(): Promise<any[]> {
     return await this.createQueryBuilder('publicacao')

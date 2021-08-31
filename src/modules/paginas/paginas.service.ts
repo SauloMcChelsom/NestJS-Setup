@@ -1,15 +1,15 @@
-import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { IndexRepository } from './index.repository'
+import { Injectable } from '@nestjs/common'
+import { InjectRepository } from '@nestjs/typeorm'
+import { PaginasRepository } from './paginas.repository'
 
 import { CreateDto } from './dto/create.dto'
 import { UpdateDto  } from './dto/update.dto'
 import { RetornoDto  } from './dto/retorno.dto'
 
 @Injectable()
-export class IndexService {
+export class PaginasService {
 
-  constructor(@InjectRepository(IndexRepository) private readonly repository: IndexRepository) {}
+  constructor(@InjectRepository(PaginasRepository) private readonly repository: PaginasRepository) {}
 
   public async save(values:CreateDto) {
     const res = await this.repository.save(values)
@@ -35,11 +35,6 @@ export class IndexService {
   public async delete(id) {
     await this.repository.delete(id);
     return {"mensagem":"deletado"}
-  }
-
-  public async deleteTodosUsuarios() {
-    await this.repository.deleteTodosUsuarios();
-    return {"mensagem":"Todos usuarios deletados"}
   }
 }
 

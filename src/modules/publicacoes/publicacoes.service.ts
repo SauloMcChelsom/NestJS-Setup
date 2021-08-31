@@ -1,15 +1,15 @@
-import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { IndexRepository } from './index.repository'
+import { Injectable } from '@nestjs/common'
+import { InjectRepository } from '@nestjs/typeorm'
+import { PublicacoesRepository } from './publicacoes.repository'
 
 import { CreateDto } from './dto/create.dto'
 import { UpdateDto  } from './dto/update.dto'
 import { RetornoDto  } from './dto/retorno.dto'
 
 @Injectable()
-export class PublicacaoService {
+export class PublicacoesService {
 
-  constructor(@InjectRepository(IndexRepository) private readonly repository: IndexRepository) {}
+  constructor(@InjectRepository(PublicacoesRepository) private readonly repository: PublicacoesRepository) {}
 
   public async save(values:CreateDto) {
     const res = await this.repository.save(values)

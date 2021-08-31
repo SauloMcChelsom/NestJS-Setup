@@ -1,15 +1,14 @@
-import { Controller, Res, Redirect, HttpStatus, Param, HttpCode, Header, Get, Query, Post, Body, Put, Delete } from '@nestjs/common';
+import { Controller, Res, Redirect, HttpStatus, Param, HttpCode, Header, Get, Query, Post, Body, Put, Delete } from '@nestjs/common'
+
+import { PaginasService } from './paginas.service'
 
 import { CreateDto } from './dto/create.dto'
-
 import { UpdateDto  } from './dto/update.dto'
 
-import { IndexService } from './index.service'
+@Controller('paginas')
+export class PaginasController {
 
-@Controller('usuario')
-export class IndexController {
-
-  constructor(private readonly service: IndexService) {}
+  constructor(private readonly service: PaginasService) {}
 
   @Post()
   public async save(@Body() create: CreateDto) {
@@ -24,11 +23,6 @@ export class IndexController {
   @Delete(':id')
   public async delete(@Param('id') id: string) {
     return await this.service.delete(id);
-  }
-
-  @Delete()
-  public async deleteTodosUsuarios() {
-    return await this.service.deleteTodosUsuarios();
   }
 
   @Get()

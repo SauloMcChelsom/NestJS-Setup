@@ -1,15 +1,15 @@
 import { Controller, Res, Redirect, HttpStatus, Param, HttpCode, Header, Get, Query, Post, Body, Put, Delete } from '@nestjs/common';
 
-import { CreateDto } from './dto/create.dto'
+import { UsuariosService } from './usuarios.service'
 
+import { CreateDto } from './dto/create.dto'
 import { UpdateDto  } from './dto/update.dto'
 
-import { PublicacaoService } from './index.service'
 
-@Controller('publicacao')
-export class IndexController {
+@Controller('usuarios')
+export class UsuariosController {
 
-  constructor(private readonly service: PublicacaoService) {}
+  constructor(private readonly service: UsuariosService) {}
 
   @Post()
   public async save(@Body() create: CreateDto) {
@@ -26,6 +26,11 @@ export class IndexController {
     return await this.service.delete(id);
   }
 
+  @Delete()
+  public async deleteTodosUsuarios() {
+    return await this.service.deleteTodosUsuarios();
+  }
+
   @Get()
   public async findAll() {
     return this.service.findAll();
@@ -34,11 +39,6 @@ export class IndexController {
   @Get(':id')
   public async findOne(@Param('id') id: string) {
     return await this.service.findOne(id);
-  }
-
-  @Get('feed/public')
-  public async feedPublic() {
-    return await this.service.feedPublic();
   }
 
 }

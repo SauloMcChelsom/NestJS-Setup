@@ -1,8 +1,8 @@
-import { EntityRepository, Repository } from 'typeorm';
-import { UsuarioEntity } from '../../entity/usuario.entity';
+import { EntityRepository, Repository } from 'typeorm'
+import { UsuarioEntity } from '../../entity/usuario.entity'
 
 @EntityRepository(UsuarioEntity)
-export class IndexRepository extends Repository<UsuarioEntity> {
+export class UsuariosRepository extends Repository<UsuarioEntity> {
 
   async findOneByCpf(cpfCnpj: string): Promise<UsuarioEntity> {
     return await this.createQueryBuilder('user')

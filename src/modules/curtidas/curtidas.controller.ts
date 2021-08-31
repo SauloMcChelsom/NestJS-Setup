@@ -1,13 +1,15 @@
-import { Controller, Res, Redirect, HttpStatus, Param, HttpCode, Header, Get, Query, Post, Body, Put, Delete } from '@nestjs/common';
+import { Controller, Res, Redirect, HttpStatus, Param, HttpCode, Header, Get, Query, Post, Body, Put, Delete } from '@nestjs/common'
+
+import { CurtidasService } from './curtidas.service'
 
 import { CreateDto } from './dto/create.dto'
 import { UpdateDto  } from './dto/update.dto'
-import { IndexService } from './index.service'
+
 
 @Controller('curtidas')
-export class IndexController {
+export class CurtidasController {
 
-  constructor(private readonly service: IndexService) {}
+  constructor(private readonly service: CurtidasService) {}
 
   @Post()
   public async save(@Body() create: CreateDto) {

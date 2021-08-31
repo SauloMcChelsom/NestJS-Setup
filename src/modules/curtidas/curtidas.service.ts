@@ -1,20 +1,19 @@
-import { Injectable, Inject } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { IndexRepository } from './index.repository'
+import { CurtidasRepository } from './curtidas.repository'
 
-import {  PublicacaoService } from '../publicacao/index.service'
+import {  PublicacoesService } from '../publicacoes/publicacoes.service'
 
 import { CreateDto } from './dto/create.dto'
 import { UpdateDto  } from './dto/update.dto'
 import { RetornoDto  } from './dto/retorno.dto'
 
 @Injectable()
-export class IndexService {
+export class CurtidasService {
 
   constructor(
-    private readonly publicacaoRepository:PublicacaoService,
-    @InjectRepository(IndexRepository) private readonly repository: IndexRepository,
-
+    private readonly publicacaoRepository:PublicacoesService,
+    @InjectRepository(CurtidasRepository) private readonly repository: CurtidasRepository,
   ) {}
 
   public async save(values:CreateDto) {
@@ -47,7 +46,7 @@ export class IndexService {
 
     let publicacaoCurtidaPorUsuario = await this.repository.find({ where:{ usuario_id: values.usuario_id }})
 
-    if(publicacaoCurtidaPorUsuario != undefined){
+    if(Object.keys(publicacaoCurtidaPorUsuario).length != 0){
      let curtida = new RetornoDto(publicacaoCurtidaPorUsuario[0])
 
       if(curtida.eu_curti){
@@ -64,7 +63,9 @@ export class IndexService {
       let criarPrimeiraCurtidaDoUsuarioDestaPublicacao = new RetornoDto(values)
       criarPrimeiraCurtidaDoUsuarioDestaPublicacao.eu_curti = true
       delete criarPrimeiraCurtidaDoUsuarioDestaPublicacao.id
-      return await this.repository.save(criarPrimeiraCurtidaDoUsuarioDestaPublicacao)
+      let curtida = await this.repository.save(criarPrimeiraCurtidaDoUsuarioDestaPublicacao)
+      this.publicacaoRepository.incrementCurtida(criarPrimeiraCurtidaDoUsuarioDestaPublicacao.publicacao_id)
+      return curtida
     }
   }
 

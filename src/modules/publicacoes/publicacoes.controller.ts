@@ -1,15 +1,14 @@
-import { Controller, Res, Redirect, HttpStatus, Param, HttpCode, Header, Get, Query, Post, Body, Put, Delete } from '@nestjs/common';
+import { Controller, Res, Redirect, HttpStatus, Param, HttpCode, Header, Get, Query, Post, Body, Put, Delete } from '@nestjs/common'
+
+import { PublicacoesService } from './publicacoes.service'
 
 import { CreateDto } from './dto/create.dto'
-
 import { UpdateDto  } from './dto/update.dto'
 
-import { IndexService } from './index.service'
+@Controller('publicacoes')
+export class PublicacoesController {
 
-@Controller('pagina')
-export class IndexController {
-
-  constructor(private readonly service: IndexService) {}
+  constructor(private readonly service: PublicacoesService) {}
 
   @Post()
   public async save(@Body() create: CreateDto) {
@@ -34,6 +33,11 @@ export class IndexController {
   @Get(':id')
   public async findOne(@Param('id') id: string) {
     return await this.service.findOne(id);
+  }
+
+  @Get('feed/public')
+  public async feedPublic() {
+    return await this.service.feedPublic();
   }
 
 }
