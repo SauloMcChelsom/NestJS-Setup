@@ -35,9 +35,9 @@ export class PublicacoesController {
     return await this.service.findOne(id);
   }
 
-  @Get('feed/public')
-  public async feedPublic() {
-    return await this.service.feedPublic();
+  @Get('feed/:usuarios')
+  public async feed(@Param('id') id: string) {
+    return await this.service.feed(id);
   }
 
 }

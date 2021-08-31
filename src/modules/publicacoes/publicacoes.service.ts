@@ -37,8 +37,8 @@ export class PublicacoesService {
     return {"mensagem":"deletado"}
   }
 
-  public async feedPublic() {
-    return await this.repository.feedPublic();
+  public async feed(id:string) {
+    return await this.repository.feed();
   }
 
   public async incrementCurtida(id) {
