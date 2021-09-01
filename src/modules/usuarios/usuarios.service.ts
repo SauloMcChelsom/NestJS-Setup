@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { UsuariosRepository } from './usuarios.repository'
 
-import { CreateDto } from './dto/create.dto'
 import { UpdateDto  } from './dto/update.dto'
 import { RetornoDto  } from './dto/retorno.dto'
 
@@ -11,7 +10,7 @@ export class UsuariosService {
 
   constructor(@InjectRepository(UsuariosRepository) private readonly repository: UsuariosRepository) {}
 
-  public async save(values:CreateDto) {
+  public async save(values) {
     const res = await this.repository.save(values)
     return new RetornoDto(res)
   }

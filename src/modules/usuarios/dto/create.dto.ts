@@ -1,15 +1,29 @@
 import { Contains, MinLength, MaxLength, ValidationOptions, IsDate, IsNumber, IsString, Length, IsNotEmpty, IsEmail, IsInt, Min,  Max, IsBoolean  } from 'class-validator';
+import { ApiProperty } from '@nestjs/swagger'
 
-export class CreateDto  {
+export class CreateNewUsuarioDto  {
+
+  @ApiProperty({ 
+    example: 'ana', 
+    description: 'Nome completo do usuario' 
+  })
   @IsNotEmpty()
   @IsString()
   @MinLength(3)
   nome: string;
 
+  @ApiProperty({ 
+    example: 'ana@gmail.com', 
+    description: 'Digite um email', 
+  })
   @IsNotEmpty()
   @IsEmail()
   email: string;
 
+  @ApiProperty({
+    example: '123#@!',
+    description: 'Uma senha forte!',
+  })
   @IsNotEmpty()
   @IsString()
   @MinLength(3)
@@ -19,7 +33,63 @@ export class CreateDto  {
 
 
 
+const a =
+{
+  "codHttpStatus":400,
+  "codMessageStatus":19,
+  "textMessageStatus":"dto_falhou",
+  "results":[],
+  "warning":[],
+  "erros":[
+    {
+      "property": "nome",
+      "constraints": {
+        "minLength": "nome must be longer than or equal to 3 characters",
+        "isString": "nome must be a string",
+        "isNotEmpty": "nome should not be empty"
+      }
+    }
+  ],
+  "size":0,
+  "offset":0,
+  "limit":15,
+}
+
+//offset=10&limit=5
+
+/*
+
+#Códigos de Status HTTP
 
 
 
+200 OK Em requisições GET, PUT e DELETE executadas com sucesso.
 
+201 Created
+#Em requisições POST, quando um novo recurso é criado com sucesso.
+
+206 Partial Content
+#Em requisições GET que devolvem apenas uma parte do conteúdo de um recurso.
+
+400 Bad Request
+#Em requisições cujas informações enviadas pelo cliente sejam invalidas.
+
+401 Unauthorized
+#Em requisições que exigem autenticação, mas seus dados não foram fornecidos.
+
+403 Forbidden
+#Em requisições que o cliente não tem permissão de acesso ao recurso solicitado.
+
+404 Not Found
+#Em requisições cuja URI de um determinado recurso seja inválida.
+
+429 Too Many Requests
+#No caso do serviço ter um limite de requisições que pode ser feita por um cliente, e ele já tiver sido atingido.
+
+500 Internal Server Error
+#Em requisições onde um erro tenha ocorrido no servidor.
+
+503 Service Unavailable
+#Em requisições feitas a um serviço que esta fora do ar, para manutenção ou sobrecarga.
+
+*/

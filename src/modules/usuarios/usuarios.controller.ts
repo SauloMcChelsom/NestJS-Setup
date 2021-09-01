@@ -1,18 +1,36 @@
 import { Controller, Res, Redirect, HttpStatus, Param, HttpCode, Header, Get, Query, Post, Body, Put, Delete } from '@nestjs/common';
+import {
+  ApiBearerAuth,
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger'
 
 import { UsuariosService } from './usuarios.service'
 
-import { CreateDto } from './dto/create.dto'
+import { CreateNewUsuarioDto } from './dto/create.dto'
 import { UpdateDto  } from './dto/update.dto'
 
 
+@ApiBearerAuth()
+@ApiTags('usuarios')
 @Controller('usuarios')
 export class UsuariosController {
 
   constructor(private readonly service: UsuariosService) {}
-
+ 
   @Post()
-  public async save(@Body() create: CreateDto) {
+  @ApiOperation({ summary: 'Cadastrar um usuario' })
+  @ApiResponse({
+    status: 200,
+    description: 'Usuario cadastrado com sucesso',
+    type: CreateNewUsuarioDto
+  })
+  @ApiResponse({
+    status: 403, 
+    description: 'Forbidden.' 
+  })
+  public async save(@Body() create: CreateNewUsuarioDto) {
     return await this.service.save(create);
   }
 
