@@ -3,18 +3,43 @@ import { ValidationPipe, BadRequestException, ValidationError } from '@nestjs/co
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 
+import { NestExpressApplication } from '@nestjs/platform-express';
+import { join } from 'path';
+import { Logger } from '@nestjs/common';
+import * as hbs from 'hbs';
+
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
-  const config = new DocumentBuilder()
-  .setTitle('Rede Social')
-  .setDescription('Documentação da API Rede Social')
-  .setVersion('1.0')
-  //.addBearerAuth()
-  .build();
 
-  const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('/', app, document);
+  /*---------------------| Documentação Swagger |------------------*/
+  /*---------------------------------------------------------------*/
+  /*---------------------------------------------------------------*/
+  /*---------------------------------------------------------------*/
+  /*---------------------------------------------------------------*/
+  /**/const config = new DocumentBuilder()/*-----------------------*/
+  /**/.setTitle('Rede Social')/*-----------------------------------*/
+  /**/.setDescription('Documentação da API Rede Social')/*---------*/
+  /**/.setVersion('1.0')/*-----------------------------------------*/
+  /**///.addBearerAuth()/*-----------------------------------------*/
+  /**/.build();/*--------------------------------------------------*/
+  /**/const document = SwaggerModule.createDocument(app, config);/**/
+  /**/SwaggerModule.setup('/', app, document);/*-------------------*/
+  /*---------------------------------------------------------------*/
+  /*---------------------------------------------------------------*/
+  /*---------------------------------------------------------------*/
+  /*---------------------------------------------------------------*/
+  /*---------------------------------------------------------------*/
+
+  /*-------------------| Paginas Web |-----------------------------*/
+  /*---------------------------------------------------------------*/
+  /*---------------------------------------------------------------*/
+  /**/app.useStaticAssets(join(__dirname, '..', './src','public'));/*------*/
+  /**/app.setBaseViewsDir(join(__dirname, '..', './src','views'));/*-------*/
+  /**/app.setViewEngine('hbs');/*----------------------------------*/
+  /*---------------------------------------------------------------*/
+  /*---------------------------------------------------------------*/
+  /*---------------------------------------------------------------*/
 
   app.useGlobalPipes(
     new ValidationPipe({
@@ -29,8 +54,10 @@ async function bootstrap() {
   console.log(`                 `);
   console.log(`                 `);
   console.log(`                   ${await app.getUrl()}`);
+  console.log(join(__dirname, '..', './src', 'public'))
   console.log(`                 `);
   console.log(`                 `);
 
 }
+
 bootstrap();

@@ -5,6 +5,7 @@ import { UsuariosModule } from './modules/usuarios/usuarios.module';
 import { PaginasModule } from './modules/paginas/paginas.module';
 import { PublicacoesModule } from './modules/publicacoes/publicacoes.module';
 import { CurtidasModule } from './modules/curtidas/curtidas.module';
+import { IndexModule } from './modules/authentication-firebase/index.module';
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import { CurtidasModule } from './modules/curtidas/curtidas.module';
     PaginasModule,
     PublicacoesModule,
     CurtidasModule,
+    IndexModule
   ],
   controllers: [],
   providers: [],
