@@ -47,12 +47,11 @@ async function bootstrap() {
     })
   );
 
-  await app.listen(3000, '0.0.0.0');
+  await app.listen(3000, '192.168.18.11');
 
   console.log(`                 `);
   console.log(`                 `);
   console.log(`                   ${await app.getUrl()}`);
-  console.log(join(__dirname, '..', './src', 'public'))
   console.log(`                 `);
   console.log(`                 `);
 

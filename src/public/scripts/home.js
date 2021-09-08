@@ -1,6 +1,7 @@
 class Home {
 
     constructor() {
+      document.title = 'Home';
       loading.classList.add("hidden");
       this.isLogged()
     }

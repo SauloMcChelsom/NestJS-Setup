@@ -1,6 +1,7 @@
 class Login {
 
   constructor() {
+    document.title = 'Login';
     error.style.display = 'none';
     signInLoading.style.display = 'none';
     this.isLogged()

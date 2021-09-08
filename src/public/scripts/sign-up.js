@@ -1,8 +1,9 @@
 class SignUp {
 
     constructor() {
+      document.title = 'Register';
       error.style.display = 'none';
-      signInLoading.style.display = 'none';
+      signUpLoading.style.display = 'none';
       this.isLogged()
     }
   
@@ -21,15 +22,15 @@ class SignUp {
         return
       }
 
-      signInLoading.style.display = ''
-      signInBtn.style.display = 'none';
+      signUpLoading.style.display = ''
+      signUpBtn.style.display = 'none';
   
       return firebase.auth().createUserWithEmailAndPassword(email, password).then((user) => {
         window.location.href = "/auth/home";
       })
       .catch((err) => {
-        signInBtn.style.display = ''
-        signInLoading.style.display = 'none';
+        signUpBtn.style.display = ''
+        signUpLoading.style.display = 'none';
         error.style.display = 'block';
         error.innerHTML = err.message;
       });
@@ -40,8 +41,8 @@ class SignUp {
         window.location.href = "/auth/home";
       })
       .catch((err) => {
-        signInBtn.style.display = ''
-        signInLoading.style.display = 'none';
+        signUpBtn.style.display = ''
+        signUpLoading.style.display = 'none';
         error.style.display = 'block';
         error.innerHTML = err.message;
       });
@@ -49,9 +50,9 @@ class SignUp {
   
     async isLogged() {
       await firebase.auth().onAuthStateChanged((res) => {
-          if(res){
-            window.location.href = "/auth/home";
-          }
+        if(res){
+          window.location.href = "/auth/home";
+        }
       });
     }
   }
