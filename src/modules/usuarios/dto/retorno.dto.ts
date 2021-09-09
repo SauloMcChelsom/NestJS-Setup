@@ -6,10 +6,10 @@ export class RetornoDto  {
   private data_de_cadastro: Date;
 
   constructor(values:any){
-    this.id = values.id;
-    this.nome = values.nome;
-    this.sobreNome = values.sobreNome;
-    this.email = values.email;
-    this.data_de_cadastro = values.data_de_cadastro;
+    this.id = values?.id;
+    this.nome = values?.nome;
+    this.sobreNome = values?.sobreNome;
+    this.email = values?.email;
+    this.data_de_cadastro = values?.data_de_cadastro;
   }
 }

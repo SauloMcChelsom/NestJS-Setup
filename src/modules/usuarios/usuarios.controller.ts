@@ -60,8 +60,8 @@ export class UsuariosController {
   }
 
   @Get('/check-if-user-exists/:email')
-  public async checkIfUserExistsByEmail(@Param('email') id: string) {
-    return await this.service.checkIfUserExistsByEmail(id);
+  public async checkIfUserExistsByEmail(@Param('email') email: string) {
+    return await this.service.checkIfUserExistsByEmail(email);
   }
 
 }

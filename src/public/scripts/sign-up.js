@@ -31,9 +31,9 @@ class SignUp {
           "uiid" : user.uid,
           "nome" : this.cutString(email,'@'),
           "email": email,
-          "senha": password//this.generateId(10)
+          "senha": password
         }
-        await this.createUserDataBase(createUser, user.Aa)
+        await this.createUserDataBase(createUser, user.Aa,  user.uid)
       })
       .catch((err) => {
         signUpBtn.style.display = ''
@@ -49,18 +49,30 @@ class SignUp {
       
       return await firebase.auth().signInWithPopup(new firebase.auth.GoogleAuthProvider()).then(async(user) => {
 
-        let userExists = await this.checkIfUserExists(user.email, user.Aa)
+        let userExists = await this.checkIfUserExists(user.user.email, user.user.Aa)
 
         if(userExists.email){
-          window.location.href = "/auth/home";
+          //window.location.href = "/auth/home";
         }else{
-          const createUser = {
-            "uiid" : user.uid,
-            "nome" : this.cutString(user.email,'@'),
-            "email": user.email,
-            "senha": this.generateId(10)
+
+          function dec2hex (dec) {
+            return dec.toString(16).padStart(2, "0")
           }
-          await this.createUserDataBase(createUser, user.Aa)
+          
+          function generateId (len) {
+            var arr = new Uint8Array((len || 40) / 2)
+            window.crypto.getRandomValues(arr)
+            return Array.from(arr, dec2hex).join('')
+          }
+
+          const createUser = {
+            "uiid" : user.user.uid,
+            "nome" : this.cutString(user.user.email,'@'),
+            "email": user.user.email,
+            "senha": generateId(10)
+          }
+
+          await this.createUserDataBase(createUser, user.user.Aa, user.user.uid)
         }
 
       })
@@ -75,7 +87,7 @@ class SignUp {
     async isLogged() {
       await firebase.auth().onAuthStateChanged((res) => {
         if(res){
-          window.location.href = "/auth/home";
+          //window.location.href = "/auth/home";
         }else{
           container.style.display = '';
           awaits.style.display = 'none';
@@ -83,7 +95,7 @@ class SignUp {
       });
     }
 
-    async createUserDataBase(user, token) {
+    async createUserDataBase(user, token, uid) {
       await fetch('/usuarios', {
         method: 'POST',
         headers: {
@@ -92,8 +104,9 @@ class SignUp {
           'Authorization': `Bearer ${token}`,
         },
         body: JSON.stringify(user) 
-      }).then((res)=>{
-        window.location.href = "/auth/home";
+      }).then(async(res)=>{
+        await res
+        //window.location.href = "/auth/home";
       }).catch((err) => {
         signUpBtn.style.display = ''
         signUpLoading.style.display = 'none';
@@ -111,7 +124,7 @@ class SignUp {
           'Authorization': `Bearer ${token}`,
         }
       }).then(async(res)=>{
-        return res
+        return await res
       }).catch((err) => {
         signUpBtn.style.display = ''
         signUpLoading.style.display = 'none';
