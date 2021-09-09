@@ -65,3 +65,10 @@ body {
 .visible {
   display: block !important;
 }
+
+.await{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: calc(100vh - 50px);
+}

@@ -1,12 +1,12 @@
 import { NestFactory } from '@nestjs/core';
 import { ValidationPipe, BadRequestException, ValidationError } from '@nestjs/common'
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
-import { AppModule } from './app.module';
-
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { join } from 'path';
+import { AppModule } from './app.module';
 
 async function bootstrap() {
+  
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
 
@@ -49,11 +49,11 @@ async function bootstrap() {
 
   await app.listen(3000, '192.168.18.11');
 
-  console.log(`                 `);
-  console.log(`                 `);
-  console.log(`                   ${await app.getUrl()}`);
-  console.log(`                 `);
-  console.log(`                 `);
+  console.log(`                                                    `);
+  console.log(`                                                    `);
+  console.log(`                  ${await app.getUrl()}/auth/sign-in`);
+  console.log(`                                                    `);
+  console.log(`                                                    `);
 
 }
 

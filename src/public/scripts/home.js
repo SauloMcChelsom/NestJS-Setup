@@ -2,6 +2,8 @@ class Home {
 
     constructor() {
       document.title = 'Home';
+      container.style.display = 'none';
+      nav.style.display = 'none';
       loading.classList.add("hidden");
       this.isLogged()
     }
@@ -11,6 +13,9 @@ class Home {
         if(res){
           uid.innerHTML = res.uid
           token.innerHTML = res.Aa
+          container.style.display = '';
+          nav.style.display = '';
+          await.style.display = 'none';
         }else{
             window.location.href = "/auth/sign-in";
         }

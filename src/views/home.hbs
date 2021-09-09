@@ -6,12 +6,12 @@
         <link rel="stylesheet" href="/styles/style.css">
     </head>
     <body>
-        <nav class="navbar navbar-dark bg-dark">
+        <nav id="nav" class="navbar navbar-dark bg-dark" style="display: none;">
             <button class="navbar-toggler" style="padding: 15px;" type="button" data-toggle="modal" data-target="#exampleModal">
                 sign out
             </button>
         </nav>
-        <div class='container'>
+        <div id="container" class='container' style="display: none;">
             <h1>Home</h1>
             <div class="card mt-4 mb-4" style="width: 100%;">
                 <div class="card-body">
@@ -44,6 +44,11 @@
                         <span class="sr-only">Loading...</span>
                     </div>
                 </div>
+            </div>
+        </div>
+        <div id="await" class='container await'>
+            <div class="spinner-border text-primary" style="font-size: medium; height: 3rem; width: 3rem;" role="status">
+                <span class="sr-only">Loading...</span>
             </div>
         </div>
     </body>

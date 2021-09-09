@@ -20,6 +20,11 @@ export class UsuariosService {
     return new RetornoDto(res)
   }
 
+  public async checkIfUserExistsByEmail(email) {
+    const res = await this.repository.findOne({ where:{ email: email }})
+    return new RetornoDto(res)
+  }
+
   public async findAll() {
     const res = await this.repository.find();
     return res.map((r)=> new RetornoDto(r))
