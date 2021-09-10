@@ -26,12 +26,13 @@ class SignUp {
       signUpLoading.style.display = ''
       signUpBtn.style.display = 'none';
   
-      return firebase.auth().createUserWithEmailAndPassword(email, password).then(async(user) => {
+      return firebase.auth().createUserWithEmailAndPassword(email, password).then(async({user}) => {
         const createUser = {
-          "uiid" : user.uid,
+          "uid" : user.uid,
           "nome" : this.cutString(email,'@'),
           "email": email,
-          "senha": password
+          "senha": password,
+          "providers":"email_password"
         }
         await this.createUserDataBase(createUser, user.Aa,  user.uid)
       })
@@ -47,12 +48,12 @@ class SignUp {
       container.style.display = 'none';
       awaits.style.display = '';
       
-      return await firebase.auth().signInWithPopup(new firebase.auth.GoogleAuthProvider()).then(async(user) => {
+      return await firebase.auth().signInWithPopup(new firebase.auth.GoogleAuthProvider()).then(async({user}) => {
 
-        let userExists = await this.checkIfUserExists(user.user.email, user.user.Aa)
+        let userExists = await this.checkIfUserExists(user.email, user.Aa)
 
         if(userExists.email){
-          //window.location.href = "/auth/home";
+          window.location.href = "/auth/home";
         }else{
 
           function dec2hex (dec) {
@@ -66,32 +67,21 @@ class SignUp {
           }
 
           const createUser = {
-            "uiid" : user.user.uid,
-            "nome" : this.cutString(user.user.email,'@'),
-            "email": user.user.email,
-            "senha": generateId(10)
+            "uid" : user.uid,
+            "nome" : this.cutString(user.email,'@'),
+            "email": user.email,
+            "senha": generateId(10),
+            "providers":"google"
           }
 
-          await this.createUserDataBase(createUser, user.user.Aa, user.user.uid)
+          await this.createUserDataBase(createUser, user.Aa, user.uid)
         }
-
       })
       .catch((err) => {
         container.style.display = '';
         awaits.style.display = 'none';
         error.style.display = 'block';
         error.innerHTML = err.message;
-      });
-    }
-  
-    async isLogged() {
-      await firebase.auth().onAuthStateChanged((res) => {
-        if(res){
-          //window.location.href = "/auth/home";
-        }else{
-          container.style.display = '';
-          awaits.style.display = 'none';
-        }
       });
     }
 
@@ -104,9 +94,22 @@ class SignUp {
           'Authorization': `Bearer ${token}`,
         },
         body: JSON.stringify(user) 
-      }).then(async(res)=>{
+      })
+      .then(res => res.json())
+      .then(async(res)=>{
         await res
-        //window.location.href = "/auth/home";
+
+        if(res.email){
+          window.location.href = "/auth/home";
+        }else{
+          const user = firebase.auth().currentUser;
+          user.delete().then(() => {
+            signUpBtn.style.display = ''
+            signUpLoading.style.display = 'none';
+            error.style.display = 'block';
+            error.innerHTML = "Erro em cadastrar!";
+          })
+        }
       }).catch((err) => {
         signUpBtn.style.display = ''
         signUpLoading.style.display = 'none';
@@ -123,7 +126,9 @@ class SignUp {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`,
         }
-      }).then(async(res)=>{
+      })
+      .then(res => res.json())
+      .then(async(res)=>{
         return await res
       }).catch((err) => {
         signUpBtn.style.display = ''
@@ -133,19 +138,20 @@ class SignUp {
       });
     }
 
-    dec2hex (dec) {
-      return dec.toString(16).padStart(2, "0")
-    }
-    
-    generateId (len) {
-      var arr = new Uint8Array((len || 40) / 2)
-      window.crypto.getRandomValues(arr)
-      return Array.from(arr, dec2hex).join('')
-    }
-
     cutString(str, cut){
       const text = str;
       return text.slice(0, str.lastIndexOf(cut));
+    }
+
+    async isLogged() {
+      await firebase.auth().onAuthStateChanged((res) => {
+        if(res){
+          //window.location.href = "/auth/home";
+        }else{
+          container.style.display = '';
+          awaits.style.display = 'none';
+        }
+      });
     }
 
   }

@@ -1,9 +1,12 @@
-import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, OneToOne, JoinColumn, UpdateDateColumn, } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn} from 'typeorm';
 
 @Entity('usuario')
 export class UsuarioEntity {
-  @PrimaryGeneratedColumn("uuid")
-  id: string;
+  @PrimaryGeneratedColumn()
+  id: number;
+
+  @Column({ unique: true })
+  uid: string;
 
   @Column({ unique: true })
   email: string;
@@ -13,6 +16,9 @@ export class UsuarioEntity {
 
   @Column()
   senha: string;
+
+  @Column()
+  providers: string;
 
   @CreateDateColumn({ default: () => 'CURRENT_TIMESTAMP' })
   data_de_cadastro: Date;

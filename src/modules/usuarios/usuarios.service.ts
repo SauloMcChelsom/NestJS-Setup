@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common'
-import { InjectRepository } from '@nestjs/typeorm'
+import { InjectRepository} from '@nestjs/typeorm'
 import { UsuariosRepository } from './usuarios.repository'
+import { hash, compare } from 'bcryptjs';
 
 import { UpdateDto  } from './dto/update.dto'
 import { RetornoDto  } from './dto/retorno.dto'
@@ -11,8 +12,26 @@ export class UsuariosService {
   constructor(@InjectRepository(UsuariosRepository) private readonly repository: UsuariosRepository) {}
 
   public async save(values) {
+    values.senha = await hash(values.senha, 10);
     const res = await this.repository.save(values)
     return new RetornoDto(res)
+  }
+
+  public async signIn(user) {
+    const userData = await this.findByEmail(user.email);
+    const result = await compare(user.senha, userData.senha)
+
+    if (!result) {
+      return {
+        message: 'Password or email is incorrect',
+        status: 404,
+      };
+    }
+    return "logado"
+  }
+
+  public async findByEmail(email: string){
+    return await this.repository.findOne({ where:{ email: email }})
   }
 
   public async findOne(id) {
