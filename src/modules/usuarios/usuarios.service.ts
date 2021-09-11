@@ -5,6 +5,7 @@ import { hash, compare } from 'bcryptjs';
 
 import { UpdateDto  } from './dto/update.dto'
 import { RetornoDto  } from './dto/retorno.dto'
+import { checkIfUserExistsByEmailDTO  } from './dto/checkIfUserExistsByEmailDTO'
 
 @Injectable()
 export class UsuariosService {
@@ -18,20 +19,23 @@ export class UsuariosService {
   }
 
   public async signIn(user) {
-    const userData = await this.findByEmail(user.email);
-    const result = await compare(user.senha, userData.senha)
-
-    if (!result) {
+    const userData = await this.repository.findOne({ where:{ email: user.email }})
+    if (!userData) {
       return {
-        message: 'Password or email is incorrect',
+        message: 'email is incorrect',
         status: 404,
       };
     }
-    return "logado"
-  }
 
-  public async findByEmail(email: string){
-    return await this.repository.findOne({ where:{ email: email }})
+    const result = await compare(user.senha, userData.senha)
+    if (!result) {
+      return {
+        message: 'Password is incorrect',
+        status: 404,
+      };
+    }
+
+    return "logado"
   }
 
   public async findOne(id) {
@@ -41,7 +45,7 @@ export class UsuariosService {
 
   public async checkIfUserExistsByEmail(email) {
     const res = await this.repository.findOne({ where:{ email: email }})
-    return new RetornoDto(res)
+    return new checkIfUserExistsByEmailDTO(res)
   }
 
   public async findAll() {
@@ -57,12 +61,12 @@ export class UsuariosService {
 
   public async delete(id) {
     await this.repository.delete(id);
-    return {"mensagem":"deletado"}
+    return "Usuario Deletado"
   }
 
   public async deleteTodosUsuarios() {
     await this.repository.deleteTodosUsuarios();
-    return {"mensagem":"Todos usuarios deletados"}
+    return "Todos Usuarios Deletados"
   }
 }
 

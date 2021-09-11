@@ -1,15 +1,6 @@
 import { Injectable } from '@nestjs/common'
-
-import { PassportStrategy } from '@nestjs/passport';
-import { UnauthorizedException } from '@nestjs/common';
-import { Strategy, ExtractJwt } from 'passport-firebase-jwt';
 import * as firebase from 'firebase-admin';
 var serviceAccount = require("./firebase.config.json");
-
-import { CreateDto } from './dto/create.dto'
-import { UpdateDto  } from './dto/update.dto'
-import { RetornoDto  } from './dto/retorno.dto'
-
 
 @Injectable()
 export class IndexService {
@@ -73,7 +64,7 @@ export class IndexService {
   public async getUserByEmail(email) {
     return await firebase.auth().getUserByEmail(email)
     .then(async(userRecord) => {
-      return await { message:'Successfully fetched user data', response:userRecord.toJSON() }
+      return await { response:userRecord.toJSON() }
     })
     .catch((error) => {
       return { message:'Error fetching user data', error:error }

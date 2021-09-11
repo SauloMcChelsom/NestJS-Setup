@@ -49,27 +49,33 @@ export class CreateNewUsuarioDto  {
 
 
 
-const a =
+const responseGetLayout =
 {
-  "codHttpStatus":400,
-  "codMessageStatus":19,
-  "textMessageStatus":"dto_falhou",
-  "results":[],
-  "warning":[],
-  "erros":[
-    {
-      "property": "nome",
-      "constraints": {
-        "minLength": "nome must be longer than or equal to 3 characters",
-        "isString": "nome must be a string",
-        "isNotEmpty": "nome should not be empty"
-      }
-    }
-  ],
-  "size":0,
-  "offset":0,
-  "limit":15,
+  "httpStatus":400,
+  "ok":{
+    "result":[],
+    "size":0,
+    "offset":0,
+    "limit":0,
+  },
+  "info":{
+    "timestamp": "2021-09-01T12:55:04.169+0000",
+    "message": "The email address is already in use by another account.",
+    "code": "auth/email-already-in-use",
+    "description":"",
+    "path": "/api/v1/auth/sign-up",
+    "method":"POST"
+  },
+  "error":{
+    "timestamp": "2021-09-01T12:55:04.169+0000",
+    "message": "The email address is already in use by another account.",
+    "code": "auth/email-already-in-use",
+    "description":"",
+    "path": "/api/v1/auth/sign-up",
+    "method":"POST"
+  }
 }
+
 
 //offset=10&limit=5
 
@@ -83,9 +89,6 @@ const a =
 
 201 Created
 #Em requisições POST, quando um novo recurso é criado com sucesso.
-
-206 Partial Content
-#Em requisições GET que devolvem apenas uma parte do conteúdo de um recurso.
 
 400 Bad Request
 #Em requisições cujas informações enviadas pelo cliente sejam invalidas.

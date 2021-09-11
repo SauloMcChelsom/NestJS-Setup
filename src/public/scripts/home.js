@@ -17,7 +17,7 @@ class Home {
           nav.style.display = '';
           await.style.display = 'none';
         }else{
-            window.location.href = "/auth/sign-in";
+          window.location.href = "/auth/sign-in";
         }
       });
     }

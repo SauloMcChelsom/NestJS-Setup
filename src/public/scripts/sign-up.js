@@ -37,6 +37,7 @@ class SignUp {
         await this.createUserDataBase(createUser, user.Aa,  user.uid)
       })
       .catch((err) => {
+        console.log(err)
         signUpBtn.style.display = ''
         signUpLoading.style.display = 'none';
         error.style.display = 'block';
@@ -96,9 +97,7 @@ class SignUp {
         body: JSON.stringify(user) 
       })
       .then(res => res.json())
-      .then(async(res)=>{
-        await res
-
+      .then((res)=>{
         if(res.email){
           window.location.href = "/auth/home";
         }else{
@@ -143,10 +142,12 @@ class SignUp {
       return text.slice(0, str.lastIndexOf(cut));
     }
 
-    async isLogged() {
-      await firebase.auth().onAuthStateChanged((res) => {
+    isLogged() {
+      firebase.auth().onAuthStateChanged((res) => {
         if(res){
-          //window.location.href = "/auth/home";
+          setTimeout(()=>{
+            window.location.href = "/auth/home";
+          },5000)//5 segundos
         }else{
           container.style.display = '';
           awaits.style.display = 'none';

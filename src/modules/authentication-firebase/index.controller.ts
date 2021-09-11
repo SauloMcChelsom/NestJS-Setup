@@ -56,6 +56,16 @@ export class IndexController {
     return await this.service.verifyIdToken(id)
   }
 
+  @Get('/user/:id')
+  public async getUser(@Param('id') id: string,) {
+    return await this.service.getUserByEmail(id)
+  }
+
+  @Get('/user/:email')
+  public async getUserByEmail(@Param('email') email: string) {
+    return await this.service.getUserByEmail(email)
+  }
+
   @Put(':id')
   public async update(@Param('id') id: string, @Body() updateDto: UpdateDto) {
     return await []
