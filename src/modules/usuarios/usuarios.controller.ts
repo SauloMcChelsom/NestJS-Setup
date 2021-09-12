@@ -1,4 +1,4 @@
-import { Controller, Res, Redirect, HttpStatus, Param, HttpCode, Header, Get, Query, Post, Body, Put, Delete } from '@nestjs/common';
+import { Controller, UseFilters, Res, Redirect, HttpStatus, Param, HttpCode, Header, Get, Query, Post, Body, Put, Delete } from '@nestjs/common';
 import {
   ApiBearerAuth,
   ApiOperation,
@@ -6,16 +6,20 @@ import {
   ApiTags,
 } from '@nestjs/swagger'
 
-import { UsuariosService } from './usuarios.service'
-
 import { CreateNewUsuarioDto } from './dto/create.dto'
 import { UpdateDto  } from './dto/update.dto'
+
+import { UsuariosService } from './usuarios.service'
+
+import { Client, code  } from '../../exception/http-exception.filter'
+
 
 
 @ApiBearerAuth()
 @ApiTags('usuarios')
 @Controller('usuarios')
 export class UsuariosController {
+
 
   constructor(private readonly service: UsuariosService) {}
  
@@ -64,4 +68,37 @@ export class UsuariosController {
     return await this.service.checkIfUserExistsByEmail(email);
   }
 
+  @Get('http/ok')
+  public ok() {
+    return new Client().OK([{
+      code:"xxx-info",
+      message:"Isso esta certo?",
+    }])
+  }
+
+  @Get('http/info')
+  public Info() {
+    return new Client().Info({
+      code:"xxx-info",
+      message:"Isso esta certo?",
+    })
+  }
+
+  @Get('http/BadRequestException')
+  public BadRequestException() {
+    throw new Client().BadRequestException({
+      code:"xxx-info",
+      message:"Isso esta certo?",
+    })
+  }
+
+  @Get('http/exception')
+  public exception() {
+    throw new Client().HttpException({
+      code:code.EMAIL_ALREADY_IN_USE,
+      message:"Email ja existe",
+    },404)
+  }
+  
 }
+
