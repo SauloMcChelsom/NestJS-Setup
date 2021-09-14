@@ -2,6 +2,8 @@ import { NestFactory } from '@nestjs/core';
 import { ValidationPipe, BadRequestException, ValidationError } from '@nestjs/common'
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { NestExpressApplication } from '@nestjs/platform-express';
+
+import { Client, code  } from './exception/http-exception.filter'
 import { join } from 'path';
 import { AppModule } from './app.module';
 
@@ -42,8 +44,20 @@ async function bootstrap() {
   app.useGlobalPipes(
     new ValidationPipe({
       exceptionFactory: (validationErrors: ValidationError[] = []) => {
-        console.log(validationErrors)
-        return new BadRequestException(validationErrors);
+        var err = validationErrors
+        var property = err[0].property
+        var constraints = err[0].constraints
+        var key = Object.keys(constraints)[0]
+        var values = Object.values(constraints)[0]
+        console.log({
+          code:"property_"+property+"_"+key+"_dto",
+          message: values,
+        })
+        throw new Client().BadRequestException({
+          code:"property_"+property+"_"+key+"_dto",
+          message: values,
+        })
+        //return new BadRequestException(validationErrors);
       }, validationError: { target: false } 
     })
   );

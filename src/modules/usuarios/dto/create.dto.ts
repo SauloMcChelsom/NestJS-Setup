@@ -49,34 +49,6 @@ export class CreateNewUsuarioDto  {
 
 
 
-const responseGetLayout =
-{
-  "httpStatus":400,
-  "ok":{
-    "result":[],
-    "size":0,
-    "offset":0,
-    "limit":0,
-  },
-  "info":{
-    "timestamp": "2021-09-01T12:55:04.169+0000",
-    "message": "The email address is already in use by another account.",
-    "code": "auth/email-already-in-use",
-    "description":"",
-    "path": "/api/v1/auth/sign-up",
-    "method":"POST"
-  },
-  "error":{
-    "timestamp": "2021-09-01T12:55:04.169+0000",
-    "message": "The email address is already in use by another account.",
-    "code": "auth/email-already-in-use",
-    "description":"",
-    "path": "/api/v1/auth/sign-up",
-    "method":"POST"
-  }
-}
-
-
 //offset=10&limit=5
 
 /*
