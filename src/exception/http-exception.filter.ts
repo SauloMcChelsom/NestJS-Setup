@@ -25,11 +25,14 @@ import {
 
 export class Client {
 
+
+
+
   public OK(data:any[]){
     this.ok.result = data
     this.ok.size = data.length
     return {
-      statusCode:HttpStatus.OK,
+      statusCode:HttpStatus.OK,//  200 OK Em requisições GET executadas com sucesso.
       ok:this.ok,
       info:this.info,
       error:this.error,
@@ -42,7 +45,7 @@ export class Client {
     info.path = info.path ? info.path : null
     info.description = info.description ? info.description : null
      throw new HttpException({
-      statusCode:HttpStatus.CREATED,
+      statusCode:HttpStatus.CREATED,//201 Created - Em requisições POST, PUT e DELETE quando um novo recurso é criado com sucesso.
       ok:this.ok,
       info:info,
       error:this.error,

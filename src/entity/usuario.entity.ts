@@ -22,4 +22,7 @@ export class UsuarioEntity {
 
   @CreateDateColumn({ default: () => 'CURRENT_TIMESTAMP' })
   data_de_cadastro: Date;
+
+  @Column()
+  date_exclusion: Date;
 }
