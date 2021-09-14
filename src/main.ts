@@ -49,15 +49,10 @@ async function bootstrap() {
         var constraints = err[0].constraints
         var key = Object.keys(constraints)[0]
         var values = Object.values(constraints)[0]
-        console.log({
-          code:"property_"+property+"_"+key+"_dto",
-          message: values,
-        })
         throw new Client().BadRequestException({
-          code:"property_"+property+"_"+key+"_dto",
+          code:"property_"+property+"_"+key+"_pipe",
           message: values,
         })
-        //return new BadRequestException(validationErrors);
       }, validationError: { target: false } 
     })
   );
