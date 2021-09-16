@@ -1,11 +1,11 @@
 import { Contains, MinLength, MaxLength, ValidationOptions, IsDate, IsNumber, IsString, Length, IsNotEmpty, IsEmail, IsInt, Min,  Max, IsBoolean  } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger'
 
-export class  ErrorInputSwagger {
+export class  BabRequestUserSwagger {
 
     @ApiProperty({ 
         example: "400", 
-        description: 'Informa que alguns dados foram preenchidas incorretamente', 
+        description: 'indica que o servidor não pode ou não irá processar a requisição devido a alguma coisa que foi entendida como um erro do cliente (por exemplo, sintaxe de requisição mal formada, enquadramento de mensagem de requisição inválida ou requisição de roteamento enganosa).', 
     })
     public statusCode:number
  
@@ -14,8 +14,7 @@ export class  ErrorInputSwagger {
         example: { 
             result:[], 
             size:0
-        }, 
-        description: 'Para requições GET', 
+        }
     })
     public ok:object = {
       result:[],
@@ -30,8 +29,7 @@ export class  ErrorInputSwagger {
             description: null,
             path: null,
             method: null
-        }, 
-        description: 'Informe o id auth-service', 
+        }
     })
     public info = {
       timestamp: null,
@@ -50,8 +48,7 @@ export class  ErrorInputSwagger {
             method: "/user",
             path: "POST",
             description: null
-        }, 
-        description: 'Informe o id auth-service', 
+        }
     })
     public error = {
       timestamp: null,

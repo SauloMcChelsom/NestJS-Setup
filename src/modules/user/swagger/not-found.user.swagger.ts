@@ -1,11 +1,11 @@
 import { Contains, MinLength, MaxLength, ValidationOptions, IsDate, IsNumber, IsString, Length, IsNotEmpty, IsEmail, IsInt, Min,  Max, IsBoolean  } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger'
 
-export class  CreateUserSuccessSwagger {
+export class  NotFoundUserSwagger {
 
     @ApiProperty({ 
-        example: "201", 
-        description: 'Codigo Status Http por metodo POST, informando que foi criado com sucesso', 
+        example: "404", 
+        description: 'Indica que o servidor não conseguiu encontrar o recurso solicitado', 
     })
     public statusCode:number
  
@@ -14,8 +14,7 @@ export class  CreateUserSuccessSwagger {
         example: { 
             result:[], 
             size:0
-        }, 
-        description: 'Para requições GET', 
+        }
     })
     public ok:object = {
       result:[],
@@ -24,14 +23,13 @@ export class  CreateUserSuccessSwagger {
   
     @ApiProperty({ 
         example: { 
-            timestamp: new Date(),
-            message: "Usuario cadastrado com sucesso",
-            code: 'create_user_success',
+            timestamp: null,
+            message: null,
+            code: null,
             description: null,
-            path: "/user",
-            method: "POST"
-        }, 
-        description: 'Informe o id auth-service', 
+            path: null,
+            method: null
+        }
     })
     public info = {
       timestamp: null,
@@ -44,14 +42,13 @@ export class  CreateUserSuccessSwagger {
   
     @ApiProperty({ 
         example: { 
-            timestamp: null,
-            message: null,
-            code: null,
+            timestamp: new Date(),
+            message: "Usuario não encontrado",
+            code: 'user_not_found',
             description: null,
-            path: null,
-            method: null
-        }, 
-        description: 'Informe o id auth-service', 
+            path: "/user",
+            method: "POST"
+        }
     })
     public error = {
       timestamp: null,

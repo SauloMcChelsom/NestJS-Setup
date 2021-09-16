@@ -1,7 +1,7 @@
 import { Contains, MinLength, MaxLength, ValidationOptions, IsDate, IsNumber, IsString, Length, IsNotEmpty, IsEmail, IsInt, Min,  Max, IsBoolean  } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger'
 
-export class  CreateUserSuccessSwagger {
+export class  CreatedUserSwagger {
 
     @ApiProperty({ 
         example: "201", 
@@ -14,8 +14,7 @@ export class  CreateUserSuccessSwagger {
         example: { 
             result:[], 
             size:0
-        }, 
-        description: 'Para requições GET', 
+        }
     })
     public ok:object = {
       result:[],
@@ -30,8 +29,7 @@ export class  CreateUserSuccessSwagger {
             description: null,
             path: "/user",
             method: "POST"
-        }, 
-        description: 'Informe o id auth-service', 
+        }
     })
     public info = {
       timestamp: null,
@@ -50,8 +48,7 @@ export class  CreateUserSuccessSwagger {
             description: null,
             path: null,
             method: null
-        }, 
-        description: 'Informe o id auth-service', 
+        }
     })
     public error = {
       timestamp: null,
