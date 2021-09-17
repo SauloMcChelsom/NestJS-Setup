@@ -5,34 +5,20 @@ import {
   UnauthorizedException,
   NotFoundException,
   ForbiddenException,
-  NotAcceptableException,
-  RequestTimeoutException,
   ConflictException,
-  GoneException,
-  HttpVersionNotSupportedException,
-  PayloadTooLargeException,
-  UnsupportedMediaTypeException,
-  UnprocessableEntityException,
   InternalServerErrorException,
-  NotImplementedException,
-  ImATeapotException,
-  MethodNotAllowedException,
-  BadGatewayException,
-  ServiceUnavailableException,
-  GatewayTimeoutException,
-  PreconditionFailedException
 } from '@nestjs/common'
 
-export class Client {
+import { Return } from './return.exception'
+import { Infor, Error } from './return.interface'
 
-
-
+export class Client extends Return {
 
   public OK(data:any[]){
-    this.ok.result = data
+    this.ok.results = data
     this.ok.size = data.length
     return {
-      statusCode:HttpStatus.OK,//  200 OK Em requisições GET executadas com sucesso.
+      statusCode:HttpStatus.OK,
       ok:this.ok,
       info:this.info,
       error:this.error,
@@ -45,14 +31,14 @@ export class Client {
     info.path = info.path ? info.path : null
     info.description = info.description ? info.description : null
      throw new HttpException({
-      statusCode:HttpStatus.CREATED,//201 Created - Em requisições POST, PUT e DELETE quando um novo recurso é criado com sucesso.
+      statusCode:HttpStatus.CREATED,
       ok:this.ok,
       info:info,
       error:this.error,
     },HttpStatus.CREATED)
   }
   
-  public HttpException(error:Error, status){
+  public Exception(error:Error, status){
     error.timestamp = new Date()
     error.method = error.method ? error.method : null
     error.path = error.path ? error.path : null
@@ -142,60 +128,4 @@ export class Client {
       error:error,
     })
   }
-
-  private statusCode:number = 0
-
-  private ok = {
-    result:[],
-    size:0
-  }
-
-  private info = {
-    timestamp: null,
-    message: null,
-    code: null,
-    description: null,
-    path: null,
-    method: null
-  }
-
-  private error = {
-    timestamp: null,
-    message: null,
-    code: null,
-    description: null,
-    path: null,
-    method: null
-  }
-}
-
-export enum code {
-  EMAIL_ALREADY_IN_USE = "EMAIL_ALREADY_IN_USE",
-}
-export enum message {
-  EMAIL_ALREADY_IN_USE = "Este e-mail esta sendo usando por outro usuario",
-}
-
-
-interface Ok {
-  result:object
-  size?:number
-}
-
-interface Infor {
-  timestamp?: Date
-  message: string
-  code: string
-  description?: string
-  path?: string
-  method?: string
-}
-
-interface Error {
-  timestamp?: Date
-  message: string
-  code: string
-  description?: string
-  path?: string
-  method?: string
 }

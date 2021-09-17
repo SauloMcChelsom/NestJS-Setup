@@ -12,12 +12,12 @@ export class  BabRequestUserSwagger {
     
     @ApiProperty({ 
         example: { 
-            result:[], 
+            results:[], 
             size:0
         }
     })
     public ok:object = {
-      result:[],
+      results:[],
       size:0
     }
   

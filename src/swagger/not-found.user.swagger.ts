@@ -1,23 +1,23 @@
 import { Contains, MinLength, MaxLength, ValidationOptions, IsDate, IsNumber, IsString, Length, IsNotEmpty, IsEmail, IsInt, Min,  Max, IsBoolean  } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger'
 
-export class  ConflictUserSwagger {
+export class  NotFoundUserSwagger {
 
     @ApiProperty({ 
-        example: "409", 
-        description: 'Indica que a solicitação atual conflitou com o recurso que está no servidor', 
+        example: "404", 
+        description: 'Indica que o servidor não conseguiu encontrar o recurso solicitado', 
     })
     public statusCode:number
  
     
     @ApiProperty({ 
         example: { 
-            result:[], 
+            results:[], 
             size:0
-        }, 
+        }
     })
     public ok:object = {
-      result:[],
+      results:[],
       size:0
     }
   
@@ -43,8 +43,8 @@ export class  ConflictUserSwagger {
     @ApiProperty({ 
         example: { 
             timestamp: new Date(),
-            message: "Email já existe",
-            code: 'email_already_exists',
+            message: "Usuario não encontrado",
+            code: 'user_not_found',
             description: null,
             path: "/user",
             method: "POST"

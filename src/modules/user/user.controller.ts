@@ -6,11 +6,10 @@ import {
   ApiTags,
 } from '@nestjs/swagger'
 import { CreateNewUserDto } from './dto/create-new-user.dto'
-import { CreatedUserSwagger } from './swagger/created.user.swagger'
-import { BabRequestUserSwagger } from './swagger/bad-request.user.swagger'
-import { ConflictUserSwagger } from './swagger/conflict.user.swagger'
+import { CreatedUserSwagger } from '../../swagger/created.user.swagger'
+import { BabRequestUserSwagger } from '../../swagger/bad-request.user.swagger'
+import { ConflictUserSwagger } from '../../swagger/conflict.user.swagger'
 import { UserService } from './user.service'
-import { Client, code  } from '../../exception/http-exception.filter'
 
 @ApiBearerAuth()
 @ApiTags('Usuario')

@@ -12,6 +12,7 @@ export class RetornPerfilUser  {
     this.lastName = values?.lastName;
     this.email = values?.email;
     this.timestamp = values?.timestamp;
+    this.providers = values?.providers;
   }
 }
 

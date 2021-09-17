@@ -1,20 +1,29 @@
 import { Injectable } from '@nestjs/common'
 import { InjectRepository} from '@nestjs/typeorm'
-import { UserRepository } from './user.repository'
-import { hash, compare } from 'bcryptjs';
 
+import { CryptUtilityService } from '../../utility/crypt/crypt.utility.service'
+import { UserRepository } from './user.repository'
+import { Client, code  } from '../../exception/index.exception'
+import { UserValidator } from './user.validator'
 import { RetornPerfilUser } from './map/retorn-perfil-user.map'
 import { checkIfUserExistsByEmailMap  } from './map/check-If-user-exists-by-email.map'
 
 @Injectable()
 export class UserService {
 
-  constructor(@InjectRepository(UserRepository) private readonly repository: UserRepository) {}
+  constructor(
+    @InjectRepository(UserRepository) 
+    private readonly repository: UserRepository, 
+    private validator:UserValidator,
+    private crypt:CryptUtilityService
+  ) {}
 
   public async save(values) {
-    values.senha = await hash(values.senha, 10);
+    await this.validator.emailAlreadyExist(values.email)
+    values.password = await this.crypt.hash(values.password);
     const res = await this.repository.save(values)
-    return new RetornPerfilUser(res)
+    const perfilUser = new RetornPerfilUser(res)
+    return new Client().OK([perfilUser])
   }
 
   public async signIn(user) {
@@ -26,7 +35,7 @@ export class UserService {
       };
     }
 
-    const result = await compare(user.password, userData.password)
+    const result = await this.crypt.compare(user.password, userData.password)
     if (!result) {
       return {
         message: 'Password is incorrect',
@@ -49,7 +58,14 @@ export class UserService {
 
   public async findAll() {
     const res = await this.repository.find();
-    return res.map((r)=> new RetornPerfilUser(r))
+    if(Object.keys(res).length == 0){
+      throw new Client().NotFoundException({
+        code: "not_found_user",
+        message: "Não foi encontrado usuarios na base de dados"
+      })
+    }
+    const perfilUser = res.map((r)=> new RetornPerfilUser(r))
+    return new Client().OK(perfilUser)
   }
 
   public async update(id, values) {
