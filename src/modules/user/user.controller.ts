@@ -6,9 +6,9 @@ import {
   ApiTags,
 } from '@nestjs/swagger'
 import { CreateNewUserDto } from './dto/create-new-user.dto'
-import { CreatedUserSwagger } from '../../swagger/created.user.swagger'
-import { BabRequestUserSwagger } from '../../swagger/bad-request.user.swagger'
-import { ConflictUserSwagger } from '../../swagger/conflict.user.swagger'
+import { UserCreatedSwagger } from '../../swagger/user.created.swagger'
+import { UserBabRequestSwagger } from '../../swagger/user.bad-request.swagger'
+import { UserConflictSwagger } from '../../swagger/user.conflict.swagger'
 import { UserService } from './user.service'
 
 @ApiBearerAuth()
@@ -23,17 +23,17 @@ export class UsuariosController {
   @ApiResponse({
     status: 201,
     description: 'Usuario cadastrado com sucesso',
-    type: CreatedUserSwagger
+    type: UserCreatedSwagger
   })
   @ApiResponse({
     status: 400, 
     description: 'Parametros ou propriedades, informados errados ou inexistentes',
-    type :BabRequestUserSwagger
+    type :UserBabRequestSwagger
   })
   @ApiResponse({
     status: 409, 
     description: 'Duplicidade de valor unico no banco de dados',
-    type :ConflictUserSwagger
+    type :UserConflictSwagger
   })
   public async save(@Body() create: CreateNewUserDto) {
     return await this.service.save(create);

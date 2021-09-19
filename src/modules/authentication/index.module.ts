@@ -4,7 +4,7 @@ import { PageEntity } from '../../entity/page.entity'
 import { IndexController } from './index.controller'
 import { IndexService } from './index.service'
 import { IndexRepository } from './index.repository'
-import { JwtUtilityModule } from '../../utility/jwt/jwt.utility.module'
+import { JwtUtilityModule } from '../../shared/jwt/jwt.utility.module'
 
 @Module({
   imports: [JwtUtilityModule, TypeOrmModule.forFeature([PageEntity, IndexRepository])],

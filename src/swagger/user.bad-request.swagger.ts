@@ -1,11 +1,11 @@
 import { Contains, MinLength, MaxLength, ValidationOptions, IsDate, IsNumber, IsString, Length, IsNotEmpty, IsEmail, IsInt, Min,  Max, IsBoolean  } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger'
 
-export class  ConflictUserSwagger {
+export class  UserBabRequestSwagger {
 
     @ApiProperty({ 
-        example: "409", 
-        description: 'Indica que a solicitação atual conflitou com o recurso que está no servidor', 
+        example: "400", 
+        description: 'indica que o servidor não pode ou não irá processar a requisição devido a alguma coisa que foi entendida como um erro do cliente (por exemplo, sintaxe de requisição mal formada, enquadramento de mensagem de requisição inválida ou requisição de roteamento enganosa).', 
     })
     public statusCode:number
  
@@ -14,7 +14,7 @@ export class  ConflictUserSwagger {
         example: { 
             results:[], 
             size:0
-        }, 
+        }
     })
     public ok:object = {
       results:[],
@@ -43,11 +43,11 @@ export class  ConflictUserSwagger {
     @ApiProperty({ 
         example: { 
             timestamp: new Date(),
-            message: "Email já existe",
-            code: 'email_already_exists',
-            description: null,
-            path: "/user",
-            method: "POST"
+            code: "property_name_minLength_pipe",
+            message: "name must be longer than or equal to 3 characters",
+            method: "/user",
+            path: "POST",
+            description: null
         }
     })
     public error = {

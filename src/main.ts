@@ -3,7 +3,7 @@ import { ValidationPipe, BadRequestException, ValidationError } from '@nestjs/co
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { NestExpressApplication } from '@nestjs/platform-express';
 
-import { Client, code  } from './exception/index.exception'
+import {  Exception } from './exception/'
 import { join } from 'path';
 import { AppModule } from './app.module';
 
@@ -49,7 +49,7 @@ async function bootstrap() {
         var constraints = err[0].constraints
         var key = Object.keys(constraints)[0]
         var values = Object.values(constraints)[0]
-        throw new Client().BadRequestException({
+        throw new Exception().BadRequestException({
           code:"property_"+property+"_"+key+"_pipe",
           message: values,
         })
@@ -57,7 +57,7 @@ async function bootstrap() {
     })
   );
 
-  await app.listen(3000, '192.168.18.11');
+  await app.listen(process.env.PORT || 3000, '192.168.18.11');
 
   console.log(`                                                    `);
   console.log(`                                                    `);

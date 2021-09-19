@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common'
 import { InjectRepository} from '@nestjs/typeorm'
 
-import { CryptUtilityService } from '../../utility/crypt/crypt.utility.service'
+import { CryptUtilityService } from '../../shared/crypt/crypt.utility.service'
 import { UserRepository } from './user.repository'
-import { Client, code  } from '../../exception/index.exception'
+import { Ok, Info, Exception  } from '../../exception/index'
 import { UserValidator } from './user.validator'
 import { RetornPerfilUser } from './map/retorn-perfil-user.map'
 import { checkIfUserExistsByEmailMap  } from './map/check-If-user-exists-by-email.map'
@@ -23,7 +23,7 @@ export class UserService {
     values.password = await this.crypt.hash(values.password);
     const res = await this.repository.save(values)
     const perfilUser = new RetornPerfilUser(res)
-    return new Client().OK([perfilUser])
+    return new Ok([perfilUser])
   }
 
   public async signIn(user) {
@@ -59,13 +59,13 @@ export class UserService {
   public async findAll() {
     const res = await this.repository.find();
     if(Object.keys(res).length == 0){
-      throw new Client().NotFoundException({
+      throw new Exception().NotFoundException({
         code: "not_found_user",
         message: "Não foi encontrado usuarios na base de dados"
       })
     }
     const perfilUser = res.map((r)=> new RetornPerfilUser(r))
-    return new Client().OK(perfilUser)
+    return new Ok(perfilUser)
   }
 
   public async update(id, values) {

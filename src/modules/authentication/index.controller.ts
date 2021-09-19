@@ -1,6 +1,6 @@
 import { Controller, Res, Render, Redirect, Headers, HttpStatus, Param, HttpCode, Header, Get, Query, Post, Body, Put, Delete } from '@nestjs/common'
 
-import { JwtUtilityService } from '../../utility/jwt/jwt.utility.service'
+import { JwtUtilityService } from '../../shared/jwt/jwt.utility.service'
 import { IndexService } from './index.service'
 
 import { CreateDto } from './dto/create.dto'

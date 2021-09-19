@@ -1,11 +1,11 @@
 import { Contains, MinLength, MaxLength, ValidationOptions, IsDate, IsNumber, IsString, Length, IsNotEmpty, IsEmail, IsInt, Min,  Max, IsBoolean  } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger'
 
-export class  okUserSwagger {
+export class  UserConflictSwagger {
 
     @ApiProperty({ 
-        example: "201", 
-        description: 'Indica que a requisição foi bem sucedida', 
+        example: "409", 
+        description: 'Indica que a solicitação atual conflitou com o recurso que está no servidor', 
     })
     public statusCode:number
  
@@ -14,13 +14,11 @@ export class  okUserSwagger {
         example: { 
             results:[], 
             size:0
-        }
+        }, 
     })
     public ok:object = {
-      results:[{
-          "":""
-      }],
-      size:1
+      results:[],
+      size:0
     }
   
     @ApiProperty({ 
@@ -44,12 +42,12 @@ export class  okUserSwagger {
   
     @ApiProperty({ 
         example: { 
-            timestamp: null,
-            message: null,
-            code: null,
+            timestamp: new Date(),
+            message: "Email já existe",
+            code: 'email_already_exists',
             description: null,
-            path: null,
-            method: null
+            path: "/user",
+            method: "POST"
         }
     })
     public error = {

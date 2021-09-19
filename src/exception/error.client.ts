@@ -9,34 +9,10 @@ import {
   InternalServerErrorException,
 } from '@nestjs/common'
 
-import { Return } from './return.exception'
-import { Infor, Error } from './return.interface'
+import { Responses } from './response.class'
+import { Error } from './response.interface'
 
-export class Client extends Return {
-
-  public OK(data:any[]){
-    this.ok.results = data
-    this.ok.size = data.length
-    return {
-      statusCode:HttpStatus.OK,
-      ok:this.ok,
-      info:this.info,
-      error:this.error,
-    }
-  }
-
-  public Info(info:Infor){
-    info.timestamp = new Date()
-    info.method = info.method ? info.method : null
-    info.path = info.path ? info.path : null
-    info.description = info.description ? info.description : null
-     throw new HttpException({
-      statusCode:HttpStatus.CREATED,
-      ok:this.ok,
-      info:info,
-      error:this.error,
-    },HttpStatus.CREATED)
-  }
+export class Exception extends Responses {
   
   public Exception(error:Error, status){
     error.timestamp = new Date()
