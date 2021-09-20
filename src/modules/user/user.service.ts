@@ -5,8 +5,8 @@ import { CryptUtilityService } from '../../shared/crypt/crypt.utility.service'
 import { UserRepository } from './user.repository'
 import { Ok, Info, Exception  } from '../../exception/index'
 import { UserValidator } from './user.validator'
-import { RetornPerfilUser } from './map/retorn-perfil-user.map'
-import { checkIfUserExistsByEmailMap  } from './map/check-If-user-exists-by-email.map'
+import { PerfilUserReturn } from './return/perfil-user.return'
+import { checkIfUserExistsByEmailReturn  } from './return/check-If-user-exists-by-email.return'
 
 @Injectable()
 export class UserService {
@@ -22,38 +22,13 @@ export class UserService {
     await this.validator.emailAlreadyExist(values.email)
     values.password = await this.crypt.hash(values.password);
     const res = await this.repository.save(values)
-    const perfilUser = new RetornPerfilUser(res)
+    const perfilUser = new PerfilUserReturn(res)
     return new Ok([perfilUser])
-  }
-
-  public async signIn(user) {
-    const userData = await this.repository.findOne({ where:{ email: user.email }})
-    if (!userData) {
-      return {
-        message: 'email is incorrect',
-        status: 404,
-      };
-    }
-
-    const result = await this.crypt.compare(user.password, userData.password)
-    if (!result) {
-      return {
-        message: 'Password is incorrect',
-        status: 404,
-      };
-    }
-
-    return "logado"
   }
 
   public async findOne(id) {
     const res = await this.repository.findOne({ where:{ id: id }})
-    return new RetornPerfilUser(res)
-  }
-
-  public async checkIfUserExistsByEmail(email) {
-    const res = await this.repository.findOne({ where:{ email: email }})
-    return new checkIfUserExistsByEmailMap(res)
+    return new PerfilUserReturn(res)
   }
 
   public async findAll() {
@@ -64,14 +39,19 @@ export class UserService {
         message: "Não foi encontrado usuarios na base de dados"
       })
     }
-    const perfilUser = res.map((r)=> new RetornPerfilUser(r))
+    const perfilUser = res.map((r)=> new PerfilUserReturn(r))
     return new Ok(perfilUser)
+  }
+
+  public async checkIfUserExistsByEmail(email) {
+    const res = await this.repository.findOne({ where:{ email: email }})
+    return new checkIfUserExistsByEmailReturn(res)
   }
 
   public async update(id, values) {
     await this.repository.update(id, values);
     const res = await this.repository.findOne(id)
-    return new RetornPerfilUser(res)
+    return new PerfilUserReturn(res)
   }
 
   public async delete(id) {

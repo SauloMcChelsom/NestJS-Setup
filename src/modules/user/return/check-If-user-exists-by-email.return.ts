@@ -1,4 +1,4 @@
-export class checkIfUserExistsByEmailMap  {
+export class checkIfUserExistsByEmailReturn  {
   private email: string;
   private providers: string;
   constructor(values:any){

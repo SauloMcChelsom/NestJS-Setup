@@ -3,8 +3,8 @@ import { InjectRepository} from '@nestjs/typeorm'
 import { UserRepository } from './user.repository'
 import { hash, compare } from 'bcryptjs';
 
-import { RetornPerfilUser } from './map/retorn-perfil-user.map'
-import { checkIfUserExistsByEmailMap  } from './map/check-If-user-exists-by-email.map'
+import { PerfilUserReturn } from './return/perfil-user.return'
+import { checkIfUserExistsByEmailReturn  } from './return/check-If-user-exists-by-email.return'
 
 import { Exception } from '../../exception/'
 

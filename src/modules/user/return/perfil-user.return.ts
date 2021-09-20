@@ -1,4 +1,4 @@
-export class RetornPerfilUser  {
+export class PerfilUserReturn  {
   private uid: string;
   private name: string;
   private lastName: string;

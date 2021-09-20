@@ -1,11 +1,11 @@
-import { Controller, UseFilters, Res, Redirect, HttpStatus, Param, HttpCode, Header, Get, Query, Post, Body, Put, Delete } from '@nestjs/common';
+import { Controller, Param, Get, Post, Body, Put, Delete } from '@nestjs/common';
 import {
   ApiBearerAuth,
   ApiOperation,
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger'
-import { CreateNewUserDto } from './dto/create-new-user.dto'
+import { CreateNewUserDto } from './dto'
 import { 
   UserGetNotFoundSwagger,
   UserGetOkSwagger,
@@ -186,5 +186,8 @@ export class UsuariosController {
 
 
   verifique* deixar o mesmo mensagem no Swagger com message no dto exemplo
+  entrar nas classs de swagger e verificar se as mensagem e nome estão correto
+  o certo seria ja usar o enum, apos isso verificar se os endpis estão funcionado e
+  fazendo o que e pra ser feito
 
 */
