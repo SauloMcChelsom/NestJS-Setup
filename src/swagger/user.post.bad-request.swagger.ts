@@ -1,13 +1,12 @@
-import { Contains, MinLength, MaxLength, ValidationOptions, IsDate, IsNumber, IsString, Length, IsNotEmpty, IsEmail, IsInt, Min,  Max, IsBoolean  } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger'
 
-export class  UserBabRequestSwagger {
+export class  UserPostBabRequestSwagger {
 
     @ApiProperty({ 
         example: "400", 
         description: 'indica que o servidor não pode ou não irá processar a requisição devido a alguma coisa que foi entendida como um erro do cliente (por exemplo, sintaxe de requisição mal formada, enquadramento de mensagem de requisição inválida ou requisição de roteamento enganosa).', 
     })
-    public statusCode:number
+    public statusCode;
  
     
     @ApiProperty({ 
@@ -16,10 +15,7 @@ export class  UserBabRequestSwagger {
             size:0
         }
     })
-    public ok:object = {
-      results:[],
-      size:0
-    }
+    public ok;
   
     @ApiProperty({ 
         example: { 
@@ -31,14 +27,7 @@ export class  UserBabRequestSwagger {
             method: null
         }
     })
-    public info = {
-      timestamp: null,
-      message: null,
-      code: null,
-      description: null,
-      path: null,
-      method: null
-    }
+    public info;
   
     @ApiProperty({ 
         example: { 
@@ -50,14 +39,7 @@ export class  UserBabRequestSwagger {
             description: null
         }
     })
-    public error = {
-      timestamp: null,
-      message: null,
-      code: null,
-      description: null,
-      path: null,
-      method: null
-    }
+    public error;
 
 }
 

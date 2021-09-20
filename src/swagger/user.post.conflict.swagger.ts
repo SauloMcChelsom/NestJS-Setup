@@ -1,13 +1,12 @@
-import { Contains, MinLength, MaxLength, ValidationOptions, IsDate, IsNumber, IsString, Length, IsNotEmpty, IsEmail, IsInt, Min,  Max, IsBoolean  } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger'
 
-export class  UserConflictSwagger {
+export class  UserPostConflictSwagger {
 
     @ApiProperty({ 
         example: "409", 
         description: 'Indica que a solicitação atual conflitou com o recurso que está no servidor', 
     })
-    public statusCode:number
+    public statusCode;
  
     
     @ApiProperty({ 
@@ -16,10 +15,7 @@ export class  UserConflictSwagger {
             size:0
         }, 
     })
-    public ok:object = {
-      results:[],
-      size:0
-    }
+    public ok;
   
     @ApiProperty({ 
         example: { 
@@ -31,14 +27,7 @@ export class  UserConflictSwagger {
             method: null
         }
     })
-    public info = {
-      timestamp: null,
-      message: null,
-      code: null,
-      description: null,
-      path: null,
-      method: null
-    }
+    public info;
   
     @ApiProperty({ 
         example: { 
@@ -50,14 +39,7 @@ export class  UserConflictSwagger {
             method: "POST"
         }
     })
-    public error = {
-      timestamp: null,
-      message: null,
-      code: null,
-      description: null,
-      path: null,
-      method: null
-    }
+    public error;
 
 }
 
