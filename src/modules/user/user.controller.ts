@@ -190,4 +190,9 @@ export class UsuariosController {
   o certo seria ja usar o enum, apos isso verificar se os endpis estão funcionado e
   fazendo o que e pra ser feito
 
+
+
+  *** pensar, se for enviado um metodo POST, posso retornar dentro do ok
+  ou o ok deve ser usando somente por metodo GET
+
 */
