@@ -14,7 +14,7 @@ import {
   UserPostCreatedSwagger,
   UserDeletedInfoSwagger,
   UserDeletedIdInfoSwagger,
-  UserGetCheckIfUserExistsOkSwagger,
+  UserGetCheckIfUserExistsEmailSwagger,
   UserGetIdOkSwagger,
   UserPutInfoSwagger
 } from '../../swagger/'
@@ -86,7 +86,7 @@ export class UsuariosController {
   @ApiResponse({
     status: 200,
     description: 'Busca realizada com sucesso',
-    type: UserGetCheckIfUserExistsOkSwagger
+    type: UserGetCheckIfUserExistsEmailSwagger
   })
   @ApiResponse({
     status: 404,
@@ -194,5 +194,19 @@ export class UsuariosController {
 
   *** pensar, se for enviado um metodo POST, posso retornar dentro do ok
   ou o ok deve ser usando somente por metodo GET
+
+  user.GET.@id.swagger.ts
+  user.DEL.@id.swagger.ts
+  user.POST.swagger.ts
+  user.GET.__check-if-user-exists__@email.swagger.ts
+  user.200.swagger.ts
+  user.404.swagger.ts
+  user.409.swagger.ts
+
+
+
+  coseguimos fazer schema funciona agora é fazer para todos o poblema e que vai duplicacae
+  muito tenta fazer algo generico, ou tentar colocar no dto
+
 
 */

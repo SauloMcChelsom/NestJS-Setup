@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger'
-
+import { Error } from './user.get.ok.swagger'
 export class  UserGetNotFoundSwagger {
 
     @ApiProperty({ 
@@ -29,17 +29,11 @@ export class  UserGetNotFoundSwagger {
     })
     public info;
   
-    @ApiProperty({ 
-        example: { 
-            timestamp: new Date(),
-            message: "Usuario não encontrado",
-            code: 'user_not_found',
-            description: null,
-            path: "/user",
-            method: "POST"
-        }
+    @ApiProperty({
+        required: true,
+        type: Error,
     })
-    public error;
+    public error:Error;
 
 }
 

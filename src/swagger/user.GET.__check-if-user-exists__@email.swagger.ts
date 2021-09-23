@@ -1,7 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger'
 
-export class  UserGetOkSwagger{
-
+export  class UserGetCheckIfUserExistsEmailSwagger {
     @ApiProperty({ 
         example: "200", 
         description: 'Indica que a requisição foi bem sucedida', 
@@ -54,46 +53,4 @@ export class  UserGetOkSwagger{
         }
     })
     public error;
-
 }
-
-export class Error {
-
-    @ApiProperty({
-        example: new Date(),
-        required: true,
-        type: Date,
-    })
-    timestamp: Date;
-
-    @ApiProperty({
-        example: 'Usuario não encontrado',
-        required: true,
-        type: String,
-    })
-    message: String;
-
-    @ApiProperty({
-        required: true,
-        type: String,
-    })
-    code: 'user_not_found';
-
-    @ApiProperty({
-        required: true,
-        type: String,
-    })
-    description: null;
-
-    @ApiProperty({
-        required: true,
-        type: String,
-    })
-    path: "/user";
-
-    @ApiProperty({
-        required: true,
-        type: String,
-    })
-    method: "POST"
-  }
