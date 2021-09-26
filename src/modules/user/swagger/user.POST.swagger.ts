@@ -16,7 +16,13 @@ export class UserPostSwagger extends Body {
                 "providers": "google"
               }
             ],
-            "size": 2
+            "size": 1,
+            "timestamp": "2021-09-26T17:19:49.275Z",
+            "message": "Usuario Registrado com sucesso",
+            "code": "USER_REGISTERED",
+            "description": "",
+            "path": "",
+            "method": ""
         }
     })
     ok:any

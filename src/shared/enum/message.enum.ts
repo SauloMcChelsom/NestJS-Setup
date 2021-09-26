@@ -6,6 +6,7 @@ export enum message {
     PASSWORD_UPDATED = 'Senha atualizada com sucesso',
     ERROR_GENERIC = "Houve um erro inesperável",
     NOT_FOUND_USER = "Usuario não encontrado",
-    UID_ALREADY_IN_USE = "Este uid está sendo usado por outra pessoa"
+    UID_ALREADY_IN_USE = "Este uid está sendo usado por outra pessoa",
+    PROVIDERS_USER_IS_INVALID = "O provedor é invalido"
 }
   	

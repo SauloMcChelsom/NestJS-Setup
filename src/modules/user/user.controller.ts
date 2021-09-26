@@ -9,12 +9,13 @@ import {
 import { 
   UserPostSwagger,
   User409EmailSwagger,
-  User409UidSwagger
+  User409UidSwagger,
+  User400ProvidersSwagger
 } from './swagger/' 
 
 import { CreateNewUserDto } from './dto'
 import { UserService } from './user.service'
-
+import { message } from '@shared/enum'
 
 @ApiTags('user')
 @Controller('user')
@@ -24,19 +25,24 @@ export class UsuariosController {
   @Post()
   @ApiOperation({ summary: 'Cadastrar um novo usuario' })
   @ApiResponse({
-    status: 200,
-    description: 'Cadastro realizado com sucesso',
+    status: 201,
+    description: message.USER_REGISTERED,
     type: UserPostSwagger
   })
   @ApiResponse({
     status: 409,
-    description: 'Email está sendo usado por outra pessoa',
+    description: message.EMAIL_ALREADY_IN_USE,
     type: User409EmailSwagger
   })
   @ApiResponse({
-    status: 409,
-    description: 'Este uid está sendo usado por outra pessoa',
+    status: 408,
+    description: message.UID_ALREADY_IN_USE,
     type: User409UidSwagger
+  })
+  @ApiResponse({
+    status: 400,
+    description: message.PROVIDERS_USER_IS_INVALID,
+    type: User400ProvidersSwagger
   })
   public async save(@Body() create: CreateNewUserDto) {
     return await this.service.save(create);

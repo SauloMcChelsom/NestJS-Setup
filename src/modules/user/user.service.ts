@@ -8,7 +8,7 @@ import { UserValidator } from './user.validator'
 import { PerfilUserReturn } from './return/perfil-user.return'
 import { checkIfUserExistsByEmailReturn  } from './return/check-If-user-exists-by-email.return'
 import { code, message } from '../../shared/enum'
-
+import { CreateNewUserDto } from './dto'
 @Injectable()
 export class UserService {
 
@@ -19,11 +19,12 @@ export class UserService {
     private crypt:CryptUtilityService
   ) {}
 
-  public async save(values:any) {
-    await this.validator.emailAlreadyExist(values.email)
-    await this.validator.uidAlreadyExist(values.uid)
-    values.password = await this.crypt.hash(values.password);
-    const res = await this.repository.save(values)
+  public async save(user:CreateNewUserDto) {
+    await this.validator.emailAlreadyExist(user.email)
+    await this.validator.uidAlreadyExist(user.uid)
+    await this.validator.providersIsValid(user.providers)
+    user.password = await this.crypt.hash(user.password);
+    const res = await this.repository.save(user)
     const perfilUser = new PerfilUserReturn(res)
     return new OK(
       [perfilUser],
