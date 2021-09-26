@@ -20,7 +20,7 @@ export class UserGetUidSwagger extends Body {
             "message": "",
             "code": "",
             "description": "",
-            "path": "/user/5rkITHMFraPUdy2LZLbunRuZSNu1",
+            "path": "/user/get-user-by-uid/5rkITHMFraPUdy2LZLbunRuZSNu1",
             "method": "GET"
         },
     })

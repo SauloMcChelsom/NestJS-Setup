@@ -67,8 +67,8 @@ export class UsuariosController {
     return this.service.findAll();
   }
 
-  @Get(':uid')
-  @ApiOperation({ summary: 'Buscar usuarios por uid' })
+  @Get('/get-user-by-uid/:uid')
+  @ApiOperation({ summary: 'Buscar usuario por uid' })
   @ApiResponse({
     status: 200,
     description: 'Busca realizada com sucesso',
@@ -79,13 +79,13 @@ export class UsuariosController {
     description: message.NOT_FOUND_USER,
     type: User404UserSwagger
   })
-  public async findOne(@Param('uid') uid: string) {
-    return await this.service.findOne(uid);
+  public async getUserByUid(@Param('uid') uid: string) {
+    return await this.service.getUserByUid(uid);
   }
 
-  @Get('/check-if-user-exists/:email')
-  /*@ApiOperation({ summary: 'Verificar se o usuario existe por email' })
-  @ApiResponse({
+  @Get('/get-user-by-email/:email')
+  @ApiOperation({ summary: 'Buscar usuario por email' })
+  /*@ApiResponse({
     status: 200,
     description: 'Busca realizada com sucesso',
     type: UserGetCheckIfUserExistsEmailSwagger
@@ -95,8 +95,8 @@ export class UsuariosController {
     description: 'Usuario não encontrado',
     type: UserGetNotFoundSwagger
   })*/
-  public async checkIfUserExistsByEmail(@Param('email') email: string) {
-    return await this.service.checkIfUserExistsByEmail(email);
+  public async getUserByEmail(@Param('email') email: string) {
+    return await this.service.getUserByEmail(email);
   }
 
   @Put(':id')
