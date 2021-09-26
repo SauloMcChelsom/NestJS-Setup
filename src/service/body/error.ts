@@ -7,28 +7,28 @@ export class Error {
         required: false,
         type: Date,
     })
-    timestamp?: Date
+    timestamp?: Date = new Date()
 
     @ApiProperty({
         example: null,
         required: false,
         type: String,
     })
-    message:String = ''
+    message:string = ''
 
     @ApiProperty({
         example:null,
         required: false,
         type: String,
     })
-    code:String = ''
+    code:string = ''
 
     @ApiProperty({
         example:null,
         required: false,
         type: String,
     })
-    description?:String = ''
+    description?:string = ''
 
     @ApiProperty({
         example:null,
@@ -42,6 +42,6 @@ export class Error {
         required: false,
         type: String,
     })
-    method?:String = ''
+    method?:string = ''
   
 }

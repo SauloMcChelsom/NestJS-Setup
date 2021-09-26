@@ -6,8 +6,8 @@ export class  Body {
     @ApiProperty({example: 401, type: Number, required: false})
     public statusCode: number
  
-    @ApiProperty({type: Ok, required: false})
-    public ok = {
+    @ApiProperty({type: () => Ok, required: false})
+    public ok:Ok = {
         results:<any>[],
         size:0,
         timestamp: new Date(),
@@ -18,8 +18,8 @@ export class  Body {
         method: ''
     }
   
-    @ApiProperty({type: Error, required: false})
-    public error = {
+    @ApiProperty({type: () => Error, required: false})
+    public error:Error = {
         timestamp: new Date(),
         message: '',
         code: '',

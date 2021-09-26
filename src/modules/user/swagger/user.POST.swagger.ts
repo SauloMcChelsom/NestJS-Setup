@@ -9,9 +9,9 @@ export class UserPostSwagger extends Body {
         example:  {
             "results": [
               {
-                "uid": "h2g32hgfh6h56dfg5gf",
-                "name": "saulo",
-                "email": "saulo@mail.com",
+                "uid": "5rkITHMFraPUdy2LZLbunRuZSNu1",
+                "name": "ana",
+                "email": "ana@gmail.com",
                 "timestamp": "2021-09-17T09:29:06.940Z",
                 "providers": "google"
               }

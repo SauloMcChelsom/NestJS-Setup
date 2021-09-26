@@ -7,42 +7,42 @@ export class Ok {
         required: false,
         type: Array,
     })
-    results:any
+    results:any[] = []
 
     @ApiProperty({
         example:0,
         required: false,
         type: Number,
     })
-    size:any
+    size:number = 0
 
     @ApiProperty({
         example: new Date(),
         required: false,
         type: Date,
     })
-    timestamp?: Date
+    timestamp?: Date = new Date()
 
     @ApiProperty({
         example: null,
         required: false,
         type: String,
     })
-    message:String = ''
+    message:string = ''
 
     @ApiProperty({
         example:null,
         required: false,
         type: String,
     })
-    code:String = ''
+    code:string = ''
 
     @ApiProperty({
         example:null,
         required: false,
         type: String,
     })
-    description?:String = ''
+    description?:string = ''
 
     @ApiProperty({
         example:null,
@@ -56,5 +56,5 @@ export class Ok {
         required: false,
         type: String,
     })
-    method?:String = ''
+    method?:string = ''
 }
