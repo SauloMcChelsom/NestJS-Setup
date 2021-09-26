@@ -10,7 +10,10 @@ import {
   UserPostSwagger,
   User409EmailSwagger,
   User409UidSwagger,
-  User400ProvidersSwagger
+  User400ProvidersSwagger,
+  UserGetSwagger,
+  User404UserSwagger,
+  UserGetUidSwagger
 } from './swagger/' 
 
 import { CreateNewUserDto } from './dto'
@@ -49,35 +52,35 @@ export class UsuariosController {
   }
 
   @Get()
-  /*@ApiOperation({ summary: 'Buscar todos os usuarios' })
+  @ApiOperation({ summary: 'Buscar todos os usuarios' })
   @ApiResponse({
     status: 200,
     description: 'Busca realizada com sucesso',
-    type: UserGetOkSwagger
-  })*/
+    type: UserGetSwagger
+  })
+  @ApiResponse({
+    status: 404,
+    description: message.NOT_FOUND_USER,
+    type: User404UserSwagger
+  })
   public async findAll() {
     return this.service.findAll();
   }
 
-  @Get(':id')
-  /*@ApiOperation({ summary: 'Buscar usuarios por id' })
+  @Get(':uid')
+  @ApiOperation({ summary: 'Buscar usuarios por uid' })
   @ApiResponse({
     status: 200,
     description: 'Busca realizada com sucesso',
-    type: UserGetIdOkSwagger
+    type: UserGetUidSwagger
   })
   @ApiResponse({
     status: 404,
-    description: 'Usuario não encontrado',
-    type: UserGetNotFoundSwagger
+    description: message.NOT_FOUND_USER,
+    type: User404UserSwagger
   })
-  @ApiResponse({
-    status: 409,
-    description: 'Usuario não encontrado',
-    type: UserGetNotFoundSwagger
-  })*/
-  public async findOne(@Param('id') id: string) {
-    return await this.service.findOne(id);
+  public async findOne(@Param('uid') uid: string) {
+    return await this.service.findOne(uid);
   }
 
   @Get('/check-if-user-exists/:email')

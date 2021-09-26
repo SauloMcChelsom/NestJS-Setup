@@ -33,11 +33,6 @@ export class UserService {
     )
   }
 
-  public async findOne(id:any) {
-    const res = await this.repository.findOne({ where:{ id: id }})
-    return new PerfilUserReturn(res)
-  }
-
   public async findAll() {
     const res = await this.repository.find();
     if(Object.keys(res).length == 0){
@@ -47,8 +42,13 @@ export class UserService {
       })
     }
     const perfilUser = res.map((r)=> new PerfilUserReturn(r))
-    console.log(perfilUser)
     return new OK(perfilUser)
+  }
+
+  public async findOne(uid:string) {
+    const res = await this.validator.getUserByUid(uid)
+    const perfilUser = new PerfilUserReturn(res)
+    return new OK([perfilUser])
   }
 
   public async checkIfUserExistsByEmail(email:any) {

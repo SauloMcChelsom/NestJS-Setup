@@ -5,7 +5,8 @@ import { code, message } from '../../shared/enum'
 import { 
   ConflictExceptions, 
   InternalServerErrorExceptions,
-  BadRequestExceptions
+  BadRequestExceptions,
+  NotFoundExceptions
 } from '../../service/exception'
 
 @Injectable()
@@ -49,7 +50,8 @@ export class UserValidator {
       }
       throw new InternalServerErrorExceptions({
         code:code.ERROR_GENERIC,
-        message:message.ERROR_GENERIC
+        message:message.ERROR_GENERIC,
+        description: "algo aconteceu em verificar se o uid ja existe"
       })
     }
   }
@@ -75,4 +77,27 @@ export class UserValidator {
       })
     }
   }
+
+  public async getUserByUid(uid:string) {
+    try{
+      const res = await this.repository.findOne({ where:{ uid: uid }})
+      if(res){
+        return res
+      }
+      throw true
+    }catch(error){
+      if(error == true){
+        throw new NotFoundExceptions({
+          code:code.NOT_FOUND_USER,
+          message:message.NOT_FOUND_USER,
+        })
+      }
+      throw new InternalServerErrorExceptions({
+        code:code.ERROR_GENERIC,
+        message:message.ERROR_GENERIC,
+        description:"algo aconteceu em buscar usuario por uid"
+      })
+    }
+  }
 }
+
