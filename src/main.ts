@@ -1,9 +1,9 @@
 import { NestFactory } from '@nestjs/core';
-import { ValidationPipe, BadRequestException, ValidationError } from '@nestjs/common'
+import { ValidationPipe, ValidationError } from '@nestjs/common'
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { NestExpressApplication } from '@nestjs/platform-express';
 
-import {  Exception } from './exception/'
+import { BadRequestExceptions } from './service/exception'
 import { join } from 'path';
 import { AppModule } from './app.module';
 
@@ -45,11 +45,23 @@ async function bootstrap() {
     new ValidationPipe({
       exceptionFactory: (validationErrors: ValidationError[] = []) => {
         var err = validationErrors
-        var property = err[0].property
+
+        var property = 'not_property'
+        var key = 'not_key'
+        var values = 'not values'
+        
         var constraints = err[0].constraints
-        var key = Object.keys(constraints)[0]
-        var values = Object.values(constraints)[0]
-        throw new Exception().BadRequestException({
+
+        if(property){
+          property = err[0].property
+        }
+
+        if(constraints){
+          key = Object.keys(constraints)[0]
+          values = Object.values(constraints)[0]
+        }
+        
+        throw new BadRequestExceptions({
           code:"property_"+property+"_"+key+"_pipe",
           message: values,
         })

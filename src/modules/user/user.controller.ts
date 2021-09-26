@@ -1,72 +1,60 @@
 import { Controller, Param, Get, Post, Body, Put, Delete } from '@nestjs/common';
+
 import {
-  ApiBearerAuth,
   ApiOperation,
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger'
-import { CreateNewUserDto } from './dto'
-import { 
-  UserGetNotFoundSwagger,
-  UserGetOkSwagger,
-  UserPostBabRequestSwagger,
-  UserPostConflictSwagger,
-  UserPostCreatedSwagger,
-  UserDeletedInfoSwagger,
-  UserDeletedIdInfoSwagger,
-  UserGetCheckIfUserExistsEmailSwagger,
-  UserGetIdOkSwagger,
-  UserPutInfoSwagger
-} from '../../swagger/'
 
+import { 
+  UserPostSwagger,
+  User409EmailSwagger,
+  User409UidSwagger
+} from './swagger/' 
+
+import { CreateNewUserDto } from './dto'
 import { UserService } from './user.service'
 
-@ApiBearerAuth()
-@ApiTags('Usuario')
+
+@ApiTags('user')
 @Controller('user')
 export class UsuariosController {
-  
   constructor(private readonly service: UserService) {}
  
   @Post()
   @ApiOperation({ summary: 'Cadastrar um novo usuario' })
   @ApiResponse({
-    status: 201,
-    description: 'Usuario cadastrado com sucesso',
-    type: UserPostCreatedSwagger
+    status: 200,
+    description: 'Cadastro realizado com sucesso',
+    type: UserPostSwagger
   })
   @ApiResponse({
-    status: 400, 
-    description: 'Parametros ou propriedades, informados errados ou inexistentes',
-    type :UserPostBabRequestSwagger
+    status: 409,
+    description: 'Email está sendo usado por outra pessoa',
+    type: User409EmailSwagger
   })
   @ApiResponse({
-    status: 409, 
-    description: 'Duplicidade de valor unico no banco de dados',
-    type :UserPostConflictSwagger
+    status: 409,
+    description: 'Este uid está sendo usado por outra pessoa',
+    type: User409UidSwagger
   })
   public async save(@Body() create: CreateNewUserDto) {
     return await this.service.save(create);
   }
 
   @Get()
-  @ApiOperation({ summary: 'Buscar todos os usuarios' })
+  /*@ApiOperation({ summary: 'Buscar todos os usuarios' })
   @ApiResponse({
     status: 200,
     description: 'Busca realizada com sucesso',
     type: UserGetOkSwagger
-  })
-  @ApiResponse({
-    status: 404,
-    description: 'Usuario não encontrado',
-    type: UserGetNotFoundSwagger
-  })
+  })*/
   public async findAll() {
     return this.service.findAll();
   }
 
   @Get(':id')
-  @ApiOperation({ summary: 'Buscar usuarios por id' })
+  /*@ApiOperation({ summary: 'Buscar usuarios por id' })
   @ApiResponse({
     status: 200,
     description: 'Busca realizada com sucesso',
@@ -77,12 +65,17 @@ export class UsuariosController {
     description: 'Usuario não encontrado',
     type: UserGetNotFoundSwagger
   })
+  @ApiResponse({
+    status: 409,
+    description: 'Usuario não encontrado',
+    type: UserGetNotFoundSwagger
+  })*/
   public async findOne(@Param('id') id: string) {
     return await this.service.findOne(id);
   }
 
   @Get('/check-if-user-exists/:email')
-  @ApiOperation({ summary: 'Verificar se o usuario existe por email' })
+  /*@ApiOperation({ summary: 'Verificar se o usuario existe por email' })
   @ApiResponse({
     status: 200,
     description: 'Busca realizada com sucesso',
@@ -92,13 +85,13 @@ export class UsuariosController {
     status: 404,
     description: 'Usuario não encontrado',
     type: UserGetNotFoundSwagger
-  })
+  })*/
   public async checkIfUserExistsByEmail(@Param('email') email: string) {
     return await this.service.checkIfUserExistsByEmail(email);
   }
 
   @Put(':id')
-  @ApiOperation({ summary: 'Atualizar usuario por id' })
+  /*@ApiOperation({ summary: 'Atualizar usuario por id' })
   @ApiResponse({
     status: 200,
     description: 'Usuario atualizado com sucesso',
@@ -108,13 +101,13 @@ export class UsuariosController {
     status: 404,
     description: 'Usuario não encontrado',
     type: UserGetNotFoundSwagger
-  })
-  public async update(@Param('id') id: string, @Body() updateDto) {
+  })*/
+  public async update(@Param('id') id: string, @Body() updateDto:any) {
     return await this.service.update(id, updateDto);
   }
 
   @Delete(':id')
-  @ApiOperation({ summary: 'Deletar usuarios por id' })
+  /*@ApiOperation({ summary: 'Deletar usuarios por id' })
   @ApiResponse({
     status: 202,
     description: 'Usuario deletado com sucesso',
@@ -124,18 +117,18 @@ export class UsuariosController {
     status: 404,
     description: 'Usuario não encontrado',
     type: UserGetNotFoundSwagger
-  })
+  })*/
   public async delete(@Param('id') id: string) {
     return await this.service.delete(id);
   }
 
   @Delete()
-  @ApiOperation({ summary: 'Deletar todos usuarios' })
+  /*@ApiOperation({ summary: 'Deletar todos usuarios' })
   @ApiResponse({
     status: 202,
     description: 'Todos os usuario foram deletados',
     type: UserDeletedInfoSwagger
-  })
+  })*/
   public async deleteTodosUsuarios() {
     return await this.service.deleteTodosUsuarios();
   }

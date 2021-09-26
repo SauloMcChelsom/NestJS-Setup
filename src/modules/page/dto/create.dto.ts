@@ -14,7 +14,7 @@ export class CreateDto  {
 
   @IsNotEmpty() 
   @IsNumber()
-  quantidade_de_seguidores
+  quantidade_de_seguidores: number
 
   @IsNotEmpty() 
   @IsNumber()

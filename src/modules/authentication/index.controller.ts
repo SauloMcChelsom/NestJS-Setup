@@ -1,6 +1,6 @@
 import { Controller, Res, Render, Redirect, Headers, HttpStatus, Param, HttpCode, Header, Get, Query, Post, Body, Put, Delete } from '@nestjs/common'
 
-import { JwtUtilityService } from '../../shared/jwt/jwt.utility.service'
+import { JwtUtilityService } from '../../shared/jwt/jwt.service'
 import { IndexService } from './index.service'
 
 import { CreateDto } from './dto/create.dto'
@@ -35,12 +35,12 @@ export class IndexController {
   }
 
   @Post('/createUser')
-  public async createUser(@Body() data) {
+  public async createUser(@Body() data:any) {
     return await this.service.createUser(data)
   }
 
   @Post('/createCustomToken')
-  public async createCustomToken(@Body() data) {
+  public async createCustomToken(@Body() data:any) {
     return await this.service.createCustomToken(data.uid)
   }
 

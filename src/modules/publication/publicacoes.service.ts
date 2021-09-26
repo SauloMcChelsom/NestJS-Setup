@@ -11,12 +11,12 @@ export class PublicacoesService {
 
   constructor(@InjectRepository(PublicacoesRepository) private readonly repository: PublicacoesRepository) {}
 
-  public async save(values) {
+  public async save(values:any) {
     const res = await this.repository.save(values)
     return new RetornoDto(res)
   }
 
-  public async findOne(id) {
+  public async findOne(id:any) {
     const res = await this.repository.findOne({ where:{ id: id }})
     return new RetornoDto(res)
   }
@@ -26,13 +26,13 @@ export class PublicacoesService {
     return res.map((r)=> new RetornoDto(r))
   }
 
-  public async update(id, values) {
+  public async update(id:any, values:any) {
     await this.repository.update(id, values);
     const res = await this.repository.findOne(id)
     return new RetornoDto(res)
   }
 
-  public async delete(id) {
+  public async delete(id:any) {
     await this.repository.delete(id);
     return {"mensagem":"deletado"}
   }
@@ -41,21 +41,24 @@ export class PublicacoesService {
     return await this.repository.feed();
   }
 
-  public async incrementCurtida(id) {
+  public async incrementCurtida(id:any) {
     let publicacao = await this.repository.findOne({ where:{ id: id }})
     
- 
-     publicacao.number_of_likes++ 
+    if(publicacao){
+      publicacao.number_of_likes++ 
+      await this.repository.update(publicacao.id, publicacao);
+    }
 
-    await this.repository.update(publicacao.id, publicacao);
   }
 
-  public async decrementCurtida(id) { 
+  public async decrementCurtida(id:any) { 
     let publicacao = await this.repository.findOne({ where:{ id: id }})
-    
-    publicacao.number_of_likes--
+    if(publicacao){
+      publicacao.number_of_likes--
 
-    await this.repository.update(publicacao.id, publicacao);
+      await this.repository.update(publicacao.id, publicacao);
+    }
+
   }
 }
 

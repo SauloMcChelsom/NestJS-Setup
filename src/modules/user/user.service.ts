@@ -1,12 +1,13 @@
 import { Injectable } from '@nestjs/common'
 import { InjectRepository} from '@nestjs/typeorm'
 
-import { CryptUtilityService } from '../../shared/crypt/crypt.utility.service'
+import { CryptUtilityService } from '../../shared/bcrypt/bcrypt.service'
 import { UserRepository } from './user.repository'
-import { Ok, Info, Exception  } from '../../exception/index'
+import { OK, NotFoundExceptions } from '../../service/exception'
 import { UserValidator } from './user.validator'
 import { PerfilUserReturn } from './return/perfil-user.return'
 import { checkIfUserExistsByEmailReturn  } from './return/check-If-user-exists-by-email.return'
+import { code, message } from '../../shared/enum'
 
 @Injectable()
 export class UserService {
@@ -18,15 +19,20 @@ export class UserService {
     private crypt:CryptUtilityService
   ) {}
 
-  public async save(values) {
+  public async save(values:any) {
     await this.validator.emailAlreadyExist(values.email)
+    await this.validator.uidAlreadyExist(values.uid)
     values.password = await this.crypt.hash(values.password);
     const res = await this.repository.save(values)
     const perfilUser = new PerfilUserReturn(res)
-    return new Ok([perfilUser])
+    return new OK(
+      [perfilUser],
+      code.USER_REGISTERED,
+      message.USER_REGISTERED
+    )
   }
 
-  public async findOne(id) {
+  public async findOne(id:any) {
     const res = await this.repository.findOne({ where:{ id: id }})
     return new PerfilUserReturn(res)
   }
@@ -34,27 +40,28 @@ export class UserService {
   public async findAll() {
     const res = await this.repository.find();
     if(Object.keys(res).length == 0){
-      throw new Exception().NotFoundException({
-        code: "not_found_user",
-        message: "Não foi encontrado usuarios na base de dados"
+      throw new NotFoundExceptions({
+        code:code.NOT_FOUND_USER,
+        message:message.NOT_FOUND_USER,
       })
     }
     const perfilUser = res.map((r)=> new PerfilUserReturn(r))
-    return new Ok(perfilUser)
+    console.log(perfilUser)
+    return new OK(perfilUser)
   }
 
-  public async checkIfUserExistsByEmail(email) {
+  public async checkIfUserExistsByEmail(email:any) {
     const res = await this.repository.findOne({ where:{ email: email }})
     return new checkIfUserExistsByEmailReturn(res)
   }
 
-  public async update(id, values) {
+  public async update(id:any, values:any) {
     await this.repository.update(id, values);
     const res = await this.repository.findOne(id)
     return new PerfilUserReturn(res)
   }
 
-  public async delete(id) {
+  public async delete(id:any) {
     await this.repository.delete(id);
     return "Usuario Deletado"
   }

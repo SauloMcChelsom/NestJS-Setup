@@ -11,12 +11,12 @@ export class PaginasService {
 
   constructor(@InjectRepository(PaginasRepository) private readonly repository: PaginasRepository) {}
 
-  public async save(values) {
+  public async save(values:any) {
     const res = await this.repository.save(values)
     return new RetornoDto(res)
   }
 
-  public async findOne(id) {
+  public async findOne(id:any) {
     const res = await this.repository.findOne({ where:{ id: id }})
     return new RetornoDto(res)
   }
@@ -26,13 +26,13 @@ export class PaginasService {
     return res.map((r)=> new RetornoDto(r))
   }
 
-  public async update(id, values) {
+  public async update(id:any, values:any) {
     await this.repository.update(id, values);
     const res = await this.repository.findOne(id)
     return new RetornoDto(res)
   }
 
-  public async delete(id) {
+  public async delete(id:any) {
     await this.repository.delete(id);
     return {"mensagem":"deletado"}
   }

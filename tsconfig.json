@@ -6,13 +6,23 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "allowSyntheticDefaultImports": true,
+    "strictPropertyInitialization": false,
     "target": "es2017",
     "sourceMap": true,
     "outDir": "./dist",
     "baseUrl": "./",
     "incremental": true,
-    "strict": false,
+    "strict": true,
     "moduleResolution": "node",
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "paths": {
+      "@root/*": ["./*"],
+      "@shared/*": ["src/shared/*"],
+      "@entity/*": ["src/entity/*"],
+      "@modules/*": ["src/modules/*"],
+      "@public/*": ["src/public/*"],
+      "@service/*": ["src/service/*"],
+      "@views/*": ["src/views/*"]
+    }
   }
 }

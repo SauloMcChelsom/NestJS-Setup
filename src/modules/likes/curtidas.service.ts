@@ -16,12 +16,12 @@ export class CurtidasService {
     @InjectRepository(CurtidasRepository) private readonly repository: CurtidasRepository,
   ) {}
 
-  public async save(values) {
+  public async save(values:any) {
     const res = await this.repository.save(values)
     return new RetornoDto(res)
   }
 
-  public async findOne(id) {
+  public async findOne(id:any) {
     const res = await this.repository.findOne({ where:{ id: id }})
     return new RetornoDto(res)
   }
@@ -31,13 +31,13 @@ export class CurtidasService {
     return res.map((r)=> new RetornoDto(r))
   }
 
-  public async update(id, values) {
+  public async update(id:any, values:any) {
     await this.repository.update(id, values);
     const res = await this.repository.findOne(id)
     return new RetornoDto(res)
   }
 
-  public async delete(id) {
+  public async delete(id:any) {
     await this.repository.delete(id);
     return {"mensagem":"deletado"}
   }
@@ -62,18 +62,18 @@ export class CurtidasService {
     }else{
       let criarPrimeiraCurtidaDoUsuarioDestaPublicacao = new RetornoDto(values)
       criarPrimeiraCurtidaDoUsuarioDestaPublicacao.eu_curti = true
-      delete criarPrimeiraCurtidaDoUsuarioDestaPublicacao.id
+      //delete criarPrimeiraCurtidaDoUsuarioDestaPublicacao.id
       let curtida = await this.repository.save(criarPrimeiraCurtidaDoUsuarioDestaPublicacao)
       this.publicacaoRepository.incrementCurtida(criarPrimeiraCurtidaDoUsuarioDestaPublicacao.publicacao_id)
       return curtida
     }
   }
 
-  public async todasPublicacaoDoUsuario(id) {
+  public async todasPublicacaoDoUsuario(id:any) {
     return await this.repository.find({ where:{ usuario_id: id }})
   }
 
-  public async todasPublicacaoDoUsuarioPorPublicacao(usuario, publicacao) {
+  public async todasPublicacaoDoUsuarioPorPublicacao(usuario:any, publicacao:any) {
     return await this.repository.find({ where:{ usuario_id: usuario, publicacao_id:publicacao }})
   }
 }

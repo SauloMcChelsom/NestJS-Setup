@@ -24,3 +24,4 @@ export class CryptUtilityService {
         return await compare(textoLegivel, hash)
     }
 }
+//https://bcrypt-generator.com/

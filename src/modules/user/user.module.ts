@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common'
 import { TypeOrmModule } from '@nestjs/typeorm'
-import { CryptUtilityModule } from '../../shared/crypt/crypt.utility.module'
+import { CryptUtilityModule } from '../../shared/bcrypt/bcrypt.module'
 import { UserEntity } from '../../entity/user.entity'
 import { UsuariosController } from './user.controller'
 import { UserService } from './user.service'

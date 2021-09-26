@@ -1,8 +1,11 @@
 export enum code {
     EMAIL_ALREADY_IN_USE = "EMAIL_ALREADY_IN_USE",
-    AUTH_USER_REGISTERED = 'auth.user-registered',
-    AUTH_VERIFY_EMAIL = 'auth.verify-email',
-    AUTH_EMAIL_VERIFIED = 'auth.email-verified',
-    AUTH_FORGOT_PASSWORD = 'auth.forgot-password',
-    AUTH_PASSWORD_UPDATED = 'auth.password-updated',
+    USER_REGISTERED = 'AUTH_USER_REGISTERED',
+    VERIFY_EMAIL = 'AUTH_VERIFY_EMAIL',
+    EMAIL_VERIFIED = 'AUTH_EMAIL_VERIFIED',
+    PASSWORD_UPDATED = 'AUTH_PASSWORD_UPDATED',
+    ERROR_GENERIC = "ERROR_GENERIC",
+    NOT_FOUND_USER = "NOT_FOUND_USER",
+    UID_ALREADY_IN_USE = "UID_ALREADY_IN_USE",
+    
 }

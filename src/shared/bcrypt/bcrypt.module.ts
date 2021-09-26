@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common'
-import { CryptUtilityService } from './crypt.utility.service'
+import { CryptUtilityService } from './bcrypt.service'
 
 @Module({
   imports: [],

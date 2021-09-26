@@ -13,7 +13,7 @@ export class IndexService {
     });
   }
 
-  public async verifyIdToken(token) {
+  public async verifyIdToken(token:string) {
     return await firebase.auth().verifyIdToken(token, true).then(async(decodedToken) => {
       return await decodedToken
     })
@@ -22,7 +22,7 @@ export class IndexService {
     });
   }
 
-  public async revokeRefreshTokens(token) {
+  public async revokeRefreshTokens(token:string) {
     return await firebase.auth().verifyIdToken(token, true).then(async(decodedToken) => {
       return await firebase.auth().revokeRefreshTokens(decodedToken.uid).then(()=>{
         return {message:"sucess", code:200}
@@ -35,7 +35,7 @@ export class IndexService {
     });
   }
 
-  public async createCustomToken(uid) {
+  public async createCustomToken(uid:string) {
     const userId = uid;
     const additionalClaims = {
       premiumAccount: true,
@@ -51,7 +51,7 @@ export class IndexService {
     });
   }
 
-  public async getUser(uid) {
+  public async getUser(uid:string) {
     return await firebase.auth().getUser(uid)
     .then(async(userRecord) => {
       return await{ message:'Successfully fetched user data', response:userRecord.toJSON() }
@@ -61,7 +61,7 @@ export class IndexService {
     });
   }
 
-  public async getUserByEmail(email) {
+  public async getUserByEmail(email:string) {
     return await firebase.auth().getUserByEmail(email)
     .then(async(userRecord) => {
       return await { response:userRecord.toJSON() }
@@ -71,7 +71,7 @@ export class IndexService {
     });
   } 
   
-  public async createUser(data){
+  public async createUser(data:any){
     return await firebase.auth().createUser({
       email: 'maeli@gmail.com',
       emailVerified: false,
@@ -89,7 +89,7 @@ export class IndexService {
     });
   }
 
-  public async updateUser(uid) {
+  public async updateUser(uid:string) {
     return await firebase.auth().updateUser(uid, {
       email: 'modifiedUser@example.com',
       phoneNumber: '+11234567890',
@@ -107,7 +107,7 @@ export class IndexService {
     });
   }
 
-  public async deleteUser(uid) {
+  public async deleteUser(uid:string) {
     return await firebase.auth().deleteUser(uid)
     .then(async() => {
       return await { message:'Successfully deleted user' }
