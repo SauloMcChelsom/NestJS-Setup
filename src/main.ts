@@ -75,8 +75,6 @@ async function bootstrap() {
   console.log(`                                                    `);
   console.log(`                  ${await app.getUrl()}/auth/sign-in`);
   console.log(`                                                    `);
-  console.log(`                                                    `);
-
 }
 
 bootstrap();
