@@ -69,7 +69,7 @@ async function bootstrap() {
     })
   );
 
-  await app.listen(process.env.PORT || 3000, '192.168.18.11');
+  await app.listen(process.env.PORT || 3000);
 
   console.log(`                                                    `);
   console.log(`                                                    `);
