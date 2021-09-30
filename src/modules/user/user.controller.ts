@@ -1,4 +1,4 @@
-import { Controller, Param, Get, Post, Body, Put, Delete } from '@nestjs/common';
+import { Controller, Param, Get, Post, Body, Put, Delete, Query } from '@nestjs/common';
 
 import {
   ApiOperation,
@@ -7,13 +7,16 @@ import {
 } from '@nestjs/swagger'
 
 import { 
-  UserPostSwagger,
-  User409EmailSwagger,
-  User409UidSwagger,
-  User400ProvidersSwagger,
-  UserGetSwagger,
-  User404UserSwagger,
-  UserGetUidSwagger
+  GetUser200Swagger,
+  GetUser404NotFoundUserSwagger,
+  GetUserGetUserByEmail200Swagger,
+  GetUserGetUserByEmail404NotFoundUserSwagger,
+  GetUserGetUserByUid200Swagger,
+  GetUserGetUserByUid404NotFoundUserSwagger,
+  PostUser200Swagger,
+  PostUser400ProvidersUserIsInvalidSwagger,
+  PostUser409EmailAlreadyInUseSwagger,
+  PostUser409UidAlreadyInUseSwagger
 } from './swagger/' 
 
 import { CreateNewUserDto } from './dto'
@@ -30,22 +33,22 @@ export class UsuariosController {
   @ApiResponse({
     status: 201,
     description: message.USER_REGISTERED,
-    type: UserPostSwagger
+    type: PostUser200Swagger
   })
   @ApiResponse({
     status: 409,
     description: message.EMAIL_ALREADY_IN_USE,
-    type: User409EmailSwagger
+    type: PostUser409EmailAlreadyInUseSwagger
   })
   @ApiResponse({
     status: 408,
     description: message.UID_ALREADY_IN_USE,
-    type: User409UidSwagger
+    type: PostUser409UidAlreadyInUseSwagger
   })
   @ApiResponse({
     status: 400,
     description: message.PROVIDERS_USER_IS_INVALID,
-    type: User400ProvidersSwagger
+    type: PostUser400ProvidersUserIsInvalidSwagger
   })
   public async save(@Body() create: CreateNewUserDto) {
     return await this.service.save(create);
@@ -56,12 +59,12 @@ export class UsuariosController {
   @ApiResponse({
     status: 200,
     description: 'Busca realizada com sucesso',
-    type: UserGetSwagger
+    type: GetUser200Swagger
   })
   @ApiResponse({
     status: 404,
     description: message.NOT_FOUND_USER,
-    type: User404UserSwagger
+    type: GetUser404NotFoundUserSwagger
   })
   public async findAll() {
     return this.service.findAll();
@@ -72,12 +75,12 @@ export class UsuariosController {
   @ApiResponse({
     status: 200,
     description: 'Busca realizada com sucesso',
-    type: UserGetUidSwagger
+    type: GetUserGetUserByUid200Swagger
   })
   @ApiResponse({
     status: 404,
     description: message.NOT_FOUND_USER,
-    type: User404UserSwagger
+    type: GetUserGetUserByUid404NotFoundUserSwagger
   })
   public async getUserByUid(@Param('uid') uid: string) {
     return await this.service.getUserByUid(uid);
@@ -85,16 +88,16 @@ export class UsuariosController {
 
   @Get('/get-user-by-email/:email')
   @ApiOperation({ summary: 'Buscar usuario por email' })
-  /*@ApiResponse({
+  @ApiResponse({
     status: 200,
     description: 'Busca realizada com sucesso',
-    type: UserGetCheckIfUserExistsEmailSwagger
+    type: GetUserGetUserByEmail200Swagger
   })
   @ApiResponse({
     status: 404,
-    description: 'Usuario não encontrado',
-    type: UserGetNotFoundSwagger
-  })*/
+    description: message.NOT_FOUND_USER,
+    type: GetUserGetUserByEmail404NotFoundUserSwagger
+  })
   public async getUserByEmail(@Param('email') email: string) {
     return await this.service.getUserByEmail(email);
   }

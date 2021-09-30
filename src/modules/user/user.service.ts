@@ -51,9 +51,10 @@ export class UserService {
     return new OK([perfilUser])
   }
 
-  public async getUserByEmail(email:any) {
-    const res = await this.repository.findOne({ where:{ email: email }})
-    return new checkIfUserExistsByEmailReturn(res)
+  public async getUserByEmail(email:string) {
+    const res = await this.validator.getUserByEmail(email)
+    const perfilUser = new PerfilUserReturn(res)
+    return new OK([perfilUser])
   }
 
   public async update(id:any, values:any) {

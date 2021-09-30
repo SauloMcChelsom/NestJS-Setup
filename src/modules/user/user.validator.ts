@@ -99,5 +99,27 @@ export class UserValidator {
       })
     }
   }
+
+  public async getUserByEmail(email:string) {
+    try{
+      const res = await this.repository.findOne({ where:{ email: email }})
+      if(res){
+        return res
+      }
+      throw true
+    }catch(error){
+      if(error == true){
+        throw new NotFoundExceptions({
+          code:code.NOT_FOUND_USER,
+          message:message.NOT_FOUND_USER,
+        })
+      }
+      throw new InternalServerErrorExceptions({
+        code:code.ERROR_GENERIC,
+        message:message.ERROR_GENERIC,
+        description:"algo aconteceu em buscar usuario por email"
+      })
+    }
+  }
 }
 
