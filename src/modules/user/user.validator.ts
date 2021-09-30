@@ -121,5 +121,27 @@ export class UserValidator {
       })
     }
   }
+
+  public async updateUserByUid(id:number, user:any) {
+    try{
+      const res = await this.repository.update(id, user)
+      if(res){
+        return res
+      }
+      throw true
+    }catch(error){
+      if(error == true){
+        throw new NotFoundExceptions({
+          code:code.NOT_FOUND_USER,
+          message:message.NOT_FOUND_USER,
+        })
+      }
+      throw new InternalServerErrorExceptions({
+        code:code.ERROR_GENERIC,
+        message:message.ERROR_GENERIC,
+        description:"algo aconteceu em atualizar usuario por uid"
+      })
+    }
+  }
 }
 

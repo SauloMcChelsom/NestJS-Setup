@@ -7,6 +7,7 @@ export enum message {
     ERROR_GENERIC = "Houve um erro inesperável",
     NOT_FOUND_USER = "Usuario não encontrado",
     UID_ALREADY_IN_USE = "Este uid está sendo usado por outra pessoa",
-    PROVIDERS_USER_IS_INVALID = "O provedor é invalido"
+    PROVIDERS_USER_IS_INVALID = "O provedor é invalido",
+    USER_UPDATED = "Usuario Atualizado com sucesso"
 }
   	

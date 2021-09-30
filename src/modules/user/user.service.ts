@@ -8,7 +8,7 @@ import { UserValidator } from './user.validator'
 import { PerfilUserReturn } from './return/perfil-user.return'
 import { checkIfUserExistsByEmailReturn  } from './return/check-If-user-exists-by-email.return'
 import { code, message } from '../../shared/enum'
-import { CreateNewUserDto } from './dto'
+import { CreateNewUserDto, UpdateUserDto } from './dto'
 @Injectable()
 export class UserService {
 
@@ -57,10 +57,12 @@ export class UserService {
     return new OK([perfilUser])
   }
 
-  public async update(id:any, values:any) {
-    await this.repository.update(id, values);
-    const res = await this.repository.findOne(id)
-    return new PerfilUserReturn(res)
+  public async updateUserByUid(uid:string, user:UpdateUserDto) {
+    const { id } = await this.validator.getUserByUid(uid)
+    await this.validator.updateUserByUid(id, user)
+    const res = await this.validator.getUserByUid(uid)
+    const perfilUser = new PerfilUserReturn(res)
+    return new OK([perfilUser], code.USER_UPDATED, message.USER_UPDATED) 
   }
 
   public async delete(id:any) {

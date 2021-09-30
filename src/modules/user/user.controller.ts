@@ -16,10 +16,12 @@ import {
   PostUser200Swagger,
   PostUser400ProvidersUserIsInvalidSwagger,
   PostUser409EmailAlreadyInUseSwagger,
-  PostUser409UidAlreadyInUseSwagger
+  PostUser409UidAlreadyInUseSwagger,
+  PutUser200Swagger,
+  PutUser404NotFoundUserSwagger
 } from './swagger/' 
 
-import { CreateNewUserDto } from './dto'
+import { CreateNewUserDto, UpdateUserDto } from './dto'
 import { UserService } from './user.service'
 import { message } from '@shared/enum'
 
@@ -102,20 +104,20 @@ export class UsuariosController {
     return await this.service.getUserByEmail(email);
   }
 
-  @Put(':id')
-  /*@ApiOperation({ summary: 'Atualizar usuario por id' })
+  @Put(':uid')
+  @ApiOperation({ summary: 'Atualizar usuario por uid' })
   @ApiResponse({
     status: 200,
     description: 'Usuario atualizado com sucesso',
-    type: UserPutInfoSwagger
+    type: PutUser200Swagger
   })
   @ApiResponse({
     status: 404,
     description: 'Usuario não encontrado',
-    type: UserGetNotFoundSwagger
-  })*/
-  public async update(@Param('id') id: string, @Body() updateDto:any) {
-    return await this.service.update(id, updateDto);
+    type: PutUser404NotFoundUserSwagger
+  })
+  public async update(@Param('uid') uid: string, @Body() updateDto:UpdateUserDto) {
+    return await this.service.updateUserByUid(uid, updateDto);
   }
 
   @Delete(':id')
