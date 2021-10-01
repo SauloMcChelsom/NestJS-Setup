@@ -8,7 +8,7 @@ export class UserRepository extends Repository<UserEntity> {
     return await this.createQueryBuilder()
     .delete()
     //.where("id = :id", { id: 32 })
-    .from("usuario")
+    .from("user")
     .execute();
   }
 }

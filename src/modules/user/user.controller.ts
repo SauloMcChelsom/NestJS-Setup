@@ -18,7 +18,9 @@ import {
   PostUser409EmailAlreadyInUseSwagger,
   PostUser409UidAlreadyInUseSwagger,
   PutUser200Swagger,
-  PutUser404NotFoundUserSwagger
+  PutUser404NotFoundUserSwagger,
+  DelUser404NotFoundUserSwagger,
+  DelUser200Swagger
 } from './swagger/' 
 
 import { CreateNewUserDto, UpdateUserDto } from './dto'
@@ -120,100 +122,30 @@ export class UsuariosController {
     return await this.service.updateUserByUid(uid, updateDto);
   }
 
-  @Delete(':id')
-  /*@ApiOperation({ summary: 'Deletar usuarios por id' })
+  @Delete(':uid')
+  @ApiOperation({ summary: 'Deletar usuarios por uid' })
   @ApiResponse({
-    status: 202,
+    status: 200,
     description: 'Usuario deletado com sucesso',
-    type: UserDeletedIdInfoSwagger
+    type: DelUser200Swagger
   })
   @ApiResponse({
     status: 404,
     description: 'Usuario não encontrado',
-    type: UserGetNotFoundSwagger
-  })*/
-  public async delete(@Param('id') id: string) {
-    return await this.service.delete(id);
+    type: DelUser404NotFoundUserSwagger
+  })
+  public async deleteUserByUid(@Param('uid') uid: string) {
+    return await this.service.deleteUserByUid(uid);
   }
 
   @Delete()
-  /*@ApiOperation({ summary: 'Deletar todos usuarios' })
+  @ApiOperation({ summary: 'Deletar todos usuarios' })
   @ApiResponse({
-    status: 202,
+    status: 200,
     description: 'Todos os usuario foram deletados',
-    type: UserDeletedInfoSwagger
-  })*/
+    type:   DelUser200Swagger
+  })
   public async deleteTodosUsuarios() {
     return await this.service.deleteTodosUsuarios();
   }
-
-
-
-  /*@Get('http/ok')
-  public ok() {
-    return new Client().OK([{
-      code:"xxx-info",
-      message:"Isso esta certo?",
-    }])
-  }
-
-  @Get('http/info')
-  public Info() {
-    return new Client().Info({
-      code:"xxx-info",
-      message:"Isso esta certo?",
-    })
-  }
-
-  @Get('http/BadRequestException')
-  public BadRequestException() {
-    throw new Client().BadRequestException({
-      code:"xxx-info",
-      message:"Isso esta certo?",
-    })
-  }
-
-  @Get('http/exception')
-  public exception() {
-    throw new Client().HttpException({
-      code:code.EMAIL_ALREADY_IN_USE,
-      message:"Email ja existe",
-    },404)
-  }*/
-  
 }
-/*
--falta redigita as classe dentro de swagger
--terminar a documentaçao no controller do usuario
-
-
-
-::falta terminar o UsuariosController, auth e refatorar as paginas web
-::depois replicar para os novos modulos, disto os novos modulos
-
-
-  verifique* deixar o mesmo mensagem no Swagger com message no dto exemplo
-  entrar nas classs de swagger e verificar se as mensagem e nome estão correto
-  o certo seria ja usar o enum, apos isso verificar se os endpis estão funcionado e
-  fazendo o que e pra ser feito
-
-
-
-  *** pensar, se for enviado um metodo POST, posso retornar dentro do ok
-  ou o ok deve ser usando somente por metodo GET
-
-  user.GET.@id.swagger.ts
-  user.DEL.@id.swagger.ts
-  user.POST.swagger.ts
-  user.GET.__check-if-user-exists__@email.swagger.ts
-  user.200.swagger.ts
-  user.404.swagger.ts
-  user.409.swagger.ts
-
-
-
-  coseguimos fazer schema funciona agora é fazer para todos o poblema e que vai duplicacae
-  muito tenta fazer algo generico, ou tentar colocar no dto
-
-
-*/

@@ -65,14 +65,15 @@ export class UserService {
     return new OK([perfilUser], code.USER_UPDATED, message.USER_UPDATED) 
   }
 
-  public async delete(id:any) {
-    await this.repository.delete(id);
-    return "Usuario Deletado"
+  public async deleteUserByUid(uid:any) {
+    const { id } = await this.validator.getUserByUid(uid)
+    await this.validator.deleteUserByUid(id)
+    return new OK([], code.DELETED_SUCCESSFULLY, message.DELETED_SUCCESSFULLY) 
   }
 
   public async deleteTodosUsuarios() {
     await this.repository.deleteTodosUsuarios();
-    return "Todos Usuarios Deletados"
+    return new OK([], code.DELETED_SUCCESSFULLY, message.DELETED_SUCCESSFULLY) 
   }
 }
 

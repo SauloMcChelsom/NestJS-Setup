@@ -143,5 +143,27 @@ export class UserValidator {
       })
     }
   }
+
+  public async deleteUserByUid(id:number) {
+    try{
+      const res = await this.repository.delete(id)
+      if(res){
+        return res
+      }
+      throw true
+    }catch(error){
+      if(error == true){
+        throw new NotFoundExceptions({
+          code:code.NOT_FOUND_USER,
+          message:message.NOT_FOUND_USER,
+        })
+      }
+      throw new InternalServerErrorExceptions({
+        code:code.ERROR_GENERIC,
+        message:message.ERROR_GENERIC,
+        description:"algo aconteceu em deletar usuario por uid"
+      })
+    }
+  }
 }
 

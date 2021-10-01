@@ -8,6 +8,7 @@ export enum message {
     NOT_FOUND_USER = "Usuario não encontrado",
     UID_ALREADY_IN_USE = "Este uid está sendo usado por outra pessoa",
     PROVIDERS_USER_IS_INVALID = "O provedor é invalido",
-    USER_UPDATED = "Usuario Atualizado com sucesso"
+    USER_UPDATED = "Usuario Atualizado com sucesso",
+    DELETED_SUCCESSFULLY = "Execução deletado com sucesso"
 }
   	
