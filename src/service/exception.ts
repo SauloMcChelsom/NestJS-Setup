@@ -12,7 +12,7 @@ import {
 import  { Ok, Error, Body }  from './body/'
 
 export class OK extends Body {
-  constructor(results:any[], code:string = '', message:string = '', description:string = ''){
+  constructor(results:any[]=[], code:string = '', message:string = '', description:string = ''){
     super()
     this.statusCode = HttpStatus.OK
     this.ok.results = results

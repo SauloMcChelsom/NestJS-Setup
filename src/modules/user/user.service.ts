@@ -5,8 +5,7 @@ import { CryptUtilityService } from '../../shared/bcrypt/bcrypt.service'
 import { UserRepository } from './user.repository'
 import { OK, NotFoundExceptions } from '../../service/exception'
 import { UserValidator } from './user.validator'
-import { PerfilUserReturn } from './return/perfil-user.return'
-import { checkIfUserExistsByEmailReturn  } from './return/check-If-user-exists-by-email.return'
+import { PerfilUserMapper, CheckUserExistsByEmailMapper } from './mapper'
 import { code, message } from '../../shared/enum'
 import { CreateNewUserDto, UpdateUserDto } from './dto'
 @Injectable()
@@ -16,7 +15,9 @@ export class UserService {
     @InjectRepository(UserRepository) 
     private readonly repository: UserRepository, 
     private validator:UserValidator,
-    private crypt:CryptUtilityService
+    private crypt:CryptUtilityService,
+    private perfilUserMapper:PerfilUserMapper,
+    private checkUserExistsByEmailMapper:CheckUserExistsByEmailMapper
   ) {}
 
   public async save(user:CreateNewUserDto) {
@@ -25,9 +26,9 @@ export class UserService {
     await this.validator.providersIsValid(user.providers)
     user.password = await this.crypt.hash(user.password);
     const res = await this.repository.save(user)
-    const perfilUser = new PerfilUserReturn(res)
+    const mappings = this.perfilUserMapper.toDto(res)
     return new OK(
-      [perfilUser],
+      [mappings],
       code.USER_REGISTERED,
       message.USER_REGISTERED
     )
@@ -41,28 +42,34 @@ export class UserService {
         message:message.NOT_FOUND_USER,
       })
     }
-    const perfilUser = res.map((r)=> new PerfilUserReturn(r))
-    return new OK(perfilUser)
+    const mappings = res.map((r)=> this.perfilUserMapper.toDto(r))
+    return new OK(mappings)
   }
 
   public async getUserByUid(uid:string) {
     const res = await this.validator.getUserByUid(uid)
-    const perfilUser = new PerfilUserReturn(res)
-    return new OK([perfilUser])
+    const mappings = this.perfilUserMapper.toDto(res)
+    return new OK([mappings])
   }
 
   public async getUserByEmail(email:string) {
     const res = await this.validator.getUserByEmail(email)
-    const perfilUser = new PerfilUserReturn(res)
-    return new OK([perfilUser])
+    const mappings = this.perfilUserMapper.toDto(res)
+    return new OK([mappings])
+  }
+
+  public async checkUserExistsByEmail(email:string) {
+    const res = await this.validator.getUserByEmail(email)
+    const mappings = this.checkUserExistsByEmailMapper.toDto(res)
+    return new OK([mappings])
   }
 
   public async updateUserByUid(uid:string, user:UpdateUserDto) {
     const { id } = await this.validator.getUserByUid(uid)
     await this.validator.updateUserByUid(id, user)
     const res = await this.validator.getUserByUid(uid)
-    const perfilUser = new PerfilUserReturn(res)
-    return new OK([perfilUser], code.USER_UPDATED, message.USER_UPDATED) 
+    const mappings = this.perfilUserMapper.toDto(res)
+    return new OK([mappings], code.USER_UPDATED, message.USER_UPDATED) 
   }
 
   public async deleteUserByUid(uid:any) {
@@ -73,7 +80,7 @@ export class UserService {
 
   public async deleteTodosUsuarios() {
     await this.repository.deleteTodosUsuarios();
-    return new OK([], code.DELETED_SUCCESSFULLY, message.DELETED_SUCCESSFULLY) 
+    return new OK([],code.DELETED_SUCCESSFULLY, message.DELETED_SUCCESSFULLY) 
   }
 }
 

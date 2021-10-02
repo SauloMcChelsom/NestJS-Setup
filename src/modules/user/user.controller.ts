@@ -20,7 +20,9 @@ import {
   PutUser200Swagger,
   PutUser404NotFoundUserSwagger,
   DelUser404NotFoundUserSwagger,
-  DelUser200Swagger
+  DelUser200Swagger,
+  GetUserCheckUserExistsByEmail200Swagger,
+  GetUserCheckUserExistsByEmail404NotFoundUserSwagger
 } from './swagger/' 
 
 import { CreateNewUserDto, UpdateUserDto } from './dto'
@@ -104,6 +106,22 @@ export class UsuariosController {
   })
   public async getUserByEmail(@Param('email') email: string) {
     return await this.service.getUserByEmail(email);
+  }
+
+  @Get('/check-user-exists-by-email/:email')
+  @ApiOperation({ summary: 'Buscar usuario por email' })
+  @ApiResponse({
+    status: 200,
+    description: 'Busca realizada com sucesso',
+    type: GetUserCheckUserExistsByEmail200Swagger
+  })
+  @ApiResponse({
+    status: 404,
+    description: message.NOT_FOUND_USER,
+    type: GetUserCheckUserExistsByEmail404NotFoundUserSwagger
+  })
+  public async checkUserExistsByEmail(@Param('email') email: string) {
+    return await this.service.checkUserExistsByEmail(email);
   }
 
   @Put(':uid')

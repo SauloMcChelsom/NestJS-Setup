@@ -9,6 +9,8 @@ import {
   NotFoundExceptions
 } from '../../service/exception'
 
+import { UpdateUserDto } from './dto'
+
 @Injectable()
 export class UserValidator {
 
@@ -30,7 +32,7 @@ export class UserValidator {
       throw new InternalServerErrorExceptions({
         code:code.ERROR_GENERIC,
         message:message.ERROR_GENERIC,
-        description:"algo aconteceu em encontrar o email do usuario"
+        description:"algo aconteceu em encontrar o email do usuario"+` ::: ${error}`
       })
     }
   }
@@ -51,7 +53,7 @@ export class UserValidator {
       throw new InternalServerErrorExceptions({
         code:code.ERROR_GENERIC,
         message:message.ERROR_GENERIC,
-        description: "algo aconteceu em verificar se o uid ja existe"
+        description: "algo aconteceu em verificar se o uid ja existe"+` ::: ${error}`
       })
     }
   }
@@ -73,7 +75,7 @@ export class UserValidator {
       throw new InternalServerErrorExceptions({
         code:code.ERROR_GENERIC,
         message:message.ERROR_GENERIC,
-        description:"algo aconteceu em validar o provedor"
+        description:"algo aconteceu em validar o provedor"+` ::: ${error}`
       })
     }
   }
@@ -95,7 +97,7 @@ export class UserValidator {
       throw new InternalServerErrorExceptions({
         code:code.ERROR_GENERIC,
         message:message.ERROR_GENERIC,
-        description:"algo aconteceu em buscar usuario por uid"
+        description:"algo aconteceu em buscar usuario por uid"+` ::: ${error}`
       })
     }
   }
@@ -117,12 +119,12 @@ export class UserValidator {
       throw new InternalServerErrorExceptions({
         code:code.ERROR_GENERIC,
         message:message.ERROR_GENERIC,
-        description:"algo aconteceu em buscar usuario por email"
+        description:"algo aconteceu em buscar usuario por email"+` ::: ${error}`
       })
     }
   }
 
-  public async updateUserByUid(id:number, user:any) {
+  public async updateUserByUid(id:number, user:UpdateUserDto) {
     try{
       const res = await this.repository.update(id, user)
       if(res){
@@ -139,7 +141,7 @@ export class UserValidator {
       throw new InternalServerErrorExceptions({
         code:code.ERROR_GENERIC,
         message:message.ERROR_GENERIC,
-        description:"algo aconteceu em atualizar usuario por uid"
+        description:"algo aconteceu em atualizar usuario por uid"+` ::: ${error}`
       })
     }
   }
@@ -161,7 +163,7 @@ export class UserValidator {
       throw new InternalServerErrorExceptions({
         code:code.ERROR_GENERIC,
         message:message.ERROR_GENERIC,
-        description:"algo aconteceu em deletar usuario por uid"
+        description:"algo aconteceu em deletar usuario por uid"+` ::: ${error}`
       })
     }
   }

@@ -6,11 +6,13 @@ import { UsuariosController } from './user.controller'
 import { UserService } from './user.service'
 import { UserValidator } from './user.validator'
 import { UserRepository } from './user.repository'
+import { PerfilUserMapper } from './mapper/perfil-user.mapper'
+import { CheckUserExistsByEmailMapper } from './mapper/check-user-exists-by-email.mapper'
 
 @Module({
   imports: [CryptUtilityModule, TypeOrmModule.forFeature([UserEntity, UserRepository])],
   controllers: [UsuariosController],
-  providers: [UserService, UserValidator],
+  providers: [UserService, UserValidator, PerfilUserMapper, CheckUserExistsByEmailMapper],
   exports: [UserService]
 })
 export class UserModule {}

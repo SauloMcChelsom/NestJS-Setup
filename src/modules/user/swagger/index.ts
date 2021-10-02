@@ -12,4 +12,6 @@ export * from './PUT._user_.200.swagger';
 export * from './PUT._user_.404.NOT_FOUND_USER.swagger';
 export * from './DEL._user_.404.NOT_FOUND_USER.swagger';
 export * from './DEL._user_.200.swagger';
+export * from './GET._user_check-user-exists-by-email_.200.swagger';
+export * from './GET._user_check-user-exists-by-email_.404.NOT_FOUND_USER.swagger';
 
