@@ -26,9 +26,9 @@ export class UserService {
     await this.validate.providersIsValid(user.providers)
     user.password = await this.crypt.hash(user.password);
     const res = await this.repository.save(user)
-    const mapped = this.perfilUserMapper.toDto(res)
+    const dto = this.perfilUserMapper.toDto(res)
     return new OK(
-      [mapped],
+      [dto],
       code.USER_REGISTERED,
       message.USER_REGISTERED
     )
@@ -42,34 +42,34 @@ export class UserService {
         message:message.NOT_FOUND_USER,
       })
     }
-    const mapped = res.map((r)=> this.perfilUserMapper.toDto(r))
-    return new OK(mapped)
+    const dto = res.map((r)=> this.perfilUserMapper.toDto(r))
+    return new OK(dto)
   }
 
   public async getUserByUid(uid:string) {
     const res = await this.validate.getUserByUid(uid)
-    const mapped = this.perfilUserMapper.toDto(res)
-    return new OK([mapped])
+    const dto = this.perfilUserMapper.toDto(res)
+    return new OK([dto])
   }
 
   public async getUserByEmail(email:string) {
     const res = await this.validate.getUserByEmail(email)
-    const mapped = this.perfilUserMapper.toDto(res)
-    return new OK([mapped])
+    const dto = this.perfilUserMapper.toDto(res)
+    return new OK([dto])
   }
 
   public async checkUserExistsByEmail(email:string) {
     const res = await this.validate.getUserByEmail(email)
-    const mapped = this.checkUserExistsByEmailMapper.toDto(res)
-    return new OK([mapped])
+    const dto = this.checkUserExistsByEmailMapper.toDto(res)
+    return new OK([dto])
   }
 
   public async updateUserByUid(uid:string, user:UpdateUserDto) {
     const { id } = await this.validate.getUserByUid(uid)
     await this.validate.updateUserByUid(id, user)
     const res = await this.validate.getUserByUid(uid)
-    const mapped = this.perfilUserMapper.toDto(res)
-    return new OK([mapped], code.USER_UPDATED, message.USER_UPDATED) 
+    const dto = this.perfilUserMapper.toDto(res)
+    return new OK([dto], code.USER_UPDATED, message.USER_UPDATED) 
   }
 
   public async deleteUserByUid(uid:any) {
