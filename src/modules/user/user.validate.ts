@@ -12,7 +12,7 @@ import {
 import { UpdateUserDto } from './dto'
 
 @Injectable()
-export class UserValidator {
+export class UserValidate {
 
   constructor(@InjectRepository(UserRepository) private readonly repository: UserRepository) {}
 
