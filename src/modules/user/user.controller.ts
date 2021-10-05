@@ -5,7 +5,7 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger'
-
+import { message } from '@shared/enum'
 import { 
   GetUser200Swagger,
   GetUser404NotFoundUserSwagger,
@@ -24,10 +24,8 @@ import {
   GetUserCheckUserExistsByEmail200Swagger,
   GetUserCheckUserExistsByEmail404NotFoundUserSwagger
 } from './swagger/' 
-
 import { CreateNewUserDto, UpdateUserDto } from './dto'
 import { UserService } from './user.service'
-import { message } from '@shared/enum'
 
 @ApiTags('user')
 @Controller('user')

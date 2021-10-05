@@ -3,16 +3,24 @@ import { Contains, MinLength, MaxLength, IsDate, IsNumber, IsString, Length, IsN
 export class UpdateDto  {
   @IsNotEmpty()
   @IsString()
-  @MinLength(3)
-  descricao_da_pagina: string;
+  email: string
 
+  @IsBoolean()
+  emailVerified: boolean
 
   @IsNotEmpty()
   @IsString()
-  @MinLength(3)
-  nome_da_pagina: string;
+  password: string
 
-  @IsNotEmpty() 
-  @IsNumber()
-  usuario_id: number;
+  @IsString()
+  phoneNumber: string
+
+  @IsString()
+  displayName: string
+
+  @IsString()
+  photoURL: string
+
+  @IsBoolean()
+  disabled: boolean
 }

@@ -1,14 +1,13 @@
 import { Injectable } from '@nestjs/common'
 import { InjectRepository} from '@nestjs/typeorm'
-import { UserRepository } from './user.repository'
-import { code, message } from '../../shared/enum'
+import { code, message } from '@shared/enum'
 import { 
   ConflictExceptions, 
   InternalServerErrorExceptions,
   BadRequestExceptions,
   NotFoundExceptions
-} from '../../service/exception'
-
+} from '@service/exception'
+import { UserRepository } from './user.repository'
 import { UpdateUserDto } from './dto'
 
 @Injectable()

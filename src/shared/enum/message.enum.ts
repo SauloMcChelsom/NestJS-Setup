@@ -9,6 +9,13 @@ export enum message {
     UID_ALREADY_IN_USE = "Este uid está sendo usado por outra pessoa",
     PROVIDERS_USER_IS_INVALID = "O provedor é invalido",
     USER_UPDATED = "Usuario Atualizado com sucesso",
-    DELETED_SUCCESSFULLY = "Execução deletado com sucesso"
+    DELETED_SUCCESSFULLY = "Execução deletado com sucesso",
+    SUCCESSFULLY_FETCHED_USER_DATA = "Successfully fetched user data",
+    ERROR_FETCHING_USER_DATA = "Error fetching user data",
+    SUCCESSFULLY_CREATED_NEW_USER = "Successfully created new user",
+    ERROR_CREATING_NEW_USER = "Error creating new user",
+    SUCCESSFULLY_UPDATED_USER = "Successfully updated user",
+    ERROR_UPDATING_USER = "Error updating user",
+    SUCCESSFULLY_DELETED_USER = "Successfully deleted user",
+    ERROR_DELETING_USER = "Error deleting user"
 }
-  	

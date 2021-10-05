@@ -1,12 +1,13 @@
 import { Injectable } from '@nestjs/common'
 import { InjectRepository} from '@nestjs/typeorm'
 
-import { CryptUtilityService } from '../../shared/bcrypt/bcrypt.service'
-import { UserRepository } from './user.repository'
-import { OK, NotFoundExceptions } from '../../service/exception'
+import { CryptUtilityService } from '@shared/bcrypt/bcrypt.service'
+import { OK, NotFoundExceptions } from '@service/exception'
+import { code, message } from '@shared/enum'
+
 import { UserValidate } from './user.validate'
+import { UserRepository } from './user.repository'
 import { PerfilUserMapper, CheckUserExistsByEmailMapper } from './mapper'
-import { code, message } from '../../shared/enum'
 import { CreateNewUserDto, UpdateUserDto } from './dto'
 @Injectable()
 export class UserService {

@@ -3,21 +3,26 @@ import { Contains, MinLength, MaxLength, ValidationOptions, IsDate, IsNumber, Is
 export class CreateDto  {
   @IsNotEmpty()
   @IsString()
-  @MinLength(3)
-  descricao_da_pagina: string;
+  email: string
+
+  @IsBoolean()
+  emailVerified: boolean
 
   @IsNotEmpty()
   @IsString()
-  @MinLength(3)
-  nome_da_pagina: string;
+  password: string
 
-  @IsNotEmpty() 
-  @IsNumber()
-  quantidade_de_seguidores: number
+  @IsString()
+  phoneNumber: string
 
-  @IsNotEmpty() 
-  @IsNumber()
-  usuario_id: number;
+  @IsString()
+  displayName: string
+
+  @IsString()
+  photoURL: string
+
+  @IsBoolean()
+  disabled: boolean
 }
 
 

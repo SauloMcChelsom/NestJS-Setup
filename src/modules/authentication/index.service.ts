@@ -1,121 +1,76 @@
 import { Injectable } from '@nestjs/common'
-import * as firebase from 'firebase-admin';
-var serviceAccount = require("./firebase.config.json");
-import * as serviceAccounts from './firebase.config.json';
+import { OK } from '@service/exception'
+import { code, message } from '@shared/enum'
+import { UserValidate } from './user.validate'
+
 @Injectable()
 export class IndexService {
 
-  private admin: any;
-
-  constructor() {
-    this.admin = firebase.initializeApp({
-      credential: firebase.credential.cert(serviceAccount),
-    });
-  }
+  constructor(private validate:UserValidate) {}
 
   public async verifyIdToken(token:string) {
-    return await firebase.auth().verifyIdToken(token, true).then(async(decodedToken) => {
-      return await decodedToken
-    })
-    .catch((error) => {
-      return { message:'Error verify id  token', error:error }
-    });
+    let decodedToken = await this.validate.verifyIdToken(token)
+    return await new OK(
+      [decodedToken],
+      code.USER_REGISTERED,
+      message.USER_REGISTERED
+    )
   }
 
   public async revokeRefreshTokens(token:string) {
-    return await firebase.auth().verifyIdToken(token, true).then(async(decodedToken) => {
-      return await firebase.auth().revokeRefreshTokens(decodedToken.uid).then(()=>{
-        return {message:"sucess", code:200}
-      }).catch((error) => {
-        return { message:'Error revogar token', error:error }
-      });
-    })
-    .catch((error) => {
-      return { message:'Error verify id  token', error:error }
-    });
-  }
-
-  public async createCustomToken(uid:string) {
-    const userId = uid;
-    const additionalClaims = {
-      premiumAccount: true,
-      nomeUsuario: 'saulo'
-    };
-
-    return await firebase.auth().createCustomToken(userId, additionalClaims)
-    .then(async(customToken) => {
-      return await customToken
-    })
-    .catch((error) => {
-      return { message:'Error creating custom token', error:error }
-    });
+    let decodedToken = await this.validate.verifyIdToken(token)
+    await this.validate.revokeRefreshTokens(decodedToken.uid)
+    return await new OK(
+      [],
+      code.USER_REGISTERED,
+      message.USER_REGISTERED
+    )
   }
 
   public async getUser(uid:string) {
-    return await firebase.auth().getUser(uid)
-    .then(async(userRecord) => {
-      return await{ message:'Successfully fetched user data', response:userRecord.toJSON() }
-    })
-    .catch((error) => {
-      return { message:'Error fetching user data', error:error }
-    });
+    let user =  await this.validate.getUserByUid(uid)
+    return await new OK(
+      [user],
+      code.USER_REGISTERED,
+      message.USER_REGISTERED
+    )
+
   }
 
   public async getUserByEmail(email:string) {
-    return await firebase.auth().getUserByEmail(email)
-    .then(async(userRecord) => {
-      return await { response:userRecord.toJSON() }
-    })
-    .catch((error) => {
-      return { message:'Error fetching user data', error:error }
-    });
+    let user =  await this.validate.getUserByEmail(email)
+    return await new OK(
+      [user],
+      code.USER_REGISTERED,
+      message.USER_REGISTERED
+    )
   } 
   
-  public async createUser(data:any){
-    return await firebase.auth().createUser({
-      email: 'maeli@gmail.com',
-      emailVerified: false,
-      password: '203327',
-     /* phoneNumber: '+11234567890',
-      displayName: 'John Doe',
-      photoURL: 'http://www.example.com/12345678/photo.png',*/
-      disabled: false,
-    })
-    .then(async(userRecord) => {
-      return await { message:'Successfully created new user', response:userRecord }
-    })
-    .catch((error) => {
-      return { message:'Error creating new user', error:error }
-    });
+  public async createUser(user:any){
+    let newUser =  await this.validate.createUser(user)
+    return await new OK(
+      [newUser],
+      code.USER_REGISTERED,
+      message.USER_REGISTERED
+    )
   }
 
-  public async updateUser(uid:string) {
-    return await firebase.auth().updateUser(uid, {
-      email: 'modifiedUser@example.com',
-      phoneNumber: '+11234567890',
-      emailVerified: true,
-      password: 'newPassword',
-      displayName: 'Jane Doe',
-      photoURL: 'http://www.example.com/12345678/photo.png',
-      disabled: true,
-    })
-    .then(async(userRecord) => {
-      return await { message:'Successfully updated user', response:userRecord.toJSON() }
-    })
-    .catch((error) => {
-      return { message:'Error updating user:', error:error }
-    });
+  public async updateUser(uid:string, user:any) {
+    let newUser =  await this.validate.updateUser(uid, user)
+    return await new OK(
+      [newUser],
+      code.USER_REGISTERED,
+      message.USER_REGISTERED
+    )
   }
 
   public async deleteUser(uid:string) {
-    return await firebase.auth().deleteUser(uid)
-    .then(async() => {
-      return await { message:'Successfully deleted user' }
-    })
-    .catch((error) => {
-      console.log('Error deleting user', error);
-      return { message:'Error deleting user', error:error }
-    });
+    await this.validate.deleteUser(uid)
+    return await new OK(
+      [],
+      code.USER_REGISTERED,
+      message.USER_REGISTERED
+    )
   }
 
 }
