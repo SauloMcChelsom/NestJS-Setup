@@ -39,11 +39,6 @@ export class IndexController {
     return await this.service.createUser(data)
   }
 
-  @Post('/createCustomToken')
-  public async createCustomToken(@Body() data:any) {
-    return await this.service.createCustomToken(data.uid)
-  }
-
   @Get('/revokeRefreshTokens')
   public async revokeRefreshTokens(@Headers('Authorization') token: string) {
     const id = token.replace('Bearer ', '');
