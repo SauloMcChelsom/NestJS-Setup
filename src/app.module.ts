@@ -10,11 +10,12 @@ import { IndexModule } from './modules/authentication/index.module';
 @Module({
   imports: [
     TypeOrmModule.forRoot(),
+    IndexModule,
     UserModule,
     /*PaginasModule,
     PublicacoesModule,
     CurtidasModule,*/
-    IndexModule
+
   ],
   controllers: [],
   providers: [],

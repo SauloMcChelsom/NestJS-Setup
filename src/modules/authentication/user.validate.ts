@@ -2,66 +2,119 @@ import { Injectable } from '@nestjs/common'
 import * as firebase from 'firebase-admin';
 import { serviceAccounts } from './firebase.config';
 import { code, message } from '@shared/enum'
+import { JwtUtilityService } from '@shared/jwt/jwt.service'
 import { 
   ConflictExceptions, 
   InternalServerErrorExceptions,
   BadRequestExceptions,
   NotFoundExceptions
 } from '@service/exception'
-import { CreateDto } from './dto/create.dto'
-import { UpdateDto  } from './dto/update.dto'
 
 @Injectable()
 export class UserValidate {
 
-  constructor() {
+  /**
+  * firebase list error code
+  * https://firebase.google.com/docs/auth/admin/errors
+  */
+  constructor(private readonly jwtUtility: JwtUtilityService,) {
     firebase.initializeApp({
       credential: firebase.credential.cert(serviceAccounts),
     });
   }
 
-  public async verifyIdToken(token:string) {
+  public async isToken(token:string) {
     try{
-     let decodedToken = await firebase.auth().verifyIdToken(token, true)
-     if(decodedToken){
-      return decodedToken
-     }
-     throw true
+      if(token == "" || token == null){
+        throw 'TOKEN_IS_NULL'
+      }
+
+      if(token.startsWith('Bearer ') == !true){
+        throw 'NOT_BEARER'
+      }
+
+      if(token.length <= 84){
+        throw 'SMALL_TOKEN'
+      }
+
+      if(token.indexOf('.') == -1){
+        throw 'TOKEN_MISSING_SPECIAL_CHARACTER'
+      }
+
+      return token.replace('Bearer ', '');
     }catch(error) {
-      if(error == true){
+      if(error == 'TOKEN_IS_NULL'){
         throw new NotFoundExceptions({
-          code:code.EMAIL_ALREADY_IN_USE,
-          message:message.EMAIL_ALREADY_IN_USE,
-          description: 'Error verify id  token'+ error
+          code:code.TOKEN_IS_NULL,
+          message:message.TOKEN_IS_NULL
+        })
+      }
+      if(error == 'NOT_BEARER'){
+        throw new NotFoundExceptions({
+          code:code.NOT_BEARER,
+          message:message.NOT_BEARER
+        })
+      }
+      if(error == 'SMALL_TOKEN'){
+        throw new NotFoundExceptions({
+          code:code.SMALL_TOKEN,
+          message:message.SMALL_TOKEN
+        })
+      }
+      if(error == 'TOKEN_MISSING_SPECIAL_CHARACTER'){
+        throw new NotFoundExceptions({
+          code:code.TOKEN_MISSING_SPECIAL_CHARACTER,
+          message:message.TOKEN_MISSING_SPECIAL_CHARACTER
         })
       }
       throw new InternalServerErrorExceptions({
         code:code.ERROR_GENERIC,
         message:message.ERROR_GENERIC,
-        description:"algo aconteceu em encontrar o email do usuario"+` ::: ${error}`
+        description:"algo aconteceu em verificar se isso é um token"+` ::: ${error}`
+      })
+    }
+  }
+
+  public async validateTokenByFirebase(token:string) {
+    try{
+     let decodedToken = await firebase.auth().verifyIdToken(token, true)
+
+     if(decodedToken.uid){
+      return decodedToken
+     }
+
+     throw decodedToken
+
+    }catch(error:any) {
+      if(error.code){
+        throw new NotFoundExceptions({
+          code:error.code,
+          message:error.message,
+        })
+      }
+
+      throw new InternalServerErrorExceptions({
+        code:code.ERROR_GENERIC,
+        message:message.ERROR_GENERIC,
+        description:"algo aconteceu em verify id token"+` ::: ${error}`
       })
     }
   }
 
   public async revokeRefreshTokens(uid:string) {
     try{
-     let revoke= await firebase.auth().revokeRefreshTokens(uid).then(()=>true)
-     if(revoke){
-      return revoke
-     }
-     throw true
-    }catch(error) {
-      if(error == true){
-        throw new NotFoundExceptions({
-          code:code.EMAIL_ALREADY_IN_USE,
-          message:message.EMAIL_ALREADY_IN_USE,
-          description: 'Error verify id  token'+ error
-        })
+      let revoke = await firebase.auth().revokeRefreshTokens(uid).then(()=>true)
+      console.log('revoke >> ',revoke)
+      if(revoke){
+        return revoke
       }
+     throw revoke
+    }catch(error) {
+      console.log('revoke ::: ',error)
       throw new InternalServerErrorExceptions({
         code:code.ERROR_GENERIC,
         message:message.ERROR_GENERIC,
-        description:"algo aconteceu em encontrar o email do usuario"+` ::: ${error}`
+        description:"algo aconteceu em destruir toke "+` ::: ${error}`
       })
     }
   }
@@ -76,15 +129,14 @@ export class UserValidate {
     }catch(error) {
       if(error == true){
         throw new NotFoundExceptions({
-          code:code.EMAIL_ALREADY_IN_USE,
-          message:message.EMAIL_ALREADY_IN_USE,
-          description: 'Error verify id  token'+ error
+          code:code.NOT_FOUND_USER,
+          message:message.NOT_FOUND_USER
         })
       }
       throw new InternalServerErrorExceptions({
         code:code.ERROR_GENERIC,
         message:message.ERROR_GENERIC,
-        description:"algo aconteceu em encontrar o email do usuario"+` ::: ${error}`
+        description:"algo aconteceu em encontrar o usuario por uid"+` ::: ${error}`
       })
     }
   }
@@ -99,61 +151,14 @@ export class UserValidate {
     }catch(error) {
       if(error == true){
         throw new NotFoundExceptions({
-          code:code.EMAIL_ALREADY_IN_USE,
-          message:message.EMAIL_ALREADY_IN_USE,
-          description: 'Error verify id  token'+ error
+          code:code.NOT_FOUND_USER,
+          message:message.NOT_FOUND_USER
         })
       }
       throw new InternalServerErrorExceptions({
         code:code.ERROR_GENERIC,
         message:message.ERROR_GENERIC,
-        description:"algo aconteceu em encontrar o email do usuario"+` ::: ${error}`
-      })
-    }
-  }
-
-  public async createUser(user:CreateDto) {
-    try{
-      let newUser = await firebase.auth().createUser(user)
-      if(newUser){
-      return newUser
-     }
-     throw true
-    }catch(error) {
-      if(error == true){
-        throw new NotFoundExceptions({
-          code:code.EMAIL_ALREADY_IN_USE,
-          message:message.EMAIL_ALREADY_IN_USE,
-          description: 'Error verify id  token'+ error
-        })
-      }
-      throw new InternalServerErrorExceptions({
-        code:code.ERROR_GENERIC,
-        message:message.ERROR_GENERIC,
-        description:"algo aconteceu em encontrar o email do usuario"+` ::: ${error}`
-      })
-    }
-  }
-
-  public async updateUser(uid:string, user:UpdateDto) {
-    try{
-      let newUser = await firebase.auth().updateUser(uid, user)
-      if(newUser){
-      return newUser.toJSON()
-     }
-     throw true
-    }catch(error) {
-      if(error == true){
-        throw new NotFoundExceptions({
-          code:code.EMAIL_ALREADY_IN_USE,
-          message:message.EMAIL_ALREADY_IN_USE,
-          description: 'Error verify id  token'+ error
-        })
-      }
-      throw new InternalServerErrorExceptions({
-        code:code.ERROR_GENERIC,
-        message:message.ERROR_GENERIC,
-        description:"algo aconteceu em encontrar o email do usuario"+` ::: ${error}`
+        description:"algo aconteceu em encontrar o usuario por email"+` ::: ${error}`
       })
     }
   }
@@ -168,15 +173,14 @@ export class UserValidate {
     }catch(error) {
       if(error == true){
         throw new NotFoundExceptions({
-          code:code.EMAIL_ALREADY_IN_USE,
-          message:message.EMAIL_ALREADY_IN_USE,
-          description: 'Error verify id  token'+ error
+          code:code.NOT_FOUND_USER,
+          message:message.NOT_FOUND_USER
         })
       }
       throw new InternalServerErrorExceptions({
         code:code.ERROR_GENERIC,
         message:message.ERROR_GENERIC,
-        description:"algo aconteceu em encontrar o email do usuario"+` ::: ${error}`
+        description:"algo aconteceu em deletar o usuario"+` ::: ${error}`
       })
     }
   }

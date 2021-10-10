@@ -1,74 +1,87 @@
 import { Controller, Res, Render, Redirect, Headers, HttpStatus, Param, HttpCode, Header, Get, Query, Post, Body, Put, Delete } from '@nestjs/common'
-
-import { JwtUtilityService } from '../../shared/jwt/jwt.service'
+import {
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger'
 import { IndexService } from './index.service'
+import { message } from '@shared/enum'
+import { 
+GetAuthVerifyIdToken200Swagger,
+GetAuthVerifyIdToken404TokenInvalidSwagger
+} from './swagger/' 
 
-import { CreateDto } from './dto/create.dto'
-import { UpdateDto  } from './dto/update.dto'
-
-
-@Controller('auth')
+@ApiTags('firebase')
+@Controller('firebase')
 export class IndexController {
 
-  constructor(
-    private readonly service: IndexService,
-    private readonly jwtUtility: JwtUtilityService,
-  ) {}
+  constructor(private readonly service: IndexService) {}
 
-  @Get('sign-up')
-  @Render('sign-up')
+  @Get('/page/sign-up')
+  @Render('sign-up.hbs')
   signUp() {
     return;
   }
 
-  
-  @Get('sign-in')
-  @Render('sign-in')
+  @Get('/page/sign-in')
+  @Render('sign-in.hbs')
   signIn() {
     return;
   }
 
-  @Get('home')
-  @Render('home')
+  @Get('/page/auth/home')
+  @Render('home.hbs')
   home() {
     return;
   }
 
-  @Post('/createUser')
-  public async createUser(@Body() data:any) {
-    return await this.service.createUser(data)
-  }
-
-  @Get('/revokeRefreshTokens')
+  @Get('/auth/revoke-refresh-token')
   public async revokeRefreshTokens(@Headers('Authorization') token: string) {
-    const id = token.replace('Bearer ', '');
-    return await this.service.revokeRefreshTokens(id)
+    return await this.service.revokeRefreshTokens(token)
   }
 
-  @Get('/verifyIdToken')
-  public async verifyIdToken(@Headers('Authorization') token: string) {
-    const id = token.replace('Bearer ', '');
-    return await this.service.verifyIdToken(id)
+  @Get('/auth/verify-token')
+  public async verifyToken(@Headers('Authorization') token: string) {
+    return await this.service.verifyToken(token)
   }
 
-  @Get('/user/:id')
-  public async getUser(@Param('id') id: string,) {
-    return await this.service.getUserByEmail(id)
+  @Get('/auth/get-user-by-uid/:uid')
+  public async getUserByUid(@Param('uid') uid: string, @Headers('Authorization') token: string) {
+    return await this.service.getUserByUid(uid, token)
   }
 
-  @Get('/user/:email')
-  public async getUserByEmail(@Param('email') email: string) {
-    return await this.service.getUserByEmail(email)
+  @Get('/auth/get-user-by-email/:email')
+  public async getUserByEmail(@Param('email') email: string, @Headers('Authorization') token: string) {
+    return await this.service.getUserByEmail(email, token)
   }
 
-  @Put(':id')
-  public async update(@Param('id') id: string, @Body() updateDto: UpdateDto) {
-    return await []
+  @Get('/public/check-user-exists-by-uid/:uid')
+  public async checkUserExistsByUid(@Param('uid') uid: string) {
+    return await this.service.checkUserExistsByUid(uid)
   }
 
-  @Delete(':id')
-  public async delete(@Param('id') id: string) {
-    return await []
+  @Get('/public/check-user-exists-by-email/:email')
+  public async checkUserExistsByEmail(@Param('email') email: string) {
+    return await this.service.checkUserExistsByEmail(email)
+  }
+
+  @Delete('/auth')
+  public async delete(@Headers('Authorization') token: string) {
+    return await this.service.deleteUser(token)
   }
 
 }
+
+/*
+  @ApiOperation({ summary: 'verificar token do usuario' })
+  @ApiResponse({
+    status: 200,
+    description: 'Token valido',
+    type: GetAuthVerifyIdToken200Swagger
+  })
+  @ApiResponse({
+    status: 404,
+    description: message.TOKEN_INVALID,
+    type: GetAuthVerifyIdToken404TokenInvalidSwagger
+  })
+*/

@@ -29,15 +29,15 @@ class SignUp {
       return firebase.auth().createUserWithEmailAndPassword(email, password).then(async({user}) => {
         const createUser = {
           "uid" : user.uid,
-          "nome" : this.cutString(email,'@'),
+          "name" : this.cutString(email,'@'),
           "email": email,
-          "senha": password,
+          "password": password,
           "providers":"email_password"
         }
+
         await this.createUserDataBase(createUser, user.Aa,  user.uid)
       })
       .catch((err) => {
-        console.log(err)
         signUpBtn.style.display = ''
         signUpLoading.style.display = 'none';
         error.style.display = 'block';
@@ -54,7 +54,7 @@ class SignUp {
         let userExists = await this.checkIfUserExists(user.email, user.Aa)
 
         if(userExists.email){
-          window.location.href = "/auth/home";
+          //window.location.href = "/page/home";
         }else{
 
           function dec2hex (dec) {
@@ -87,7 +87,7 @@ class SignUp {
     }
 
     async createUserDataBase(user, token, uid) {
-      await fetch('/usuarios', {
+      await fetch('/user', {
         method: 'POST',
         headers: {
           'Accept': 'application/json',
@@ -98,15 +98,17 @@ class SignUp {
       })
       .then(res => res.json())
       .then((res)=>{
-        if(res.email){
-          window.location.href = "/auth/home";
+        console.log(res)
+        if(res.statusCode == 200){
+          console.log('cadastro com sucesso')
+          window.location.href = "/page/home";
         }else{
           const user = firebase.auth().currentUser;
           user.delete().then(() => {
             signUpBtn.style.display = ''
             signUpLoading.style.display = 'none';
             error.style.display = 'block';
-            error.innerHTML = "Erro em cadastrar!";
+            error.innerHTML = res.error.message;
           })
         }
       }).catch((err) => {
@@ -146,7 +148,7 @@ class SignUp {
       firebase.auth().onAuthStateChanged((res) => {
         if(res){
           setTimeout(()=>{
-            window.location.href = "/auth/home";
+            window.location.href = "/page/home";
           },5000)//5 segundos
         }else{
           container.style.display = '';

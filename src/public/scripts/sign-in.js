@@ -21,7 +21,7 @@ class Login {
 
     firebase.auth().signInWithEmailAndPassword(email, password).then(({ user }) => {
 
-      window.location.href = "/auth/home";
+      window.location.href = "/page/home";
 
     })
     .catch(async(err) => {
@@ -61,7 +61,7 @@ class Login {
       let userExists = await this.checkIfUserExists(user.email, user.Aa)
 
       if(userExists.email){
-        window.location.href = "/auth/home";
+        window.location.href = "/page/home";
       }else{
 
         function dec2hex (dec) {
@@ -94,7 +94,7 @@ class Login {
   }
 
   async createUserDataBase(user, token, uid) {
-    await fetch('/usuarios', {
+    await fetch('/user', {
       method: 'POST',
       headers: {
         'Accept': 'application/json',
@@ -106,7 +106,7 @@ class Login {
     .then(res => res.json())
     .then((res)=>{
       if(res.email){
-        window.location.href = "/auth/home";
+        window.location.href = "/page/home";
       }else{
         const user = firebase.auth().currentUser;
         user.delete().then(() => {
@@ -125,7 +125,7 @@ class Login {
   }
 
   async checkIfUserExists(email, token) {
-    return await fetch(`/usuarios/check-if-user-exists/${email}`, {
+    return await fetch(`/user/get-user-by-email/${email}`, {
       method: 'GET',
       headers: {
         'Accept': 'application/json',
@@ -145,7 +145,7 @@ class Login {
   }
 
   async getUserByEmail(email) {
-    return await fetch(`/auth/user/${email}`, {
+    return await fetch(`/user/get-user-by-email/${email}`, {
       method: 'GET',
       headers: {
         'Accept': 'application/json',
@@ -172,7 +172,7 @@ class Login {
     await firebase.auth().onAuthStateChanged((res) => {
       if(res){
         setTimeout(()=>{
-          window.location.href = "/auth/home";
+          window.location.href = "/page/home";
         },5000)//5 segundos
       }else{
         container.style.display = '';

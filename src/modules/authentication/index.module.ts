@@ -5,11 +5,12 @@ import { IndexController } from './index.controller'
 import { IndexService } from './index.service'
 import { IndexRepository } from './index.repository'
 import { JwtUtilityModule } from '../../shared/jwt/jwt.module'
+import { UserValidate } from './user.validate'
 
 @Module({
   imports: [JwtUtilityModule, TypeOrmModule.forFeature([PageEntity, IndexRepository])],
   controllers: [IndexController],
-  providers: [IndexService],
+  providers: [UserValidate, IndexService],
   exports: [IndexService]
 })
 export class IndexModule {}
