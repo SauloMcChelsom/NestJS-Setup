@@ -54,7 +54,7 @@ class SignUp {
         let userExists = await this.checkIfUserExists(user.email, user.Aa)
 
         if(userExists.email){
-          //window.location.href = "/page/home";
+          //window.location.href = "/firebase/page/auth/home";
         }else{
 
           function dec2hex (dec) {
@@ -101,7 +101,7 @@ class SignUp {
         console.log(res)
         if(res.statusCode == 200){
           console.log('cadastro com sucesso')
-          window.location.href = "/page/home";
+          window.location.href = "/firebase/page/auth/home";
         }else{
           const user = firebase.auth().currentUser;
           user.delete().then(() => {
@@ -148,7 +148,7 @@ class SignUp {
       firebase.auth().onAuthStateChanged((res) => {
         if(res){
           setTimeout(()=>{
-            window.location.href = "/page/home";
+            window.location.href = "/firebase/page/auth/home";
           },5000)//5 segundos
         }else{
           container.style.display = '';

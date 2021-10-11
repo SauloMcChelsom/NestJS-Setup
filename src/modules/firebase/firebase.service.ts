@@ -1,12 +1,13 @@
 import { Injectable } from '@nestjs/common'
 import { OK, ConflictExceptions } from '@service/exception'
 import { code, message } from '@shared/enum'
-import { UserValidate } from './user.validate'
+import { FirebaseValidate } from './firebase.validate'
+import { CheckUserExistsMapper } from './mapper/check-user-exists-by-email.mapper'
 
 @Injectable()
-export class IndexService {
+export class FirebaseService {
 
-  constructor(private validate:UserValidate) {}
+  constructor(private validate:FirebaseValidate, private checkUserExistsMapper:CheckUserExistsMapper) {}
 
   public async verifyToken(token:string) {
     let body = await this.validate.isToken(token)
@@ -60,18 +61,19 @@ export class IndexService {
   } 
 
   public async checkUserExistsByUid(uid:string) {
-    await this.validate.getUserByUid(uid)
+    let user = await this.validate.getUserByUid(uid)
     return await new OK(
-      [],
+      [user],
       code.UID_ALREADY_IN_USE,
       message.UID_ALREADY_IN_USE
     )
   }
 
   public async checkUserExistsByEmail(email:string) {
-    await this.validate.getUserByEmail(email)
+    let user = await this.validate.getUserByEmail(email)
+    const dto = this.checkUserExistsMapper.toDto(user)
     return await new OK(
-      [],
+      [dto],
       code.EMAIL_ALREADY_IN_USE,
       message.EMAIL_ALREADY_IN_USE
     )

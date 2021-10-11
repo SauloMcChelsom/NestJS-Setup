@@ -1,37 +1,33 @@
 import { Controller, Res, Render, Redirect, Headers, HttpStatus, Param, HttpCode, Header, Get, Query, Post, Body, Put, Delete } from '@nestjs/common'
-import {
-  ApiOperation,
-  ApiResponse,
-  ApiTags,
-} from '@nestjs/swagger'
-import { IndexService } from './index.service'
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger'
 import { message } from '@shared/enum'
+import { FirebaseService } from './firebase.service'
 import { 
-GetAuthVerifyIdToken200Swagger,
-GetAuthVerifyIdToken404TokenInvalidSwagger
-} from './swagger/' 
+  GetAuthVerifyIdToken200Swagger,
+  GetAuthVerifyIdToken404TokenInvalidSwagger
+} from './swagger' 
 
 @ApiTags('firebase')
 @Controller('firebase')
-export class IndexController {
+export class FirebaseController {
 
-  constructor(private readonly service: IndexService) {}
+  constructor(private readonly service: FirebaseService){}
 
   @Get('/page/sign-up')
   @Render('sign-up.hbs')
-  signUp() {
+  public signUp() {
     return;
   }
 
   @Get('/page/sign-in')
   @Render('sign-in.hbs')
-  signIn() {
+  public signIn() {
     return;
   }
 
   @Get('/page/auth/home')
   @Render('home.hbs')
-  home() {
+  public home() {
     return;
   }
 

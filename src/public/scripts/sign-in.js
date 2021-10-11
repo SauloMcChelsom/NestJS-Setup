@@ -21,7 +21,7 @@ class Login {
 
     firebase.auth().signInWithEmailAndPassword(email, password).then(({ user }) => {
 
-      window.location.href = "/page/home";
+      window.location.href = "/firebase/page/auth/home";
 
     })
     .catch(async(err) => {
@@ -32,7 +32,7 @@ class Login {
         const nomeUser = user.response.displayName
         const textCut = nomeUser.slice(0, nomeUser.lastIndexOf(" "));
         alertLoginWithGoogle.innerHTML = `Olá ${textCut}, você não criou sua conta com email e senha, você fez o registro usando uma conta do Google, você reconheçe esta conta abaixa? se sim é só clicar no botão Fazer login com o Google.`;
-        document.getElementById("imgAccountGoogle").src= user.response.photoURL;
+        document.getElementById("imgAccountGoogle").src = user.response.photoURL;
         nameAccountGoogle.innerHTML = user.response.displayName
         emailAccountGoogle.innerHTML = user.response.email
         
@@ -57,11 +57,11 @@ class Login {
     awaits.style.display = '';
     
     return await firebase.auth().signInWithPopup(new firebase.auth.GoogleAuthProvider()).then(async({user}) => {
+      window.location.href = "/firebase/page/auth/home";
+      //let userExists = await this.checkIfUserExists(user.email, user.Aa)
 
-      let userExists = await this.checkIfUserExists(user.email, user.Aa)
-
-      if(userExists.email){
-        window.location.href = "/page/home";
+      /*if(userExists.email){
+        window.location.href = "/firebase/page/auth/home";
       }else{
 
         function dec2hex (dec) {
@@ -83,7 +83,7 @@ class Login {
         }
 
         await this.createUserDataBase(createUser, user.Aa, user.uid)
-      }
+      }*/
     })
     .catch((err) => {
       container.style.display = '';
@@ -106,7 +106,7 @@ class Login {
     .then(res => res.json())
     .then((res)=>{
       if(res.email){
-        window.location.href = "/page/home";
+        window.location.href = "/firebase/page/auth/home";
       }else{
         const user = firebase.auth().currentUser;
         user.delete().then(() => {
@@ -124,7 +124,7 @@ class Login {
     });
   }
 
-  async checkIfUserExists(email, token) {
+  async  checkIfUserExists(email, token) {
     return await fetch(`/user/get-user-by-email/${email}`, {
       method: 'GET',
       headers: {
@@ -172,7 +172,7 @@ class Login {
     await firebase.auth().onAuthStateChanged((res) => {
       if(res){
         setTimeout(()=>{
-          window.location.href = "/page/home";
+          window.location.href = "/firebase/page/auth/home";
         },5000)//5 segundos
       }else{
         container.style.display = '';

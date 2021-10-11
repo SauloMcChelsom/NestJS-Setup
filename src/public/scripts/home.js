@@ -17,7 +17,7 @@ class Home {
           nav.style.display = '';
           await.style.display = 'none';
         }else{
-          window.location.href = "/page/sign-in";
+          window.location.href = "/firebase/page/sign-in";
         }
       });
     }
@@ -35,7 +35,7 @@ class Home {
     }
   
     async revokeRefreshTokens(token) {
-      return await fetch('/page/revokeRefreshTokens', {
+      return await fetch('/firebase/page/revokeRefreshTokens', {
         method: 'GET',
         headers: {
           Accept: 'application/json',

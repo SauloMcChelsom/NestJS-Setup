@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common'
 import * as firebase from 'firebase-admin';
 import { serviceAccounts } from './firebase.config';
 import { code, message } from '@shared/enum'
-import { JwtUtilityService } from '@shared/jwt/jwt.service'
 import { 
   ConflictExceptions, 
   InternalServerErrorExceptions,
@@ -11,13 +10,9 @@ import {
 } from '@service/exception'
 
 @Injectable()
-export class UserValidate {
+export class FirebaseValidate {
 
-  /**
-  * firebase list error code
-  * https://firebase.google.com/docs/auth/admin/errors
-  */
-  constructor(private readonly jwtUtility: JwtUtilityService,) {
+  constructor() {
     firebase.initializeApp({
       credential: firebase.credential.cert(serviceAccounts),
     });
@@ -92,7 +87,6 @@ export class UserValidate {
           message:error.message,
         })
       }
-
       throw new InternalServerErrorExceptions({
         code:code.ERROR_GENERIC,
         message:message.ERROR_GENERIC,
@@ -104,13 +98,17 @@ export class UserValidate {
   public async revokeRefreshTokens(uid:string) {
     try{
       let revoke = await firebase.auth().revokeRefreshTokens(uid).then(()=>true)
-      console.log('revoke >> ',revoke)
       if(revoke){
         return revoke
       }
-     throw revoke
-    }catch(error) {
-      console.log('revoke ::: ',error)
+      throw revoke
+    }catch(error:any) {
+      if(error.code){
+        throw new NotFoundExceptions({
+          code:error.code,
+          message:error.message,
+        })
+      }
       throw new InternalServerErrorExceptions({
         code:code.ERROR_GENERIC,
         message:message.ERROR_GENERIC,
@@ -125,12 +123,12 @@ export class UserValidate {
       if(user){
       return user.toJSON()
      }
-     throw true
-    }catch(error) {
-      if(error == true){
+     throw user
+    }catch(error:any) {
+      if(error.code){
         throw new NotFoundExceptions({
-          code:code.NOT_FOUND_USER,
-          message:message.NOT_FOUND_USER
+          code:error.code,
+          message:error.message,
         })
       }
       throw new InternalServerErrorExceptions({
@@ -147,12 +145,12 @@ export class UserValidate {
       if(user){
       return user.toJSON()
      }
-     throw true
-    }catch(error) {
-      if(error == true){
+     throw user
+    }catch(error:any) {
+      if(error.code){
         throw new NotFoundExceptions({
-          code:code.NOT_FOUND_USER,
-          message:message.NOT_FOUND_USER
+          code:error.code,
+          message:error.message,
         })
       }
       throw new InternalServerErrorExceptions({
