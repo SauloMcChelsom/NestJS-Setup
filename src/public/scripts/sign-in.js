@@ -10,11 +10,8 @@ class Login {
   }
 
   signInWithEmailAndPassword() {
-    const emailField = document.getElementById('email');
-    const passwordField = document.getElementById('password');
-
-    const email = emailField.value;
-    const password = passwordField.value;
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
 
     signInLoading.style.display = ''
     signInBtn.style.display = 'none';
@@ -25,24 +22,31 @@ class Login {
 
     })
     .catch(async(err) => {
-      let userExists = await this.checkIfUserExists(email, '')
-      if(userExists.providers == "google"){
-        let user = await this.getUserByEmail(email)
+      let {statusCode, ok, error:e, message:m  }  = await this.checkIfUserExists(email, '');
 
-        const nomeUser = user.response.displayName
+      if(statusCode == 404){
+        signInBtn.style.display = ''
+        signInLoading.style.display = 'none';
+        error.style.display = 'block';
+        error.innerHTML = e.message || m;
+        return
+      }
+
+      let userExists = ok.results[0]
+
+      if(userExists.providers == "google.com"){        
+        const nomeUser = userExists.displayName
         const textCut = nomeUser.slice(0, nomeUser.lastIndexOf(" "));
         alertLoginWithGoogle.innerHTML = `Olá ${textCut}, você não criou sua conta com email e senha, você fez o registro usando uma conta do Google, você reconheçe esta conta abaixa? se sim é só clicar no botão Fazer login com o Google.`;
-        document.getElementById("imgAccountGoogle").src = user.response.photoURL;
-        nameAccountGoogle.innerHTML = user.response.displayName
-        emailAccountGoogle.innerHTML = user.response.email
-        
+        document.getElementById("imgAccountGoogle").src = userExists.photoURL;
+        nameAccountGoogle.innerHTML = userExists.displayName
+        emailAccountGoogle.innerHTML = userExists.email
         setTimeout(()=>{
           showAlertLoginWithGoogle.style.display = ''
           loginForm.style.display = 'none'
           signInBtn.style.display = ''
           signInLoading.style.display = 'none';
-        },1000)//5 segundos
-
+        },1000)
       }else{
         signInBtn.style.display = ''
         signInLoading.style.display = 'none';
@@ -58,9 +62,9 @@ class Login {
     
     return await firebase.auth().signInWithPopup(new firebase.auth.GoogleAuthProvider()).then(async({user}) => {
       window.location.href = "/firebase/page/auth/home";
-      //let userExists = await this.checkIfUserExists(user.email, user.Aa)
+      let userExists = await this.checkIfUserExists(user.email, user.Aa)
 
-      /*if(userExists.email){
+      if(userExists.email){
         window.location.href = "/firebase/page/auth/home";
       }else{
 
@@ -83,7 +87,7 @@ class Login {
         }
 
         await this.createUserDataBase(createUser, user.Aa, user.uid)
-      }*/
+      }
     })
     .catch((err) => {
       container.style.display = '';
@@ -125,7 +129,7 @@ class Login {
   }
 
   async  checkIfUserExists(email, token) {
-    return await fetch(`/user/get-user-by-email/${email}`, {
+    return await fetch(`/firebase/public/check-user-exists-by-email/${email}`, {
       method: 'GET',
       headers: {
         'Accept': 'application/json',
