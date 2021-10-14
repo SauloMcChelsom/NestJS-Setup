@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger'
 import { Body } from '../../../service/body'
 import { code, message } from '../../../shared/enum'
-export class User400ProvidersSwagger extends Body {
+export class PostUser400ProvidersUserIsInvalidSwagger extends Body {
 
     @ApiProperty({example: 400})
     public statusCode:any

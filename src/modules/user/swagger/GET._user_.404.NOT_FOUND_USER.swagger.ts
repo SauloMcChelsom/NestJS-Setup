@@ -1,19 +1,19 @@
 import { ApiProperty } from '@nestjs/swagger'
 import { Body } from '../../../service/body'
 import { code, message } from '../../../shared/enum'
-export class User409EmailSwagger extends Body {
+export class GetUser404NotFoundUserSwagger extends Body {
 
-    @ApiProperty({example: 409})
+    @ApiProperty({example: 404})
     public statusCode:any
 
     @ApiProperty({
         example: {
             timestamp: new Date(),
-            code:code.EMAIL_ALREADY_IN_USE,
-            message:message.EMAIL_ALREADY_IN_USE,
-            description: null,
+            code:code.NOT_FOUND_USER,
+            message:message.NOT_FOUND_USER,
+            description: "",
             path: "/user",
-            method: "POST"
+            method: "GET"
         }
     })
     error:any

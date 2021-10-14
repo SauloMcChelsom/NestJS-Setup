@@ -1,20 +1,14 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
-import { UserModule } from './modules/user/user.module';
-/*import { PaginasModule } from './modules/page/paginas.module';
-import { PublicacoesModule } from './modules/publication/publicacoes.module';
-import { CurtidasModule } from './modules/likes/curtidas.module';*/
-import { IndexModule } from './modules/authentication/index.module';
+import { FirebaseModule } from '@modules/firebase/firebase.module';
+import { UserModule } from '@modules/user/user.module';
 
 @Module({
   imports: [
     TypeOrmModule.forRoot(),
+    FirebaseModule,
     UserModule,
-    /*PaginasModule,
-    PublicacoesModule,
-    CurtidasModule,*/
-    IndexModule
   ],
   controllers: [],
   providers: [],

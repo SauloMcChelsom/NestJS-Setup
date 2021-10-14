@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger'
 import { Body } from '@service/body'
-export class UserGetUidSwagger extends Body {
+export class GetUserGetUserByUid200Swagger extends Body {
     @ApiProperty({example: 200})
     public statusCode:any
 

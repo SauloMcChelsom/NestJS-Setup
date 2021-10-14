@@ -1,33 +1,35 @@
 import { Injectable } from '@nestjs/common'
 import { InjectRepository} from '@nestjs/typeorm'
 
-import { CryptUtilityService } from '../../shared/bcrypt/bcrypt.service'
+import { CryptUtilityService } from '@shared/bcrypt/bcrypt.service'
+import { OK, NotFoundExceptions } from '@service/exception'
+import { code, message } from '@shared/enum'
+
+import { UserValidate } from './user.validate'
 import { UserRepository } from './user.repository'
-import { OK, NotFoundExceptions } from '../../service/exception'
-import { UserValidator } from './user.validator'
-import { PerfilUserReturn } from './return/perfil-user.return'
-import { checkIfUserExistsByEmailReturn  } from './return/check-If-user-exists-by-email.return'
-import { code, message } from '../../shared/enum'
-import { CreateNewUserDto } from './dto'
+import { PerfilUserMapper, CheckUserExistsByEmailMapper } from './mapper'
+import { CreateNewUserDto, UpdateUserDto } from './dto'
 @Injectable()
 export class UserService {
 
   constructor(
     @InjectRepository(UserRepository) 
     private readonly repository: UserRepository, 
-    private validator:UserValidator,
-    private crypt:CryptUtilityService
+    private validate:UserValidate,
+    private crypt:CryptUtilityService,
+    private perfilUserMapper:PerfilUserMapper,
+    private checkUserExistsByEmailMapper:CheckUserExistsByEmailMapper
   ) {}
 
   public async save(user:CreateNewUserDto) {
-    await this.validator.emailAlreadyExist(user.email)
-    await this.validator.uidAlreadyExist(user.uid)
-    await this.validator.providersIsValid(user.providers)
+    await this.validate.emailAlreadyExist(user.email)
+    await this.validate.uidAlreadyExist(user.uid)
+    await this.validate.providersIsValid(user.providers)
     user.password = await this.crypt.hash(user.password);
     const res = await this.repository.save(user)
-    const perfilUser = new PerfilUserReturn(res)
+    const dto = this.perfilUserMapper.toDto(res)
     return new OK(
-      [perfilUser],
+      [dto],
       code.USER_REGISTERED,
       message.USER_REGISTERED
     )
@@ -41,35 +43,45 @@ export class UserService {
         message:message.NOT_FOUND_USER,
       })
     }
-    const perfilUser = res.map((r)=> new PerfilUserReturn(r))
-    return new OK(perfilUser)
+    const dto = res.map((r)=> this.perfilUserMapper.toDto(r))
+    return new OK(dto)
   }
 
   public async getUserByUid(uid:string) {
-    const res = await this.validator.getUserByUid(uid)
-    const perfilUser = new PerfilUserReturn(res)
-    return new OK([perfilUser])
+    const res = await this.validate.getUserByUid(uid)
+    const dto = this.perfilUserMapper.toDto(res)
+    return new OK([dto])
   }
 
-  public async getUserByEmail(email:any) {
-    const res = await this.repository.findOne({ where:{ email: email }})
-    return new checkIfUserExistsByEmailReturn(res)
+  public async getUserByEmail(email:string) {
+    const res = await this.validate.getUserByEmail(email)
+    const dto = this.perfilUserMapper.toDto(res)
+    return new OK([dto])
   }
 
-  public async update(id:any, values:any) {
-    await this.repository.update(id, values);
-    const res = await this.repository.findOne(id)
-    return new PerfilUserReturn(res)
+  public async checkUserExistsByEmail(email:string) {
+    const res = await this.validate.getUserByEmail(email)
+    const dto = this.checkUserExistsByEmailMapper.toDto(res)
+    return new OK([dto])
   }
 
-  public async delete(id:any) {
-    await this.repository.delete(id);
-    return "Usuario Deletado"
+  public async updateUserByUid(uid:string, user:UpdateUserDto) {
+    const { id } = await this.validate.getUserByUid(uid)
+    await this.validate.updateUserByUid(id, user)
+    const res = await this.validate.getUserByUid(uid)
+    const dto = this.perfilUserMapper.toDto(res)
+    return new OK([dto], code.USER_UPDATED, message.USER_UPDATED) 
+  }
+
+  public async deleteUserByUid(uid:any) {
+    const { id } = await this.validate.getUserByUid(uid)
+    await this.validate.deleteUserByUid(id)
+    return new OK([], code.DELETED_SUCCESSFULLY, message.DELETED_SUCCESSFULLY) 
   }
 
   public async deleteTodosUsuarios() {
     await this.repository.deleteTodosUsuarios();
-    return "Todos Usuarios Deletados"
+    return new OK([],code.DELETED_SUCCESSFULLY, message.DELETED_SUCCESSFULLY) 
   }
 }
 

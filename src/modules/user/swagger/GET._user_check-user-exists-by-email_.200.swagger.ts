@@ -1,7 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger'
-import { Body } from '../../../service/body'
-export class UserPostSwagger extends Body {
-
+import { Body } from '@service/body'
+export class GetUserCheckUserExistsByEmail200Swagger extends Body {
     @ApiProperty({example: 200})
     public statusCode:any
 
@@ -9,22 +8,18 @@ export class UserPostSwagger extends Body {
         example:  {
             "results": [
               {
-                "uid": "5rkITHMFraPUdy2LZLbunRuZSNu1",
-                "name": "ana",
                 "email": "ana@gmail.com",
-                "timestamp": "2021-09-17T09:29:06.940Z",
                 "providers": "google"
               }
             ],
             "size": 1,
             "timestamp": "2021-09-26T17:19:49.275Z",
-            "message": "Usuario Registrado com sucesso",
-            "code": "USER_REGISTERED",
+            "message": "",
+            "code": "",
             "description": "",
-            "path": "",
-            "method": ""
-        }
+            "path": "/user/check-user-exists-by-email/ana@gmail.com",
+            "method": "GET"
+        },
     })
     ok:any
 }
-

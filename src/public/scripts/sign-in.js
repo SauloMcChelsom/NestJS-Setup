@@ -10,39 +10,43 @@ class Login {
   }
 
   signInWithEmailAndPassword() {
-    const emailField = document.getElementById('email');
-    const passwordField = document.getElementById('password');
-
-    const email = emailField.value;
-    const password = passwordField.value;
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
 
     signInLoading.style.display = ''
     signInBtn.style.display = 'none';
 
     firebase.auth().signInWithEmailAndPassword(email, password).then(({ user }) => {
 
-      window.location.href = "/auth/home";
+      window.location.href = "/firebase/page/auth/home";
 
     })
     .catch(async(err) => {
-      let userExists = await this.checkIfUserExists(email, '')
-      if(userExists.providers == "google"){
-        let user = await this.getUserByEmail(email)
+      let {statusCode, ok, error:_error, message:unknown_message  }  = await this.checkIfUserExists(email);
 
-        const nomeUser = user.response.displayName
+      if(statusCode == 404){
+        signInBtn.style.display = ''
+        signInLoading.style.display = 'none';
+        error.style.display = 'block';
+        error.innerHTML = _error.message || `error: ${_error} >--x--< message: ${unknown_message}`;
+        return
+      }
+
+      let userExists = ok.results[0]
+
+      if(userExists.providers == "google.com"){        
+        const nomeUser = userExists.displayName
         const textCut = nomeUser.slice(0, nomeUser.lastIndexOf(" "));
         alertLoginWithGoogle.innerHTML = `Olá ${textCut}, você não criou sua conta com email e senha, você fez o registro usando uma conta do Google, você reconheçe esta conta abaixa? se sim é só clicar no botão Fazer login com o Google.`;
-        document.getElementById("imgAccountGoogle").src= user.response.photoURL;
-        nameAccountGoogle.innerHTML = user.response.displayName
-        emailAccountGoogle.innerHTML = user.response.email
-        
+        document.getElementById("imgAccountGoogle").src = userExists.photoURL;
+        nameAccountGoogle.innerHTML = userExists.displayName
+        emailAccountGoogle.innerHTML = userExists.email
         setTimeout(()=>{
           showAlertLoginWithGoogle.style.display = ''
           loginForm.style.display = 'none'
           signInBtn.style.display = ''
           signInLoading.style.display = 'none';
-        },1000)//5 segundos
-
+        },1000)
       }else{
         signInBtn.style.display = ''
         signInLoading.style.display = 'none';
@@ -58,32 +62,43 @@ class Login {
     
     return await firebase.auth().signInWithPopup(new firebase.auth.GoogleAuthProvider()).then(async({user}) => {
 
-      let userExists = await this.checkIfUserExists(user.email, user.Aa)
+      let {statusCode, error:_error, message:unknown_message  } = await this.getUserByEmail(user.email)
 
-      if(userExists.email){
-        window.location.href = "/auth/home";
-      }else{
-
-        function dec2hex (dec) {
-          return dec.toString(16).padStart(2, "0")
-        }
-        
-        function generateId (len) {
-          var arr = new Uint8Array((len || 40) / 2)
-          window.crypto.getRandomValues(arr)
-          return Array.from(arr, dec2hex).join('')
-        }
-
-        const createUser = {
-          "uid" : user.uid,
-          "nome" : this.cutString(user.email,'@'),
-          "email": user.email,
-          "senha": generateId(10),
-          "providers":"google"
-        }
-
-        await this.createUserDataBase(createUser, user.Aa, user.uid)
+      if(statusCode == 200){
+        window.location.href = "/firebase/page/auth/home";
+        return
       }
+
+      if(statusCode == 404 && unknown_message){
+        signInBtn.style.display = ''
+        signInLoading.style.display = 'none';
+        error.style.display = 'block';
+        error.innerHTML = _error.message || `error: ${_error} >--x--< message: ${unknown_message}`;
+        return
+      }
+
+      function dec2hex (dec) {
+        return dec.toString(16).padStart(2, "0")
+      }
+      
+      function generateId (len) {
+        var arr = new Uint8Array((len || 40) / 2)
+        window.crypto.getRandomValues(arr)
+        return Array.from(arr, dec2hex).join('')
+      }
+
+      const createUser = {
+        "uid" : user.uid,
+        "name" : this.cutString(user.email,'@'),
+        "email": user.email,
+        "password": generateId(10),//ex.: f539241c7b
+        "providers":"google.com"
+      }
+
+      await this.createUserDataBase(createUser)
+
+      window.location.href = "/firebase/page/auth/home";
+      
     })
     .catch((err) => {
       container.style.display = '';
@@ -93,59 +108,38 @@ class Login {
     });
   }
 
-  async createUserDataBase(user, token, uid) {
-    await fetch('/usuarios', {
+  async createUserDataBase(user) {
+    await fetch('/user', {
       method: 'POST',
       headers: {
         'Accept': 'application/json',
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
       },
       body: JSON.stringify(user) 
     })
-    .then(res => res.json())
-    .then((res)=>{
-      if(res.email){
-        window.location.href = "/auth/home";
+    .then(async(res) => await res.json())
+    .then(async(res)=>{
+      await res
+      if(res.statusCode == 200){
+        return res
       }else{
         const user = firebase.auth().currentUser;
-        user.delete().then(() => {
-          signUpBtn.style.display = ''
-          signUpLoading.style.display = 'none';
-          error.style.display = 'block';
-          error.innerHTML = "Erro em cadastrar!";
-        })
+        user.delete();
+        signInBtn.style.display = '';
+        signInLoading.style.display = 'none';
+        error.style.display = 'block';
+        error.innerHTML = res.error.message;
       }
     }).catch((err) => {
-      signUpBtn.style.display = ''
-      signUpLoading.style.display = 'none';
+      signInBtn.style.display = ''
+      signInLoading.style.display = 'none';
       error.style.display = 'block';
       error.innerHTML = err;
     });
   }
 
-  async checkIfUserExists(email, token) {
-    return await fetch(`/usuarios/check-if-user-exists/${email}`, {
-      method: 'GET',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`,
-      }
-    })
-    .then(res => res.json())
-    .then(async(res)=>{
-      return await res
-    }).catch((err) => {
-      signUpBtn.style.display = ''
-      signUpLoading.style.display = 'none';
-      error.style.display = 'block';
-      error.innerHTML = err;
-    });
-  }
-
-  async getUserByEmail(email) {
-    return await fetch(`/auth/user/${email}`, {
+  async  checkIfUserExists(email) {
+    return await fetch(`/firebase/public/check-user-exists-by-email/${email}`, {
       method: 'GET',
       headers: {
         'Accept': 'application/json',
@@ -156,8 +150,27 @@ class Login {
     .then(async(res)=>{
       return await res
     }).catch((err) => {
-      signUpBtn.style.display = ''
-      signUpLoading.style.display = 'none';
+      signInBtn.style.display = ''
+      signInLoading.style.display = 'none';
+      error.style.display = 'block';
+      error.innerHTML = err;
+    });
+  }
+
+  async getUserByEmail(email) {
+    return await fetch(`/user/get-user-by-email/${email}`, {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      }
+    })
+    .then(res => res.json())
+    .then(async(res)=>{
+      return await res
+    }).catch((err) => {
+      signInBtn.style.display = ''
+      signInLoading.style.display = 'none';
       error.style.display = 'block';
       error.innerHTML = err;
     });
@@ -172,7 +185,7 @@ class Login {
     await firebase.auth().onAuthStateChanged((res) => {
       if(res){
         setTimeout(()=>{
-          window.location.href = "/auth/home";
+         window.location.href = "/firebase/page/auth/home";
         },5000)//5 segundos
       }else{
         container.style.display = '';

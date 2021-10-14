@@ -1,5 +1,5 @@
 import { EntityRepository, Repository } from 'typeorm'
-import { UserEntity } from '../../entity/user.entity'
+import { UserEntity } from '@entity/user.entity'
 
 @EntityRepository(UserEntity)
 export class UserRepository extends Repository<UserEntity> {
@@ -8,7 +8,7 @@ export class UserRepository extends Repository<UserEntity> {
     return await this.createQueryBuilder()
     .delete()
     //.where("id = :id", { id: 32 })
-    .from("usuario")
+    .from("user")
     .execute();
   }
 }
