@@ -38,7 +38,7 @@ export class CreateNewUserDto  {
   password: string;
 
   @ApiProperty({ 
-    example: 'google|email_password', 
+    example: 'google.com|email_password', 
     description: 'usuario autenticou com o google ou email/senha', 
   })
   @IsNotEmpty()

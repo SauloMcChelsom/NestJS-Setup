@@ -59,7 +59,7 @@ export class UserValidate {
 
   public async providersIsValid(providers:string) {
     try{
-      if(providers == "google" || providers == "email_password"){
+      if(providers == "google.com" || providers == "email_password"){
         return
       }
       throw true
@@ -68,7 +68,7 @@ export class UserValidate {
         throw new BadRequestExceptions({
           code:code.PROVIDERS_USER_IS_INVALID,
           message:message.PROVIDERS_USER_IS_INVALID,
-          description:"usuario autenticou com o google ou email/senha? example: google ou email_password"
+          description:"usuario autenticou com o google.com ou email/senha? example: google ou email_password"
         })
       }
       throw new InternalServerErrorExceptions({

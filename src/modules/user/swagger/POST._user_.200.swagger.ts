@@ -13,7 +13,7 @@ export class PostUser200Swagger extends Body {
                 "name": "ana",
                 "email": "ana@gmail.com",
                 "timestamp": "2021-09-17T09:29:06.940Z",
-                "providers": "google"
+                "providers": "google.com"
               }
             ],
             "size": 1,

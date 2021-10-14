@@ -22,13 +22,13 @@ class Login {
 
     })
     .catch(async(err) => {
-      let {statusCode, ok, error:e, message:m  }  = await this.checkIfUserExists(email, '');
+      let {statusCode, ok, error:_error, message:unknown_message  }  = await this.checkIfUserExists(email);
 
       if(statusCode == 404){
         signInBtn.style.display = ''
         signInLoading.style.display = 'none';
         error.style.display = 'block';
-        error.innerHTML = e.message || m;
+        error.innerHTML = _error.message || `error: ${_error} >--x--< message: ${unknown_message}`;
         return
       }
 
@@ -61,33 +61,44 @@ class Login {
     awaits.style.display = '';
     
     return await firebase.auth().signInWithPopup(new firebase.auth.GoogleAuthProvider()).then(async({user}) => {
-      window.location.href = "/firebase/page/auth/home";
-      let userExists = await this.checkIfUserExists(user.email, user.Aa)
 
-      if(userExists.email){
+      let {statusCode, error:_error, message:unknown_message  } = await this.getUserByEmail(user.email)
+
+      if(statusCode == 200){
         window.location.href = "/firebase/page/auth/home";
-      }else{
-
-        function dec2hex (dec) {
-          return dec.toString(16).padStart(2, "0")
-        }
-        
-        function generateId (len) {
-          var arr = new Uint8Array((len || 40) / 2)
-          window.crypto.getRandomValues(arr)
-          return Array.from(arr, dec2hex).join('')
-        }
-
-        const createUser = {
-          "uid" : user.uid,
-          "nome" : this.cutString(user.email,'@'),
-          "email": user.email,
-          "senha": generateId(10),
-          "providers":"google"
-        }
-
-        await this.createUserDataBase(createUser, user.Aa, user.uid)
+        return
       }
+
+      if(statusCode == 404 && unknown_message){
+        signInBtn.style.display = ''
+        signInLoading.style.display = 'none';
+        error.style.display = 'block';
+        error.innerHTML = _error.message || `error: ${_error} >--x--< message: ${unknown_message}`;
+        return
+      }
+
+      function dec2hex (dec) {
+        return dec.toString(16).padStart(2, "0")
+      }
+      
+      function generateId (len) {
+        var arr = new Uint8Array((len || 40) / 2)
+        window.crypto.getRandomValues(arr)
+        return Array.from(arr, dec2hex).join('')
+      }
+
+      const createUser = {
+        "uid" : user.uid,
+        "name" : this.cutString(user.email,'@'),
+        "email": user.email,
+        "password": generateId(10),//ex.: f539241c7b
+        "providers":"google.com"
+      }
+
+      await this.createUserDataBase(createUser)
+
+      window.location.href = "/firebase/page/auth/home";
+      
     })
     .catch((err) => {
       container.style.display = '';
@@ -97,52 +108,50 @@ class Login {
     });
   }
 
-  async createUserDataBase(user, token, uid) {
+  async createUserDataBase(user) {
     await fetch('/user', {
       method: 'POST',
       headers: {
         'Accept': 'application/json',
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
       },
       body: JSON.stringify(user) 
     })
-    .then(res => res.json())
-    .then((res)=>{
-      if(res.email){
-        window.location.href = "/firebase/page/auth/home";
+    .then(async(res) => await res.json())
+    .then(async(res)=>{
+      await res
+      if(res.statusCode == 200){
+        return res
       }else{
         const user = firebase.auth().currentUser;
-        user.delete().then(() => {
-          signUpBtn.style.display = ''
-          signUpLoading.style.display = 'none';
-          error.style.display = 'block';
-          error.innerHTML = "Erro em cadastrar!";
-        })
+        user.delete();
+        signInBtn.style.display = '';
+        signInLoading.style.display = 'none';
+        error.style.display = 'block';
+        error.innerHTML = res.error.message;
       }
     }).catch((err) => {
-      signUpBtn.style.display = ''
-      signUpLoading.style.display = 'none';
+      signInBtn.style.display = ''
+      signInLoading.style.display = 'none';
       error.style.display = 'block';
       error.innerHTML = err;
     });
   }
 
-  async  checkIfUserExists(email, token) {
+  async  checkIfUserExists(email) {
     return await fetch(`/firebase/public/check-user-exists-by-email/${email}`, {
       method: 'GET',
       headers: {
         'Accept': 'application/json',
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
       }
     })
     .then(res => res.json())
     .then(async(res)=>{
       return await res
     }).catch((err) => {
-      signUpBtn.style.display = ''
-      signUpLoading.style.display = 'none';
+      signInBtn.style.display = ''
+      signInLoading.style.display = 'none';
       error.style.display = 'block';
       error.innerHTML = err;
     });
@@ -160,8 +169,8 @@ class Login {
     .then(async(res)=>{
       return await res
     }).catch((err) => {
-      signUpBtn.style.display = ''
-      signUpLoading.style.display = 'none';
+      signInBtn.style.display = ''
+      signInLoading.style.display = 'none';
       error.style.display = 'block';
       error.innerHTML = err;
     });
@@ -176,7 +185,7 @@ class Login {
     await firebase.auth().onAuthStateChanged((res) => {
       if(res){
         setTimeout(()=>{
-          window.location.href = "/firebase/page/auth/home";
+         window.location.href = "/firebase/page/auth/home";
         },5000)//5 segundos
       }else{
         container.style.display = '';
