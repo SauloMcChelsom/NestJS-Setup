@@ -13,6 +13,12 @@ export class FirebaseController {
 
   constructor(private readonly service: FirebaseService){}
 
+  @Get('/page/login')
+  @Render('login.hbs')
+  public login() {
+    return;
+  }
+
   @Get('/page/sign-up')
   @Render('sign-up.hbs')
   public signUp() {

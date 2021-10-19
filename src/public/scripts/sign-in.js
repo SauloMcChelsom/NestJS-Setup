@@ -22,7 +22,7 @@ class Login {
 
     })
     .catch(async(err) => {
-      let {statusCode, ok, error:_error, message:unknown_message  }  = await this.checkIfUserExists(email);
+      let {statusCode, ok, error:_error, message:unknown_message  }  = await this.checkIfUserExistsFaribase(email);
 
       if(statusCode == 404){
         signInBtn.style.display = ''
@@ -138,7 +138,7 @@ class Login {
     });
   }
 
-  async  checkIfUserExists(email) {
+  async checkIfUserExistsFaribase(email) {
     return await fetch(`/firebase/public/check-user-exists-by-email/${email}`, {
       method: 'GET',
       headers: {
