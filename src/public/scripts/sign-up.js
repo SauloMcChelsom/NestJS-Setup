@@ -9,13 +9,9 @@ class SignUp {
     }
   
     async createUserWithEmailAndPassword() {
-      const emailField = document.getElementById('email');
-      const passwordField = document.getElementById('password');
-      const repeatPasswordField = document.getElementById('repeatpassword');
-  
-      const email = emailField.value;
-      const password = passwordField.value;
-      const repeatPassword = repeatPasswordField.value;
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      const repeatPassword = document.getElementById('repeatpassword').value;
 
       if(password != repeatPassword){
         error.style.display = 'block';
@@ -35,7 +31,9 @@ class SignUp {
           "providers":"email_password"
         }
 
-        await this.createUserDataBase(createUser, user.Aa,  user.uid)
+        await this.createUserDataBase(createUser)
+
+        window.location.href = "/firebase/page/auth/home";
       })
       .catch((err) => {
         signUpBtn.style.display = ''
@@ -51,32 +49,42 @@ class SignUp {
       
       return await firebase.auth().signInWithPopup(new firebase.auth.GoogleAuthProvider()).then(async({user}) => {
 
-        let userExists = await this.checkIfUserExists(user.email, user.Aa)
+        let {statusCode, error:_error, message:unknown_message  } = await this.getUserByEmail(user.email)
 
-        if(userExists.email){
-          //window.location.href = "/firebase/page/auth/home";
-        }else{
-
-          function dec2hex (dec) {
-            return dec.toString(16).padStart(2, "0")
-          }
-          
-          function generateId (len) {
-            var arr = new Uint8Array((len || 40) / 2)
-            window.crypto.getRandomValues(arr)
-            return Array.from(arr, dec2hex).join('')
-          }
-
-          const createUser = {
-            "uid" : user.uid,
-            "nome" : this.cutString(user.email,'@'),
-            "email": user.email,
-            "senha": generateId(10),
-            "providers":"google"
-          }
-
-          await this.createUserDataBase(createUser, user.Aa, user.uid)
+        if(statusCode == 200){
+          window.location.href = "/firebase/page/auth/home";
+          return
         }
+        if(statusCode == 404 && unknown_message){
+          signUpBtn.style.display = ''
+          signUpLoading.style.display = 'none';
+          error.style.display = 'block';
+          error.innerHTML = _error.message || `error: ${_error} >--x--< message: ${unknown_message}`;
+          return
+        }
+  
+        function dec2hex (dec) {
+          return dec.toString(16).padStart(2, "0")
+        }
+        
+        function generateId (len) {
+          var arr = new Uint8Array((len || 40) / 2)
+          window.crypto.getRandomValues(arr)
+          return Array.from(arr, dec2hex).join('')
+        }
+  
+        const createUser = {
+          "uid" : user.uid,
+          "name" : this.cutString(user.email,'@'),
+          "email": user.email,
+          "password": generateId(10),//ex.: f539241c7b
+          "providers":"google.com"
+        }
+  
+        await this.createUserDataBase(createUser)
+  
+        window.location.href = "/firebase/page/auth/home";
+      
       })
       .catch((err) => {
         container.style.display = '';
@@ -86,22 +94,20 @@ class SignUp {
       });
     }
 
-    async createUserDataBase(user, token, uid) {
+    async createUserDataBase(user) {
       await fetch('/user', {
         method: 'POST',
         headers: {
           'Accept': 'application/json',
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
         },
         body: JSON.stringify(user) 
       })
-      .then(res => res.json())
-      .then((res)=>{
-        console.log(res)
+      .then(async(res) => await res.json())
+      .then(async(res)=>{
+        await res
         if(res.statusCode == 200){
-          console.log('cadastro com sucesso')
-          window.location.href = "/firebase/page/auth/home";
+          return res
         }else{
           const user = firebase.auth().currentUser;
           user.delete().then(() => {
@@ -119,21 +125,20 @@ class SignUp {
       });
     }
 
-    async checkIfUserExists(email, token) {
-      return await fetch(`/usuarios/check-if-user-exists/${email}`, {
+    async getUserByEmail(email) {
+      return await fetch(`/user/get-user-by-email/${email}`, {
         method: 'GET',
         headers: {
           'Accept': 'application/json',
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
         }
       })
       .then(res => res.json())
       .then(async(res)=>{
         return await res
       }).catch((err) => {
-        signUpBtn.style.display = ''
-        signUpLoading.style.display = 'none';
+        signInBtn.style.display = ''
+        signInLoading.style.display = 'none';
         error.style.display = 'block';
         error.innerHTML = err;
       });
