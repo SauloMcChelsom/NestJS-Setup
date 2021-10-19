@@ -72,3 +72,8 @@ body {
   align-items: center;
   height: calc(100vh - 50px);
 }
+
+.card-login-gmail {
+  background-color: #fff0;
+  border: 0px solid rgba(0,0,0,.125);
+}
