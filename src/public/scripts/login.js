@@ -1,6 +1,12 @@
 class Login {
 
-  constructor() {}
+  constructor() {
+    document.title = 'Login';
+    container.style.display = '';
+    lottie.style.display = 'none';
+    btnIconLoading.style.display = 'none';
+    btnTexLoading.style.display = '';
+  }
 
   
 }
