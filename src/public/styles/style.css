@@ -77,3 +77,10 @@ body {
   background-color: #fff0;
   border: 0px solid rgba(0,0,0,.125);
 }
+
+.between-inside{
+  display: flex;
+    flex-direction: column;
+    height: calc(100vh);
+    justify-content: space-between;
+}
