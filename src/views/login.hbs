@@ -13,14 +13,10 @@
                     <div class="card card-login-gmail" style="width: 25rem;">
                         <div class="card-body" style="display: flex; flex-direction: column; align-items: center; margin-top: 25%;">
                             <img src="/img/gmail-logo.png" style="width:50%; height:40%">
-                            <button class='btn btn-primary' style="margin-top: 20px;">
-                                <div id="btnIconLoading" class="spinner-border text-light" style="font-size: x-small; height: 1.5rem; width: 1.5rem;" role="status">
-                                    <span class="sr-only">Loading...</span>
-                                </div>
-                                <div id="btnTexLoading">
-                                    Login
-                                </div>
+                            <button onclick="_.authenticationByGoogle()" id="login" class='btn btn-primary' style="margin-top: 20px;">
+                                Login
                             </button>
+                            <div id="error" class="alert alert-danger" role="alert" style="display: none; margin-top: 10px;"></div>
                         </div>
                     </div>
                 </div>
@@ -43,10 +39,8 @@
                         <div class="card-body d-flex justify-content-center" style="padding: 0rem;">
                             <a href="#" class="card-link card-foot">About</a> 
                             <a href="#" class="card-link card-foot">Help</a> 
-                            <a href="#" class="card-link card-foot">API</a>
                             <a href="#" class="card-link card-foot">Privacy</a>
-                            <a href="#" class="card-link card-foot">Terms</a>
-                            <a href="#" class="card-link">Forgot password?</a>   
+                            <a href="#" class="card-link card-foot">Terms</a>   
                         </div>
                     </div>
                 </div>
@@ -67,7 +61,12 @@
             </div>
         </div>
         <div id="lottie" class='container await'>
-            <lottie-player src="https://assets3.lottiefiles.com/packages/lf20_tszzqucf.json"  background="transparent"  speed="1"  style="width: 300px; height: 300px;"    autoplay></lottie-player>
+            <lottie-player src="https://assets3.lottiefiles.com/packages/lf20_tszzqucf.json"  background="transparent"  speed="1"  style="width: 300px; height: 300px;" autoplay></lottie-player>
+        </div>
+        <div id="awaits" class='container await'>
+            <div class="spinner-border text-primary" style="font-size: medium; height: 3rem; width: 3rem;" role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
         </div>
     </body>
     <!-- Firebase App (the core Firebase SDK) is always required and must be listed first -->
