@@ -1,4 +1,4 @@
-class Login {
+class SignIn {
 
   constructor() {
     document.title = 'Login';
@@ -210,4 +210,4 @@ class Login {
   }
 }
 
-let _ = new Login();
+let _ = new SignIn();

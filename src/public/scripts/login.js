@@ -56,9 +56,13 @@ class Login {
 
       lottie.style.display = '';
       awaits.style.display = 'none';
+
+      const player = document.querySelector("lottie-player");
+      player.load("https://assets3.lottiefiles.com/packages/lf20_tszzqucf.json");
+
       setTimeout(()=>{
         window.location.href = "/firebase/page/auth/home";
-      },5000)//5 segundos
+      },5500)//5 segundos
       
     })
     .catch((err) => {
