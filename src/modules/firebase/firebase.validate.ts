@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common'
 import * as firebase from 'firebase-admin';
-import { serviceAccounts } from './firebase.config';
 import { code, message } from '@shared/enum'
 import { 
   ConflictExceptions, 
@@ -12,11 +11,7 @@ import {
 @Injectable()
 export class FirebaseValidate {
 
-  constructor() {
-    firebase.initializeApp({
-      credential: firebase.credential.cert(serviceAccounts),
-    });
-  }
+  constructor() {}
 
   public async isToken(token:string) {
     try{

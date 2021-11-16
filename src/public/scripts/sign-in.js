@@ -139,7 +139,7 @@ class SignIn {
   }
 
   async checkIfUserExistsFaribase(email) {
-    return await fetch(`/firebase/public/check-user-exists-by-email/${email}`, {
+    return await fetch(`/firebase/user-display-by-email/${email}`, {
       method: 'GET',
       headers: {
         'Accept': 'application/json',

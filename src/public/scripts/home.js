@@ -35,7 +35,7 @@ class Home {
     }
   
     async revokeRefreshTokens(token) {
-      return await fetch('/firebase/page/revokeRefreshTokens', {
+      return await fetch('/firebase/auth/revoke-refresh-token', {
         method: 'GET',
         headers: {
           Accept: 'application/json',
@@ -46,4 +46,3 @@ class Home {
   }
   
   let _ = new Home();
-  
