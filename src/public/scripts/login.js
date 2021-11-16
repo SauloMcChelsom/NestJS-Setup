@@ -13,7 +13,7 @@ class Login {
     
     return await firebase.auth().signInWithPopup(new firebase.auth.GoogleAuthProvider()).then(async({user}) => {
 
-      let {statusCode, error:_error, message:unknown_message  } = await this.getUserByEmail(user.email)
+      let {statusCode, error:_error, message:unknown_message  } = await this.checkUserExistsByEmail(user.email)
 
       if(statusCode == 200){
         lottie.style.display = '';
@@ -99,8 +99,8 @@ class Login {
     });
   }
 
-  async getUserByEmail(email) {
-    return await fetch(`/user/get-user-by-email/${email}`, {
+  async checkUserExistsByEmail(email) {
+    return await fetch(`/user/check-user-exists-by-email/${email}`, {
       method: 'GET',
       headers: {
         'Accept': 'application/json',

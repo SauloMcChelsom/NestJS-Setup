@@ -72,8 +72,8 @@ export class FirebaseService {
     const dto = this.checkUserExistsMapper.toDto(user)
     return await new OK(
       [dto],
-      code.EMAIL_ALREADY_IN_USE,
-      message.EMAIL_ALREADY_IN_USE
+      code.USER_FOUND,
+      message.USER_FOUND
     )
   } 
 
