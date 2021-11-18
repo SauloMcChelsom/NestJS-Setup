@@ -5,12 +5,20 @@ class Home {
       container.style.display = 'none';
       nav.style.display = 'none';
       loading.classList.add("hidden");
+      document.getElementById("imgAccountGoogle").src = "/img/icon-perfil.png"
       this.isLogged()
     }
   
     async isLogged() {
       await firebase.auth().onAuthStateChanged((res) => {
         if(res){
+          console.log(res)
+          if(res.photoURL){
+            document.getElementById("imgAccountGoogle").src = res.photoURL;
+          }
+          if(res.displayName){
+            nameAccountGoogle.innerHTML = res.displayName
+          }
           uid.innerHTML = res.uid
           token.innerHTML = res.Aa
           container.style.display = '';
