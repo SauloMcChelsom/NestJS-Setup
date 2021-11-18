@@ -37,16 +37,10 @@ export class UsuariosController {
     return await this.service.updateUserByUid(uid, updateDto, token);
   }
 
-  @Delete('/auth/:uid')
+  @Delete('/auth/delete-account')
   @ApiOperation({ summary: 'Excluir usuario' })
-  public async deleteUserByUid(@Param('uid') uid: string, @Headers('Authorization') token: string) {
-    return await this.service.deleteUserByUid(uid, token);
-  }
-
-  @Delete('/auth')
-  @ApiOperation({ summary: 'Excluir todos  usuario' })
-  public async deleteTodosUsuarios(@Headers('Authorization') token: string) {
-    return await this.service.deleteTodosUsuarios(token);
+  public async deleteUserByUid(@Headers('Authorization') token: string) {
+    return await this.service.deleteUserByUid(token);
   }
 
   @Post()

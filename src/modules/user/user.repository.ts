@@ -4,10 +4,10 @@ import { UserEntity } from '@entity/user.entity'
 @EntityRepository(UserEntity)
 export class UserRepository extends Repository<UserEntity> {
 
-  async deleteTodosUsuarios(){
+  async deleteUserByUid(id:any){
     return await this.createQueryBuilder()
     .delete()
-    //.where("id = :id", { id: 32 })
+    .where("id = :id", { id: id })
     .from("user")
     .execute();
   }

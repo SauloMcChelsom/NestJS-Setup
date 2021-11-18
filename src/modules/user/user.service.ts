@@ -114,29 +114,19 @@ export class UserService {
     return new OK([dto], code.USER_UPDATED, message.USER_UPDATED) 
   }
 
-  public async deleteUserByUid(uid:any, token:string) {
+  public async deleteUserByUid(token:string) {
     let body = await this.validateFirebase.isToken(token)
     let decoded = await this.validateFirebase.validateTokenByFirebase(body)
 
-    if(decoded.uid != uid){
-      return await new ConflictExceptions({
-        code:code.UID_INVALID,
-        message:message.UID_INVALID,
-        description:message.UID_INVALID_CONFLICT_TOKEN_DESCRIPTION
-      })
-    }
+    const { id, uid } = await this.validate.getUserByUid(decoded.uid)
 
-    const { id } = await this.validate.getUserByUid(uid)
-    await this.validate.deleteUserByUid(id)
+    await this.validateFirebase.revokeRefreshTokens(uid)
+
+    await this.validateFirebase.deleteUser(uid)
+
+    await this.repository.deleteUserByUid(id);
+
     return new OK([], code.DELETED_SUCCESSFULLY, message.DELETED_SUCCESSFULLY) 
-  }
-
-  public async deleteTodosUsuarios(token:string) {
-    let body = await this.validateFirebase.isToken(token)
-    let decoded = await this.validateFirebase.validateTokenByFirebase(body)
-
-    await this.repository.deleteTodosUsuarios();
-    return new OK([],code.DELETED_SUCCESSFULLY, message.DELETED_SUCCESSFULLY) 
   }
 }
 
