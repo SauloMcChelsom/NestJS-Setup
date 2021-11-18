@@ -7,6 +7,10 @@ import { BadRequestExceptions } from './service/exception'
 import { join } from 'path';
 import { AppModule } from './app.module';
 
+import { initializeFirebase } from '@shared/firebase/firebase.config';
+
+initializeFirebase();
+
 async function bootstrap() {
   
   const app = await NestFactory.create<NestExpressApplication>(AppModule);

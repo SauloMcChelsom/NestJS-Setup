@@ -13,7 +13,7 @@ class Login {
     
     return await firebase.auth().signInWithPopup(new firebase.auth.GoogleAuthProvider()).then(async({user}) => {
 
-      let {statusCode, error:_error, message:unknown_message  } = await this.getUserByEmail(user.email)
+      let {statusCode, error:_error, message:unknown_message  } = await this.checkUserExistsByEmail(user.email)
 
       if(statusCode == 200){
         lottie.style.display = '';
@@ -56,9 +56,13 @@ class Login {
 
       lottie.style.display = '';
       awaits.style.display = 'none';
+
+      const player = document.querySelector("lottie-player");
+      player.load("https://assets3.lottiefiles.com/packages/lf20_tszzqucf.json");
+
       setTimeout(()=>{
         window.location.href = "/firebase/page/auth/home";
-      },5000)//5 segundos
+      },5500)//5 segundos
       
     })
     .catch((err) => {
@@ -95,8 +99,8 @@ class Login {
     });
   }
 
-  async getUserByEmail(email) {
-    return await fetch(`/user/get-user-by-email/${email}`, {
+  async checkUserExistsByEmail(email) {
+    return await fetch(`/user/check-user-exists-by-email/${email}`, {
       method: 'GET',
       headers: {
         'Accept': 'application/json',
