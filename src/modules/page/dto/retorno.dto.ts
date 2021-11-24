@@ -1,16 +1,17 @@
 export class RetornoDto  {
   private id: number;
-  private descricao_da_pagina: string;
-  private nome_da_pagina: string;
-  private usuario_id: number;
-  private data_criacao_pagina: Date;
-
+  private page_description: string;
+  private page_name: string;
+  private user_id: number;
+  private timestamp: Date;
+  private number_of_followers: number;
 
   constructor(values:any) {
     this.id = values.id;
-    this.descricao_da_pagina = values.descricao_da_pagina;
-    this.nome_da_pagina = values.nome_da_pagina;
-    this.usuario_id = values.usuario_id;
-    this.data_criacao_pagina = values.data_criacao_pagina;
+    this.page_description = values.page_description;
+    this.page_name = values.page_name;
+    this.number_of_followers = values.number_of_followers
+    this.user_id = values.user_id;
+    this.timestamp = values.timestamp;
   }
 }
