@@ -14,30 +14,39 @@ export class PageController {
 
   constructor(private readonly service: PageService) {}
 
-  @Post('/auth')
   @ApiOperation({ summary: 'Criar uma pagina' })
+  @Post('/auth')
   public async save(@Body() create: CreateNewPageDto, @Headers('Authorization') token: string) { 
     return await this.service.save(create, token);
   }
 
-  @Put(':id')
-  public async update(@Param('id') id: string, @Body() updateDto: UpdateDto) {
-    return await this.service.update(id, updateDto);
+  @ApiOperation({ summary: 'Buscar por nome da pagina' })
+  @Get('/name/:page')
+  public async findOne(@Param('page') page: string) {
+    return await this.service.findOneByName(page);
   }
 
-  @Delete(':id')
-  public async delete(@Param('id') id: string) {
-    return await this.service.delete(id);
+  @ApiOperation({ summary: 'Buscar por id da pagina' })
+  @Get(':id')
+  public async findOneById(@Param('id') id: string) {
+    return await this.service.findOneById(id);
   }
 
+  @ApiOperation({ summary: 'Buscar todas as paginas' })
   @Get()
   public async findAll() {
     return this.service.findAll();
   }
 
-  @Get(':id')
-  public async findOne(@Param('id') id: string) {
-    return await this.service.findOne(id);
+  @ApiOperation({ summary: 'Atualizar nome da pagina por id' })
+  @Put('/auth/:id')
+  public async update(@Body() page: UpdateDto, @Param('id') id: string, @Headers('Authorization') token: string) {
+    return await this.service.update(page, id, token);
   }
 
+  @ApiOperation({ summary: 'Atualizar nome da pagina por id' })
+  @Post('/follow')
+  public async follow(@Headers('Authorization') token: string) { 
+    return await this.service.follow(token);
+  }
 }

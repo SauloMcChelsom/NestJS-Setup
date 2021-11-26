@@ -31,5 +31,9 @@ export enum message {
     TOKEN_REVOKE_WITH_SUCCESS = 'The Firebase ID token has been revoked.',
     UID_INVALID_CONFLICT_TOKEN_DESCRIPTION = 'uid do token e uid informados não são iguais: -> verifica se o token passado pelo usuario é valido, se for, compara o uid do token com o do uid passado pelo paramentro',
     EMAIL_INVALID_CONFLICT_TOKEN_DESCRIPTION = 'email do token e email informados não são iguais: -> verifica se o token passado pelo usuario é valido, se for, compara o email do token com o do email passado pelo paramentro',
-    PAGE_ALREADY_IN_USE = 'Nome da pagina já em uso por outro usuario'
+    PAGE_ALREADY_IN_USE = 'Nome da pagina já em uso por outro usuario',
+    SUCCESSFULLY_CREATED = "Criado com sucesso",
+    SUCCESSFULLY_FOUND = "Encontrado com sucesso",
+    NOT_FOUND = "Não encontrado",
+    SUCCESSFULLY_UPDATED = "Atualizado com sucesso"
 }
