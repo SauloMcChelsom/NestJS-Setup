@@ -1,13 +1,13 @@
 import { Injectable } from '@nestjs/common'
 import { OK, ConflictExceptions } from '@service/exception'
 import { code, message } from '@shared/enum'
-import { FirebaseValidate } from './firebase.validate'
+import { FirebaseModel } from './firebase.model'
 import { CheckUserExistsMapper } from './mapper/check-user-exists-by-email.mapper'
 
 @Injectable()
 export class FirebaseService {
 
-  constructor(private validate:FirebaseValidate, private checkUserExistsMapper:CheckUserExistsMapper) {}
+  constructor(private validate:FirebaseModel, private checkUserExistsMapper:CheckUserExistsMapper) {}
 
   public async verifyToken(token:string) {
     let body = await this.validate.isToken(token)

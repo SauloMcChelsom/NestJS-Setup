@@ -5,9 +5,9 @@ import { CryptUtilityService } from '@shared/bcrypt/bcrypt.service'
 import { OK, NotFoundExceptions, ConflictExceptions } from '@service/exception'
 import { code, message } from '@shared/enum'
 
-import { FirebaseValidate } from '@modules/firebase/firebase.validate'
+import { FirebaseModel } from '@root/src/modules/firebase/firebase.model'
 
-import { UserValidate } from './user.validate'
+import { UserModel } from './user.model'
 import { UserRepository } from './user.repository'
 import { PerfilUserMapper, CheckUserExistsByEmailMapper } from './mapper'
 import { CreateNewUserDto, UpdateUserDto } from './dto'
@@ -18,8 +18,8 @@ export class UserService {
   constructor(
     @InjectRepository(UserRepository) 
     private readonly repository: UserRepository, 
-    private validate:UserValidate,
-    private validateFirebase:FirebaseValidate,
+    private validate:UserModel,
+    private validateFirebase:FirebaseModel,
     private crypt:CryptUtilityService,
     private perfilUserMapper:PerfilUserMapper,
     private checkUserExistsByEmailMapper:CheckUserExistsByEmailMapper

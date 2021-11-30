@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { PageRepository } from './page.repository'
-import { PageValidate } from './page.validate'
-import { FirebaseValidate } from '@modules/firebase/firebase.validate'
-import { UserValidate } from '@modules/user/user.validate'
+import { PageModel } from './page.model'
+import { FirebaseModel } from '@root/src/modules/firebase/firebase.model'
+import { UserModel } from '@root/src/modules/user/user.model'
 import { CreateNewPageDto } from './dto/createNewPage.dto'
 import { OK, NotFoundExceptions, ConflictExceptions } from '@service/exception'
 import { code, message } from '@shared/enum'
@@ -15,9 +15,9 @@ export class PageService {
 
   constructor(
     @InjectRepository(PageRepository) private readonly repository: PageRepository,
-    private validate:PageValidate,
-    private validateFirebase:FirebaseValidate,
-    private validateUser:UserValidate,
+    private validate:PageModel,
+    private validateFirebase:FirebaseModel,
+    private validateUser:UserModel,
   ) {}
 
   public async save(page:CreateNewPageDto, token:string) {

@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { PageFollowRepository } from './page-follow.repository'
 import { PageFollowModel } from './page-follow.model'
-import { FirebaseValidate } from '@modules/firebase/firebase.validate'
+import { FirebaseModel } from '@root/src/modules/firebase/firebase.model'
 import { CreateNewPageDto } from './dto/createNewPage.dto'
 import { OK, NotFoundExceptions, ConflictExceptions } from '@service/exception'
 import { code, message } from '@shared/enum'
@@ -14,7 +14,7 @@ export class PageFollowService {
 
   constructor(
     @InjectRepository(PageFollowRepository) private readonly repository: PageFollowRepository,
-    private validateFirebase:FirebaseValidate,
+    private validateFirebase:FirebaseModel,
     private model:PageFollowModel
   ) {}
 
@@ -48,7 +48,6 @@ export class PageFollowService {
   }
 }
 /**
- * trocar de validacao para model em todos
  * ajustar nome das resposta da mensagem code/message - aalguns estão apresetando texto trocados
  * criar a funcionalidade seguir/para de seguir
  */

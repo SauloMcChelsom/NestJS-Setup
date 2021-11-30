@@ -9,7 +9,7 @@ import {
 } from '@service/exception'
 
 @Injectable()
-export class FirebaseValidate {
+export class FirebaseModel {
 
   constructor() {}
 
