@@ -43,10 +43,4 @@ export class PageController {
   public async update(@Body() page: UpdateDto, @Param('id') id: string, @Headers('Authorization') token: string) {
     return await this.service.update(page, id, token);
   }
-
-  @ApiOperation({ summary: 'Atualizar nome da pagina por id' })
-  @Post('/follow')
-  public async follow(@Headers('Authorization') token: string) { 
-    return await this.service.follow(token);
-  }
 }

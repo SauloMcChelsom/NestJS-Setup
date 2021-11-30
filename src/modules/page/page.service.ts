@@ -72,12 +72,5 @@ export class PageService {
     const res = await this.repository.findOne(id)
     return new OK([res], code.SUCCESSFULLY_UPDATED, message.SUCCESSFULLY_UPDATED) 
   }
-
-  public async follow(token:string) {
-    let body = await this.validateFirebase.isToken(token)
-    const decoded = await this.validateFirebase.validateTokenByFirebase(body)
- 
-    return new OK([], code.SUCCESSFULLY_CREATED, message.SUCCESSFULLY_CREATED) 
-  }
 }
 
