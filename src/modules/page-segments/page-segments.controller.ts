@@ -6,27 +6,20 @@ import {
 } from '@nestjs/swagger'
 import { PageSegmentsService } from './page-segments.service'
 import { CreateFollowPageDto } from './dto/createNewPage.dto'
-import { UpdateDto  } from './dto/update.dto'
 
 @ApiTags('page-segments')
 @Controller('page-segments')
 export class PageSegmentsController {
 
   constructor(private readonly service: PageSegmentsService) {}
-
-  @ApiOperation({ summary: 'Começar a serguir esta pagina' })
-  @Post('/auth')
-  public async save(@Body() body: CreateFollowPageDto, @Headers('Authorization') token: string) { 
-    return await this.service.save(body, token);
-  }
   
-  @ApiOperation({ summary: 'Todos usuario que segue esta pagina por id' })
+  @ApiOperation({ summary: 'Todos os usuarios da pagina' })
   @Get('/auth/page/:id')
   public async findByIdPage(@Param('id') id: string, @Headers('Authorization') token: string) {
     return await this.service.findByIdPage(id, token);
   }
 
-  @ApiOperation({ summary: 'Paginas que usuario segue por id' })
+  @ApiOperation({ summary: 'Todas as paginas que o usuario segue' })
   @Get('/auth/user/:id')
   public async findByIdUser(@Param('id') id: string, @Headers('Authorization') token: string) {
     return await this.service.findByIdUser(id, token);
@@ -37,10 +30,20 @@ export class PageSegmentsController {
   public async followPage(@Body() body: CreateFollowPageDto, @Headers('Authorization') token: string) {
     return await this.service.followPage(body, token);
   }
-
-  @ApiOperation({ summary: 'Atualizar nome da pagina por id' })
-  @Put('/auth/:id')
-  public async update(@Body() body: UpdateDto, @Param('id') id: string, @Headers('Authorization') token: string) {
-    return await this.service.update(body, id, token);
-  }
 }
+/**
+ * -------nova funcionalidade-----
+ * 
+ * -quantas pessoas te seguem
+ * 
+ * -quantas pessoas te seguiram. ex: os que te seguem e os que pararam
+ * 
+ * -quantas pessoas pararam de te seguir
+ * 
+ * -quantas pessoas voltaram a te seguir
+ * 
+ * -quantas pessoas voltaram a te seguir por periodo, ex: no mês de out-dez x pessoas voltaram
+ * 
+ * -quantas pessoas pararam a te seguir por periodo, ex: no mês de out-dez x pessoas voltaram
+ * 
+ */

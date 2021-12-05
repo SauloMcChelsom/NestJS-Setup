@@ -31,7 +31,7 @@ export class PageModel {
       throw new InternalServerErrorExceptions({
         code:code.ERROR_GENERIC,
         message:message.ERROR_GENERIC,
-        description:"algo aconteceu em encontrar o email do usuario"+` ::: ${error}`
+        description:"algo aconteceu em verificar se a pagina ja existe "+` ::: ${error}`
       })
     }
   }
@@ -146,22 +146,35 @@ export class PageModel {
   }
 
   public async incrementNumberFollowersPage(id:any) {
-    let page = await this.repository.findOne({ where:{ id: id }})
-    if(page){
-      page.number_of_followers++ 
-      await this.repository.update(page.id, page);
+    try{
+      let page = await this.repository.findOne({ where:{ id: id }})
+      if(typeof page?.number_of_followers == "number"){
+        page.number_of_followers++ 
+        await this.repository.update(page.id, { number_of_followers: page.number_of_followers });
+      }
+    }catch(error){
+      throw new InternalServerErrorExceptions({
+        code:code.ERROR_GENERIC,
+        message:message.ERROR_GENERIC,
+        description:"algo aconteceu em incrementar o numero da pagina"+` ::: ${error}`
+      })
     }
-
   }
 
   public async decrementNumberFollowersPage(id:any) { 
-    let page = await this.repository.findOne({ where:{ id: id }})
-    if(page){
-      page.number_of_followers--
-
-      await this.repository.update(page.id, page);
+    try{
+      let page = await this.repository.findOne({ where:{ id: id }})
+      if(typeof page?.number_of_followers == "number"){
+        page.number_of_followers--
+        await this.repository.update(page.id, { number_of_followers: page.number_of_followers });
+      }
+    }catch(error){
+      throw new InternalServerErrorExceptions({
+        code:code.ERROR_GENERIC,
+        message:message.ERROR_GENERIC,
+        description:"algo aconteceu em decrementar o numero da pagina"+` ::: ${error}`
+      })
     }
-
   }
 }
 

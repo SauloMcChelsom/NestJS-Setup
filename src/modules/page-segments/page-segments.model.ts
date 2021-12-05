@@ -15,28 +15,7 @@ export class PageSegmentsModel {
 
   constructor(@InjectRepository(PageSegmentsRepository) private readonly repository: PageSegmentsRepository) {}
 
-  public async pageFollowAlreadyExist(userId:string, pageId:string) {
-    try{
-      const res = await this.repository.findOne({ where:{ user_id: userId, page_id:pageId }})
-      if(res){
-        throw true
-      }
-    }catch(error){
-      if(error == true){
-        throw new ConflictExceptions({
-          code:code.ALREADY_IN_USE,
-          message:message.ALREADY_IN_USE,
-        })
-      }
-      throw new InternalServerErrorExceptions({
-        code:code.ERROR_GENERIC,
-        message:message.ERROR_GENERIC,
-        description:"algo aconteceu em encontrar o email do usuario"+` ::: ${error}`
-      })
-    }
-  }
-
-  public async userFollowPage(userId:string, pageId:string) {
+  public async userAlreadyFollowPage(userId:string, pageId:string) {
     try{
       const res = await this.repository.findOne({ where:{ user_id: userId, page_id:pageId }})
       if(res){
@@ -48,7 +27,7 @@ export class PageSegmentsModel {
       throw new InternalServerErrorExceptions({
         code:code.ERROR_GENERIC,
         message:message.ERROR_GENERIC,
-        description:"algo aconteceu em encontrar o email do usuario"+` ::: ${error}`
+        description:"algo aconteceu em verificar se o usuario ja seguiu a pagina"+` ::: ${error}`
       })
     }
   }
@@ -70,14 +49,14 @@ export class PageSegmentsModel {
       throw new InternalServerErrorExceptions({
         code:code.ERROR_GENERIC,
         message:message.ERROR_GENERIC,
-        description:"algo aconteceu em encontrar o email do usuario"+` ::: ${error}`
+        description:"algo aconteceu em verifica se esta seguindo"+` ::: ${error}`
       })
     }
   }
 
   public async findByIdPage(id:string) {
     try{
-        const res = await this.repository.find({ where:{ page_id: id }})
+        const res = await this.repository.find({ where:{ page_id: id, i_am_following: true }})
       if(res){
         return res
       }
@@ -92,14 +71,14 @@ export class PageSegmentsModel {
       throw new InternalServerErrorExceptions({
         code:code.ERROR_GENERIC,
         message:message.ERROR_GENERIC,
-        description:"algo aconteceu em buscar usuario por uid"+` ::: ${error}`
+        description:"algo aconteceu em encontar por id da pagina"+` ::: ${error}`
       })
     }
   }
 
   public async findByIdUser(id:string) {
     try{
-        const res = await this.repository.find({ where:{ user_id: id }})
+        const res = await this.repository.find({ where:{ user_id: id, i_am_following: true }})
       if(res){
         return res
       }
@@ -114,7 +93,7 @@ export class PageSegmentsModel {
       throw new InternalServerErrorExceptions({
         code:code.ERROR_GENERIC,
         message:message.ERROR_GENERIC,
-        description:"algo aconteceu em buscar usuario por uid"+` ::: ${error}`
+        description:"algo aconteceu em encontar por id do usuario"+` ::: ${error}`
       })
     }
   }
