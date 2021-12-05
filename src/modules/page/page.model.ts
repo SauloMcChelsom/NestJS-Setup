@@ -146,9 +146,7 @@ export class PageModel {
   }
 
   public async incrementNumberFollowersPage(id:any) {
-    console.log('============>', id)
     let page = await this.repository.findOne({ where:{ id: id }})
-    console.log('============>', page)
     if(page){
       page.number_of_followers++ 
       await this.repository.update(page.id, page);
@@ -157,9 +155,7 @@ export class PageModel {
   }
 
   public async decrementNumberFollowersPage(id:any) { 
-    console.log('============>', id)
     let page = await this.repository.findOne({ where:{ id: id }})
-    console.log('============>', page)
     if(page){
       page.number_of_followers--
 

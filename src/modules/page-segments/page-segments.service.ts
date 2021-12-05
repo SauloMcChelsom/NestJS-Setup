@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
-import { PageFollowRepository } from './page-follow.repository'
-import { PageFollowModel } from './page-follow.model'
+import { PageSegmentsRepository } from './page-segments.repository'
+import { PageSegmentsModel } from './page-segments.model'
 import { PageModel } from '@modules/page/page.model'
 import { FirebaseModel } from '@root/src/modules/firebase/firebase.model'
 import { CreateFollowPageDto } from './dto/createNewPage.dto'
@@ -11,12 +11,12 @@ import { UpdateDto  } from './dto/update.dto'
 import { RetornoDto  } from './dto/retorno.dto'
 
 @Injectable()
-export class PageFollowService {
+export class PageSegmentsService {
 
   constructor(
-    @InjectRepository(PageFollowRepository) private readonly repository: PageFollowRepository,
+    @InjectRepository(PageSegmentsRepository) private readonly repository: PageSegmentsRepository,
     private validateFirebase:FirebaseModel,
-    private model:PageFollowModel,
+    private model:PageSegmentsModel,
     private pageModel:PageModel
   ) {}
 

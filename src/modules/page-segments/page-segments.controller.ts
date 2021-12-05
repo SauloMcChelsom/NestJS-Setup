@@ -4,15 +4,15 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger'
-import { PageFollowService } from './page-follow.service'
+import { PageSegmentsService } from './page-segments.service'
 import { CreateFollowPageDto } from './dto/createNewPage.dto'
 import { UpdateDto  } from './dto/update.dto'
 
 @ApiTags('page-segments')
 @Controller('page-segments')
-export class PageFollowController {
+export class PageSegmentsController {
 
-  constructor(private readonly service: PageFollowService) {}
+  constructor(private readonly service: PageSegmentsService) {}
 
   @ApiOperation({ summary: 'Começar a serguir esta pagina' })
   @Post('/auth')

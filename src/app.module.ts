@@ -4,7 +4,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { FirebaseModule } from '@modules/firebase/firebase.module';
 import { UserModule } from '@modules/user/user.module';
 import { PageModule } from '@modules/page/page.module';
-import { PageFollowModule } from '@modules/page-follow/page-follow.module';
+import { PageSegmentsModule } from '@root/src/modules/page-segments/page-segments.module';
 
 @Module({
   imports: [
@@ -12,7 +12,7 @@ import { PageFollowModule } from '@modules/page-follow/page-follow.module';
     FirebaseModule,
     UserModule,
     PageModule,
-    PageFollowModule
+    PageSegmentsModule
   ],
   controllers: [],
   providers: [],
