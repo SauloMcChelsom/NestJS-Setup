@@ -24,8 +24,47 @@ export class PageFollowModel {
     }catch(error){
       if(error == true){
         throw new ConflictExceptions({
-          code:code.PAGE_ALREADY_IN_USE,
-          message:message.PAGE_ALREADY_IN_USE,
+          code:code.ALREADY_IN_USE,
+          message:message.ALREADY_IN_USE,
+        })
+      }
+      throw new InternalServerErrorExceptions({
+        code:code.ERROR_GENERIC,
+        message:message.ERROR_GENERIC,
+        description:"algo aconteceu em encontrar o email do usuario"+` ::: ${error}`
+      })
+    }
+  }
+
+  public async userFollowPage(userId:string, pageId:string) {
+    try{
+      const res = await this.repository.findOne({ where:{ user_id: userId, page_id:pageId }})
+      if(res){
+        return true
+      }else{
+        return false
+      }
+    }catch(error){
+      throw new InternalServerErrorExceptions({
+        code:code.ERROR_GENERIC,
+        message:message.ERROR_GENERIC,
+        description:"algo aconteceu em encontrar o email do usuario"+` ::: ${error}`
+      })
+    }
+  }
+
+  public async getPageUserFollow(userId:string, pageId:string) {
+    try{
+      const res = await this.repository.findOne({ where:{ user_id: userId, page_id:pageId }})
+      if(res){
+        return res
+      }
+      throw true
+    }catch(error){
+      if(error == true){
+        throw new NotFoundExceptions({
+          code:code.NOT_FOUND_USER,
+          message:message.NOT_FOUND_USER,
         })
       }
       throw new InternalServerErrorExceptions({

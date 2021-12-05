@@ -72,5 +72,6 @@ export class PageService {
     const res = await this.repository.findOne(id)
     return new OK([res], code.SUCCESSFULLY_UPDATED, message.SUCCESSFULLY_UPDATED) 
   }
+
 }
 

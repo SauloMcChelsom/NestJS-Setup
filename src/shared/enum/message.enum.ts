@@ -35,5 +35,6 @@ export enum message {
     SUCCESSFULLY_CREATED = "Criado com sucesso",
     SUCCESSFULLY_FOUND = "Encontrado com sucesso",
     NOT_FOUND = "Não encontrado",
-    SUCCESSFULLY_UPDATED = "Atualizado com sucesso"
+    SUCCESSFULLY_UPDATED = "Atualizado com sucesso",
+    ALREADY_IN_USE = "em uso"
 }
