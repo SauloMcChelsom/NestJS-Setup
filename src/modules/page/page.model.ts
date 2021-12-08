@@ -36,111 +36,24 @@ export class PageModel {
     }
   }
 
-  public async uidAlreadyExist(uid:string) {
+  public async findPageByIdOfUserAndIdOfPage(user_id:string, page_id:string) {
     try{
-      const res = await this.repository.findOne({ where:{ uid: uid }})
+      const res = await this.repository.findOne({ where:{ user_id: user_id, id:page_id }})
       if(res){
-        throw true
+        return res
       }
+      throw true
     }catch(error){
       if(error == true){
         throw new ConflictExceptions({
-          code:code.UID_ALREADY_IN_USE,
-          message:message.UID_ALREADY_IN_USE,
+          code:code.DATA_CONFLICT,
+          message:"id do usuario no token e id da pagina no body, não coincide como chave composta",
         })
       }
       throw new InternalServerErrorExceptions({
         code:code.ERROR_GENERIC,
         message:message.ERROR_GENERIC,
-        description: "algo aconteceu em verificar se o uid ja existe"+` ::: ${error}`
-      })
-    }
-  }
-
-  public async providersIsValid(providers:string) {
-    try{
-      if(providers == "google.com" || providers == "email_password"){
-        return
-      }
-      throw true
-    }catch(error){
-      if(error == true){
-        throw new BadRequestExceptions({
-          code:code.PROVIDERS_USER_IS_INVALID,
-          message:message.PROVIDERS_USER_IS_INVALID,
-          description:"usuario autenticou com o google.com ou email/senha? example: google ou email_password"
-        })
-      }
-      throw new InternalServerErrorExceptions({
-        code:code.ERROR_GENERIC,
-        message:message.ERROR_GENERIC,
-        description:"algo aconteceu em validar o provedor"+` ::: ${error}`
-      })
-    }
-  }
-
-  public async getUserByUid(uid:string) {
-    try{
-      const res = await this.repository.findOne({ where:{ uid: uid }})
-      if(res){
-        return res
-      }
-      throw true
-    }catch(error){
-      if(error == true){
-        throw new NotFoundExceptions({
-          code:code.NOT_FOUND_USER,
-          message:message.NOT_FOUND_USER,
-        })
-      }
-      throw new InternalServerErrorExceptions({
-        code:code.ERROR_GENERIC,
-        message:message.ERROR_GENERIC,
-        description:"algo aconteceu em buscar usuario por uid"+` ::: ${error}`
-      })
-    }
-  }
-
-  public async getUserByEmail(email:string) {
-    try{
-      const res = await this.repository.findOne({ where:{ email: email }})
-      if(res){
-        return res
-      }
-      throw true
-    }catch(error){
-      if(error == true){
-        throw new NotFoundExceptions({
-          code:code.NOT_FOUND_USER,
-          message:message.NOT_FOUND_USER,
-        })
-      }
-      throw new InternalServerErrorExceptions({
-        code:code.ERROR_GENERIC,
-        message:message.ERROR_GENERIC,
-        description:"algo aconteceu em buscar usuario por email"+` ::: ${error}`
-      })
-    }
-  }
-
-  public async deleteUserByUid(id:number) {
-    try{
-      const res = await this.repository.delete(id)
-      if(res){
-        return res
-      }
-      throw true
-    }catch(error){
-      if(error == true){
-        throw new NotFoundExceptions({
-          code:code.NOT_FOUND_USER,
-          message:message.NOT_FOUND_USER,
-        })
-      }
-      throw new InternalServerErrorExceptions({
-        code:code.ERROR_GENERIC,
-        message:message.ERROR_GENERIC,
-        description:"algo aconteceu em deletar usuario por uid"+` ::: ${error}`
+        description:"algo aconteceu em encontra a pagina pelo id"+` ::: ${error}`
       })
     }
   }

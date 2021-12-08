@@ -4,7 +4,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { FirebaseModule } from '@modules/firebase/firebase.module';
 import { UserModule } from '@modules/user/user.module';
 import { PageModule } from '@modules/page/page.module';
-import { PageSegmentsModule } from '@root/src/modules/page-segments/page-segments.module';
+import { PageSegmentsModule } from '@modules/page-segments/page-segments.module';
+import { PublicationModule } from '@modules/publication/publication.module';
 
 @Module({
   imports: [
@@ -12,7 +13,8 @@ import { PageSegmentsModule } from '@root/src/modules/page-segments/page-segment
     FirebaseModule,
     UserModule,
     PageModule,
-    PageSegmentsModule
+    PageSegmentsModule,
+    PublicationModule
   ],
   controllers: [],
   providers: [],

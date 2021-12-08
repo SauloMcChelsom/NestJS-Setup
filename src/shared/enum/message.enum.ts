@@ -37,5 +37,6 @@ export enum message {
     NOT_FOUND = "Não encontrado",
     SUCCESSFULLY_UPDATED = "Atualizado com sucesso",
     ALREADY_IN_USE = "em uso",
-    NO_REGISTRY = "Sem registro"
+    NO_REGISTRY = "Sem registro",
+    DATA_CONFLICT = "houve um conflito de dados"
 }

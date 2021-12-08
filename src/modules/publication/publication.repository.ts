@@ -1,8 +1,8 @@
 import { EntityRepository, Repository } from 'typeorm'
-import { PublicationEntity } from '../../entity/publication.entity'
+import { PublicationEntity } from '@root/src/entity/publication.entity'
 
 @EntityRepository(PublicationEntity)
-export class PublicacoesRepository extends Repository<PublicationEntity> {
+export class PublicationRepository extends Repository<PublicationEntity> {
 
   async feed(): Promise<any[]> {
     return await this.createQueryBuilder('publicacao')
@@ -12,14 +12,3 @@ export class PublicacoesRepository extends Repository<PublicationEntity> {
   }
   
 }
-
-/**
-  select
-    pagina.nome_da_pagina,
-    publicacao.texto,
-    publicacao.data_da_publicacao 
-  from
-    publicacao
-  join pagina on
-    publicacao.pagina_id = pagina.id
- */

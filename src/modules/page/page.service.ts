@@ -15,16 +15,17 @@ export class PageService {
 
   constructor(
     @InjectRepository(PageRepository) private readonly repository: PageRepository,
-    private validate:PageModel,
-    private validateFirebase:FirebaseModel,
-    private validateUser:UserModel,
+    private model:PageModel,
+    private modelFirebase:FirebaseModel,
+    private modelUser:UserModel,
   ) {}
 
   public async save(page:CreateNewPageDto, token:string) {
-    let body = await this.validateFirebase.isToken(token)
-    const decoded = await this.validateFirebase.validateTokenByFirebase(body)
-    const user = await this.validateUser.getUserByUid(decoded.uid)
-    await this.validate.pageAlreadyExist(page.page_name)
+    let body = await this.modelFirebase.isToken(token)
+    const decoded = await this.modelFirebase.validateTokenByFirebase(body)
+    const user = await this.modelUser.getUserByUid(decoded.uid)
+    
+    await this.model.pageAlreadyExist(page.page_name)
 
     page.user_id = user.id
     page.number_of_followers = 0
@@ -65,8 +66,8 @@ export class PageService {
   }
 
   public async update(page:any, id:string, token:string) {
-    let body = await this.validateFirebase.isToken(token)
-    const decoded = await this.validateFirebase.validateTokenByFirebase(body)
+    let body = await this.modelFirebase.isToken(token)
+    const decoded = await this.modelFirebase.validateTokenByFirebase(body)
 
     await this.repository.update(id, page);
     const res = await this.repository.findOne(id)
