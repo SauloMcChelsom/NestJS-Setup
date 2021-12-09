@@ -2,8 +2,8 @@ import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, OneToOne, Man
 import { PublicationEntity as Publication } from './publication.entity'
 import { UserEntity as User } from './user.entity'
 
-@Entity('my_likes')
-export class MinhasCurtidasEntity {
+@Entity('like')
+export class LikeEntity {
   @PrimaryGeneratedColumn()
   id: number;
 

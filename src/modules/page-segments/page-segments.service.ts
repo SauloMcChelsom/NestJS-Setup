@@ -59,8 +59,8 @@ export class PageSegmentsService {
 
   public async followPage(body:CreateFollowPageDto, token:string) {
  
-    //let tokenOfBody = await this.validateFirebase.isToken(token)
-    //await this.validateFirebase.validateTokenByFirebase(tokenOfBody)
+    let tokenOfBody = await this.validateFirebase.isToken(token)
+    await this.validateFirebase.validateTokenByFirebase(tokenOfBody)
 
     //verificar se o usuario ja seguiu a pagina
     let follow = await this.model.userAlreadyFollowPage(body.user_id.toString(), body.page_id.toString())

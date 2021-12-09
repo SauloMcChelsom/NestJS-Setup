@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { PublicationRepository } from './publication.repository'
+import { PublicationModel } from './publication.model'
 
 import { FirebaseModel } from '@modules/firebase/firebase.model'
 import { OK, NotFoundExceptions, ConflictExceptions } from '@service/exception'
@@ -19,7 +20,8 @@ export class PublicationService {
     @InjectRepository(PublicationRepository) private readonly repository: PublicationRepository,
     private modelFirebase:FirebaseModel,
     private modelUser:UserModel,
-    private modelPage:PageModel
+    private modelPage:PageModel,
+    private model:PublicationModel
   ) {}
 
   public async createNewPublications(post:CreateNewPublicationDto, token:string) {
