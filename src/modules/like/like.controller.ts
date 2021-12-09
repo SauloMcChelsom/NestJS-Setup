@@ -1,14 +1,8 @@
 import { Controller, Headers, Res, Redirect, HttpStatus, Param, HttpCode, Header, Get, Query, Post, Body, Put, Delete } from '@nestjs/common'
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger'
 
 import { LikeService } from './like.service'
-
 import { LikeDto } from './dto/like.dto'
-
-import {
-  ApiOperation,
-  ApiResponse,
-  ApiTags,
-} from '@nestjs/swagger'
 
 @ApiTags('like')
 @Controller('like')
