@@ -3,12 +3,12 @@ import { PublicationEntity as Publication } from './publication.entity'
 import { UserEntity as User } from './user.entity'
 
 @Entity('comment')
-export class ComentarioEntity {
+export class CommentEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
   @Column()
-  user_comment: string;
+  comment: string;
 
   @CreateDateColumn({ default: () => 'CURRENT_TIMESTAMP' })
   timestamp: Date;

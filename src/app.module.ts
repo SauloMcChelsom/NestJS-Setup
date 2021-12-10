@@ -7,6 +7,7 @@ import { PageModule } from '@modules/page/page.module';
 import { PageSegmentsModule } from '@modules/page-segments/page-segments.module';
 import { PublicationModule } from '@modules/publication/publication.module';
 import { LikeModule } from '@modules/like/like.module';
+import { CommentModule } from '@modules/comment/comment.module';
 
 @Module({
   imports: [
@@ -16,7 +17,8 @@ import { LikeModule } from '@modules/like/like.module';
     PageModule,
     PageSegmentsModule,
     PublicationModule,
-    LikeModule
+    LikeModule,
+    CommentModule
   ],
   controllers: [],
   providers: [],

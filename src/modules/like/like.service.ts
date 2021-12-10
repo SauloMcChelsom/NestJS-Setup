@@ -30,6 +30,7 @@ export class LikeService {
     const decoded = await this.modelFirebase.validateTokenByFirebase(body)
     const user = await this.modelUser.getUserByUid(decoded.uid)
 
+    like.user_id = user.id
 
     //verificar se o usuario ja curtiu a publicacao
     let amLiking = await this.model.userAlreadyLikePublication(like.publication_id.toString(), user.id.toString())
