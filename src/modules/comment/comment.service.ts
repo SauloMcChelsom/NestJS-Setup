@@ -26,15 +26,38 @@ export class CommentService {
     private model:CommentModel
   ) {}
 
-  public async makeComment(comment:CommentDto, token:string) {
+  public async findOneById(id:string, token:string){
+    let body = await this.modelFirebase.isToken(token)
+    await this.modelFirebase.validateTokenByFirebase(body)
+    let res = await this.model.findOneById(id)
+    return new OK([res], code.SUCCESSFULLY_FOUND, message.SUCCESSFULLY_FOUND) 
+  }
+
+  public async findByUserId(id:string, token:string){
+    let body = await this.modelFirebase.isToken(token)
+    const decoded = await this.modelFirebase.validateTokenByFirebase(body)
+    await this.modelUser.getUserByUid(decoded.uid)
+
+    let res = await this.model.findByUserId(id)
+    return new OK(res, code.SUCCESSFULLY_FOUND, message.SUCCESSFULLY_FOUND) 
+  }
+
+  public async findByPublicationId(id:string, token:string){
+    let body = await this.modelFirebase.isToken(token)
+    await this.modelFirebase.validateTokenByFirebase(body)
+
+    let res = await this.model.findByPublicationId(id)
+    return new OK(res, code.SUCCESSFULLY_FOUND, message.SUCCESSFULLY_FOUND) 
+  }
+
+  public async createComment(comment:CommentDto, token:string) {
     let body = await this.modelFirebase.isToken(token)
     const decoded = await this.modelFirebase.validateTokenByFirebase(body)
     const user = await this.modelUser.getUserByUid(decoded.uid)
 
     comment.user_id = user.id
-    await this.model.saveComment(comment)
-
-    let res = await this.model.getComment(comment.publication_id.toString(), user.id.toString())
+    let create = await this.model.create(comment)
+    let res = await this.model.findOneById(create.id)
     return new OK([res], code.SUCCESSFULLY_FOUND, message.SUCCESSFULLY_FOUND) 
   }
 
@@ -43,13 +66,21 @@ export class CommentService {
     const decoded = await this.modelFirebase.validateTokenByFirebase(body)
     const user = await this.modelUser.getUserByUid(decoded.uid)
 
-    await this.model.updateComment(id, comment)
+    await this.model.updateById(id, comment)
 
     let res = await this.model.findOneById(id)
 
     return new OK([res], code.SUCCESSFULLY_UPDATED, message.SUCCESSFULLY_UPDATED) 
   }
-  
+
+  public async deleteComment(id:string, token:string){
+    let body = await this.modelFirebase.isToken(token)
+    await this.modelFirebase.validateTokenByFirebase(body)
+
+    await this.model.deleteById(id);
+
+    return new OK([], code.DELETED_SUCCESSFULLY, message.DELETED_SUCCESSFULLY) 
+  }
 
 }
 

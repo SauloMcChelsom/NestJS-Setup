@@ -11,10 +11,28 @@ export class CommentController {
 
   constructor(private readonly service: CommentService) {}
 
+  @ApiOperation({ summary: 'Buscar comentario por id do usuario' })
+  @Get('user/:id')
+  public async findByUserId(@Param('id') id: string, @Headers('Authorization') token: string) {
+    return await this.service.findByUserId(id, token);
+  }
+
+  @ApiOperation({ summary: 'Buscar comentario por id da publicacao' })
+  @Get('publication/:id')
+  public async findByPublicationId(@Param('id') id: string, @Headers('Authorization') token: string) {
+    return await this.service.findByPublicationId(id, token);
+  }
+
+  @ApiOperation({ summary: 'Buscar comentario por id' })
+  @Get(':id')
+  public async findOneById(@Param('id') id: string, @Headers('Authorization') token: string) {
+    return await this.service.findOneById(id, token);
+  }
+
   @ApiOperation({ summary: 'fazer um comentario' })
   @Post()
-  public async makeComment(@Body() body: CommentDto, @Headers('Authorization') token: string) {
-    return await this.service.makeComment(body, token);
+  public async createComment(@Body() body: CommentDto, @Headers('Authorization') token: string) {
+    return await this.service.createComment(body, token);
   }
 
   @ApiOperation({ summary: 'Atualizar um comentario' })
@@ -23,5 +41,9 @@ export class CommentController {
     return await this.service.updateComment(body, id, token);
   }
 
-  
+  @ApiOperation({ summary: 'Deletar um comentario' })
+  @Delete(':id')
+  public async deleteComment(@Body() body: UpdateDto, @Param('id') id: string, @Headers('Authorization') token: string) {
+    return await this.service.deleteComment(id, token);
+  }
 }
