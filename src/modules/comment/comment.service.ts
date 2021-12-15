@@ -9,76 +9,64 @@ import { UserModel } from '@modules/user/user.model'
 import { PageModel } from '@modules/page/page.model'
 import { PublicationModel } from '@modules/publication/publication.model'
 
-import { CommentRepository } from './comment.repository'
 import { CommentModel } from './comment.model'
-import { CommentDto } from './dto/comment.dto'
+import { CreateDto } from './dto/create.dto'
 import { UpdateDto } from './dto/update.dto'
 
 @Injectable()
 export class CommentService {
 
   constructor(
-    @InjectRepository(CommentRepository) private readonly repository: CommentRepository,
-    private modelFirebase:FirebaseModel,
-    private modelUser:UserModel,
-    private modelPage:PageModel,
-    private modelPublication:PublicationModel,
     private model:CommentModel
   ) {}
 
-  public async findOneById(id:string, token:string){
-    let body = await this.modelFirebase.isToken(token)
-    await this.modelFirebase.validateTokenByFirebase(body)
-    let res = await this.model.findOneById(id)
-    return new OK([res], code.SUCCESSFULLY_FOUND, message.SUCCESSFULLY_FOUND) 
-  }
-
-  public async findByUserId(id:string, token:string){
-    let body = await this.modelFirebase.isToken(token)
-    const decoded = await this.modelFirebase.validateTokenByFirebase(body)
-    await this.modelUser.getUserByUid(decoded.uid)
-
+  public async authFindByUserToken(id:string){
     let res = await this.model.findByUserId(id)
     return new OK(res, code.SUCCESSFULLY_FOUND, message.SUCCESSFULLY_FOUND) 
   }
 
-  public async findByPublicationId(id:string, token:string){
-    let body = await this.modelFirebase.isToken(token)
-    await this.modelFirebase.validateTokenByFirebase(body)
+  public async authFindByUserId(id:string){
+    let res = await this.model.findByUserId(id)
+    return new OK(res, code.SUCCESSFULLY_FOUND, message.SUCCESSFULLY_FOUND) 
+  }
 
+  public async publicFindByUserId(id:string, limit?:number, offset?:number, order?:string, column?:string){
+    let  res  = await this.model.findByUserId(id, limit, offset, order, column)
+    return new OK(res, code.SUCCESSFULLY_FOUND, message.SUCCESSFULLY_FOUND) 
+  }
+
+  public async findByPublicationId(id:string){
     let res = await this.model.findByPublicationId(id)
     return new OK(res, code.SUCCESSFULLY_FOUND, message.SUCCESSFULLY_FOUND) 
   }
 
-  public async createComment(comment:CommentDto, token:string) {
-    let body = await this.modelFirebase.isToken(token)
-    const decoded = await this.modelFirebase.validateTokenByFirebase(body)
-    const user = await this.modelUser.getUserByUid(decoded.uid)
+  public async authFindOneById(id:string, userId:string){
+    await this.model.validateID(id, userId)
+    let res = await this.model.findOneById(id)
+    return new OK([res], code.SUCCESSFULLY_FOUND, message.SUCCESSFULLY_FOUND) 
+  }
 
-    comment.user_id = user.id
+  public async publicFindOneById(id:string){
+    let res = await this.model.findOneById(id)
+    return new OK([res], code.SUCCESSFULLY_FOUND, message.SUCCESSFULLY_FOUND) 
+  }
+
+  public async createComment(comment:CreateDto) {
     let create = await this.model.create(comment)
     let res = await this.model.findOneById(create.id)
     return new OK([res], code.SUCCESSFULLY_FOUND, message.SUCCESSFULLY_FOUND) 
   }
 
-  public async updateComment(comment:UpdateDto, id:string, token:string) {
-    let body = await this.modelFirebase.isToken(token)
-    const decoded = await this.modelFirebase.validateTokenByFirebase(body)
-    const user = await this.modelUser.getUserByUid(decoded.uid)
-
+  public async updateComment(comment:UpdateDto, id:string, userId:string) {
+    await this.model.validateID(id, userId)
     await this.model.updateById(id, comment)
-
     let res = await this.model.findOneById(id)
-
     return new OK([res], code.SUCCESSFULLY_UPDATED, message.SUCCESSFULLY_UPDATED) 
   }
 
-  public async deleteComment(id:string, token:string){
-    let body = await this.modelFirebase.isToken(token)
-    await this.modelFirebase.validateTokenByFirebase(body)
-
+  public async deleteComment(id:string, userId:string){
+    await this.model.validateID(id, userId)
     await this.model.deleteById(id);
-
     return new OK([], code.DELETED_SUCCESSFULLY, message.DELETED_SUCCESSFULLY) 
   }
 

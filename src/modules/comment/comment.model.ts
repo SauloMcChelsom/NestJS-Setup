@@ -1,14 +1,24 @@
-import { Injectable } from '@nestjs/common'
+import { Injectable, Inject, Scope } from '@nestjs/common'
 import { InjectRepository} from '@nestjs/typeorm'
 import { code, message } from '@shared/enum'
+import { UtilityService } from "@shared/model/utility/utility.service"
 import { InternalServerErrorExceptions, NotFoundExceptions, ConflictExceptions } from '@service/exception'
 import { CommentRepository } from './comment.repository'
+
 import { UpdateDto } from './dto/update.dto'
 
-@Injectable()
+import { REQUEST } from '@nestjs/core';
+import { Request } from 'express';
+
+
+@Injectable({ scope: Scope.REQUEST })
 export class CommentModel {
 
-  constructor(@InjectRepository(CommentRepository) private readonly repository: CommentRepository) {}
+  constructor(
+    @InjectRepository(CommentRepository) private readonly repository: CommentRepository,
+    @Inject(REQUEST) private readonly request: Request,
+    private utility:UtilityService
+  ) {}
 
   public async create(comment:any){
     try{
@@ -22,12 +32,16 @@ export class CommentModel {
         throw new NotFoundExceptions({
           code:code.NOT_FOUND,
           message:message.NOT_FOUND,
+          method:this.request.url,
+          path:this.request.method,
         })
       }
       throw new InternalServerErrorExceptions({
         code:code.ERROR_GENERIC,
         message:message.ERROR_GENERIC,
-        description:"algo aconteceu em verifica se esta seguindo"+` ::: ${Exception}`
+        method:this.request.url,
+        path:this.request.method,
+        description:"algo inesperado aconteçeu, verifique: "+`${Exception}`
       })
     }
   }
@@ -44,12 +58,16 @@ export class CommentModel {
         throw new NotFoundExceptions({
           code:code.NOT_FOUND,
           message:message.NOT_FOUND,
+          method:this.request.url,
+          path:this.request.method,
         })
       }
       throw new InternalServerErrorExceptions({
         code:code.ERROR_GENERIC,
         message:message.ERROR_GENERIC,
-        description:"algo aconteceu em verifica se esta seguindo"+` ::: ${Exception}`
+        method:this.request.url,
+        path:this.request.method,
+        description:"algo inesperado aconteçeu, verifique: "+`${Exception}`,
       })
     }
   }
@@ -66,18 +84,37 @@ export class CommentModel {
         throw new NotFoundExceptions({
           code:code.NOT_FOUND,
           message:message.NOT_FOUND,
+          method:this.request.url,
+          path:this.request.method,
         })
       }
       throw new InternalServerErrorExceptions({
         code:code.ERROR_GENERIC,
         message:message.ERROR_GENERIC,
-        description:"algo aconteceu em verifica se esta seguindo"+` ::: ${Exception}`
+        method:this.request.url,
+        path:this.request.method,
+        description:"algo inesperado aconteçeu, verifique: "+`${Exception}`
       })
     }
   }
 
-  public async findByUserId(userId:string){
+  public async findByUserId(userId:string, limit:number=3, offset:number=0, orderBy:string='ASC', column:string='id'){
     try{
+      const count = await this.repository.count({ where: {user_id: userId}});
+     
+      
+      if(this.utility.empty(column)){
+        column = "id"
+      }
+
+      if(!(orderBy === "ASC" || orderBy === "DESC")){
+        orderBy = "ASC"
+      }
+
+      let order:any = new Object();
+          order[column] = orderBy;////DESC ASC
+
+   
       const res = await this.repository.find({
         select: ["comment", "id"],
         
@@ -85,16 +122,14 @@ export class CommentModel {
           user_id: userId
         },
 
-        order: {
-          id: "ASC",//DESC ASC
-        },
+        order: order,
 
-        skip: 3,
-        take: 3,
-        cache: true,
+        skip: offset,
+        take: limit,
       });
       if(Object.keys(res).length != 0){
-        return res
+
+        return [res, limit, offset, count, orderBy, column, this.request.url, this.request.method]
       }
       throw 'error'
     }catch(Exception){
@@ -102,12 +137,16 @@ export class CommentModel {
         throw new NotFoundExceptions({
           code:code.NOT_FOUND,
           message:message.NOT_FOUND,
+          method:this.request.url,
+          path:this.request.method,
         })
       }
       throw new InternalServerErrorExceptions({
         code:code.ERROR_GENERIC,
         message:message.ERROR_GENERIC,
-        description:"algo aconteceu em verifica se esta seguindo"+` ::: ${Exception}`
+        method:this.request.url,
+        path:this.request.method,
+        description:"algo inesperado aconteçeu, "+`${Exception}`
       })
     }
   }
@@ -124,12 +163,16 @@ export class CommentModel {
         throw new NotFoundExceptions({
           code:code.NOT_FOUND,
           message:message.NOT_FOUND,
+          method:this.request.url,
+          path:this.request.method,
         })
       }
       throw new InternalServerErrorExceptions({
         code:code.ERROR_GENERIC,
         message:message.ERROR_GENERIC,
-        description:"algo aconteceu em verifica se esta seguindo"+` ::: ${Exception}`
+        method:this.request.url,
+        path:this.request.method,
+        description:"algo inesperado aconteçeu, verifique: "+`${Exception}`
       })
     }
   }
@@ -145,7 +188,9 @@ export class CommentModel {
       throw new InternalServerErrorExceptions({
         code:code.ERROR_GENERIC,
         message:message.ERROR_GENERIC,
-        description:"algo aconteceu em verifica se esta seguindo"+` ::: ${Exception}`
+        method:this.request.url,
+        path:this.request.method,
+        description:"algo inesperado aconteçeu, verifique: "+`${Exception}`
       })
     }
   }
@@ -160,6 +205,8 @@ export class CommentModel {
       throw new InternalServerErrorExceptions({
         code:code.ERROR_GENERIC,
         message:message.ERROR_GENERIC,
+        method:this.request.url,
+        path:this.request.method,
         description:"algo aconteceu em atualizar updateAmFollowing"+` ::: ${Exception}`
       })
     }
@@ -177,12 +224,16 @@ export class CommentModel {
         throw new ConflictExceptions({
           code:code.DATA_CONFLICT,
           message:message.DATA_CONFLICT,
+          method:this.request.url,
+          path:this.request.method,
         })
       }
       throw new InternalServerErrorExceptions({
         code:code.ERROR_GENERIC,
         message:message.ERROR_GENERIC,
-        description:"algo aconteceu em verifica se esta seguindo"+` ::: ${Exception}`
+        method:this.request.url,
+        path:this.request.method,
+        description:"algo inesperado aconteçeu, verifique: "+`${Exception}`
       })
     }
   }

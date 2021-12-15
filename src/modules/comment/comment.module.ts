@@ -14,11 +14,12 @@ import { PageRepository } from '@modules/page/page.repository'
 import { UserRepository } from '@modules/user/user.repository'
 import { PublicationModel } from '@modules/publication/publication.model'
 import { PublicationRepository } from '@modules/publication/publication.repository'
+import { UtilityService } from "@shared/model/utility/utility.service"
 
 @Module({
   imports: [TypeOrmModule.forFeature([CommentEntity, CommentRepository, PageRepository, UserRepository, PublicationRepository])],
   controllers: [CommentController],
-  providers: [CommentService, CommentModel, PublicationModel, PageModel, FirebaseModel, UserModel],
+  providers: [CommentService, UtilityService, CommentModel, PublicationModel, PageModel, FirebaseModel, UserModel],
   exports: [CommentService]
 })
 export class CommentModule {}

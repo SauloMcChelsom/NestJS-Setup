@@ -15,7 +15,12 @@ export class  Body {
         code: '',
         description: '',
         path: '',
-        method: ''
+        method: '',
+        limit:0,
+        offset:0, 
+        count:0,
+        order:'', 
+        column:''
     }
   
     @ApiProperty({type: () => Error, required: false})

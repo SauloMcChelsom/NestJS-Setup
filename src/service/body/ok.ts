@@ -57,4 +57,39 @@ export class Ok {
         type: String,
     })
     method?:string = ''
+
+    @ApiProperty({
+        example:0,
+        required: false,
+        type: Number,
+    })
+    limit?:number = 0
+
+    @ApiProperty({
+        example:0,
+        required: false,
+        type: Number,
+    })
+    offset?:number = 0
+
+    @ApiProperty({
+        example:0,
+        required: false,
+        type: Number,
+    })
+    count?:number = 0
+
+    @ApiProperty({
+        example:0,
+        required: false,
+        type: Number,
+    })
+    order?:string = ''
+
+    @ApiProperty({
+        example:0,
+        required: false,
+        type: Number,
+    })
+    column?:string = ''
 }
