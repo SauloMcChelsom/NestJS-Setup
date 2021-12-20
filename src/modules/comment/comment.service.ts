@@ -21,19 +21,23 @@ export class CommentService {
   ) {}
 
   public async authFindByUserToken(id:string){
-    let res = await this.model.findByUserId(id)
-    return new OK(res, code.SUCCESSFULLY_FOUND, message.SUCCESSFULLY_FOUND) 
+    let  res  = await this.model.findByUserId(id)
+    //return new OK(res, code.SUCCESSFULLY_FOUND, message.SUCCESSFULLY_FOUND) 
   }
 
   public async authFindByUserId(id:string){
-    let res = await this.model.findByUserId(id)
+    let  res  = await this.model.findByUserId(id)
+   // return new OK(res, code.SUCCESSFULLY_FOUND, message.SUCCESSFULLY_FOUND) 
+  }
+
+  public async publicFindByUserId(id:string, limit_?:number, offset_?:number, order_?:string, column_?:string){
+    const  res = await this.model.findByUserId(id, limit_, offset_, order_, column_)
     return new OK(res, code.SUCCESSFULLY_FOUND, message.SUCCESSFULLY_FOUND) 
   }
 
-  public async publicFindByUserId(id:string, limit?:number, offset?:number, order?:string, column?:string){
-    let  res  = await this.model.findByUserId(id, limit, offset, order, column)
-    return new OK(res, code.SUCCESSFULLY_FOUND, message.SUCCESSFULLY_FOUND) 
-  }
+  /*
+
+  */
 
   public async findByPublicationId(id:string){
     let res = await this.model.findByPublicationId(id)

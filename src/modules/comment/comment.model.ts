@@ -2,7 +2,7 @@ import { Injectable, Inject, Scope } from '@nestjs/common'
 import { InjectRepository} from '@nestjs/typeorm'
 import { code, message } from '@shared/enum'
 import { UtilityService } from "@shared/model/utility/utility.service"
-import { InternalServerErrorExceptions, NotFoundExceptions, ConflictExceptions } from '@service/exception'
+import { OK, InternalServerErrorExceptions, NotFoundExceptions, ConflictExceptions } from '@service/exception'
 import { CommentRepository } from './comment.repository'
 
 import { UpdateDto } from './dto/update.dto'
@@ -123,13 +123,12 @@ export class CommentModel {
         },
 
         order: order,
-
         skip: offset,
         take: limit,
       });
       if(Object.keys(res).length != 0){
-
-        return [res, limit, offset, count, orderBy, column, this.request.url, this.request.method]
+        this.options(this.request.url, this.request.method, limit, offset, count, orderBy, column)        
+        return res
       }
       throw 'error'
     }catch(Exception){
@@ -149,6 +148,18 @@ export class CommentModel {
         description:"algo inesperado aconteçeu, "+`${Exception}`
       })
     }
+  }
+
+  public async options(url:any, method:any, limit:any, offset:any, count:any, orderBy:any, column:any ){
+    OK.getInstance().setOptions(
+      url,
+      method,
+      limit,
+      offset,
+      count,
+      orderBy,
+      column
+    ) 
   }
 
   public async findByPublicationId(publicationId:string){
