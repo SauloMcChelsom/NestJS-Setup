@@ -38,8 +38,8 @@ export class CommentController {
 
   @ApiOperation({ summary: 'Buscar comentario por id do usuario' })
   @Get('/public/user/:id')
-  public async publicFindByUserId(@Param('id') id: string, @Query('limit') limit:number, @Query('offset') offset:number, @Query('order') order:string, @Query('column') column:string) {
-    return await this.service.publicFindByUserId(id, limit, offset, order, column);
+  public async publicFindByUserId(@Param('id') id: string, @Query('search') search:string, @Query('limit') limit:number, @Query('offset') offset:number, @Query('order') order:string, @Query('column') column:string, @Query('start') start:string, @Query('end') end:string) {
+    return await this.service.publicFindByUserId(id, search, limit, offset, order, column, start, end);
   }
 
   @ApiOperation({ summary: 'Buscar comentario por id da publicacao' })

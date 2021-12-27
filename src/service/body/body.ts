@@ -14,6 +14,7 @@ export class  Body {
         message: '',
         code: '',
         description: '',
+        search: '',
         path: '',
         method: '',
         limit:0,

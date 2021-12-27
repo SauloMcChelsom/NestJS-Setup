@@ -9,7 +9,7 @@ import { UpdateDto } from './dto/update.dto'
 
 import { REQUEST } from '@nestjs/core';
 import { Request } from 'express';
-
+import { ILike } from "typeorm";
 
 @Injectable({ scope: Scope.REQUEST })
 export class CommentModel {
@@ -98,40 +98,37 @@ export class CommentModel {
     }
   }
 
-  public async findByUserId(userId:string, limit:number=3, offset:number=0, orderBy:string='ASC', column:string='id'){
+
+  public async findByUserId(userId:string, search:string='', limit:number=3, offset:number=0, order:string='ASC', column:string='id', start:any=false, end:any=false){
     try{
-      const count = await this.repository.count({ where: {user_id: userId}});
-     
-      
+    
       if(this.utility.empty(column)){
         column = "id"
       }
 
-      if(!(orderBy === "ASC" || orderBy === "DESC")){
-        orderBy = "ASC"
+      if(!(order === "ASC" || order === "DESC")){
+        order = "ASC"
       }
 
-      let order:any = new Object();
-          order[column] = orderBy;////DESC ASC
+      if(start){
+        start = this.utility.isValidTimestamp(start)
+      }
 
-   
-      const res = await this.repository.find({
-        select: ["comment", "id"],
-        
-        where: {
-          user_id: userId
-        },
+      if(end){
+        end = this.utility.isValidTimestamp(end)
+      }
+      
+      console.log(start, end)
 
-        order: order,
-        skip: offset,
-        take: limit,
-      });
+      const res = await this.repository.listCommentByUserId(userId, search, limit, offset, order, column, start, end)
+      const count = await this.repository.getCount(userId, search, start, end)
+ 
       if(Object.keys(res).length != 0){
-        this.options(this.request.url, this.request.method, limit, offset, count, orderBy, column)        
+        new OK().options(search, this.request.url, this.request.method, parseInt(limit+'') , parseInt(offset+''), count, order, column)        
         return res
       }
       throw 'error'
-    }catch(Exception){
+    }catch(Exception:any){
       if(Exception == 'error'){
         throw new NotFoundExceptions({
           code:code.NOT_FOUND,
@@ -140,26 +137,9 @@ export class CommentModel {
           path:this.request.method,
         })
       }
-      throw new InternalServerErrorExceptions({
-        code:code.ERROR_GENERIC,
-        message:message.ERROR_GENERIC,
-        method:this.request.url,
-        path:this.request.method,
-        description:"algo inesperado aconteçeu, "+`${Exception}`
-      })
+      console.log(Exception.response)
+      throw new InternalServerErrorExceptions(Exception.response)
     }
-  }
-
-  public async options(url:any, method:any, limit:any, offset:any, count:any, orderBy:any, column:any ){
-    OK.getInstance().setOptions(
-      url,
-      method,
-      limit,
-      offset,
-      count,
-      orderBy,
-      column
-    ) 
   }
 
   public async findByPublicationId(publicationId:string){

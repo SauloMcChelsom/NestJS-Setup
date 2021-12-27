@@ -49,6 +49,13 @@ export class Ok {
         required: false,
         type: String,
     })
+    search?:string = ''
+
+    @ApiProperty({
+        example:null,
+        required: false,
+        type: String,
+    })
     path?:string = ''
 
     @ApiProperty({

@@ -13,13 +13,39 @@ import  { Ok, Error, Body }  from './body/'
 
 export class OK extends Body {
 
+  constructor(results:any[]=[], code:string = '', message:string = '', description:string = ''){
+    
+    super()
+    this.statusCode = HttpStatus.OK
+    this.ok.results = results
+    this.ok.size = results.length
+    this.ok.description = description 
+    this.ok.message = message
+    this.ok.code = code
+    this.ok.timestamp = new Date()
+
+    if(code){
+      const { search, method, column, count, offset, order,  path, limit } = OK.getInstance().getOptions()
+      this.ok.search = search,
+      this.ok.path = path,
+      this.ok.method = method,
+      this.ok.limit = limit,
+      this.ok.offset = offset,
+      this.ok.count = count,
+      this.ok.order = order,
+      this.ok.column = column
+    } 
+
+  }
+
   private static _instance:OK = new OK();
 
   public static getInstance():OK{
     return OK._instance;
   }
 
-  public setOptions(path:string = '', method:string = '', limit:number = 0, offset:number = 0, count:number = 0,  order:string = '', column:string = ''){
+  public setOptions(search:string = '', path:string = '', method:string = '', limit:number = 0, offset:number = 0, count:number = 0,  order:string = '', column:string = ''){
+    this.ok.search = search,
     this.ok.path = path,
     this.ok.method = method,
     this.ok.limit = limit,
@@ -31,6 +57,7 @@ export class OK extends Body {
 
   public getOptions() {
     return  {    
+      search: this.ok.search || '',
       path: this.ok.path || '',
       method: this.ok.method || '',
       limit: this.ok.limit || 0,
@@ -41,49 +68,18 @@ export class OK extends Body {
     }
   }
 
-  constructor(results:any[]=[], code:string = '', message:string = '', description:string = ''){
-    
-    super()
-
-    if(code){
-      const { method, column, count, offset, order,  path, limit } = OK.getInstance().getOptions()
-      this.ok.path = path,
-      this.ok.method = method,
-      this.ok.limit = limit,
-      this.ok.offset = offset,
-      this.ok.count = count,
-      this.ok.order = order,
-      this.ok.column = column
-    } 
-
-    this.statusCode = HttpStatus.OK
-    this.ok.results = results
-    this.ok.size = results.length
-    this.ok.description = description 
-    this.ok.message = message
-    this.ok.code = code
-    this.ok.timestamp = new Date()
-    
-  }
-
- 
-
-
-
-
-
-  /**
+  public async options(search:string, url:string, method:string, limit:number, offset:number, count:number, order:string, column:string ){
     OK.getInstance().setOptions(
+      search,
       url,
       method,
       limit,
       offset,
       count,
-      orderBy,
+      order,
       column
     ) 
-    const { path, method, limit, offset, count, order, column } = OK.getInstance().getOptions()
-   */
+  }
 }
 
 export class Exception extends Body {
