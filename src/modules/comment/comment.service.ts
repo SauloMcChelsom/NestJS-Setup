@@ -30,7 +30,7 @@ export class CommentService {
     return new OK(res, code.SUCCESSFULLY_FOUND, message.SUCCESSFULLY_FOUND) 
   }
 
-  public async publicFindByUserId(id:string, search?:string, limit?:number, offset?:number, order?:string, column?:string, start?:any, end?:any){
+  public async publicFindByUserId(id:string, search?:string, limit?:number, offset?:number, order?:string, column?:string, start?:string, end?:string){
     const  res = await this.model.findByUserId(id, search, limit, offset, order, column, start, end)
     return new OK(res, code.SUCCESSFULLY_FOUND, message.SUCCESSFULLY_FOUND) 
   }

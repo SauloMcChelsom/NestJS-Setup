@@ -25,7 +25,7 @@ export class OK extends Body {
     this.ok.timestamp = new Date()
 
     if(code){
-      const { search, method, column, count, offset, order,  path, limit } = OK.getInstance().getOptions()
+      const { search, method, column, count, offset, order,  path, limit, start, end } = OK.getInstance().getOptions()
       this.ok.search = search,
       this.ok.path = path,
       this.ok.method = method,
@@ -33,7 +33,9 @@ export class OK extends Body {
       this.ok.offset = offset,
       this.ok.count = count,
       this.ok.order = order,
-      this.ok.column = column
+      this.ok.column = column,
+      this.ok.start = start,
+      this.ok.end = end
     } 
 
   }
@@ -44,7 +46,7 @@ export class OK extends Body {
     return OK._instance;
   }
 
-  public setOptions(search:string = '', path:string = '', method:string = '', limit:number = 0, offset:number = 0, count:number = 0,  order:string = '', column:string = ''){
+  public setOptions(search:string = '', path:string = '', method:string = '', limit:number = 0, offset:number = 0, count:number = 0,  order:string = '', column:string = '', start:string = '', end:string = ''){
     this.ok.search = search,
     this.ok.path = path,
     this.ok.method = method,
@@ -53,22 +55,26 @@ export class OK extends Body {
     this.ok.count = count,
     this.ok.order = order,
     this.ok.column = column
+    this.ok.start = start,
+    this.ok.end = end
   }
 
   public getOptions() {
     return  {    
       search: this.ok.search || '',
-      path: this.ok.path || '',
+      path:   this.ok.path   || '',
       method: this.ok.method || '',
-      limit: this.ok.limit || 0,
+      limit:  this.ok.limit  || 0,
       offset: this.ok.offset || 0,
-      count: this.ok.count || 0,
-      order: this.ok.order || '',
-      column:this.ok.column || ''
+      count:  this.ok.count  || 0,
+      order:  this.ok.order  || '',
+      column: this.ok.column || '',
+      start:  this.ok.start  || '',
+      end:    this.ok.end    || ''
     }
   }
 
-  public async options(search:string, url:string, method:string, limit:number, offset:number, count:number, order:string, column:string ){
+  public async options(search:string, url:string, method:string, limit:number, offset:number, count:number, order:string, column:string, start:string, end:string ){
     OK.getInstance().setOptions(
       search,
       url,
@@ -77,7 +83,9 @@ export class OK extends Body {
       offset,
       count,
       order,
-      column
+      column,
+      start,
+      end
     ) 
   }
 }

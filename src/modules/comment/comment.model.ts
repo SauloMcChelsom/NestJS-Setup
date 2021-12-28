@@ -2,7 +2,7 @@ import { Injectable, Inject, Scope } from '@nestjs/common'
 import { InjectRepository} from '@nestjs/typeorm'
 import { code, message } from '@shared/enum'
 import { UtilityService } from "@shared/model/utility/utility.service"
-import { OK, InternalServerErrorExceptions, NotFoundExceptions, ConflictExceptions } from '@service/exception'
+import { OK, InternalServerErrorExceptions, NotFoundExceptions, ConflictExceptions, Exception } from '@service/exception'
 import { CommentRepository } from './comment.repository'
 
 import { UpdateDto } from './dto/update.dto'
@@ -99,7 +99,7 @@ export class CommentModel {
   }
 
 
-  public async findByUserId(userId:string, search:string='', limit:number=3, offset:number=0, order:string='ASC', column:string='id', start:any=false, end:any=false){
+  public async findByUserId(userId:string, search:string='', limit:number=3, offset:number=0, order:string='ASC', column:string='id', start:string='', end:string=''){
     try{
     
       if(this.utility.empty(column)){
@@ -118,27 +118,27 @@ export class CommentModel {
         end = this.utility.isValidTimestamp(end)
       }
       
-      console.log(start, end)
-
       const res = await this.repository.listCommentByUserId(userId, search, limit, offset, order, column, start, end)
       const count = await this.repository.getCount(userId, search, start, end)
  
       if(Object.keys(res).length != 0){
-        new OK().options(search, this.request.url, this.request.method, parseInt(limit+'') , parseInt(offset+''), count, order, column)        
+        new OK().options(search, this.request.url, this.request.method, parseInt(limit+'') , parseInt(offset+''), count, order, column, start, end)        
         return res
       }
-      throw 'error'
-    }catch(Exception:any){
-      if(Exception == 'error'){
-        throw new NotFoundExceptions({
-          code:code.NOT_FOUND,
-          message:message.NOT_FOUND,
-          method:this.request.url,
-          path:this.request.method,
-        })
-      }
-      console.log(Exception.response)
-      throw new InternalServerErrorExceptions(Exception.response)
+
+      throw new NotFoundExceptions({
+        code:code.NOT_FOUND,
+        message:message.NOT_FOUND,
+      })
+      
+    }catch(e:any){
+      throw new Exception({
+        code:e.response.error.code,
+        message:e.response.error.message,
+        description:e.response.error.description,
+        method:this.request.url,
+        path:this.request.method,
+      },e.response.statusCode);
     }
   }
 

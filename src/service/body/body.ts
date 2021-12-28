@@ -21,7 +21,9 @@ export class  Body {
         offset:0, 
         count:0,
         order:'', 
-        column:''
+        column:'',
+        start:'',
+        end:''
     }
   
     @ApiProperty({type: () => Error, required: false})

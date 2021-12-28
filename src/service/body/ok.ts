@@ -89,14 +89,28 @@ export class Ok {
     @ApiProperty({
         example:0,
         required: false,
-        type: Number,
+        type: String,
     })
     order?:string = ''
 
     @ApiProperty({
         example:0,
         required: false,
-        type: Number,
+        type: String,
     })
     column?:string = ''
+
+    @ApiProperty({
+        example:0,
+        required: false,
+        type: String,
+    })
+    start?:string = ''
+
+    @ApiProperty({
+        example:0,
+        required: false,
+        type: String,
+    })
+    end?:string = ''
 }

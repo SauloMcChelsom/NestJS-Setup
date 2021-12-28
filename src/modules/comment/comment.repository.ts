@@ -4,10 +4,7 @@ import { CommentEntity } from '@root/src/entity/comment.entity'
 @EntityRepository(CommentEntity)
 export class CommentRepository extends Repository<CommentEntity> {
     
-    async listCommentByUserId(userId:string, search:string = '',  limit:number=3, offset:number=0, order:any='ASC', column:string='id', 
-    timestampStart:any=false,
-    timestampEnd:any=false
-    ){
+    async listCommentByUserId(userId:string, search:string = '',  limit:number=3, offset:number=0, order:any='ASC', column:string='id', timestampStart:string='', timestampEnd:string=''){
         return await this.createQueryBuilder('comment')
         .where("comment.user_id = :userId", { userId: userId })
         .andWhere('comment.comment ILIKE :searchQuery', {searchQuery: `%${search}%`})

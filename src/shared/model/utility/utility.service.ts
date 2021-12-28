@@ -34,10 +34,10 @@ export class UtilityService {
     const dia = parseInt(timestamp.substr(8))
 
     const valid = (new Date(timestamp)).getTime() > 0;
-    if(valid){
+    if(!valid){
       throw new ConflictExceptions({
         code:code.DATA_CONFLICT,
-        message:'Data Invalida',
+        message:'Timestamp Invalida',
         description:'Exemplo de um timestamp: "2021-12-20" ou "2021-12-20 15:18:49"'
       })
     }
@@ -169,8 +169,7 @@ export class UtilityService {
       return timestamp+' 23:59:59'
     }
 
+    return ''
   }
-
-
 
 }
