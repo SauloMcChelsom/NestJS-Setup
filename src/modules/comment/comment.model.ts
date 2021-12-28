@@ -9,7 +9,7 @@ import { UpdateDto } from './dto/update.dto'
 
 import { REQUEST } from '@nestjs/core';
 import { Request } from 'express';
-import { ILike } from "typeorm";
+
 
 @Injectable({ scope: Scope.REQUEST })
 export class CommentModel {
