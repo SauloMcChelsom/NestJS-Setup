@@ -2,7 +2,7 @@ import { Entity, Column, Index, PrimaryGeneratedColumn, CreateDateColumn, OneToO
 import { PublicationEntity as Publication } from './publication.entity'
 import { UserEntity as User } from './user.entity'
 
-@Entity('comments')
+@Entity('comment')
 export class CommentEntity {
   @PrimaryGeneratedColumn()
   id: number;
