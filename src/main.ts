@@ -75,10 +75,10 @@ async function bootstrap() {
 
   await app.listen(process.env.PORT || 3000);
 
-  console.log(`                                                    `);
-  console.log(`                                                    `);
-  console.log(`                  ${await app.getUrl()}/auth/sign-in`);
-  console.log(`                                                    `);
+  console.log(process.env.PORT || 3000);
+  console.log(process.env.TYPEORM_HOST)
+  console.log(`.env.${process.env.NODE_ENV || 'development'}`)
+                                               
 }
 
 bootstrap();
