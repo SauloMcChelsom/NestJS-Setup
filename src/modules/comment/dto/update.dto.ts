@@ -1,4 +1,4 @@
-import { Contains, IsEmpty, MinLength, MaxLength, ValidationOptions, IsDate, IsNumber, IsString, Length, IsNotEmpty, IsEmail, IsInt, Min,  Max, IsBoolean  } from 'class-validator';
+import { MinLength, IsNotEmpty  } from 'class-validator';
 
 export class UpdateDto  {
   @IsNotEmpty()

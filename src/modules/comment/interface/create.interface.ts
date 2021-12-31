@@ -5,11 +5,3 @@ export interface CreateInterface  {
   publication_id?: number;
   user_id?: number;
 }
-
-
-
-
-
-
-
-

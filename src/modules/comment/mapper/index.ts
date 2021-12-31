@@ -6,4 +6,3 @@ export * from './publicListCommentByUserId.mapper';
 export * from './publicListCommentByPublicationId.mapper';
 export * from './publicListCommentByUserId.mapper';
 export * from './updateComment.mapper';
-

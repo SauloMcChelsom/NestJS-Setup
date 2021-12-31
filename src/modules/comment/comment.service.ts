@@ -4,7 +4,7 @@ import { OK } from '@service/exception'
 import { code, message } from '@shared/enum'
 
 import { CommentModel } from './comment.model'
-import { CreateInterface, UpdateInterface } from './interface/'
+import { CreateInterface, UpdateInterface, ClassificationInterface } from './interface'
 import { 
   CreateCommentMapper, 
   AuthListCommentByUserIdMapper, 
@@ -29,20 +29,20 @@ export class CommentService {
     private publicFindOneCommentByIdMapper: PublicFindOneCommentByIdMapper
   ) {}
 
-  public async authListCommentByUserId(id:string, search?:string, limit?:number, offset?:number, order?:string, column?:string, start?:string, end?:string){
-    let  res  = await this.model.listByUserId(id, search, limit, offset, order, column, start, end)
+  public async authListCommentByUserId(id:string, cls:ClassificationInterface){
+    let  res  = await this.model.listByUserId(id, cls.search, cls.limit, cls.offset, cls.order, cls.column, cls.start, cls.end)
     const dto = res.map((r)=> this.authListCommentByUserIdMapper.toMapper(r))
     return new OK(dto, code.SUCCESSFULLY_FOUND, message.SUCCESSFULLY_FOUND) 
   }
 
-  public async publicListCommentByUserId(id:string, search?:string, limit?:number, offset?:number, order?:string, column?:string, start?:string, end?:string){
-    const  res = await this.model.listByUserId(id, search, limit, offset, order, column, start, end)
+  public async publicListCommentByUserId(id:string, cls:ClassificationInterface){
+    const  res = await this.model.listByUserId(id, cls.search, cls.limit, cls.offset, cls.order, cls.column, cls.start, cls.end)
     const dto = res.map((r)=> this.publicListCommentByUserIdMapper.toMapper(r))
     return new OK(dto, code.SUCCESSFULLY_FOUND, message.SUCCESSFULLY_FOUND) 
   }
 
-  public async publicListCommentByPublicationId(id:string, search?:string, limit?:number, offset?:number, order?:string, column?:string, start?:string, end?:string){
-    let res = await this.model.listByPublicationId(id, search, limit, offset, order, column, start, end)
+  public async publicListCommentByPublicationId(id:string, cls:ClassificationInterface){
+    let res = await this.model.listByPublicationId(id, cls.search, cls.limit, cls.offset, cls.order, cls.column, cls.start, cls.end)
     const dto = res.map((r)=> this.publicListCommentByPublicationIdMapper.toMapper(r))
     return new OK(dto, code.SUCCESSFULLY_FOUND, message.SUCCESSFULLY_FOUND) 
   }

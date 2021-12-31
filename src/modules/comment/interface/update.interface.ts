@@ -3,5 +3,3 @@ export interface UpdateInterface  {
   comment: string;
   user_id: number;
 }
-  
-  
