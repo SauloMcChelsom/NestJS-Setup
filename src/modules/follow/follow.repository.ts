@@ -1,8 +1,8 @@
 import { EntityRepository, Repository } from 'typeorm'
-import { PageSegmentsEntity } from '../../entity/page-segments.entity'
+import { FollowEntity } from '../../entity/follow.entity'
 
-@EntityRepository(PageSegmentsEntity)
-export class PageSegmentsRepository extends Repository<PageSegmentsEntity> {
+@EntityRepository(FollowEntity)
+export class FollowRepository extends Repository<FollowEntity> {
 
     async findAllPageUserFollowByIdOfUser(id:any){
         return await  this.createQueryBuilder("page_segments")

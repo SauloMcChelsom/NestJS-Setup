@@ -1,14 +1,14 @@
 import { Injectable, Inject, Scope } from '@nestjs/common'
 import { InjectRepository} from '@nestjs/typeorm'
-import { code, message } from '@shared/enum'
-import { UtilityService } from "@shared/model/utility/utility.service"
-import { OK, InternalServerErrorExceptions, NotFoundExceptions, ConflictExceptions, Exception } from '@service/exception'
-import { CommentRepository } from './comment.repository'
-
-import { UpdateDto } from './dto/update.dto'
-
 import { REQUEST } from '@nestjs/core';
 import { Request } from 'express';
+
+import { UtilityService } from "@shared/model/utility/utility.service"
+import { code, message } from '@shared/enum'
+import { OK, InternalServerErrorExceptions, NotFoundExceptions, ConflictExceptions, Exception } from '@service/exception'
+
+import { CommentRepository } from './comment.repository'
+import { UpdateInterface } from './interface'
 
 
 @Injectable({ scope: Scope.REQUEST })
@@ -26,49 +26,18 @@ export class CommentModel {
       if(res){
         return res
       }
-      throw 'error'
-    }catch(Exception){
-      if(Exception == 'error'){
-        throw new NotFoundExceptions({
-          code:code.NOT_FOUND,
-          message:message.NOT_FOUND,
-          method:this.request.url,
-          path:this.request.method,
-        })
-      }
-      throw new InternalServerErrorExceptions({
-        code:code.ERROR_GENERIC,
-        message:message.ERROR_GENERIC,
+      throw new NotFoundExceptions({
+        code:code.NOT_FOUND,
+        message:message.NOT_FOUND
+      })
+    }catch(e:any){
+      throw new Exception({
+        code:e.response.error.code,
+        message:e.response.error.message,
+        description:e.response.error.description,
         method:this.request.url,
         path:this.request.method,
-        description:"algo inesperado aconteçeu, verifique: "+`${Exception}`
-      })
-    }
-  }
-
-  public async findOneByUserIdAndPublicationId(publicationId:string, userId:string){
-    try{
-      const res = await this.repository.findOne({ where:{ publication_id: publicationId, user_id:userId }})
-      if(res){
-        return res
-      }
-      throw 'error'
-    }catch(Exception){
-      if(Exception == 'error'){
-        throw new NotFoundExceptions({
-          code:code.NOT_FOUND,
-          message:message.NOT_FOUND,
-          method:this.request.url,
-          path:this.request.method,
-        })
-      }
-      throw new InternalServerErrorExceptions({
-        code:code.ERROR_GENERIC,
-        message:message.ERROR_GENERIC,
-        method:this.request.url,
-        path:this.request.method,
-        description:"algo inesperado aconteçeu, verifique: "+`${Exception}`,
-      })
+      },e.response.statusCode);
     }
   }
 
@@ -78,28 +47,23 @@ export class CommentModel {
       if(res){
         return res
       }
-      throw 'error'
-    }catch(Exception){
-      if(Exception == 'error'){
-        throw new NotFoundExceptions({
-          code:code.NOT_FOUND,
-          message:message.NOT_FOUND,
-          method:this.request.url,
-          path:this.request.method,
-        })
-      }
-      throw new InternalServerErrorExceptions({
-        code:code.ERROR_GENERIC,
-        message:message.ERROR_GENERIC,
+      throw new NotFoundExceptions({
+        code:code.NOT_FOUND,
+        message:message.NOT_FOUND
+      })
+    }catch(e:any){
+      throw new Exception({
+        code:e.response.error.code,
+        message:e.response.error.message,
+        description:e.response.error.description,
         method:this.request.url,
         path:this.request.method,
-        description:"algo inesperado aconteçeu, verifique: "+`${Exception}`
-      })
+      },e.response.statusCode);
     }
   }
 
 
-  public async findByUserId(userId:string, search:string='', limit:number=3, offset:number=0, order:string='ASC', column:string='id', start:string='', end:string=''){
+  public async listByUserId(userId:string, search:string='', limit:number=3, offset:number=0, order:string='ASC', column:string='id', start:string='', end:string=''){
     try{
     
       if(this.utility.empty(column)){
@@ -118,8 +82,8 @@ export class CommentModel {
         end = this.utility.isValidTimestamp(end)
       }
       
-      const res = await this.repository.listCommentByUserId(userId, search, limit, offset, order, column, start, end)
-      const count = await this.repository.getCount(userId, search, start, end)
+      const res = await this.repository.listByUserId(userId, search, limit, offset, order, column, start, end)
+      const count = await this.repository.countListByUserId(userId, search, start, end)
  
       if(Object.keys(res).length != 0){
         new OK().options(search, this.request.url, this.request.method, parseInt(limit+'') , parseInt(offset+''), count, order, column, start, end)        
@@ -142,29 +106,46 @@ export class CommentModel {
     }
   }
 
-  public async findByPublicationId(publicationId:string){
+  public async listByPublicationId(publicationId:string, search:string='', limit:number=3, offset:number=0, order:string='ASC', column:string='id', start:string='', end:string=''){
     try{
-        const res = await this.repository.find({ where:{ publication_id: publicationId }})
-        if(Object.keys(res).length != 0){
-          return res
-        }
-        throw 'error'
-    }catch(Exception){
-      if(Exception == 'error'){
-        throw new NotFoundExceptions({
-          code:code.NOT_FOUND,
-          message:message.NOT_FOUND,
-          method:this.request.url,
-          path:this.request.method,
-        })
+
+      if(this.utility.empty(column)){
+        column = "id"
       }
-      throw new InternalServerErrorExceptions({
-        code:code.ERROR_GENERIC,
-        message:message.ERROR_GENERIC,
+
+      if(!(order === "ASC" || order === "DESC")){
+        order = "ASC"
+      }
+
+      if(start){
+        start = this.utility.isValidTimestamp(start)
+      }
+
+      if(end){
+        end = this.utility.isValidTimestamp(end)
+      }
+
+      const res = await this.repository.listByPublicationId(publicationId, search, limit, offset, order, column, start, end)
+      const count = await this.repository.countListByPublicationId(publicationId, search, start, end)
+
+      if(Object.keys(res).length != 0){
+        new OK().options(search, this.request.url, this.request.method, parseInt(limit+'') , parseInt(offset+''), count, order, column, start, end)        
+        return res
+      }
+
+      throw new NotFoundExceptions({
+        code:code.NOT_FOUND,
+        message:message.NOT_FOUND
+      })
+
+    }catch(e:any){
+      throw new Exception({
+        code:e.response.error.code,
+        message:e.response.error.message,
+        description:e.response.error.description,
         method:this.request.url,
         path:this.request.method,
-        description:"algo inesperado aconteçeu, verifique: "+`${Exception}`
-      })
+      },e.response.statusCode);
     }
   }
 
@@ -174,31 +155,30 @@ export class CommentModel {
       if(res){
         return res
       }
-      throw res
-    }catch(Exception){
+    }catch(e){
       throw new InternalServerErrorExceptions({
         code:code.ERROR_GENERIC,
         message:message.ERROR_GENERIC,
         method:this.request.url,
         path:this.request.method,
-        description:"algo inesperado aconteçeu, verifique: "+`${Exception}`
+        description:"algo inesperado aconteçeu, verifique: "+`${e}`
       })
     }
   }
 
-  public async updateById(id:string, body: UpdateDto) {
+  public async updateById(id:number, body: UpdateInterface) {
     try{
       const res = await this.repository.update(id, { ...body as any });
       if(res){
         return res
       }
-    }catch(Exception){
+    }catch(e){
       throw new InternalServerErrorExceptions({
         code:code.ERROR_GENERIC,
         message:message.ERROR_GENERIC,
         method:this.request.url,
         path:this.request.method,
-        description:"algo aconteceu em atualizar updateAmFollowing"+` ::: ${Exception}`
+        description:"algo aconteceu em atualizar updateAmFollowing"+` ::: ${e}`
       })
     }
   }
@@ -209,25 +189,19 @@ export class CommentModel {
       if(res){
         return true
       }
-      throw 'conflict'
-    }catch(Exception){
-      if(Exception == 'conflict'){
-        throw new ConflictExceptions({
-          code:code.DATA_CONFLICT,
-          message:message.DATA_CONFLICT,
-          method:this.request.url,
-          path:this.request.method,
-        })
-      }
-      throw new InternalServerErrorExceptions({
-        code:code.ERROR_GENERIC,
-        message:message.ERROR_GENERIC,
+      throw new ConflictExceptions({
+        code:code.DATA_CONFLICT,
+        message:message.DATA_CONFLICT
+      })
+    }catch(e:any){
+      throw new Exception({
+        code:e.response.error.code,
+        message:e.response.error.message,
+        description:e.response.error.description,
         method:this.request.url,
         path:this.request.method,
-        description:"algo inesperado aconteçeu, verifique: "+`${Exception}`
-      })
+      },e.response.statusCode);
     }
   }
-  
 }
 

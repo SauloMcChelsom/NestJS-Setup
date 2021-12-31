@@ -7,13 +7,13 @@ import {
   BadRequestExceptions,
   NotFoundExceptions
 } from '@service/exception'
-import { PageSegmentsRepository } from './page-segments.repository'
+import { FollowRepository } from './follow.repository'
 
 
 @Injectable()
-export class PageSegmentsModel {
+export class FollowModel {
 
-  constructor(@InjectRepository(PageSegmentsRepository) private readonly repository: PageSegmentsRepository) {}
+  constructor(@InjectRepository(FollowRepository) private readonly repository: FollowRepository) {}
 
   public async userAlreadyFollowPage(userId:string, pageId:string) {
     try{

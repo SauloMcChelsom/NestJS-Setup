@@ -4,5 +4,5 @@ export class UpdateDto  {
   @IsNotEmpty()
   @IsNotEmpty()
   @MinLength(1)
-  comment: boolean;
+  comment: string;
 }

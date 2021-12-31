@@ -2,8 +2,8 @@ import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, OneToOne, Man
 import { UserEntity as User } from './user.entity'
 import { PageEntity as Page } from './page.entity'
 
-@Entity('page_segments')
-export class PageSegmentsEntity {
+@Entity('follow')
+export class FollowEntity {
 
   @PrimaryGeneratedColumn()
   id: number;

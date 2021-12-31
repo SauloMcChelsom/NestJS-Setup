@@ -1,67 +1,78 @@
 import { Injectable } from '@nestjs/common'
-import { InjectRepository } from '@nestjs/typeorm'
 
-import { OK, NotFoundExceptions, ConflictExceptions } from '@service/exception'
+import { OK } from '@service/exception'
 import { code, message } from '@shared/enum'
 
-import { FirebaseModel } from '@modules/firebase/firebase.model'
-import { UserModel } from '@modules/user/user.model'
-import { PageModel } from '@modules/page/page.model'
-import { PublicationModel } from '@modules/publication/publication.model'
-
 import { CommentModel } from './comment.model'
-import { CreateDto } from './dto/create.dto'
-import { UpdateDto } from './dto/update.dto'
+import { CreateInterface, UpdateInterface } from './interface/'
+import { 
+  CreateCommentMapper, 
+  AuthListCommentByUserIdMapper, 
+  PublicListCommentByUserIdMapper,
+  AuthFindOneCommentByIdMapper,
+  PublicListCommentByPublicationIdMapper,
+  UpdateCommentMapper,
+  PublicFindOneCommentByIdMapper
+} from './mapper'
 
 @Injectable()
 export class CommentService {
 
   constructor(
-    private model:CommentModel
+    private model: CommentModel, 
+    private createCommentMapper: CreateCommentMapper,
+    private authListCommentByUserIdMapper: AuthListCommentByUserIdMapper,
+    private publicListCommentByUserIdMapper: PublicListCommentByUserIdMapper,
+    private authFindOneCommentByIdMapper: AuthFindOneCommentByIdMapper,
+    private publicListCommentByPublicationIdMapper: PublicListCommentByPublicationIdMapper,
+    private updateCommentMapper: UpdateCommentMapper,
+    private publicFindOneCommentByIdMapper: PublicFindOneCommentByIdMapper
   ) {}
 
-  public async authFindByUserToken(id:string){
-    let  res  = await this.model.findByUserId(id)
-    return new OK(res, code.SUCCESSFULLY_FOUND, message.SUCCESSFULLY_FOUND) 
+  public async authListCommentByUserId(id:string, search?:string, limit?:number, offset?:number, order?:string, column?:string, start?:string, end?:string){
+    let  res  = await this.model.listByUserId(id, search, limit, offset, order, column, start, end)
+    const dto = res.map((r)=> this.authListCommentByUserIdMapper.toMapper(r))
+    return new OK(dto, code.SUCCESSFULLY_FOUND, message.SUCCESSFULLY_FOUND) 
   }
 
-  public async authFindByUserId(id:string){
-    let  res  = await this.model.findByUserId(id)
-    return new OK(res, code.SUCCESSFULLY_FOUND, message.SUCCESSFULLY_FOUND) 
+  public async publicListCommentByUserId(id:string, search?:string, limit?:number, offset?:number, order?:string, column?:string, start?:string, end?:string){
+    const  res = await this.model.listByUserId(id, search, limit, offset, order, column, start, end)
+    const dto = res.map((r)=> this.publicListCommentByUserIdMapper.toMapper(r))
+    return new OK(dto, code.SUCCESSFULLY_FOUND, message.SUCCESSFULLY_FOUND) 
   }
 
-  public async publicFindByUserId(id:string, search?:string, limit?:number, offset?:number, order?:string, column?:string, start?:string, end?:string){
-    const  res = await this.model.findByUserId(id, search, limit, offset, order, column, start, end)
-    return new OK(res, code.SUCCESSFULLY_FOUND, message.SUCCESSFULLY_FOUND) 
+  public async publicListCommentByPublicationId(id:string, search?:string, limit?:number, offset?:number, order?:string, column?:string, start?:string, end?:string){
+    let res = await this.model.listByPublicationId(id, search, limit, offset, order, column, start, end)
+    const dto = res.map((r)=> this.publicListCommentByPublicationIdMapper.toMapper(r))
+    return new OK(dto, code.SUCCESSFULLY_FOUND, message.SUCCESSFULLY_FOUND) 
   }
 
-  public async findByPublicationId(id:string){
-    let res = await this.model.findByPublicationId(id)
-    return new OK(res, code.SUCCESSFULLY_FOUND, message.SUCCESSFULLY_FOUND) 
-  }
-
-  public async authFindOneById(id:string, userId:string){
+  public async authFindOneCommentById(id:string, userId:string){
     await this.model.validateID(id, userId)
     let res = await this.model.findOneById(id)
-    return new OK([res], code.SUCCESSFULLY_FOUND, message.SUCCESSFULLY_FOUND) 
+    const dto = this.authFindOneCommentByIdMapper.toMapper(res)
+    return new OK([dto], code.SUCCESSFULLY_FOUND, message.SUCCESSFULLY_FOUND) 
   }
 
-  public async publicFindOneById(id:string){
+  public async publicFindOneCommentById(id:string){
     let res = await this.model.findOneById(id)
-    return new OK([res], code.SUCCESSFULLY_FOUND, message.SUCCESSFULLY_FOUND) 
+    const dto = this.publicFindOneCommentByIdMapper.toMapper(res)
+    return new OK([dto], code.SUCCESSFULLY_FOUND, message.SUCCESSFULLY_FOUND) 
   }
 
-  public async createComment(comment:CreateDto) {
+  public async createComment(comment:CreateInterface) {
     let create = await this.model.create(comment)
     let res = await this.model.findOneById(create.id)
-    return new OK([res], code.SUCCESSFULLY_FOUND, message.SUCCESSFULLY_FOUND) 
+    const dto = this.createCommentMapper.toMapper(res)
+    return new OK([dto], code.SUCCESSFULLY_FOUND, message.SUCCESSFULLY_FOUND) 
   }
 
-  public async updateComment(comment:UpdateDto, id:string, userId:string) {
-    await this.model.validateID(id, userId)
-    await this.model.updateById(id, comment)
-    let res = await this.model.findOneById(id)
-    return new OK([res], code.SUCCESSFULLY_UPDATED, message.SUCCESSFULLY_UPDATED) 
+  public async updateComment(comment:UpdateInterface) {
+    await this.model.validateID(comment.id.toString(), comment.user_id.toString())
+    await this.model.updateById(comment.id, comment)
+    let res = await this.model.findOneById(comment.id.toString())
+    const dto = this.updateCommentMapper.toMapper(res)
+    return new OK([dto], code.SUCCESSFULLY_UPDATED, message.SUCCESSFULLY_UPDATED) 
   }
 
   public async deleteComment(id:string, userId:string){
