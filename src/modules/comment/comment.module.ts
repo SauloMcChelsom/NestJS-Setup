@@ -16,10 +16,34 @@ import { PublicationModel } from '@modules/publication/publication.model'
 import { PublicationRepository } from '@modules/publication/publication.repository'
 import { UtilityService } from "@shared/model/utility/utility.service"
 
+import { 
+  CreateCommentMapper, 
+  AuthListCommentByUserIdMapper, 
+  PublicListCommentByUserIdMapper,
+  AuthFindOneCommentByIdMapper,
+  PublicListCommentByPublicationIdMapper,
+  UpdateCommentMapper,
+  PublicFindOneCommentByIdMapper
+} from './mapper'
+
 @Module({
   imports: [TypeOrmModule.forFeature([CommentEntity, CommentRepository, PageRepository, UserRepository, PublicationRepository])],
   controllers: [CommentController],
-  providers: [CommentService, UtilityService, CommentModel, PublicationModel, PageModel, FirebaseModel, UserModel],
+  providers: [
+    CommentService, 
+    UtilityService, 
+    CommentModel, 
+    PublicationModel,
+     PageModel, 
+     FirebaseModel, 
+     UserModel,
+     CreateCommentMapper, 
+     AuthListCommentByUserIdMapper, 
+     PublicListCommentByUserIdMapper,
+     AuthFindOneCommentByIdMapper,
+     PublicListCommentByPublicationIdMapper,
+     UpdateCommentMapper,
+     PublicFindOneCommentByIdMapper],
   exports: [CommentService]
 })
 export class CommentModule {}
