@@ -1,34 +1,62 @@
-import { Controller, Headers, Res, Redirect, HttpStatus, Param, HttpCode, Header, Get, Query, Post, Body, Put, Delete } from '@nestjs/common'
-import {
-  ApiOperation,
-  ApiResponse,
-  ApiTags,
-} from '@nestjs/swagger'
+import { Controller, Headers, Param, Get, Post, Body, Query } from '@nestjs/common'
+import { ApiOperation, ApiTags } from '@nestjs/swagger'
+
+import { FirebaseModel } from '@modules/firebase/firebase.model'
+import { ClassificationInterface } from '@shared/interfaces'
+
 import { FollowService } from './follow.service'
-import { CreateFollowPageDto } from './dto/createNewPage.dto'
+import { CreateDto } from './dto/create.dto'
 
 @ApiTags('follow')
 @Controller('follow')
 export class FollowController {
 
-  constructor(private readonly service: FollowService) {}
+  constructor(private modelFirebase:FirebaseModel,private readonly service: FollowService) {}
   
-  @ApiOperation({ summary: 'Todos os usuarios da pagina' })
+  @ApiOperation({ summary: 'Listar usuarios da pagina' })
   @Get('/auth/page/:id')
-  public async findByIdPage(@Param('id') id: string, @Headers('Authorization') token: string) {
-    return await this.service.findByIdPage(id, token);
+  public async authListFollowByIdPage(@Param('id') id: string, @Headers('Authorization') authorization: string, @Query('search') search:string, @Query('limit') limit:number, @Query('offset') offset:number, @Query('order') order:string, @Query('column') column:string, @Query('start') start:string, @Query('end') end:string) {
+    
+    let token = await this.modelFirebase.isToken(authorization)
+    await this.modelFirebase.validateTokenByFirebase(token)
+
+    const cls:ClassificationInterface = {
+      search:search, 
+      limit:limit, 
+      offset:offset, 
+      order:order, 
+      column:column, 
+      start:start, 
+      end:end
+    }
+
+    return await this.service.authListFollowByIdPage(id, cls);
   }
 
-  @ApiOperation({ summary: 'Todas as paginas que o usuario segue' })
+  @ApiOperation({ summary: 'Listar as paginas que o usuario segue' })
   @Get('/auth/user/:id')
-  public async findByIdUser(@Param('id') id: string, @Headers('Authorization') token: string) {
-    return await this.service.findByIdUser(id, token);
+  public async authListFollowByIdUser(@Param('id') id: string, @Headers('Authorization') authorization: string, @Query('search') search:string, @Query('limit') limit:number, @Query('offset') offset:number, @Query('order') order:string, @Query('column') column:string, @Query('start') start:string, @Query('end') end:string) {
+    let token = await this.modelFirebase.isToken(authorization)
+    await this.modelFirebase.validateTokenByFirebase(token)
+
+    const cls:ClassificationInterface = {
+      search:search, 
+      limit:limit, 
+      offset:offset, 
+      order:order, 
+      column:column, 
+      start:start, 
+      end:end
+    }
+    return await this.service.authListFollowByIdUser(id, cls);
   }
 
   @ApiOperation({ summary: 'Seguir a pagina' })
   @Post('/auth/follow')
-  public async followPage(@Body() body: CreateFollowPageDto, @Headers('Authorization') token: string) {
-    return await this.service.followPage(body, token);
+  public async createPage(@Body() body: CreateDto, @Headers('Authorization') authorization: string) {
+    let token = await this.modelFirebase.isToken(authorization)
+    await this.modelFirebase.validateTokenByFirebase(token)
+    return await this.service.createPage(body);
   }
 }
 /**

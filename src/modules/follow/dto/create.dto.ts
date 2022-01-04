@@ -1,6 +1,6 @@
 import { MinLength, IsNumber, IsString, IsNotEmpty, IsEmpty } from 'class-validator';
 
-export class CreateFollowPageDto  {  
+export class CreateDto  {  
   @IsNumber()
   @IsNotEmpty()
   user_id: number;

@@ -2,9 +2,7 @@ import { Injectable } from '@nestjs/common'
 import * as firebase from 'firebase-admin';
 import { code, message } from '@shared/enum'
 import { 
-  ConflictExceptions, 
   InternalServerErrorExceptions,
-  BadRequestExceptions,
   NotFoundExceptions
 } from '@service/exception'
 

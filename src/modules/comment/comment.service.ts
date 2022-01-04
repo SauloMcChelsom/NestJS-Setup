@@ -2,9 +2,10 @@ import { Injectable } from '@nestjs/common'
 
 import { OK } from '@service/exception'
 import { code, message } from '@shared/enum'
+import { ClassificationInterface } from '@shared/interfaces'
 
 import { CommentModel } from './comment.model'
-import { CreateInterface, UpdateInterface, ClassificationInterface } from './interface'
+import { CreateInterface, UpdateInterface } from './interface'
 import { 
   CreateCommentMapper, 
   AuthListCommentByUserIdMapper, 

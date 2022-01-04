@@ -65,6 +65,10 @@ export class CommentModel {
 
   public async listByUserId(userId:string, search:string='', limit:number=3, offset:number=0, order:string='ASC', column:string='id', start:string='', end:string=''){
     try{
+
+      if(limit > 15){
+        limit = 15
+      }
     
       if(this.utility.empty(column)){
         column = "id"
@@ -108,6 +112,10 @@ export class CommentModel {
 
   public async listByPublicationId(publicationId:string, search:string='', limit:number=3, offset:number=0, order:string='ASC', column:string='id', start:string='', end:string=''){
     try{
+
+      if(limit > 15){
+        limit = 15
+      }
 
       if(this.utility.empty(column)){
         column = "id"

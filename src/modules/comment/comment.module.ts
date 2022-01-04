@@ -1,12 +1,6 @@
 import { Module } from '@nestjs/common'
 import { TypeOrmModule } from '@nestjs/typeorm'
 
-import { CommentEntity } from '../../entity/comment.entity'
-import { CommentController } from './comment.controller'
-import { CommentService } from './comment.service'
-import { CommentRepository } from './comment.repository'
-import { CommentModel } from './comment.model'
-
 import { PageModel } from '@modules/page/page.model'
 import { FirebaseModel } from '@modules/firebase/firebase.model'
 import { UserModel } from '@modules/user/user.model'
@@ -15,6 +9,12 @@ import { UserRepository } from '@modules/user/user.repository'
 import { PublicationModel } from '@modules/publication/publication.model'
 import { PublicationRepository } from '@modules/publication/publication.repository'
 import { UtilityService } from "@shared/model/utility/utility.service"
+import { CommentEntity } from '@entity/comment.entity'
+
+import { CommentController } from './comment.controller'
+import { CommentService } from './comment.service'
+import { CommentRepository } from './comment.repository'
+import { CommentModel } from './comment.model'
 
 import { 
   CreateCommentMapper, 
@@ -34,16 +34,17 @@ import {
     UtilityService, 
     CommentModel, 
     PublicationModel,
-     PageModel, 
-     FirebaseModel, 
-     UserModel,
-     CreateCommentMapper, 
-     AuthListCommentByUserIdMapper, 
-     PublicListCommentByUserIdMapper,
-     AuthFindOneCommentByIdMapper,
-     PublicListCommentByPublicationIdMapper,
-     UpdateCommentMapper,
-     PublicFindOneCommentByIdMapper],
+    PageModel, 
+    FirebaseModel, 
+    UserModel,
+    CreateCommentMapper, 
+    AuthListCommentByUserIdMapper, 
+    PublicListCommentByUserIdMapper,
+    AuthFindOneCommentByIdMapper,
+    PublicListCommentByPublicationIdMapper,
+    UpdateCommentMapper,
+    PublicFindOneCommentByIdMapper
+  ],
   exports: [CommentService]
 })
 export class CommentModule {}

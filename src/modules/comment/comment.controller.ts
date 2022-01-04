@@ -3,11 +3,12 @@ import { ApiOperation, ApiTags } from '@nestjs/swagger'
 
 import { FirebaseModel } from '@modules/firebase/firebase.model'
 import { UserModel } from '@modules/user/user.model'
+import { ClassificationInterface } from '@shared/interfaces'
 
 import { CommentService } from './comment.service'
 import { CreateDto } from './dto/create.dto'
 import { UpdateDto } from './dto/update.dto'
-import { CreateInterface, UpdateInterface, ClassificationInterface } from './interface'
+import { CreateInterface, UpdateInterface } from './interface'
 
 @ApiTags('comment')
 @Controller('comment')
