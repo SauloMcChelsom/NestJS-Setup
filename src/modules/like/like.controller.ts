@@ -1,18 +1,31 @@
-import { Controller, Headers, Res, Redirect, HttpStatus, Param, HttpCode, Header, Get, Query, Post, Body, Put, Delete } from '@nestjs/common'
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger'
+import { Controller, Headers, Post, Body } from '@nestjs/common'
+import { ApiOperation, ApiTags } from '@nestjs/swagger'
+
+import { FirebaseModel } from '@modules/firebase/firebase.model'
+import { UserModel } from '@modules/user/user.model'
 
 import { LikeService } from './like.service'
-import { LikeDto } from './dto/like.dto'
+import { CreateDto } from './dto/create.dto'
+import { CreateInterface } from './interface/create.interface'
 
 @ApiTags('like')
 @Controller('like')
 export class LikeController {
 
-  constructor(private readonly service: LikeService) {}
+  constructor(private readonly service: LikeService, private modelFirebase:FirebaseModel, private modelUser:UserModel) {}
 
   @ApiOperation({ summary: 'Curtir uma publicação' })
-  @Post()
-  public async likePublication(@Body() body: LikeDto, @Headers('Authorization') token: string) {
-    return await this.service.likePublication(body, token);
+  @Post('/auth/')
+  public async createLike(@Body() body: CreateDto, @Headers('Authorization') authorization: string) {
+    let token = await this.modelFirebase.isToken(authorization)
+    const decoded = await this.modelFirebase.validateTokenByFirebase(token)
+    const user = await this.modelUser.getUserByUid(decoded.uid)
+
+    const like:CreateInterface = {
+      ...body,
+      user_id: user.id
+    }
+   
+    return await this.service.createLike(like);
   }
 }

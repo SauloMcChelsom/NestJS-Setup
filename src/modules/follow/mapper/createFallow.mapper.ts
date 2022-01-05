@@ -1,13 +1,13 @@
 import { FollowInterface } from '../interface/follow.interface'
 
 export class CreateFallowMapper {
-    public toMapper(comment:FollowInterface){
+    public toMapper(fallow:FollowInterface){
         return {
-            id : comment.id,
-            user_id : comment.user_id,
-            page_id : comment.page_id,
-            i_am_following : comment.i_am_following,
-            timestamp : comment.timestamp?.toString()
+            id : fallow.id,
+            user_id : fallow.user_id,
+            page_id : fallow.page_id,
+            i_am_following : fallow.i_am_following,
+            timestamp : fallow.timestamp?.toString()
         }
     }
 }
