@@ -14,7 +14,8 @@ import { CreateInterface, UpdateInterface } from './interface'
 @Controller('comment')
 export class CommentController {
 
-  constructor(private readonly service: CommentService,
+  constructor(
+    private readonly service: CommentService,
     private modelFirebase:FirebaseModel,
     private modelUser:UserModel,
   ) {}

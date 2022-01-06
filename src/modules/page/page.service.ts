@@ -1,77 +1,82 @@
 import { Injectable } from '@nestjs/common'
-import { InjectRepository } from '@nestjs/typeorm'
-import { PageRepository } from './page.repository'
-import { PageModel } from './page.model'
-import { FirebaseModel } from '@root/src/modules/firebase/firebase.model'
-import { UserModel } from '@root/src/modules/user/user.model'
-import { CreateNewPageDto } from './dto/createNewPage.dto'
-import { OK, NotFoundExceptions, ConflictExceptions } from '@service/exception'
+
+import { ClassificationInterface } from '@shared/interfaces'
+import { OK } from '@service/exception'
 import { code, message } from '@shared/enum'
-import { UpdateDto  } from './dto/update.dto'
-import { RetornoDto  } from './dto/retorno.dto'
+
+import { PageModel } from './page.model'
+import { CreateInterface, UpdateInterface } from './interface'
+import { 
+  CreateMapper, 
+  AuthListMapper, 
+  PublicListMapper,
+  AuthFindOneMapper,
+  PublicFindOneMapper
+} from './mapper'
+
 
 @Injectable()
 export class PageService {
 
   constructor(
-    @InjectRepository(PageRepository) private readonly repository: PageRepository,
     private model:PageModel,
-    private modelFirebase:FirebaseModel,
-    private modelUser:UserModel,
+    private createMapper:CreateMapper, 
+    private authListMapper:AuthListMapper, 
+    private publicListMapper:PublicListMapper,
+    private authFindOneMapper:AuthFindOneMapper,
+    private publicFindOneMapper:PublicFindOneMapper
   ) {}
 
-  public async save(page:CreateNewPageDto, token:string) {
-    let body = await this.modelFirebase.isToken(token)
-    const decoded = await this.modelFirebase.validateTokenByFirebase(body)
-    const user = await this.modelUser.getUserByUid(decoded.uid)
-    
+  public async create(page:CreateInterface) {
     await this.model.pageAlreadyExist(page.page_name)
-
-    page.user_id = user.id
     page.number_of_followers = 0
-    const res = await this.repository.save(page)
-    return new OK([res], code.SUCCESSFULLY_CREATED, message.SUCCESSFULLY_CREATED) 
+    const res = await this.model.create(page)
+    const dto = this.createMapper.toMapper(res)
+    return new OK([dto], code.SUCCESSFULLY_CREATED, message.SUCCESSFULLY_CREATED) 
   }
 
-  public async findOneByName(page:string) {
-    const res = await this.repository.findOne({ where:{ page_name: page }})
-
-    if(res == null){
-      throw new NotFoundExceptions({
-        code:code.NOT_FOUND,
-        message:message.NOT_FOUND,
-      })
-    }
-
-    return new OK([res], code.SUCCESSFULLY_FOUND, message.SUCCESSFULLY_FOUND) 
+  public async authFindOneByName(page:string) {
+    const res = await this.model.findOneByName(page)
+    const dto = this.authFindOneMapper.toMapper(res)
+    return new OK([dto], code.SUCCESSFULLY_FOUND, message.SUCCESSFULLY_FOUND) 
   }
 
-  public async findOneById(id:string) {
-    const res = await this.repository.findOne({ where:{ id: id }})
-
-    if(res == null){
-      throw new NotFoundExceptions({
-        code:code.NOT_FOUND,
-        message:message.NOT_FOUND,
-      })
-    }
-
-    return new OK([res], code.SUCCESSFULLY_FOUND, message.SUCCESSFULLY_FOUND) 
+  public async publicfindOneByName(page:string) {
+    const res = await this.model.findOneByName(page)
+    const dto = this.publicFindOneMapper.toMapper(res)
+    return new OK([dto], code.SUCCESSFULLY_FOUND, message.SUCCESSFULLY_FOUND) 
   }
 
-  public async findAll() {
-    const res = await this.repository.find();
-    const all =  res.map((r)=> new RetornoDto(r))
-    return new OK([all], code.SUCCESSFULLY_FOUND, message.SUCCESSFULLY_FOUND) 
+  public async authFindOneById(id:number) {
+    const res = await this.model.findOneById(id)
+    const dto = this.authFindOneMapper.toMapper(res)
+    return new OK([dto], code.SUCCESSFULLY_FOUND, message.SUCCESSFULLY_FOUND) 
   }
 
-  public async update(page:any, id:string, token:string) {
-    let body = await this.modelFirebase.isToken(token)
-    const decoded = await this.modelFirebase.validateTokenByFirebase(body)
+  public async publicfindOneById(id:number) {
+    const res = await this.model.findOneById(id)
+    const dto = this.publicFindOneMapper.toMapper(res)
+    return new OK([dto], code.SUCCESSFULLY_FOUND, message.SUCCESSFULLY_FOUND) 
+  }
 
-    await this.repository.update(id, page);
-    const res = await this.repository.findOne(id)
-    return new OK([res], code.SUCCESSFULLY_UPDATED, message.SUCCESSFULLY_UPDATED) 
+  public async authListAll(cls:ClassificationInterface) {
+    const res = await this.model.listAll(cls.search, cls.limit, cls.offset, cls.order, cls.column, cls.start, cls.end);
+    const dto = res.map((r)=> this.authListMapper.toMapper(r))
+    return new OK(dto, code.SUCCESSFULLY_FOUND, message.SUCCESSFULLY_FOUND) 
+  }
+
+  public async publicListAll(cls:ClassificationInterface) {
+    const res = await this.model.listAll(cls.search, cls.limit, cls.offset, cls.order, cls.column, cls.start, cls.end);
+    const dto = res.map((r)=> this.publicListMapper.toMapper(r))
+    return new OK(dto, code.SUCCESSFULLY_FOUND, message.SUCCESSFULLY_FOUND) 
+  }
+
+  public async update(page:UpdateInterface) {
+    await this.model.findPageByIdOfUserAndIdOfPage(page.user_id.toString(), page.id.toString())
+    await this.model.update(page.id, page);
+    const res = await this.model.findOneById(page.id)
+    const dto = this.authFindOneMapper.toMapper(res)
+    return new OK([dto], code.SUCCESSFULLY_UPDATED, message.SUCCESSFULLY_UPDATED) 
   }
 
 }

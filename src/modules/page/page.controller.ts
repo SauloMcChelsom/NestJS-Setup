@@ -1,46 +1,109 @@
-import { Controller, Headers, Res, Redirect, HttpStatus, Param, HttpCode, Header, Get, Query, Post, Body, Put, Delete } from '@nestjs/common'
-import {
-  ApiOperation,
-  ApiResponse,
-  ApiTags,
-} from '@nestjs/swagger'
+import { Controller, Headers, Param, Get, Query, Post, Body, Put  } from '@nestjs/common'
+import { ApiOperation, ApiTags } from '@nestjs/swagger'
+
+import { FirebaseModel } from '@modules/firebase/firebase.model'
+import { UserModel } from '@modules/user/user.model'
+import { ClassificationInterface } from '@shared/interfaces'
+
 import { PageService } from './page.service'
-import { CreateNewPageDto } from './dto/createNewPage.dto'
-import { UpdateDto  } from './dto/update.dto'
+import { UpdateDto } from './dto/update.dto'
+import { CreateDto,  } from './dto/create.dto'
+import { CreateInterface, UpdateInterface } from './interface'
 
 @ApiTags('page')
 @Controller('page')
 export class PageController {
 
-  constructor(private readonly service: PageService) {}
+  constructor(
+    private readonly service: PageService,
+    private modelFirebase:FirebaseModel,  
+    private modelUser:UserModel,
+  ) {}
 
-  @ApiOperation({ summary: 'Criar uma pagina' })
-  @Post('/auth')
-  public async save(@Body() create: CreateNewPageDto, @Headers('Authorization') token: string) { 
-    return await this.service.save(create, token);
+  @ApiOperation({ summary: 'Buscar por nome da pagina' })
+  @Get('/auth/name/:page')
+  public async authFindOneByName(@Param('page') page: string, @Headers('Authorization') authorization: string) {
+    let token = await this.modelFirebase.isToken(authorization)
+    await this.modelFirebase.validateTokenByFirebase(token)
+    return await this.service.authFindOneByName(page);
   }
 
   @ApiOperation({ summary: 'Buscar por nome da pagina' })
-  @Get('/name/:page')
-  public async findOne(@Param('page') page: string) {
-    return await this.service.findOneByName(page);
+  @Get('/public/name/:page')
+  public async publicfindOneByName(@Param('page') page: string) {
+    return await this.service.publicfindOneByName(page);
   }
 
   @ApiOperation({ summary: 'Buscar por id da pagina' })
-  @Get(':id')
-  public async findOneById(@Param('id') id: string) {
-    return await this.service.findOneById(id);
+  @Get('/auth/:id')
+  public async authFindOneById(@Param('id') id: number, @Headers('Authorization') authorization: string) {
+    let token = await this.modelFirebase.isToken(authorization)
+    await this.modelFirebase.validateTokenByFirebase(token)
+    return await this.service.authFindOneById(id);
   }
 
-  @ApiOperation({ summary: 'Buscar todas as paginas' })
+  @ApiOperation({ summary: 'Buscar por id da pagina' })
+  @Get('/public/:id')
+  public async publicfindOneById(@Param('id') id: number) {
+    return await this.service.publicfindOneById(id);
+  }
+
+  @ApiOperation({ summary: 'Listar todas as paginas' })
   @Get()
-  public async findAll() {
-    return this.service.findAll();
+  public async authListAll(@Headers('Authorization') authorization: string, @Query('search') search:string, @Query('limit') limit:number, @Query('offset') offset:number, @Query('order') order:string, @Query('column') column:string, @Query('start') start:string, @Query('end') end:string) {
+    const cls:ClassificationInterface = {
+      search:search, 
+      limit:limit, 
+      offset:offset, 
+      order:order, 
+      column:column, 
+      start:start, 
+      end:end
+    }
+    return this.service.authListAll(cls);
+  }
+
+  @ApiOperation({ summary: 'Listar todas as paginas' })
+  @Get()
+  public async publicListAll(@Query('search') search:string, @Query('limit') limit:number, @Query('offset') offset:number, @Query('order') order:string, @Query('column') column:string, @Query('start') start:string, @Query('end') end:string) {
+    const cls:ClassificationInterface = {
+      search:search, 
+      limit:limit, 
+      offset:offset, 
+      order:order, 
+      column:column, 
+      start:start, 
+      end:end
+    }
+    return this.service.publicListAll(cls);
+  }
+
+  @ApiOperation({ summary: 'Criar uma pagina' })
+  @Post('/auth')
+  public async save(@Body() body: CreateDto, @Headers('Authorization') authorization: string) { 
+    let token = await this.modelFirebase.isToken(authorization)
+    const decoded = await this.modelFirebase.validateTokenByFirebase(token)
+    const user = await this.modelUser.getUserByUid(decoded.uid)
+
+    const page:CreateInterface = {
+      ...body,
+      user_id:user.id
+    }
+
+    return await this.service.create(page);
   }
 
   @ApiOperation({ summary: 'Atualizar nome da pagina por id' })
   @Put('/auth/:id')
-  public async update(@Body() page: UpdateDto, @Param('id') id: string, @Headers('Authorization') token: string) {
-    return await this.service.update(page, id, token);
+  public async update(@Body() body: UpdateDto, @Param('id') id: number, @Headers('Authorization') authorization: string) {
+    let token = await this.modelFirebase.isToken(authorization)
+    const decoded = await this.modelFirebase.validateTokenByFirebase(token)
+    const user = await this.modelUser.getUserByUid(decoded.uid)
+    const page:UpdateInterface = {
+      ...body,
+      id:id,
+      user_id:user.id
+    }
+    return await this.service.update(page);
   }
 }
