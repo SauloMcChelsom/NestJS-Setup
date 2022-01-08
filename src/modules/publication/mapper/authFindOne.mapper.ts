@@ -4,10 +4,10 @@ export class AuthFindOneMapper {
   public toMapper(field:ReturnInterface){
     return {
       id : field.id,
-      user_id : field.user_id,
-      page_name : field.page_name,
-      page_description : field.page_description,
-      number_of_followers : field.number_of_followers,
+      page_id : field.page_id,
+      number_of_likes : field.number_of_likes,
+      number_of_comments : field.number_of_comments,
+      text : field.text,
       timestamp : field.timestamp?.toString()
     }
   }

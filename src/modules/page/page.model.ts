@@ -131,7 +131,7 @@ export class PageModel {
     }
   }
 
-  public async update(id:number, page: UpdateInterface) {
+  public async update(id:number, page: UpdateInterface) { 
     try{
       const res = await this.repository.update(id, { ...page as any });
       if(res){

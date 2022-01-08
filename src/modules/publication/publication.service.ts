@@ -1,62 +1,58 @@
 import { Injectable } from '@nestjs/common'
-import { InjectRepository } from '@nestjs/typeorm'
-import { PublicationRepository } from './publication.repository'
-import { PublicationModel } from './publication.model'
 
-import { FirebaseModel } from '@modules/firebase/firebase.model'
-import { OK, NotFoundExceptions, ConflictExceptions } from '@service/exception'
+import { ClassificationInterface } from '@shared/interfaces'
+import { OK } from '@service/exception'
 import { code, message } from '@shared/enum'
-import { UserModel } from '@modules/user/user.model'
-import { PageModel } from '@modules/page/page.model'
 
-import { CreateNewPublicationDto } from './dto/create-new-publication.dto'
-import { UpdatePublicationDto  } from './dto/update-publication.dto'
-import { RetornoDto  } from './dto/retorno.dto'
+import { PublicationModel } from './publication.model'
+import { CreateInterface, UpdateInterface } from './interface'
+import { 
+  CreateMapper, 
+  AuthListMapper, 
+  PublicListMapper,
+  AuthFindOneMapper,
+  PublicFindOneMapper
+} from './mapper'
 
 @Injectable()
 export class PublicationService {
 
   constructor(
-    @InjectRepository(PublicationRepository) private readonly repository: PublicationRepository,
-    private modelFirebase:FirebaseModel,
-    private modelUser:UserModel,
-    private modelPage:PageModel,
+    private createMapper:CreateMapper, 
+    private authListMapper:AuthListMapper, 
+    private publicListMapper:PublicListMapper,
+    private authFindOneMapper:AuthFindOneMapper,
+    private publicFindOneMapper:PublicFindOneMapper,
     private model:PublicationModel
   ) {}
 
-  public async createNewPublications(post:CreateNewPublicationDto, token:string) {
-    let body = await this.modelFirebase.isToken(token)
-    const decoded = await this.modelFirebase.validateTokenByFirebase(body)
-    const user = await this.modelUser.getUserByUid(decoded.uid)
-    //encontra a pagina, ultilizando o id do usuario no token e id da pagina que passou no body
-    //se não correponderem, significa que o sistema esta sendo testado por terceiros
-    await this.modelPage.findPageByIdOfUserAndIdOfPage(user.id.toString(), post.page_id.toString())
-
+  public async create(post:CreateInterface) {
     post.number_of_likes = 0
-
-    const res = await this.repository.save(post)
-    return new OK([res], code.SUCCESSFULLY_CREATED, message.SUCCESSFULLY_CREATED) 
+    const res = await this.model.create(post)
+    const dto = this.createMapper.toMapper(res)
+    return new OK([dto], code.SUCCESSFULLY_CREATED, message.SUCCESSFULLY_CREATED) 
   }
 
-  public async updatePublication(id:string, body:UpdatePublicationDto|any, token:string) {
-    await this.repository.update(id, body);
-    const res = await this.repository.findOne(id)
-    return new OK([res], code.SUCCESSFULLY_FOUND, message.SUCCESSFULLY_FOUND) 
+  public async update(put:UpdateInterface) {
+    await this.model.update(put.id, put);
+    const res = await this.model.findOneById(put.id)
+    const dto = this.authFindOneMapper.toMapper(res)
+    return new OK([dto], code.SUCCESSFULLY_UPDATED, message.SUCCESSFULLY_UPDATED) 
   }
 
-  public async publication(id:any) {
-    /**
-     * buscar da tabela 
-     *    pagina
-     *    publicação
-     *    comentario: 0 - 5 por atual
-     *    
-     */
-    const res = await this.repository.findOne({ where:{ id: id }})
-    return new OK([res], code.SUCCESSFULLY_FOUND, message.SUCCESSFULLY_FOUND) 
+  public async authFindOneById(id:any) {
+    const res = await this.model.findOneById(id)
+    const dto = this.authFindOneMapper.toMapper(res)
+    return new OK([dto], code.SUCCESSFULLY_FOUND, message.SUCCESSFULLY_FOUND) 
   }
 
-  public async feed() {
+  public async publicfindOneById(id:any) {
+    const res = await this.model.findOneById(id)
+    const dto = this.publicFindOneMapper.toMapper(res)
+    return new OK([dto], code.SUCCESSFULLY_FOUND, message.SUCCESSFULLY_FOUND) 
+  }
+
+  public async authListFeed(cls:ClassificationInterface) {
     /**
      * buscar da tabela 
      *    pagina
@@ -77,13 +73,38 @@ export class PublicationService {
      *   0 - 5
      * 
      */
-    return await this.repository.feed();
+    const res =  await this.model.listFeed(cls.search, cls.limit, cls.offset, cls.order, cls.column, cls.start, cls.end);
+    const dto = res.map((r)=> this.authListMapper.toMapper(r))
+    return new OK(dto, code.SUCCESSFULLY_FOUND, message.SUCCESSFULLY_FOUND) 
   }
 
-  public async search(query:string){
-    
-
+  public async publicListFeed(cls:ClassificationInterface) {
+     const res =  await this.model.listFeed(cls.search, cls.limit, cls.offset, cls.order, cls.column, cls.start, cls.end);
+     const dto = res.map((r)=> this.publicListMapper.toMapper(r))
+     return new OK(dto, code.SUCCESSFULLY_FOUND, message.SUCCESSFULLY_FOUND) 
   }
 
+  public async authListSearchByText(cls:ClassificationInterface) {
+    this.model.validateSearchByText(cls.search)
+    const res =  await this.model.searchByText(cls.search, cls.limit, cls.offset, cls.order, cls.column, cls.start, cls.end);
+    const dto = res.map((r)=> this.authListMapper.toMapper(r))
+    return new OK(dto, code.SUCCESSFULLY_FOUND, message.SUCCESSFULLY_FOUND) 
+  }
+
+  public async publicListSearchByText(cls:ClassificationInterface) {
+    this.model.validateSearchByText(cls.search)
+    const res = await this.model.searchByText(cls.search, cls.limit, cls.offset, cls.order, cls.column, cls.start, cls.end);
+    const dto = res.map((r)=> this.publicListMapper.toMapper(r))
+    return new OK(dto, code.SUCCESSFULLY_FOUND, message.SUCCESSFULLY_FOUND) 
+  }
+
+  public async incrementNumberLikeOfPublication(id:any) {
+    await this.model.increment(id)
+  }
+
+  public async decrementNumberLikeOfPublication(id:any) { 
+    await this.model.decrement(id)
+  }
+  
 }
 

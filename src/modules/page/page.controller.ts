@@ -51,7 +51,7 @@ export class PageController {
   @ApiOperation({ summary: 'Listar todas as paginas' })
   @Get()
   public async authListAll(@Headers('Authorization') authorization: string, @Query('search') search:string, @Query('limit') limit:number, @Query('offset') offset:number, @Query('order') order:string, @Query('column') column:string, @Query('start') start:string, @Query('end') end:string) {
-    const cls:ClassificationInterface = {
+    const cls:ClassificationInterface = { 
       search:search, 
       limit:limit, 
       offset:offset, 
@@ -80,7 +80,7 @@ export class PageController {
 
   @ApiOperation({ summary: 'Criar uma pagina' })
   @Post('/auth')
-  public async save(@Body() body: CreateDto, @Headers('Authorization') authorization: string) { 
+  public async create(@Body() body: CreateDto, @Headers('Authorization') authorization: string) { 
     let token = await this.modelFirebase.isToken(authorization)
     const decoded = await this.modelFirebase.validateTokenByFirebase(token)
     const user = await this.modelUser.getUserByUid(decoded.uid)
@@ -94,7 +94,7 @@ export class PageController {
   }
 
   @ApiOperation({ summary: 'Atualizar nome da pagina por id' })
-  @Put('/auth/:id')
+  @Put('/auth/')
   public async update(@Body() body: UpdateDto, @Param('id') id: number, @Headers('Authorization') authorization: string) {
     let token = await this.modelFirebase.isToken(authorization)
     const decoded = await this.modelFirebase.validateTokenByFirebase(token)
