@@ -23,6 +23,8 @@ export class PublicationController {
   @ApiOperation({ summary: 'List um feed' })
   @Get('/auth/feed')
   public async authListFeed(@Headers('Authorization') authorization: string, @Query('limit') limit:number, @Query('offset') offset:number, @Query('order') order:string, @Query('column') column:string, @Query('start') start:string, @Query('end') end:string) {
+    let token = await this.modelFirebase.isToken(authorization)
+    await this.modelFirebase.validateTokenByFirebase(token)
     const cls:ClassificationInterface = {
       limit:limit, 
       offset:offset, 
@@ -48,6 +50,7 @@ export class PublicationController {
     return this.service.publicListFeed(cls);
   }
 
+  @ApiOperation({ summary: 'Buscar por id da publicação' })
   @Get('/auth/:id')
   public async authFindOneById(@Param('id') id: string, @Headers('Authorization') authorization: string) {
     let token = await this.modelFirebase.isToken(authorization)
@@ -55,11 +58,13 @@ export class PublicationController {
     return await this.service.authFindOneById(id);
   }
 
+  @ApiOperation({ summary: 'Buscar por id da publicação' })
   @Get('/public/:id')
   public async publicfindOneById(@Param('id') id: string) {
     return await this.service.publicfindOneById(id);
   }
 
+  @ApiOperation({ summary: 'Lista de publicação pesquisando por texto' })
   @Get('/auth/search/text')
   public async authListSearchByText(@Headers('Authorization') authorization: string, @Query('search') search:string, @Query('limit') limit:number, @Query('offset') offset:number, @Query('order') order:string, @Query('column') column:string, @Query('start') start:string, @Query('end') end:string) {
     let token = await this.modelFirebase.isToken(authorization)
@@ -76,6 +81,7 @@ export class PublicationController {
     return await this.service.authListSearchByText(cls);
   }
 
+  @ApiOperation({ summary: 'Lista de publicação pesquisando por texto' })
   @Get('/public/search/text')
   public async publicListSearchByText(@Query('search') search:string, @Query('limit') limit:number, @Query('offset') offset:number, @Query('order') order:string, @Query('column') column:string, @Query('start') start:string, @Query('end') end:string) {
     const cls:ClassificationInterface = { 
@@ -105,7 +111,7 @@ export class PublicationController {
     return await this.service.create(post);
   }
 
-  @ApiOperation({ summary: 'Alterar o texto da minha publicaçao' })
+  @ApiOperation({ summary: 'Alterar o texto da publicaçao' })
   @Put(':id')
   public async update(@Body() body: UpdateDto, @Param('id') id: number, @Headers('Authorization') authorization: string) {
     let token = await this.modelFirebase.isToken(authorization)
