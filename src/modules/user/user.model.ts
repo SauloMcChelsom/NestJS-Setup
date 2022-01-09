@@ -1,38 +1,41 @@
-import { Injectable } from '@nestjs/common'
+import { Injectable, Inject, Scope } from '@nestjs/common'
 import { InjectRepository} from '@nestjs/typeorm'
-import { code, message } from '@shared/enum'
-import { 
-  ConflictExceptions, 
-  InternalServerErrorExceptions,
-  BadRequestExceptions,
-  NotFoundExceptions
-} from '@service/exception'
-import { UserRepository } from './user.repository'
-import { UpdateUserDto } from './dto'
+import { REQUEST } from '@nestjs/core';
+import { Request } from 'express';
 
-@Injectable()
+import { UtilityService } from "@shared/model/utility/utility.service"
+import { code, message } from '@shared/enum'
+import { OK, InternalServerErrorExceptions, ConflictExceptions, BadRequestExceptions, NotFoundExceptions, Exception } from '@service/exception'
+
+import { UserRepository } from './user.repository'
+import { UpdateInterface } from './interface'
+
+@Injectable({ scope: Scope.REQUEST })
 export class UserModel {
 
-  constructor(@InjectRepository(UserRepository) private readonly repository: UserRepository) {}
+  constructor(
+    @InjectRepository(UserRepository) private readonly repository: UserRepository,
+    @Inject(REQUEST) private readonly request: Request,
+    private utility:UtilityService
+  ) {}
 
   public async emailAlreadyExist(email:string) {
     try{
       const res = await this.repository.findOne({ where:{ email: email }})
       if(res){
-        throw true
-      }
-    }catch(error){
-      if(error == true){
         throw new ConflictExceptions({
           code:code.EMAIL_ALREADY_IN_USE,
           message:message.EMAIL_ALREADY_IN_USE,
         })
       }
-      throw new InternalServerErrorExceptions({
-        code:code.ERROR_GENERIC,
-        message:message.ERROR_GENERIC,
-        description:"algo aconteceu em encontrar o email do usuario"+` ::: ${error}`
-      })
+    }catch(e:any){
+      throw new Exception({
+        code:e.response.error.code,
+        message:e.response.error.message,
+        description:e.response.error.description,
+        method:this.request.url,
+        path:this.request.method,
+      },e.response.statusCode);
     }
   }
 
@@ -40,20 +43,19 @@ export class UserModel {
     try{
       const res = await this.repository.findOne({ where:{ uid: uid }})
       if(res){
-        throw true
-      }
-    }catch(error){
-      if(error == true){
         throw new ConflictExceptions({
           code:code.UID_ALREADY_IN_USE,
           message:message.UID_ALREADY_IN_USE,
         })
       }
-      throw new InternalServerErrorExceptions({
-        code:code.ERROR_GENERIC,
-        message:message.ERROR_GENERIC,
-        description: "algo aconteceu em verificar se o uid ja existe"+` ::: ${error}`
-      })
+    }catch(e:any){
+      throw new Exception({
+        code:e.response.error.code,
+        message:e.response.error.message,
+        description:e.response.error.description,
+        method:this.request.url,
+        path:this.request.method,
+      },e.response.statusCode);
     }
   }
 
@@ -62,20 +64,19 @@ export class UserModel {
       if(providers == "google.com" || providers == "email_password"){
         return
       }
-      throw true
-    }catch(error){
-      if(error == true){
-        throw new BadRequestExceptions({
-          code:code.PROVIDERS_USER_IS_INVALID,
-          message:message.PROVIDERS_USER_IS_INVALID,
-          description:"usuario autenticou com o google.com ou email/senha? example: google ou email_password"
-        })
-      }
-      throw new InternalServerErrorExceptions({
-        code:code.ERROR_GENERIC,
-        message:message.ERROR_GENERIC,
-        description:"algo aconteceu em validar o provedor"+` ::: ${error}`
+      throw new BadRequestExceptions({
+        code:code.PROVIDERS_USER_IS_INVALID,
+        message:message.PROVIDERS_USER_IS_INVALID,
+        description:"usuario autenticou com o google.com ou email/senha? example: google ou email_password"
       })
+    }catch(e:any){
+      throw new Exception({
+        code:e.response.error.code,
+        message:e.response.error.message,
+        description:e.response.error.description,
+        method:this.request.url,
+        path:this.request.method,
+      },e.response.statusCode);
     }
   }
 
@@ -85,19 +86,18 @@ export class UserModel {
       if(res){
         return res
       }
-      throw true
-    }catch(error){
-      if(error == true){
-        throw new NotFoundExceptions({
-          code:code.NOT_FOUND_USER,
-          message:message.NOT_FOUND_USER,
-        })
-      }
-      throw new InternalServerErrorExceptions({
-        code:code.ERROR_GENERIC,
-        message:message.ERROR_GENERIC,
-        description:"algo aconteceu em buscar usuario por uid"+` ::: ${error}`
+      throw new NotFoundExceptions({
+        code:code.NOT_FOUND_USER,
+        message:message.NOT_FOUND_USER,
       })
+    }catch(e:any){
+      throw new Exception({
+        code:e.response.error.code,
+        message:e.response.error.message,
+        description:e.response.error.description,
+        method:this.request.url,
+        path:this.request.method,
+      },e.response.statusCode);
     }
   }
 
@@ -107,63 +107,81 @@ export class UserModel {
       if(res){
         return res
       }
-      throw true
-    }catch(error){
-      if(error == true){
-        throw new NotFoundExceptions({
-          code:code.NOT_FOUND_USER,
-          message:message.NOT_FOUND_USER,
-        })
-      }
-      throw new InternalServerErrorExceptions({
-        code:code.ERROR_GENERIC,
-        message:message.ERROR_GENERIC,
-        description:"algo aconteceu em buscar usuario por email"+` ::: ${error}`
+      throw new NotFoundExceptions({
+        code:code.NOT_FOUND_USER,
+        message:message.NOT_FOUND_USER,
       })
+    }catch(e:any){
+      throw new Exception({
+        code:e.response.error.code,
+        message:e.response.error.message,
+        description:e.response.error.description,
+        method:this.request.url,
+        path:this.request.method,
+      },e.response.statusCode);
     }
   }
 
-  public async updateUserByUid(id:number, user:UpdateUserDto) {
+  public async updateUserByUid(id:number, body:UpdateInterface) {
     try{
-      const res = await this.repository.update(id, user)
+      const res = await this.repository.update(id, body)
       if(res){
         return res
       }
-      throw true
-    }catch(error){
-      if(error == true){
-        throw new NotFoundExceptions({
-          code:code.NOT_FOUND_USER,
-          message:message.NOT_FOUND_USER,
-        })
-      }
-      throw new InternalServerErrorExceptions({
-        code:code.ERROR_GENERIC,
-        message:message.ERROR_GENERIC,
-        description:"algo aconteceu em atualizar usuario por uid"+` ::: ${error}`
+      throw new NotFoundExceptions({
+        code:code.NOT_FOUND_USER,
+        message:message.NOT_FOUND_USER,
       })
+    }catch(e:any){
+      throw new Exception({
+        code:e.response.error.code,
+        message:e.response.error.message,
+        description:e.response.error.description,
+        method:this.request.url,
+        path:this.request.method,
+      },e.response.statusCode);
     }
   }
 
-  public async deleteUserByUid(id:number) {
+  public async delete(id:number) {
     try{
       const res = await this.repository.delete(id)
       if(res){
         return res
       }
-      throw true
-    }catch(error){
-      if(error == true){
-        throw new NotFoundExceptions({
-          code:code.NOT_FOUND_USER,
-          message:message.NOT_FOUND_USER,
-        })
-      }
-      throw new InternalServerErrorExceptions({
-        code:code.ERROR_GENERIC,
-        message:message.ERROR_GENERIC,
-        description:"algo aconteceu em deletar usuario por uid"+` ::: ${error}`
+      throw new NotFoundExceptions({
+        code:code.NOT_FOUND_USER,
+        message:message.NOT_FOUND_USER,
       })
+    }catch(e:any){
+      throw new Exception({
+        code:e.response.error.code,
+        message:e.response.error.message,
+        description:e.response.error.description,
+        method:this.request.url,
+        path:this.request.method,
+      },e.response.statusCode);
+    }
+  }
+
+  public async create(page:any){
+    try{
+      const res = await this.repository.save(page)
+      if(res){
+        return res
+      }
+      throw new NotFoundExceptions({
+        code:code.NOT_FOUND,
+        message:message.NOT_FOUND
+      })
+    }catch(e:any){
+      throw new Exception({
+        code:e.response.error.code,
+        message:e.response.error.message,
+        description:e.response.error.description,
+        method:this.request.url,
+        path:this.request.method,
+      },e.response.statusCode);
     }
   }
 }

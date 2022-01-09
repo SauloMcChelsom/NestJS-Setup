@@ -1,37 +1,43 @@
 import { Injectable } from '@nestjs/common'
-import { InjectRepository} from '@nestjs/typeorm'
 
+
+import { FirebaseModel } from '@modules/firebase/firebase.model'
+import { ClassificationInterface } from '@shared/interfaces'
 import { CryptUtilityService } from '@shared/bcrypt/bcrypt.service'
-import { OK, NotFoundExceptions, ConflictExceptions } from '@service/exception'
+import { OK } from '@service/exception'
 import { code, message } from '@shared/enum'
 
-import { FirebaseModel } from '@root/src/modules/firebase/firebase.model'
-
 import { UserModel } from './user.model'
-import { UserRepository } from './user.repository'
-import { PerfilUserMapper, CheckUserExistsByEmailMapper } from './mapper'
-import { CreateNewUserDto, UpdateUserDto } from './dto'
+import { CreateInterface, UpdateInterface } from './interface'
+import { 
+  CreateMapper, 
+  AuthListMapper, 
+  PublicListMapper,
+  AuthFindOneMapper,
+  PublicFindOneMapper
+} from './mapper'
 
 @Injectable()
 export class UserService {
 
   constructor(
-    @InjectRepository(UserRepository) 
-    private readonly repository: UserRepository, 
     private model:UserModel,
     private validateFirebase:FirebaseModel,
     private crypt:CryptUtilityService,
-    private perfilUserMapper:PerfilUserMapper,
-    private checkUserExistsByEmailMapper:CheckUserExistsByEmailMapper
+    private createMapper:CreateMapper, 
+    private authListMapper:AuthListMapper, 
+    private publicListMapper:PublicListMapper,
+    private authFindOneMapper:AuthFindOneMapper,
+    private publicFindOneMapper:PublicFindOneMapper
   ) {}
 
-  public async save(user:CreateNewUserDto) {
-    await this.model.emailAlreadyExist(user.email)
-    await this.model.uidAlreadyExist(user.uid)
-    await this.model.providersIsValid(user.providers)
-    user.password = await this.crypt.hash(user.password);
-    const res = await this.repository.save(user)
-    const dto = this.perfilUserMapper.toDto(res)
+  public async create(body:CreateInterface) {
+    await this.model.emailAlreadyExist(body.email)
+    await this.model.uidAlreadyExist(body.uid)
+    await this.model.providersIsValid(body.providers)
+    body.password = await this.crypt.hash(body.password);
+    const res = await this.model.create(body)
+    const dto = this.createMapper.toMapper(res)
     return new OK(
       [dto],
       code.USER_REGISTERED,
@@ -39,92 +45,47 @@ export class UserService {
     )
   }
 
-  public async findAll(token:string) {
-    let body = await this.validateFirebase.isToken(token)
-    let decoded = await this.validateFirebase.validateTokenByFirebase(body)
-
-    const res = await this.repository.find();
-    
-    if(Object.keys(res).length == 0){
-      throw new NotFoundExceptions({
-        code:code.NOT_FOUND_USER,
-        message:message.NOT_FOUND_USER,
-      })
-    }
-    const dto = res.map((r)=> this.perfilUserMapper.toDto(r))
-    return new OK(dto)
-  }
-
-  public async getUserByUid(uid:string, token:string) {
-    let body = await this.validateFirebase.isToken(token)
-    let decoded = await this.validateFirebase.validateTokenByFirebase(body)
-
-    if(decoded.uid != uid){
-      return await new ConflictExceptions({
-        code:code.UID_INVALID,
-        message:message.UID_INVALID,
-        description:message.UID_INVALID_CONFLICT_TOKEN_DESCRIPTION
-      })
-    }
-
+  public async authFindOneByUid(uid:string) {
     const res = await this.model.getUserByUid(uid)
-    const dto = this.perfilUserMapper.toDto(res)
+    const dto = this.authFindOneMapper.toMapper(res)
     return new OK([dto])
   }
 
-  public async getUserByEmail(email:string, token:string) {
-    let body = await this.validateFirebase.isToken(token)
-    let decoded = await this.validateFirebase.validateTokenByFirebase(body)
+  public async publicFindOneByUid(uid:string) {
+    const res = await this.model.getUserByUid(uid)
+    const dto = this.publicFindOneMapper.toMapper(res)
+    return new OK([dto])
+  }
 
-    if(decoded.email != email){
-      return await new ConflictExceptions({
-        code:code.EMAIL_INVALID,
-        message:message.EMAIL_INVALID,
-        description:message.EMAIL_INVALID_CONFLICT_TOKEN_DESCRIPTION
-      })
-    }
-
+  public async authFindOneByEmail(email:string) {
     const res = await this.model.getUserByEmail(email)
-    const dto = this.perfilUserMapper.toDto(res)
+    const dto = this.authFindOneMapper.toMapper(res)
     return new OK([dto])
   }
 
-  public async checkUserExistsByEmail(email:string) {
+  public async publicFindOneByEmail(email:string) {
     const res = await this.model.getUserByEmail(email)
-    const dto = this.checkUserExistsByEmailMapper.toDto(res)
+    const dto = this.publicFindOneMapper.toMapper(res)
     return new OK([dto])
   }
 
-  public async updateUserByUid(uid:string, user:UpdateUserDto, token:string) {
-    let body = await this.validateFirebase.isToken(token)
-    let decoded = await this.validateFirebase.validateTokenByFirebase(body)
-
-    if(decoded.uid != uid){
-      return await new ConflictExceptions({
-        code:code.UID_INVALID,
-        message:message.UID_INVALID,
-        description:message.UID_INVALID_CONFLICT_TOKEN_DESCRIPTION
-      })
-    }
-
+  public async updateByUid(uid:string, body:UpdateInterface) {
     const { id } = await this.model.getUserByUid(uid)
-    await this.model.updateUserByUid(id, user)
+    await this.model.updateUserByUid(id, body)
     const res = await this.model.getUserByUid(uid)
-    const dto = this.perfilUserMapper.toDto(res)
+    const dto = this.authFindOneMapper.toMapper(res)
     return new OK([dto], code.USER_UPDATED, message.USER_UPDATED) 
   }
 
-  public async deleteUserByUid(token:string) {
-    let body = await this.validateFirebase.isToken(token)
-    let decoded = await this.validateFirebase.validateTokenByFirebase(body)
+  public async deleteByUid(uid:string) {
 
-    const { id, uid } = await this.model.getUserByUid(decoded.uid)
+    const { id } = await this.model.getUserByUid(uid)
 
     await this.validateFirebase.revokeRefreshTokens(uid)
 
     await this.validateFirebase.deleteUser(uid)
 
-    await this.repository.deleteUserByUid(id);
+    await this.model.delete(id);
 
     return new OK([], code.DELETED_SUCCESSFULLY, message.DELETED_SUCCESSFULLY) 
   }

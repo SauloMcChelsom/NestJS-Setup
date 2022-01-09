@@ -10,7 +10,7 @@ import { OK, InternalServerErrorExceptions, NotFoundExceptions, Exception } from
 import { PublicationRepository } from './publication.repository'
 import { UpdateInterface } from './interface'
 
-@Injectable()
+@Injectable({ scope: Scope.REQUEST })
 export class PublicationModel {
 
     constructor(

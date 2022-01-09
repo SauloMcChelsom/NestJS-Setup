@@ -12,7 +12,7 @@ import { UpdateInterface } from './interface'
 
 
 
-@Injectable()
+@Injectable({ scope: Scope.REQUEST })
 export class PageModel {
 
   constructor(

@@ -1,57 +1,73 @@
-import { Controller, Param, Get, Post, Body, Put, Delete, Headers } from '@nestjs/common';
-import {
-  ApiOperation,
-  ApiResponse,
-  ApiTags,
-} from '@nestjs/swagger'
-import { message } from '@shared/enum'
-import { CreateNewUserDto, UpdateUserDto } from './dto'
+import { Controller, Headers, Param, Get, Query, Post, Body, Put, Delete  } from '@nestjs/common'
+import { ApiOperation, ApiTags } from '@nestjs/swagger'
+
+import { FirebaseModel } from '@modules/firebase/firebase.model'
+import { UserModel } from '@modules/user/user.model'
+import { ClassificationInterface } from '@shared/interfaces'
+
 import { UserService } from './user.service'
+import { UpdateDto } from './dto/update.dto'
+import { CreateDto,  } from './dto/create.dto'
+import { CreateInterface, UpdateInterface } from './interface'
 
 @ApiTags('user')
 @Controller('user')
 export class UsuariosController {
-  constructor(private readonly service: UserService) {}
- 
-  @Get('/auth')
-  @ApiOperation({ summary: 'Listar todos usuarios da base' })
-  public async findAll(@Headers('Authorization') token: string) {
-    return this.service.findAll(token);
+
+  constructor(
+    private readonly service: UserService,
+    private modelFirebase:FirebaseModel,  
+    private modelUser:UserModel,
+  ) {}
+
+  @Get('/auth/uid/')
+  @ApiOperation({ summary: 'Buscar informação do usuario por uid' })
+  public async authFindOneByUid(@Headers('Authorization') authorization: string) {
+    let token = await this.modelFirebase.isToken(authorization)
+    let user = await this.modelFirebase.validateTokenByFirebase(token)
+    return await this.service.authFindOneByUid(user.uid);
   }
 
-  @Get('/auth/get-user-by-uid/:uid')
-  @ApiOperation({ summary: 'Obter informação do usuario por uid' })
-  public async getUserByUid(@Param('uid') uid: string, @Headers('Authorization') token: string) {
-    return await this.service.getUserByUid(uid, token);
+  @Get('/public/uid/:uid')
+  @ApiOperation({ summary: 'Buscar informação do usuario por uid' })
+  public async publicFindOneByUid(@Param('uid') uid: string) {
+    return await this.service.publicFindOneByUid(uid);
   }
 
-  @Get('/auth/get-user-by-email/:email')
-  @ApiOperation({ summary: 'Obter informação do usuario por email' })
-  public async getUserByEmail(@Param('email') email: string, @Headers('Authorization') token: string) {
-    return await this.service.getUserByEmail(email, token);
+  @Get('/auth/email/')
+  @ApiOperation({ summary: 'Buscar informação do usuario por email' })
+  public async authFindOneByEmail(@Headers('Authorization') authorization: string) {
+    let token = await this.modelFirebase.isToken(authorization)
+    let user = await this.modelFirebase.validateTokenByFirebase(token)
+    return await this.service.authFindOneByEmail(user.email+'');
   }
 
-  @Put('/auth/:uid')
-  @ApiOperation({ summary: 'Atualizar usuario por uid' })
-  public async update(@Param('uid') uid: string, @Body() updateDto:UpdateUserDto, @Headers('Authorization') token: string) {
-    return await this.service.updateUserByUid(uid, updateDto, token);
+  @Get('/public/email/:email')
+  @ApiOperation({ summary: 'Buscar informação do usuario por email' })
+  public async publicFindOneByEmail(@Param('email') email: string) {
+    return await this.service.publicFindOneByEmail(email);
   }
 
-  @Delete('/auth/delete-account')
-  @ApiOperation({ summary: 'Excluir usuario' })
-  public async deleteUserByUid(@Headers('Authorization') token: string) {
-    return await this.service.deleteUserByUid(token);
-  }
-
-  @Post()
+  @Post('/auth/')
   @ApiOperation({ summary: 'Criar um usuario' })
-  public async save(@Body() create: CreateNewUserDto) {
-    return await this.service.save(create);
+  public async create(@Body() create: CreateDto) {
+    return await this.service.create(create);
+  }
+  
+  @Put('/auth/')
+  @ApiOperation({ summary: 'Atualizar usuario por uid' })
+  public async update(@Body() body:UpdateDto, @Headers('Authorization') authorization: string) {
+    let token = await this.modelFirebase.isToken(authorization)
+    let user = await this.modelFirebase.validateTokenByFirebase(token)
+
+    return await this.service.updateByUid(user.uid, body);
   }
 
-  @Get('/check-user-exists-by-email/:email')
-  @ApiOperation({ summary: 'Checar se o usuario existe por email' })
-  public async checkUserExistsByEmail(@Param('email') email: string) {
-    return await this.service.checkUserExistsByEmail(email);
+  @Delete('/auth/')
+  @ApiOperation({ summary: 'Excluir usuario' })
+  public async deleteUserByUid(@Headers('Authorization') authorization: string) {
+    let token = await this.modelFirebase.isToken(authorization)
+    let user = await this.modelFirebase.validateTokenByFirebase(token)
+    return await this.service.deleteByUid(user.uid);
   }
 }

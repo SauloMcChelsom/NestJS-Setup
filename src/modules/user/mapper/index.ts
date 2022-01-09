@@ -1,4 +1,7 @@
-export * from './perfil-user.mapper';
-export * from './check-user-exists-by-email.mapper';
+export * from './authFindOne.mapper';
+export * from './authList.mapper';
+export * from './create.mapper';
+export * from './publicFindOne.mapper';
+export * from './publicList.mapper';
 
 

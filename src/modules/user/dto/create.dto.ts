@@ -1,7 +1,7 @@
 import { Contains, MinLength, MaxLength, ValidationOptions, IsDate, IsNumber, IsString, Length, IsNotEmpty, IsEmail, IsInt, Min,  Max, IsBoolean  } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger'
 
-export class CreateNewUserDto  {
+export class CreateDto  {
 
   @ApiProperty({ 
     example: '5rkITHMFraPUdy2LZLbunRuZSNu1', 
@@ -45,3 +45,4 @@ export class CreateNewUserDto  {
   @IsString()
   providers: string;
 }
+
