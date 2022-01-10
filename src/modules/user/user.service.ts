@@ -1,8 +1,6 @@
 import { Injectable } from '@nestjs/common'
 
-
 import { FirebaseModel } from '@modules/firebase/firebase.model'
-import { ClassificationInterface } from '@shared/interfaces'
 import { CryptUtilityService } from '@shared/bcrypt/bcrypt.service'
 import { OK } from '@service/exception'
 import { code, message } from '@shared/enum'
@@ -10,9 +8,7 @@ import { code, message } from '@shared/enum'
 import { UserModel } from './user.model'
 import { CreateInterface, UpdateInterface } from './interface'
 import { 
-  CreateMapper, 
-  AuthListMapper, 
-  PublicListMapper,
+  CreateMapper,
   AuthFindOneMapper,
   PublicFindOneMapper
 } from './mapper'
@@ -24,11 +20,9 @@ export class UserService {
     private model:UserModel,
     private validateFirebase:FirebaseModel,
     private crypt:CryptUtilityService,
-    private createMapper:CreateMapper, 
-    private authListMapper:AuthListMapper, 
-    private publicListMapper:PublicListMapper,
+    private createMapper:CreateMapper,
     private authFindOneMapper:AuthFindOneMapper,
-    private publicFindOneMapper:PublicFindOneMapper
+    private publicFindOneMapper:PublicFindOneMapper,
   ) {}
 
   public async create(body:CreateInterface) {
@@ -38,11 +32,7 @@ export class UserService {
     body.password = await this.crypt.hash(body.password);
     const res = await this.model.create(body)
     const dto = this.createMapper.toMapper(res)
-    return new OK(
-      [dto],
-      code.USER_REGISTERED,
-      message.USER_REGISTERED
-    )
+    return new OK([dto], code.USER_REGISTERED, message.USER_REGISTERED)
   }
 
   public async authFindOneByUid(uid:string) {
@@ -78,16 +68,17 @@ export class UserService {
   }
 
   public async deleteByUid(uid:string) {
-
     const { id } = await this.model.getUserByUid(uid)
-
     await this.validateFirebase.revokeRefreshTokens(uid)
-
     await this.validateFirebase.deleteUser(uid)
-
     await this.model.delete(id);
-
     return new OK([], code.DELETED_SUCCESSFULLY, message.DELETED_SUCCESSFULLY) 
   }
+
+  public async getUserByUid(uid:string) {
+    return await this.model.getUserByUid(uid)
+  }
+
+  
 }
 

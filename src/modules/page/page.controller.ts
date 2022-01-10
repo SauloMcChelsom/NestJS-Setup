@@ -22,16 +22,16 @@ export class PageController {
 
   @ApiOperation({ summary: 'Buscar por nome da pagina' })
   @Get('/auth/name/:page')
-  public async authFindOneByName(@Param('page') page: string, @Headers('Authorization') authorization: string) {
+  public async authFindOneByName(@Param('page') name: string, @Headers('Authorization') authorization: string) {
     let token = await this.modelFirebase.isToken(authorization)
     await this.modelFirebase.validateTokenByFirebase(token)
-    return await this.service.authFindOneByName(page);
+    return await this.service.authFindOneByName(name);
   }
 
   @ApiOperation({ summary: 'Buscar por nome da pagina' })
   @Get('/public/name/:page')
-  public async publicfindOneByName(@Param('page') page: string) {
-    return await this.service.publicfindOneByName(page);
+  public async publicfindOneByName(@Param('page') name: string) {
+    return await this.service.publicfindOneByName(name);
   }
 
   @ApiOperation({ summary: 'Buscar por id da pagina' })
@@ -51,6 +51,9 @@ export class PageController {
   @ApiOperation({ summary: 'Listar todas as paginas' })
   @Get()
   public async authListAll(@Headers('Authorization') authorization: string, @Query('search') search:string, @Query('limit') limit:number, @Query('offset') offset:number, @Query('order') order:string, @Query('column') column:string, @Query('start') start:string, @Query('end') end:string) {
+    let token = await this.modelFirebase.isToken(authorization)
+    await this.modelFirebase.validateTokenByFirebase(token)
+    
     const cls:ClassificationInterface = { 
       search:search, 
       limit:limit, 

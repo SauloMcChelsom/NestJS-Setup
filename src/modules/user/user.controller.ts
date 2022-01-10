@@ -1,14 +1,11 @@
-import { Controller, Headers, Param, Get, Query, Post, Body, Put, Delete  } from '@nestjs/common'
+import { Controller, Headers, Param, Get, Post, Body, Put, Delete  } from '@nestjs/common'
 import { ApiOperation, ApiTags } from '@nestjs/swagger'
 
 import { FirebaseModel } from '@modules/firebase/firebase.model'
-import { UserModel } from '@modules/user/user.model'
-import { ClassificationInterface } from '@shared/interfaces'
 
 import { UserService } from './user.service'
 import { UpdateDto } from './dto/update.dto'
 import { CreateDto,  } from './dto/create.dto'
-import { CreateInterface, UpdateInterface } from './interface'
 
 @ApiTags('user')
 @Controller('user')
@@ -16,8 +13,7 @@ export class UsuariosController {
 
   constructor(
     private readonly service: UserService,
-    private modelFirebase:FirebaseModel,  
-    private modelUser:UserModel,
+    private modelFirebase:FirebaseModel
   ) {}
 
   @Get('/auth/uid/')

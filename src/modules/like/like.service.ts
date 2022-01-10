@@ -2,19 +2,19 @@ import { Injectable } from '@nestjs/common'
 
 import { OK } from '@service/exception'
 import { code, message } from '@shared/enum'
-import { PublicationModel } from '@modules/publication/publication.model'
+import { PublicationService } from '@modules/publication/publication.service'
 
 import { LikeModel } from './like.model'
 import { CreateInterface } from './interface/create.interface'
-import { CreateLikeMapper } from './mapper/createLike.mapper'
+import { CreateMapper } from './mapper/create.mapper'
 
 @Injectable()
 export class LikeService {
 
   constructor(
-    private modelPublication:PublicationModel,
+    private servicePublication:PublicationService,
     private model:LikeModel,
-    private createLikeMapper:CreateLikeMapper
+    private createMapper:CreateMapper
   ) {}
 
   public async createLike(like:CreateInterface) {
@@ -28,27 +28,27 @@ export class LikeService {
       if(segments.i_liked){
         //se sim, atualiza para 'para de curtir' e atualizar o contator na tabela publication para --
         await this.model.updateLike(segments.id.toString(), {i_liked:false})
-        await this.modelPublication.decrementNumberLikeOfPublication(segments.publication_id)
+        await this.servicePublication.decrementNumberLikeOfPublication(segments.publication_id)
 
         let res = await this.model.getLike(like.publication_id.toString(), like.user_id.toString())
-        const dto = this.createLikeMapper.toMapper(res)
+        const dto = this.createMapper.toMapper(res)
         return new OK([dto], code.SUCCESSFULLY_UPDATED, message.SUCCESSFULLY_UPDATED) 
       }else{
         //se não, atualizar para 'começar a seguir' e atualizar o contator na tabela page ++
         await this.model.updateLike(segments.id.toString(), {i_liked:true})
-        await this.modelPublication.incrementNumberLikeOfPublication(segments.publication_id)
+        await this.servicePublication.incrementNumberLikeOfPublication(segments.publication_id)
 
         let res = await this.model.getLike(like.publication_id.toString(), like.user_id.toString())
-        const dto = this.createLikeMapper.toMapper(res)
+        const dto = this.createMapper.toMapper(res)
         return new OK([dto], code.SUCCESSFULLY_UPDATED, message.SUCCESSFULLY_UPDATED) 
       }
     }else{
       //se não houver registro, criar um registro ja seguindo e atualizar o contator na tabela page ++
       like.i_liked = true
       await this.model.save(like)
-      await this.modelPublication.incrementNumberLikeOfPublication(like.publication_id.toString())
+      await this.servicePublication.incrementNumberLikeOfPublication(like.publication_id.toString())
       let res = await this.model.getLike(like.publication_id.toString(), like.user_id.toString())
-      const dto = this.createLikeMapper.toMapper(res)
+      const dto = this.createMapper.toMapper(res)
       return new OK([dto], code.SUCCESSFULLY_CREATED, message.SUCCESSFULLY_CREATED) 
     }
   }

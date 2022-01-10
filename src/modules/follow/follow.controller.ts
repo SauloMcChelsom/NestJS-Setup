@@ -15,7 +15,7 @@ export class FollowController {
   
   @ApiOperation({ summary: 'Listar usuarios da pagina' })
   @Get('/auth/page/:id')
-  public async authListFollowByIdPage(@Param('id') id: string, @Headers('Authorization') authorization: string, @Query('search') search:string, @Query('limit') limit:number, @Query('offset') offset:number, @Query('order') order:string, @Query('column') column:string, @Query('start') start:string, @Query('end') end:string) {
+  public async authListByIdPage(@Param('id') id: string, @Headers('Authorization') authorization: string, @Query('search') search:string, @Query('limit') limit:number, @Query('offset') offset:number, @Query('order') order:string, @Query('column') column:string, @Query('start') start:string, @Query('end') end:string) {
     
     let token = await this.modelFirebase.isToken(authorization)
     await this.modelFirebase.validateTokenByFirebase(token)
@@ -30,12 +30,12 @@ export class FollowController {
       end:end
     }
 
-    return await this.service.authListFollowByIdPage(id, cls);
+    return await this.service.authListByIdPage(id, cls);
   }
 
   @ApiOperation({ summary: 'Listar as paginas que o usuario segue' })
   @Get('/auth/user/:id')
-  public async authListFollowByIdUser(@Param('id') id: string, @Headers('Authorization') authorization: string, @Query('search') search:string, @Query('limit') limit:number, @Query('offset') offset:number, @Query('order') order:string, @Query('column') column:string, @Query('start') start:string, @Query('end') end:string) {
+  public async authListByIdUser(@Param('id') id: string, @Headers('Authorization') authorization: string, @Query('search') search:string, @Query('limit') limit:number, @Query('offset') offset:number, @Query('order') order:string, @Query('column') column:string, @Query('start') start:string, @Query('end') end:string) {
     let token = await this.modelFirebase.isToken(authorization)
     await this.modelFirebase.validateTokenByFirebase(token)
 
@@ -48,15 +48,15 @@ export class FollowController {
       start:start, 
       end:end
     }
-    return await this.service.authListFollowByIdUser(id, cls);
+    return await this.service.authListByIdUser(id, cls);
   }
 
   @ApiOperation({ summary: 'Seguir a pagina' })
   @Post('/auth/follow')
-  public async createPage(@Body() body: CreateDto, @Headers('Authorization') authorization: string) {
+  public async create(@Body() body: CreateDto, @Headers('Authorization') authorization: string) {
     let token = await this.modelFirebase.isToken(authorization)
     await this.modelFirebase.validateTokenByFirebase(token)
-    return await this.service.createPage(body);
+    return await this.service.create(body);
   }
 }
 /**

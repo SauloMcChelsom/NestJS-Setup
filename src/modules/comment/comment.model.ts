@@ -20,9 +20,9 @@ export class CommentModel {
     private utility:UtilityService
   ) {}
 
-  public async create(comment:any){
+  public async create(body:any){
     try{
-      const res = await this.repository.save(comment)
+      const res = await this.repository.save(body)
       if(res){
         return res
       }

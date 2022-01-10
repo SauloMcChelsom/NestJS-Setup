@@ -26,16 +26,16 @@ export class PublicationService {
     private model:PublicationModel
   ) {}
 
-  public async create(post:CreateInterface) {
-    post.number_of_likes = 0
-    const res = await this.model.create(post)
+  public async create(body:CreateInterface) {
+    body.number_of_likes = 0
+    const res = await this.model.create(body)
     const dto = this.createMapper.toMapper(res)
     return new OK([dto], code.SUCCESSFULLY_CREATED, message.SUCCESSFULLY_CREATED) 
   }
 
-  public async update(put:UpdateInterface) {
-    await this.model.update(put.id, put);
-    const res = await this.model.findOneById(put.id)
+  public async update(body:UpdateInterface) {
+    await this.model.update(body.id, body);
+    const res = await this.model.findOneById(body.id)
     const dto = this.authFindOneMapper.toMapper(res)
     return new OK([dto], code.SUCCESSFULLY_UPDATED, message.SUCCESSFULLY_UPDATED) 
   }

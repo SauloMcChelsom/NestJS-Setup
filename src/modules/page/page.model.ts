@@ -9,7 +9,7 @@ import { OK, InternalServerErrorExceptions, NotFoundExceptions, ConflictExceptio
 
 import { PageRepository } from './page.repository'
 import { UpdateInterface } from './interface'
-
+import { CreateInterface } from './interface'
 
 
 @Injectable({ scope: Scope.REQUEST })
@@ -21,9 +21,9 @@ export class PageModel {
     private utility:UtilityService
   ) {}
 
-  public async create(page:any){
+  public async create(body:CreateInterface){
     try{
-      const res = await this.repository.save(page)
+      const res = await this.repository.save(body)
       if(res){
         return res
       }
@@ -42,9 +42,9 @@ export class PageModel {
     }
   }
 
-  public async findOneByName(page:string){
+  public async findOneByName(name:string){
     try{
-      const res = await this.repository.findOne({ where:{ page_name: page }})
+      const res = await this.repository.findOne({ where:{ page_name: name }})
       if(res){
         return res
       }
@@ -131,9 +131,9 @@ export class PageModel {
     }
   }
 
-  public async update(id:number, page: UpdateInterface) { 
+  public async update(id:number, body: UpdateInterface) { 
     try{
-      const res = await this.repository.update(id, { ...page as any });
+      const res = await this.repository.update(id, { ...body as any });
       if(res){
         return res
       }
@@ -142,15 +142,14 @@ export class PageModel {
         code:code.ERROR_GENERIC,
         message:message.ERROR_GENERIC,
         method:this.request.url,
-        path:this.request.method,
-        description:"algo aconteceu em atualizar updateAmFollowing"+` ::: ${e}`
+        path:this.request.method
       })
     }
   }
 
-  public async pageAlreadyExist(page:string) {
+  public async pageAlreadyExist(name:string) {
     try{
-      const res = await this.repository.findOne({ where:{ page_name: page }})
+      const res = await this.repository.findOne({ where:{ page_name: name }})
       if(res){
         throw new ConflictExceptions({
           code:code.PAGE_ALREADY_IN_USE,

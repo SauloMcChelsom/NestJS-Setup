@@ -1,49 +1,42 @@
 import { Module } from '@nestjs/common'
 import { TypeOrmModule } from '@nestjs/typeorm'
 
-import { PageModel } from '@modules/page/page.model'
-import { FirebaseModel } from '@modules/firebase/firebase.model'
-import { UserModel } from '@modules/user/user.model'
-import { PageRepository } from '@modules/page/page.repository'
-import { UserRepository } from '@modules/user/user.repository'
-import { PublicationModel } from '@modules/publication/publication.model'
-import { PublicationRepository } from '@modules/publication/publication.repository'
-import { UtilityService } from "@shared/model/utility/utility.service"
+import { FirebaseModule } from '@modules/firebase/firebase.module'
+import { UtilityModule } from "@shared/model/utility/utility.module"
+import { UserModule } from '@modules/user/user.module'
 import { CommentEntity } from '@entity/comment.entity'
 
 import { CommentController } from './comment.controller'
 import { CommentService } from './comment.service'
-import { CommentRepository } from './comment.repository'
 import { CommentModel } from './comment.model'
+import { CommentRepository } from './comment.repository'
 
 import { 
-  CreateCommentMapper, 
-  AuthListCommentByUserIdMapper, 
-  PublicListCommentByUserIdMapper,
-  AuthFindOneCommentByIdMapper,
-  PublicListCommentByPublicationIdMapper,
-  UpdateCommentMapper,
-  PublicFindOneCommentByIdMapper
+  CreateMapper, 
+  AuthListMapper, 
+  PublicListMapper,
+  AuthFindOneMapper,
+  UpdateMapper,
+  PublicFindOneMapper
 } from './mapper'
 
 @Module({
-  imports: [TypeOrmModule.forFeature([CommentEntity, CommentRepository, PageRepository, UserRepository, PublicationRepository])],
+  imports: [
+    TypeOrmModule.forFeature([CommentEntity, CommentRepository]), 
+    UserModule,
+    UtilityModule,
+    FirebaseModule
+  ],
   controllers: [CommentController],
   providers: [
     CommentService, 
-    UtilityService, 
     CommentModel, 
-    PublicationModel,
-    PageModel, 
-    FirebaseModel, 
-    UserModel,
-    CreateCommentMapper, 
-    AuthListCommentByUserIdMapper, 
-    PublicListCommentByUserIdMapper,
-    AuthFindOneCommentByIdMapper,
-    PublicListCommentByPublicationIdMapper,
-    UpdateCommentMapper,
-    PublicFindOneCommentByIdMapper
+    AuthListMapper, 
+    PublicListMapper,
+    AuthFindOneMapper,
+    PublicFindOneMapper,
+    CreateMapper, 
+    UpdateMapper,
   ],
   exports: [CommentService]
 })

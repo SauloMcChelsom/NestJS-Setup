@@ -88,5 +88,20 @@ export class FirebaseService {
     )
   }
 
+  public async isToken(token:string) {
+    let body = await this.validate.isToken(token)
+    let decoded = await this.validate.validateTokenByFirebase(body)
+    await this.validate.deleteUser(decoded.uid)
+    return await new OK(
+      [],
+      code.SUCCESSFULLY_DELETED_USER,
+      message.SUCCESSFULLY_DELETED_USER
+    )
+  }
+
+  public async validateTokenByFirebase(token:string) {
+    let body = await this.validate.isToken(token)
+    return await this.validate.validateTokenByFirebase(body)
+  }
 }
 

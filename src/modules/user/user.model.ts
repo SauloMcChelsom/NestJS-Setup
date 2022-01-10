@@ -3,9 +3,8 @@ import { InjectRepository} from '@nestjs/typeorm'
 import { REQUEST } from '@nestjs/core';
 import { Request } from 'express';
 
-import { UtilityService } from "@shared/model/utility/utility.service"
 import { code, message } from '@shared/enum'
-import { OK, InternalServerErrorExceptions, ConflictExceptions, BadRequestExceptions, NotFoundExceptions, Exception } from '@service/exception'
+import { ConflictExceptions, BadRequestExceptions, NotFoundExceptions, Exception } from '@service/exception'
 
 import { UserRepository } from './user.repository'
 import { UpdateInterface } from './interface'
@@ -15,8 +14,7 @@ export class UserModel {
 
   constructor(
     @InjectRepository(UserRepository) private readonly repository: UserRepository,
-    @Inject(REQUEST) private readonly request: Request,
-    private utility:UtilityService
+    @Inject(REQUEST) private readonly request: Request
   ) {}
 
   public async emailAlreadyExist(email:string) {

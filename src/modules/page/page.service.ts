@@ -14,7 +14,6 @@ import {
   PublicFindOneMapper
 } from './mapper'
 
-
 @Injectable()
 export class PageService {
 
@@ -27,22 +26,22 @@ export class PageService {
     private publicFindOneMapper:PublicFindOneMapper
   ) {}
 
-  public async create(page:CreateInterface) {
-    await this.model.pageAlreadyExist(page.page_name)
-    page.number_of_followers = 0
-    const res = await this.model.create(page)
+  public async create(body:CreateInterface) {
+    await this.model.pageAlreadyExist(body.page_name)
+    body.number_of_followers = 0
+    const res = await this.model.create(body)
     const dto = this.createMapper.toMapper(res)
     return new OK([dto], code.SUCCESSFULLY_CREATED, message.SUCCESSFULLY_CREATED) 
   }
 
-  public async authFindOneByName(page:string) {
-    const res = await this.model.findOneByName(page)
+  public async authFindOneByName(name:string) {
+    const res = await this.model.findOneByName(name)
     const dto = this.authFindOneMapper.toMapper(res)
     return new OK([dto], code.SUCCESSFULLY_FOUND, message.SUCCESSFULLY_FOUND) 
   }
 
-  public async publicfindOneByName(page:string) {
-    const res = await this.model.findOneByName(page)
+  public async publicfindOneByName(name:string) {
+    const res = await this.model.findOneByName(name)
     const dto = this.publicFindOneMapper.toMapper(res)
     return new OK([dto], code.SUCCESSFULLY_FOUND, message.SUCCESSFULLY_FOUND) 
   }
@@ -71,10 +70,10 @@ export class PageService {
     return new OK(dto, code.SUCCESSFULLY_FOUND, message.SUCCESSFULLY_FOUND) 
   }
 
-  public async update(page:UpdateInterface) {
-    await this.model.findPageByIdOfUserAndIdOfPage(page.user_id.toString(), page.id.toString())
-    await this.model.update(page.id, page);
-    const res = await this.model.findOneById(page.id)
+  public async update(body:UpdateInterface) {
+    await this.model.findPageByIdOfUserAndIdOfPage(body.user_id.toString(), body.id.toString())
+    await this.model.update(body.id, body);
+    const res = await this.model.findOneById(body.id)
     const dto = this.authFindOneMapper.toMapper(res)
     return new OK([dto], code.SUCCESSFULLY_UPDATED, message.SUCCESSFULLY_UPDATED) 
   }

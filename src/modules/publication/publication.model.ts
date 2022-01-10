@@ -169,9 +169,9 @@ export class PublicationModel {
         }
     }
 
-    public async create(page:any){
+    public async create(body:any){
         try{
-          const res = await this.repository.save(page)
+          const res = await this.repository.save(body)
           if(res){
             return res
           }
@@ -190,9 +190,9 @@ export class PublicationModel {
         }
     }
 
-    public async update(id:number, put: UpdateInterface) { 
+    public async update(id:number, body: UpdateInterface) { 
         try{
-          const res = await this.repository.update(id, { ...put as any });
+          const res = await this.repository.update(id, { ...body as any });
           if(res){
             return res
           }

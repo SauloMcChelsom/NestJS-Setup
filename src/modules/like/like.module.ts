@@ -6,19 +6,24 @@ import { LikeController } from './like.controller'
 import { LikeService } from './like.service'
 import { LikeRepository } from './like.repository'
 import { LikeModel } from './like.model'
+import { UtilityService } from '@shared/model/utility/utility.service'
 
-import { PageModel } from '@modules/page/page.model'
+import { PublicationService } from '@modules/publication/publication.service'
 import { FirebaseModel } from '@modules/firebase/firebase.model'
-import { UserModel } from '@modules/user/user.model'
-import { PageRepository } from '@modules/page/page.repository'
-import { UserRepository } from '@modules/user/user.repository'
-import { PublicationModel } from '@modules/publication/publication.model'
-import { PublicationRepository } from '@modules/publication/publication.repository'
+
+import { CreateMapper } from './mapper/create.mapper'
 
 @Module({
-  imports: [TypeOrmModule.forFeature([LikeEntity, LikeRepository, PageRepository, UserRepository, PublicationRepository])],
+  imports: [TypeOrmModule.forFeature([LikeEntity, LikeRepository])],
   controllers: [LikeController],
-  providers: [LikeService, LikeModel, PublicationModel, PageModel, FirebaseModel, UserModel],
+  providers: [
+    LikeService, 
+    LikeModel, 
+    UtilityService,
+    PublicationService,
+    FirebaseModel, 
+    CreateMapper
+  ],
   exports: [LikeService]
 })
 export class LikeModule {}

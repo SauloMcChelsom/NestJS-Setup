@@ -22,9 +22,9 @@ export class LikeModel {
     @Inject(REQUEST) private readonly request: Request,
   ) {}
 
-  public async save(like:CreateInterface){
+  public async save(body:CreateInterface){
     try{
-      await this.repository.save(like)
+      await this.repository.save(body)
     }catch(error){
       throw new InternalServerErrorExceptions({
         code:code.ERROR_GENERIC,
