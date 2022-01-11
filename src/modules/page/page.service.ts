@@ -78,5 +78,13 @@ export class PageService {
     return new OK([dto], code.SUCCESSFULLY_UPDATED, message.SUCCESSFULLY_UPDATED) 
   }
 
+  public async incrementNumberFollowersPage(id:number) {
+    await this.model.increment(id)
+  }
+
+  public async decrementNumberFollowersPage(id:number) { 
+    await this.model.decrement(id)
+  }
+
 }
 

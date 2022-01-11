@@ -190,7 +190,7 @@ export class PageModel {
     }
   }
 
-  public async incrementNumberFollowersPage(id:any) {
+  public async increment(id:any) {
     try{
       let page = await this.repository.findOne({ where:{ id: id }})
 
@@ -207,7 +207,7 @@ export class PageModel {
     }
   }
 
-  public async decrementNumberFollowersPage(id:any) { 
+  public async decrement(id:any) { 
     try{
       let page = await this.repository.findOne({ where:{ id: id }})
 

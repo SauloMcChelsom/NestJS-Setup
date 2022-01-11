@@ -3,7 +3,7 @@ import { TypeOrmModule } from '@nestjs/typeorm'
 
 import { CryptUtilityModule } from '@shared/bcrypt/bcrypt.module'
 import { UserEntity } from '@entity/user.entity'
-import { FirebaseModel } from '@root/src/modules/firebase/firebase.model'
+import { FirebaseModule } from '@root/src/modules/firebase/firebase.module'
 
 import { UsuariosController } from './user.controller'
 import { UserService } from './user.service'
@@ -19,17 +19,19 @@ import {
 } from './mapper'
 
 @Module({
-  imports: [CryptUtilityModule, TypeOrmModule.forFeature([UserEntity, UserRepository])],
+  imports: [TypeOrmModule.forFeature([UserEntity, UserRepository]),
+  CryptUtilityModule,
+  FirebaseModule
+  ],
   controllers: [UsuariosController],
   providers: [
     UserService, 
     UserModel, 
-    FirebaseModel,
-    CreateMapper, 
     AuthListMapper, 
     PublicListMapper,
     AuthFindOneMapper,
-    PublicFindOneMapper
+    PublicFindOneMapper,
+    CreateMapper,
   ],
   exports: [UserService]
 })

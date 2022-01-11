@@ -109,7 +109,7 @@ class SignIn {
   }
 
   async createUserDataBase(user) {
-    await fetch('/user', {
+    await fetch('/user/public/', {
       method: 'POST',
       headers: {
         'Accept': 'application/json',

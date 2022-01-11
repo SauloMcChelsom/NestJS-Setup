@@ -1,7 +1,7 @@
 import { Controller, Headers, Param, Get, Post, Body, Query } from '@nestjs/common'
 import { ApiOperation, ApiTags } from '@nestjs/swagger'
 
-import { FirebaseModel } from '@modules/firebase/firebase.model'
+import { FirebaseService } from '@modules/firebase/firebase.service'
 import { ClassificationInterface } from '@shared/interfaces'
 
 import { FollowService } from './follow.service'
@@ -11,15 +11,12 @@ import { CreateDto } from './dto/create.dto'
 @Controller('follow')
 export class FollowController {
 
-  constructor(private modelFirebase:FirebaseModel,private readonly service: FollowService) {}
+  constructor(private firebase:FirebaseService,private readonly service: FollowService) {}
   
   @ApiOperation({ summary: 'Listar usuarios da pagina' })
   @Get('/auth/page/:id')
   public async authListByIdPage(@Param('id') id: string, @Headers('Authorization') authorization: string, @Query('search') search:string, @Query('limit') limit:number, @Query('offset') offset:number, @Query('order') order:string, @Query('column') column:string, @Query('start') start:string, @Query('end') end:string) {
-    
-    let token = await this.modelFirebase.isToken(authorization)
-    await this.modelFirebase.validateTokenByFirebase(token)
-
+    const decoded = await this.firebase.validateTokenByFirebase(authorization)
     const cls:ClassificationInterface = {
       search:search, 
       limit:limit, 
@@ -27,18 +24,15 @@ export class FollowController {
       order:order, 
       column:column, 
       start:start, 
-      end:end
+      end:end 
     }
-
     return await this.service.authListByIdPage(id, cls);
   }
 
   @ApiOperation({ summary: 'Listar as paginas que o usuario segue' })
   @Get('/auth/user/:id')
   public async authListByIdUser(@Param('id') id: string, @Headers('Authorization') authorization: string, @Query('search') search:string, @Query('limit') limit:number, @Query('offset') offset:number, @Query('order') order:string, @Query('column') column:string, @Query('start') start:string, @Query('end') end:string) {
-    let token = await this.modelFirebase.isToken(authorization)
-    await this.modelFirebase.validateTokenByFirebase(token)
-
+    const decoded = await this.firebase.validateTokenByFirebase(authorization)
     const cls:ClassificationInterface = {
       search:search, 
       limit:limit, 
@@ -52,10 +46,9 @@ export class FollowController {
   }
 
   @ApiOperation({ summary: 'Seguir a pagina' })
-  @Post('/auth/follow')
+  @Post('/auth/')
   public async create(@Body() body: CreateDto, @Headers('Authorization') authorization: string) {
-    let token = await this.modelFirebase.isToken(authorization)
-    await this.modelFirebase.validateTokenByFirebase(token)
+    const decoded = await this.firebase.validateTokenByFirebase(authorization)
     return await this.service.create(body);
   }
 }

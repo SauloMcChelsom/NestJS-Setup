@@ -1,8 +1,8 @@
 import { Controller, Headers, Param, Get, Query, Post, Body, Put  } from '@nestjs/common'
 import { ApiOperation, ApiTags } from '@nestjs/swagger'
 
-import { FirebaseModel } from '@modules/firebase/firebase.model'
-import { UserModel } from '@modules/user/user.model'
+import { FirebaseService } from '@modules/firebase/firebase.service'
+import { UserService } from '@modules/user/user.service'
 import { ClassificationInterface } from '@shared/interfaces'
 
 import { PublicationService } from './publication.service'
@@ -16,15 +16,14 @@ export class PublicationController {
   
   constructor(
     private readonly service: PublicationService,
-    private modelFirebase:FirebaseModel,  
-    private modelUser:UserModel,
+    private firebase:FirebaseService,
+    private user:UserService,
   ) {}
 
   @ApiOperation({ summary: 'List um feed' })
   @Get('/auth/feed')
   public async authListFeed(@Headers('Authorization') authorization: string, @Query('limit') limit:number, @Query('offset') offset:number, @Query('order') order:string, @Query('column') column:string, @Query('start') start:string, @Query('end') end:string) {
-    let token = await this.modelFirebase.isToken(authorization)
-    await this.modelFirebase.validateTokenByFirebase(token)
+    const decoded = await this.firebase.validateTokenByFirebase(authorization)
     const cls:ClassificationInterface = {
       limit:limit, 
       offset:offset, 
@@ -53,8 +52,7 @@ export class PublicationController {
   @ApiOperation({ summary: 'Buscar por id da publicação' })
   @Get('/auth/:id')
   public async authFindOneById(@Param('id') id: string, @Headers('Authorization') authorization: string) {
-    let token = await this.modelFirebase.isToken(authorization)
-    await this.modelFirebase.validateTokenByFirebase(token)
+    const decoded = await this.firebase.validateTokenByFirebase(authorization)
     return await this.service.authFindOneById(id);
   }
 
@@ -67,8 +65,7 @@ export class PublicationController {
   @ApiOperation({ summary: 'Lista de publicação pesquisando por texto' })
   @Get('/auth/search/text')
   public async authListSearchByText(@Headers('Authorization') authorization: string, @Query('search') search:string, @Query('limit') limit:number, @Query('offset') offset:number, @Query('order') order:string, @Query('column') column:string, @Query('start') start:string, @Query('end') end:string) {
-    let token = await this.modelFirebase.isToken(authorization)
-    await this.modelFirebase.validateTokenByFirebase(token)
+    const decoded = await this.firebase.validateTokenByFirebase(authorization)
     const cls:ClassificationInterface = { 
       search:search, 
       limit:limit, 
@@ -97,11 +94,11 @@ export class PublicationController {
   }
 
   @ApiOperation({ summary: 'Criar uma nova publicaçao' })
-  @Post()
+  @Post('/auth/')
   public async create(@Body() body: CreateDto, @Headers('Authorization') authorization: string) {
-    let token = await this.modelFirebase.isToken(authorization)
-    const decoded = await this.modelFirebase.validateTokenByFirebase(token)
-    const user = await this.modelUser.getUserByUid(decoded.uid)
+    let token = await this.firebase.isToken(authorization)
+    const decoded = await this.firebase.validateTokenByFirebase(authorization)
+    const user = await this.user.getUserByUid(decoded.uid)
 
     const post:CreateInterface = {
       ...body,
@@ -112,11 +109,10 @@ export class PublicationController {
   }
 
   @ApiOperation({ summary: 'Alterar o texto da publicaçao' })
-  @Put(':id')
+  @Put('/auth/:id')
   public async update(@Body() body: UpdateDto, @Param('id') id: number, @Headers('Authorization') authorization: string) {
-    let token = await this.modelFirebase.isToken(authorization)
-    const decoded = await this.modelFirebase.validateTokenByFirebase(token)
-    const user = await this.modelUser.getUserByUid(decoded.uid)
+    const decoded = await this.firebase.validateTokenByFirebase(authorization)
+    const user = await this.user.getUserByUid(decoded.uid)
     const put:UpdateInterface = {
       ...body,
       id:id,

@@ -1,11 +1,10 @@
 import { Module } from '@nestjs/common'
 import { TypeOrmModule } from '@nestjs/typeorm'
 
-import { UserModel } from '@modules/user/user.model'
-import { UserRepository } from '@modules/user/user.repository'
-import { FirebaseModel } from '@modules/firebase/firebase.model'
+import { FirebaseModule } from '@modules/firebase/firebase.module'
+import { UtilityModule } from "@shared/model/utility/utility.module"
+import { UserModule } from '@modules/user/user.module'
 import { PageEntity } from '@entity/page.entity'
-import { UtilityService } from '@shared/model/utility/utility.service'
 
 import { PageModel } from './page.model'
 import { PageController } from './page.controller'
@@ -16,24 +15,25 @@ import {
   CreateMapper, 
   AuthListMapper, 
   PublicListMapper,
-  AuthFindOneMapper,
+  AuthFindOneMapper, 
   PublicFindOneMapper
 } from './mapper'
 
 @Module({
-  imports: [TypeOrmModule.forFeature([PageEntity, PageRepository, UserRepository])],
+  imports: [TypeOrmModule.forFeature([PageEntity, PageRepository]),
+    UserModule,
+    UtilityModule,
+    FirebaseModule
+  ],
   controllers: [PageController],
   providers: [
     PageService, 
     PageModel, 
-    FirebaseModel, 
-    UserModel,
-    UtilityService, 
-    CreateMapper, 
     AuthListMapper, 
     PublicListMapper,
     AuthFindOneMapper,
-    PublicFindOneMapper
+    PublicFindOneMapper,
+    CreateMapper, 
   ],
   exports: [PageService]
 })

@@ -1,8 +1,8 @@
 import { Controller, Headers, Param, Get, Query, Post, Body, Put  } from '@nestjs/common'
 import { ApiOperation, ApiTags } from '@nestjs/swagger'
 
-import { FirebaseModel } from '@modules/firebase/firebase.model'
-import { UserModel } from '@modules/user/user.model'
+import { FirebaseService } from '@modules/firebase/firebase.service'
+import { UserService } from '@modules/user/user.service'
 import { ClassificationInterface } from '@shared/interfaces'
 
 import { PageService } from './page.service'
@@ -16,15 +16,14 @@ export class PageController {
 
   constructor(
     private readonly service: PageService,
-    private modelFirebase:FirebaseModel,  
-    private modelUser:UserModel,
+    private firebase:FirebaseService,  
+    private user:UserService,
   ) {}
 
   @ApiOperation({ summary: 'Buscar por nome da pagina' })
   @Get('/auth/name/:page')
   public async authFindOneByName(@Param('page') name: string, @Headers('Authorization') authorization: string) {
-    let token = await this.modelFirebase.isToken(authorization)
-    await this.modelFirebase.validateTokenByFirebase(token)
+    const decoded = await this.firebase.validateTokenByFirebase(authorization)
     return await this.service.authFindOneByName(name);
   }
 
@@ -37,8 +36,7 @@ export class PageController {
   @ApiOperation({ summary: 'Buscar por id da pagina' })
   @Get('/auth/:id')
   public async authFindOneById(@Param('id') id: number, @Headers('Authorization') authorization: string) {
-    let token = await this.modelFirebase.isToken(authorization)
-    await this.modelFirebase.validateTokenByFirebase(token)
+    const decoded = await this.firebase.validateTokenByFirebase(authorization)
     return await this.service.authFindOneById(id);
   }
 
@@ -51,8 +49,7 @@ export class PageController {
   @ApiOperation({ summary: 'Listar todas as paginas' })
   @Get()
   public async authListAll(@Headers('Authorization') authorization: string, @Query('search') search:string, @Query('limit') limit:number, @Query('offset') offset:number, @Query('order') order:string, @Query('column') column:string, @Query('start') start:string, @Query('end') end:string) {
-    let token = await this.modelFirebase.isToken(authorization)
-    await this.modelFirebase.validateTokenByFirebase(token)
+    const decoded = await this.firebase.validateTokenByFirebase(authorization)
     
     const cls:ClassificationInterface = { 
       search:search, 
@@ -84,9 +81,8 @@ export class PageController {
   @ApiOperation({ summary: 'Criar uma pagina' })
   @Post('/auth')
   public async create(@Body() body: CreateDto, @Headers('Authorization') authorization: string) { 
-    let token = await this.modelFirebase.isToken(authorization)
-    const decoded = await this.modelFirebase.validateTokenByFirebase(token)
-    const user = await this.modelUser.getUserByUid(decoded.uid)
+    const decoded = await this.firebase.validateTokenByFirebase(authorization)
+    const user = await this.user.getUserByUid(decoded.uid)
 
     const page:CreateInterface = {
       ...body,
@@ -99,9 +95,8 @@ export class PageController {
   @ApiOperation({ summary: 'Atualizar nome da pagina por id' })
   @Put('/auth/')
   public async update(@Body() body: UpdateDto, @Param('id') id: number, @Headers('Authorization') authorization: string) {
-    let token = await this.modelFirebase.isToken(authorization)
-    const decoded = await this.modelFirebase.validateTokenByFirebase(token)
-    const user = await this.modelUser.getUserByUid(decoded.uid)
+    const decoded = await this.firebase.validateTokenByFirebase(authorization)
+    const user = await this.user.getUserByUid(decoded.uid)
     const page:UpdateInterface = {
       ...body,
       id:id,

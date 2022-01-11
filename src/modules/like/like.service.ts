@@ -12,42 +12,42 @@ import { CreateMapper } from './mapper/create.mapper'
 export class LikeService {
 
   constructor(
-    private servicePublication:PublicationService,
+    private publication:PublicationService,
     private model:LikeModel,
     private createMapper:CreateMapper
   ) {}
 
-  public async createLike(like:CreateInterface) {
+  public async create(body:CreateInterface) {
     //verificar se o usuario ja curtiu a publicacao
-    let amLiking = await this.model.userAlreadyLikePublication(like.publication_id.toString(), like.user_id.toString())
+    let amLiking = await this.model.userAlreadyLikePublication(body.publication_id.toString(), body.user_id.toString())
     
     if(amLiking){
       //se houver registro,  verifica se esta curtindo
-      let segments = await this.model.getLike(like.publication_id.toString(), like.user_id.toString())
+      let segments = await this.model.getLike(body.publication_id.toString(), body.user_id.toString())
    
       if(segments.i_liked){
         //se sim, atualiza para 'para de curtir' e atualizar o contator na tabela publication para --
         await this.model.updateLike(segments.id.toString(), {i_liked:false})
-        await this.servicePublication.decrementNumberLikeOfPublication(segments.publication_id)
+        await this.publication.decrementNumberLikeOfPublication(segments.publication_id)
 
-        let res = await this.model.getLike(like.publication_id.toString(), like.user_id.toString())
+        let res = await this.model.getLike(body.publication_id.toString(), body.user_id.toString())
         const dto = this.createMapper.toMapper(res)
         return new OK([dto], code.SUCCESSFULLY_UPDATED, message.SUCCESSFULLY_UPDATED) 
       }else{
         //se não, atualizar para 'começar a seguir' e atualizar o contator na tabela page ++
         await this.model.updateLike(segments.id.toString(), {i_liked:true})
-        await this.servicePublication.incrementNumberLikeOfPublication(segments.publication_id)
+        await this.publication.incrementNumberLikeOfPublication(segments.publication_id)
 
-        let res = await this.model.getLike(like.publication_id.toString(), like.user_id.toString())
+        let res = await this.model.getLike(body.publication_id.toString(), body.user_id.toString())
         const dto = this.createMapper.toMapper(res)
         return new OK([dto], code.SUCCESSFULLY_UPDATED, message.SUCCESSFULLY_UPDATED) 
       }
     }else{
       //se não houver registro, criar um registro ja seguindo e atualizar o contator na tabela page ++
-      like.i_liked = true
-      await this.model.save(like)
-      await this.servicePublication.incrementNumberLikeOfPublication(like.publication_id.toString())
-      let res = await this.model.getLike(like.publication_id.toString(), like.user_id.toString())
+      body.i_liked = true
+      await this.model.save(body)
+      await this.publication.incrementNumberLikeOfPublication(body.publication_id.toString())
+      let res = await this.model.getLike(body.publication_id.toString(), body.user_id.toString())
       const dto = this.createMapper.toMapper(res)
       return new OK([dto], code.SUCCESSFULLY_CREATED, message.SUCCESSFULLY_CREATED) 
     }

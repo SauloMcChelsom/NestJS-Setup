@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common'
 
 import { code, message } from '@shared/enum'
 import { ClassificationInterface } from '@shared/interfaces'
-import { PageModel } from '@modules/page/page.model'
+import { PageService } from '@modules/page/page.service'
 import { OK } from '@service/exception'
 
 import { FollowModel } from './follow.model'
@@ -15,7 +15,7 @@ export class FollowService {
 
   constructor(
     private model:FollowModel, 
-    private pageModel:PageModel,
+    private page:PageService,
     private authListMapper:AuthListMapper,
     private createFallowMapper:CreateMapper
   ) {}
@@ -44,7 +44,7 @@ export class FollowService {
       if(segments.i_am_following){
         //se sim, atualiza para 'para de seguir' e atualizar o contator na tabela page para --
         await this.model.updateAmFollowing(segments.id.toString(), {i_am_following:false})
-        await this.pageModel.decrementNumberFollowersPage(segments.page_id)
+        await this.page.decrementNumberFollowersPage(segments.page_id)
 
         let res = await this.model.getPageUserFollow(body.user_id.toString(), body.page_id.toString())
         const dto = this.createFallowMapper.toMapper(res)
@@ -52,7 +52,7 @@ export class FollowService {
       }else{
         //se não, atualizar para 'começar a seguir' e atualizar o contator na tabela page ++
         await this.model.updateAmFollowing(segments.id.toString(), {i_am_following:true})
-        await this.pageModel.incrementNumberFollowersPage(segments.page_id)
+        await this.page.incrementNumberFollowersPage(segments.page_id)
 
         let res = await this.model.getPageUserFollow(body.user_id.toString(), body.page_id.toString())
         const dto = this.createFallowMapper.toMapper(res)
@@ -62,7 +62,7 @@ export class FollowService {
       //se não houver registro, criar um registro ja seguindo e atualizar o contator na tabela page ++
       await this.model.save(body)
       let segments = await this.model.getPageUserFollow(body.user_id.toString(), body.page_id.toString())
-      await this.pageModel.incrementNumberFollowersPage(segments.page_id)
+      await this.page.incrementNumberFollowersPage(segments.page_id)
 
       let res = await this.model.getPageUserFollow(body.user_id.toString(), body.page_id.toString())
       const dto = this.createFallowMapper.toMapper(res)

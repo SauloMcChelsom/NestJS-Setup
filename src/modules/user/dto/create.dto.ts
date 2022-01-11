@@ -1,4 +1,4 @@
-import { Contains, MinLength, MaxLength, ValidationOptions, IsDate, IsNumber, IsString, Length, IsNotEmpty, IsEmail, IsInt, Min,  Max, IsBoolean  } from 'class-validator';
+import { MinLength, IsString, IsNotEmpty, IsEmail } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger'
 
 export class CreateDto  {

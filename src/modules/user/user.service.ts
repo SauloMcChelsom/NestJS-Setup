@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common'
 
-import { FirebaseModel } from '@modules/firebase/firebase.model'
+import { FirebaseService } from '@modules/firebase/firebase.service'
 import { CryptUtilityService } from '@shared/bcrypt/bcrypt.service'
 import { OK } from '@service/exception'
 import { code, message } from '@shared/enum'
@@ -18,7 +18,7 @@ export class UserService {
 
   constructor(
     private model:UserModel,
-    private validateFirebase:FirebaseModel,
+    private firebase:FirebaseService,
     private crypt:CryptUtilityService,
     private createMapper:CreateMapper,
     private authFindOneMapper:AuthFindOneMapper,
@@ -69,8 +69,8 @@ export class UserService {
 
   public async deleteByUid(uid:string) {
     const { id } = await this.model.getUserByUid(uid)
-    await this.validateFirebase.revokeRefreshTokens(uid)
-    await this.validateFirebase.deleteUser(uid)
+    await this.firebase.revokeRefreshTokens(uid)
+    await this.firebase.deleteUser(uid)
     await this.model.delete(id);
     return new OK([], code.DELETED_SUCCESSFULLY, message.DELETED_SUCCESSFULLY) 
   }

@@ -74,7 +74,7 @@ class Login {
   }
 
   async createUserDataBase(user) {
-    await fetch('/user', {
+    await fetch('/user/public/', { 
       method: 'POST',
       headers: {
         'Accept': 'application/json',
@@ -100,7 +100,7 @@ class Login {
   }
 
   async checkUserExistsByEmail(email) {
-    return await fetch(`/user/check-user-exists-by-email/${email}`, {
+    return await fetch(`/user/public/email/${email}`, {
       method: 'GET',
       headers: {
         'Accept': 'application/json',
