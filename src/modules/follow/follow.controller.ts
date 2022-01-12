@@ -3,15 +3,17 @@ import { ApiOperation, ApiTags } from '@nestjs/swagger'
 
 import { FirebaseService } from '@modules/firebase/firebase.service'
 import { ClassificationInterface } from '@shared/interfaces'
+import { UserService } from '@modules/user/user.service'
 
 import { FollowService } from './follow.service'
 import { CreateDto } from './dto/create.dto'
+import { CreateInterface } from './interface/create.interface'
 
 @ApiTags('follow')
 @Controller('follow')
 export class FollowController {
 
-  constructor(private firebase:FirebaseService,private readonly service: FollowService) {}
+  constructor(private firebase:FirebaseService,private readonly service: FollowService, private user:UserService) {}
   
   @ApiOperation({ summary: 'Listar usuarios da pagina' })
   @Get('/auth/page/:id')
@@ -49,7 +51,14 @@ export class FollowController {
   @Post('/auth/')
   public async create(@Body() body: CreateDto, @Headers('Authorization') authorization: string) {
     const decoded = await this.firebase.validateTokenByFirebase(authorization)
-    return await this.service.create(body);
+    const user = await this.user.getUserByUid(decoded.uid)
+
+    const follow:CreateInterface = {
+      ...body,
+      user_id: user.id,
+      i_am_following: false
+    }
+    return await this.service.create(follow);
   }
 }
 /**

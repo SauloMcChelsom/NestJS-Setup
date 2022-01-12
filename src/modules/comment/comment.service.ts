@@ -3,6 +3,7 @@ import { Injectable } from '@nestjs/common'
 import { OK } from '@service/exception'
 import { code, message } from '@shared/enum'
 import { ClassificationInterface } from '@shared/interfaces'
+import { PublicationService } from '@modules/publication/publication.service'
 
 import { CommentModel } from './comment.model'
 import { CreateInterface, UpdateInterface } from './interface'
@@ -20,6 +21,7 @@ export class CommentService {
 
   constructor(
     private model: CommentModel, 
+    private publication:PublicationService,
     private createMapper:CreateMapper, 
     private authListMapper:AuthListMapper, 
     private publicListMapper:PublicListMapper,
@@ -61,6 +63,7 @@ export class CommentService {
 
   public async create(body:CreateInterface) {
     let create = await this.model.create(body)
+    await this.publication.incrementNumberCommentOfPublication(body.publication_id)
     let res = await this.model.findOneById(create.id)
     const dto = this.createMapper.toMapper(res)
     return new OK([dto], code.SUCCESSFULLY_FOUND, message.SUCCESSFULLY_FOUND) 
@@ -76,7 +79,9 @@ export class CommentService {
 
   public async delete(id:string, userId:string){
     await this.model.validateID(id, userId)
+    let comment = await this.model.findOneById(id)
     await this.model.deleteById(id);
+    await this.publication.decrementNumberCommentfPublication(comment.publication_id)
     return new OK([], code.DELETED_SUCCESSFULLY, message.DELETED_SUCCESSFULLY) 
   }
 

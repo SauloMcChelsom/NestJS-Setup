@@ -25,7 +25,7 @@ export class PublicationRepository extends Repository<PublicationEntity> {
   async listSearchByText(search:string = '',  limit:number=3, offset:number=0, order:any='ASC', column:string='id', timestampStart:string='', timestampEnd:string=''){
     return await this.createQueryBuilder('publication')
     .where('publication.text ILIKE :searchQuery', {searchQuery: `%${search}%`})
-    .where(`${timestampStart?'publication.timestamp >= :timestampStart':'publication.timestamp <= now()'}`, {timestampStart: timestampStart})
+    .andWhere(`${timestampStart?'publication.timestamp >= :timestampStart':'publication.timestamp <= now()'}`, {timestampStart: timestampStart})
     .andWhere(`${timestampEnd?'publication.timestamp <= :timestampEnd':'publication.timestamp <= now()'}`, {timestampEnd: timestampEnd})
     .orderBy(`publication.${column}`, order)
     .limit(limit)

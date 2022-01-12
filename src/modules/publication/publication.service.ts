@@ -40,10 +40,13 @@ export class PublicationService {
     return new OK([dto], code.SUCCESSFULLY_UPDATED, message.SUCCESSFULLY_UPDATED) 
   }
 
+  /**
+   * 
+   * @param REFATORAR
+   * @returns 
+   */
   public async authFindOneById(id:any) {
-    const res = await this.model.findOneById(id)
-    const dto = this.authFindOneMapper.toMapper(res)
-    return new OK([dto], code.SUCCESSFULLY_FOUND, message.SUCCESSFULLY_FOUND) 
+    return await this.model.findOneById(id)
   }
 
   public async publicfindOneById(id:any) {
@@ -99,11 +102,19 @@ export class PublicationService {
   }
 
   public async incrementNumberLikeOfPublication(id:any) {
-    await this.model.increment(id)
+    await this.model.incrementLikes(id)
   }
 
   public async decrementNumberLikeOfPublication(id:any) { 
-    await this.model.decrement(id)
+    await this.model.decrementLikes(id)
+  }
+
+  public async incrementNumberCommentOfPublication(id:any) {
+    await this.model.incrementComment(id)
+  }
+
+  public async decrementNumberCommentfPublication(id:any) { 
+    await this.model.decrementComment(id)
   }
   
 }

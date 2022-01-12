@@ -20,7 +20,7 @@ export class PublicationModel {
     ) {}
 
     
-    public async increment(id:any) {
+    public async incrementLikes(id:any) {
         try{
             let publication = await this.repository.findOne({ where:{ id: id }})
             if(typeof publication?.number_of_likes == "number"){
@@ -37,7 +37,42 @@ export class PublicationModel {
         }
     }
 
-    public async decrement(id:any) { 
+    public async incrementComment(id:any) {
+      try{
+          let publication = await this.repository.findOne({ where:{ id: id }})
+          if(typeof publication?.number_of_comments == "number"){
+              publication.number_of_comments++ 
+              await this.repository.update(publication.id, { number_of_comments: publication.number_of_comments });
+          }
+      }catch(error){
+          throw new InternalServerErrorExceptions({
+              code:code.ERROR_GENERIC,
+              message:message.ERROR_GENERIC,
+              method:this.request.url,
+              path:this.request.method
+          })
+      }
+    }
+
+    public async decrementComment(id:any) { 
+      console.log(id)
+      try{
+          let publication = await this.repository.findOne({ where:{ id: id }})
+          if(typeof publication?.number_of_comments == "number"){
+              publication.number_of_comments--
+              await this.repository.update(publication.id, { number_of_comments: publication.number_of_comments });
+          }
+      }catch(error){
+          throw new InternalServerErrorExceptions({
+              code:code.ERROR_GENERIC,
+              message:message.ERROR_GENERIC,
+              method:this.request.url,
+              path:this.request.method
+          })
+      }
+  }
+
+    public async decrementLikes(id:any) { 
         try{
             let publication = await this.repository.findOne({ where:{ id: id }})
             if(typeof publication?.number_of_likes == "number"){

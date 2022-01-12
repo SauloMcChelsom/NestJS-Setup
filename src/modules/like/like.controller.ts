@@ -12,7 +12,7 @@ import { CreateInterface } from './interface/create.interface'
 @Controller('like')
 export class LikeController {
 
-  constructor(private readonly service: LikeService, private firebase:FirebaseService, private user:UserService,) {}
+  constructor(private readonly service: LikeService, private firebase:FirebaseService, private user:UserService) {}
 
   @ApiOperation({ summary: 'Curtir uma publicação' })
   @Post('/auth/')
@@ -24,7 +24,6 @@ export class LikeController {
       ...body,
       user_id: user.id
     }
-   
     return await this.service.create(like);
   }
 }

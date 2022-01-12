@@ -47,7 +47,7 @@ export class PageController {
   }
 
   @ApiOperation({ summary: 'Listar todas as paginas' })
-  @Get()
+  @Get('/auth/')
   public async authListAll(@Headers('Authorization') authorization: string, @Query('search') search:string, @Query('limit') limit:number, @Query('offset') offset:number, @Query('order') order:string, @Query('column') column:string, @Query('start') start:string, @Query('end') end:string) {
     const decoded = await this.firebase.validateTokenByFirebase(authorization)
     
@@ -64,7 +64,7 @@ export class PageController {
   }
 
   @ApiOperation({ summary: 'Listar todas as paginas' })
-  @Get()
+  @Get('/public/')
   public async publicListAll(@Query('search') search:string, @Query('limit') limit:number, @Query('offset') offset:number, @Query('order') order:string, @Query('column') column:string, @Query('start') start:string, @Query('end') end:string) {
     const cls:ClassificationInterface = {
       search:search, 
@@ -93,14 +93,15 @@ export class PageController {
   }
 
   @ApiOperation({ summary: 'Atualizar nome da pagina por id' })
-  @Put('/auth/')
+  @Put('/auth/:id')
   public async update(@Body() body: UpdateDto, @Param('id') id: number, @Headers('Authorization') authorization: string) {
     const decoded = await this.firebase.validateTokenByFirebase(authorization)
     const user = await this.user.getUserByUid(decoded.uid)
     const page:UpdateInterface = {
       ...body,
       id:id,
-      user_id:user.id
+      user_id:user.id,
+
     }
     return await this.service.update(page);
   }

@@ -4,11 +4,21 @@ import { ApiOperation, ApiTags } from '@nestjs/swagger'
 import { FirebaseService } from '@modules/firebase/firebase.service'
 import { UserService } from '@modules/user/user.service'
 import { ClassificationInterface } from '@shared/interfaces'
+import { OK } from '@service/exception'
+import { code, message } from '@shared/enum'
 
 import { PublicationService } from './publication.service'
 import { UpdateDto } from './dto/update.dto'
 import { CreateDto,  } from './dto/create.dto'
 import { CreateInterface, UpdateInterface } from './interface'
+
+import { 
+  CreateMapper, 
+  AuthListMapper, 
+  PublicListMapper,
+  AuthFindOneMapper,
+  PublicFindOneMapper
+} from './mapper'
 
 @ApiTags('publication')
 @Controller('publication')
@@ -16,6 +26,7 @@ export class PublicationController {
   
   constructor(
     private readonly service: PublicationService,
+    private authFindOneMapper:AuthFindOneMapper,
     private firebase:FirebaseService,
     private user:UserService,
   ) {}
@@ -53,7 +64,9 @@ export class PublicationController {
   @Get('/auth/:id')
   public async authFindOneById(@Param('id') id: string, @Headers('Authorization') authorization: string) {
     const decoded = await this.firebase.validateTokenByFirebase(authorization)
-    return await this.service.authFindOneById(id);
+    const res = await this.service.authFindOneById(id);
+    const dto = this.authFindOneMapper.toMapper(res)
+    return new OK([dto], code.SUCCESSFULLY_FOUND, message.SUCCESSFULLY_FOUND) 
   }
 
   @ApiOperation({ summary: 'Buscar por id da publicação' })
@@ -64,7 +77,7 @@ export class PublicationController {
 
   @ApiOperation({ summary: 'Lista de publicação pesquisando por texto' })
   @Get('/auth/search/text')
-  public async authListSearchByText(@Headers('Authorization') authorization: string, @Query('search') search:string, @Query('limit') limit:number, @Query('offset') offset:number, @Query('order') order:string, @Query('column') column:string, @Query('start') start:string, @Query('end') end:string) {
+  public async authListSearchByText(@Headers('Authorization') authorization: string, @Query('text') search:string, @Query('limit') limit:number, @Query('offset') offset:number, @Query('order') order:string, @Query('column') column:string, @Query('start') start:string, @Query('end') end:string) {
     const decoded = await this.firebase.validateTokenByFirebase(authorization)
     const cls:ClassificationInterface = { 
       search:search, 
@@ -96,14 +109,14 @@ export class PublicationController {
   @ApiOperation({ summary: 'Criar uma nova publicaçao' })
   @Post('/auth/')
   public async create(@Body() body: CreateDto, @Headers('Authorization') authorization: string) {
-    let token = await this.firebase.isToken(authorization)
     const decoded = await this.firebase.validateTokenByFirebase(authorization)
     const user = await this.user.getUserByUid(decoded.uid)
 
     const post:CreateInterface = {
       ...body,
       user_id:user.id,
-      number_of_likes:0
+      number_of_likes:0,
+      number_of_comments:0
     }
     return await this.service.create(post);
   }

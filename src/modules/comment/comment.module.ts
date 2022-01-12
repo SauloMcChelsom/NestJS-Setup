@@ -4,6 +4,8 @@ import { TypeOrmModule } from '@nestjs/typeorm'
 import { FirebaseModule } from '@modules/firebase/firebase.module'
 import { UtilityModule } from "@shared/model/utility/utility.module"
 import { UserModule } from '@modules/user/user.module'
+import { PublicationModule } from '@modules/publication/publication.module'
+
 import { CommentEntity } from '@entity/comment.entity'
 
 import { CommentController } from './comment.controller'
@@ -25,7 +27,8 @@ import {
     TypeOrmModule.forFeature([CommentEntity, CommentRepository]), 
     UserModule,
     UtilityModule,
-    FirebaseModule
+    FirebaseModule,
+    PublicationModule
   ],
   controllers: [CommentController],
   providers: [

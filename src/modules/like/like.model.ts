@@ -55,6 +55,29 @@ export class LikeModel {
     }
   }
 
+  public async validatePublicationExists(publicationId:number){
+    try{
+      const res = await this.repository.findOne({ where:{ publication_id: publicationId }})
+
+      if(res){
+        return true
+      }
+
+      throw new NotFoundExceptions({
+        code:code.NOT_FOUND,
+        message:message.NOT_FOUND,
+      })
+
+    }catch(error){
+      throw new InternalServerErrorExceptions({
+        code:code.ERROR_GENERIC,
+        message:message.ERROR_GENERIC,
+        method:this.request.url,
+        path:this.request.method,
+      })
+    }
+  }
+
   public async getLike(publication_id:string, userId:string){
     try{
       const res = await this.repository.findOne({ where:{ publication_id: publication_id, user_id:userId }})

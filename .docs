@@ -28,3 +28,9 @@ FALTA
 -revisar tutorial
 -test
 -atualizar projeto
+
+- com o isonima vai criar, buscar, listar e atualzar todos endpoints
+- criar a variavel de ambiente para firebase
+- implementar o modulo web
+- testado api e paginas localmente sobir para produção
+- .env* em produção
