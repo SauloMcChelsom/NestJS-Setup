@@ -4,11 +4,21 @@ import { ApiOperation, ApiTags } from '@nestjs/swagger'
 import { FirebaseService } from '@modules/firebase/firebase.service'
 import { UserService } from '@modules/user/user.service'
 import { ClassificationInterface } from '@shared/interfaces'
+import { OK } from '@service/exception'
+import { code, message } from '@shared/enum'
 
 import { CommentService } from './comment.service'
 import { CreateDto } from './dto/create.dto'
 import { UpdateDto } from './dto/update.dto'
 import { CreateInterface, UpdateInterface } from './interface' 
+import { 
+  CreateMapper, 
+  AuthListMapper, 
+  PublicListMapper,
+  AuthFindOneMapper,
+  PublicFindOneMapper,
+  UpdateMapper
+} from './mapper'
 
 @ApiTags('comment')
 @Controller('comment')
@@ -18,6 +28,12 @@ export class CommentController {
     private readonly service: CommentService,
     private firebase:FirebaseService,
     private user:UserService,
+    private createMapper:CreateMapper, 
+    private authListMapper:AuthListMapper, 
+    private publicListMapper:PublicListMapper,
+    private authFindOneMapper:AuthFindOneMapper,
+    private publicFindOneMapper:PublicFindOneMapper,
+    private updateMapper:UpdateMapper
   ) {}
 
   @ApiOperation({ summary: 'Listar comentarios pelo token do usuario' })
@@ -34,7 +50,9 @@ export class CommentController {
       start:start, 
       end:end
     }
-    return await this.service.authListByUserId(user.id.toString(), cls);
+    const  res = await this.service.authListByUserId(user.id.toString(), cls);
+    const dto = res.map((r)=> this.authListMapper.toMapper(r))
+    return new OK(dto, code.SUCCESSFULLY_FOUND, message.SUCCESSFULLY_FOUND)
   }
 
   @ApiOperation({ summary: 'Listar comentarios por id do usuario' })
@@ -50,7 +68,9 @@ export class CommentController {
       start:start, 
       end:end
     }
-    return await this.service.authListByUserId(id, cls);
+    const  res = await this.service.authListByUserId(id, cls);
+    const dto = res.map((r)=> this.authListMapper.toMapper(r))
+    return new OK(dto, code.SUCCESSFULLY_FOUND, message.SUCCESSFULLY_FOUND)
   }
 
   @ApiOperation({ summary: 'Listar comentarios por id do usuario' })
@@ -65,7 +85,9 @@ export class CommentController {
       start:start, 
       end:end
     }
-    return await this.service.publicListByUserId(id, cls);
+    const  res = await this.service.publicListByUserId(id, cls);
+    const dto = res.map((r)=> this.publicListMapper.toMapper(r))
+    return new OK(dto, code.SUCCESSFULLY_FOUND, message.SUCCESSFULLY_FOUND) 
   }
 
   @ApiOperation({ summary: 'Listar comentarios por id da publicacao' })
@@ -80,7 +102,9 @@ export class CommentController {
       start:start, 
       end:end
     }
-    return await this.service.publicListByPublicationId(id, cls);
+    let res = await this.service.publicListByPublicationId(id, cls);
+    const dto = res.map((r)=> this.publicListMapper.toMapper(r))
+    return new OK(dto, code.SUCCESSFULLY_FOUND, message.SUCCESSFULLY_FOUND) 
   }
 
   @ApiOperation({ summary: 'Buscar comentario por id' })
@@ -88,13 +112,17 @@ export class CommentController {
   public async authFindOneCommentById(@Param('id') id: string, @Headers('Authorization') authorization: string) {
     const decoded = await this.firebase.validateTokenByFirebase(authorization)
     const user = await this.user.getUserByUid(decoded.uid)
-    return await this.service.authFindOneById(id, user.id.toString());
+    let res = await this.service.authFindOneById(id, user.id.toString());
+    const dto = this.authFindOneMapper.toMapper(res)
+    return new OK([dto], code.SUCCESSFULLY_FOUND, message.SUCCESSFULLY_FOUND) 
   }
 
   @ApiOperation({ summary: 'Buscar comentario por id' })
   @Get('/public/:id')
   public async publicFindOneById(@Param('id') id: string) {
-    return await this.service.publicFindOneById(id);
+    let res = await this.service.publicFindOneById(id);
+    const dto = this.publicFindOneMapper.toMapper(res)
+    return new OK([dto], code.SUCCESSFULLY_FOUND, message.SUCCESSFULLY_FOUND) 
   }
 
   @ApiOperation({ summary: 'Criar um comentario' })
@@ -104,7 +132,9 @@ export class CommentController {
     const user = await this.user.getUserByUid(decoded.uid)
     let commet:CreateInterface = { ...body }
     commet.user_id = user.id
-    return await this.service.create(commet);
+    let res = await this.service.create(commet);
+    const dto = this.createMapper.toMapper(res)
+    return new OK([dto], code.SUCCESSFULLY_CREATED, message.SUCCESSFULLY_CREATED) 
   }
 
   @ApiOperation({ summary: 'Atualizar um comentario' })
@@ -113,7 +143,9 @@ export class CommentController {
     const decoded = await this.firebase.validateTokenByFirebase(authorization)
     const user = await this.user.getUserByUid(decoded.uid)
     let commet:UpdateInterface = { ...body, id:  parseInt(id), user_id: user.id}
-    return await this.service.update(commet);
+    let res = await this.service.update(commet);
+    const dto = this.updateMapper.toMapper(res)
+    return new OK([dto], code.SUCCESSFULLY_UPDATED, message.SUCCESSFULLY_UPDATED) 
   }
 
   @ApiOperation({ summary: 'Deletar um comentario' })
@@ -121,6 +153,7 @@ export class CommentController {
   public async delete(@Param('id') id: string, @Headers('Authorization') authorization: string) {
     const decoded = await this.firebase.validateTokenByFirebase(authorization)
     const user = await this.user.getUserByUid(decoded.uid)
-    return await this.service.delete(id, user.id.toString());
+    await this.service.delete(id, user.id.toString());
+    return new OK([], code.DELETED_SUCCESSFULLY, message.DELETED_SUCCESSFULLY) 
   }
 }

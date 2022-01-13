@@ -26,9 +26,13 @@ export class PublicationController {
   
   constructor(
     private readonly service: PublicationService,
-    private authFindOneMapper:AuthFindOneMapper,
     private firebase:FirebaseService,
     private user:UserService,
+    private createMapper:CreateMapper, 
+    private authListMapper:AuthListMapper, 
+    private publicListMapper:PublicListMapper,
+    private authFindOneMapper:AuthFindOneMapper,
+    private publicFindOneMapper:PublicFindOneMapper,
   ) {}
 
   @ApiOperation({ summary: 'List um feed' })
@@ -43,7 +47,9 @@ export class PublicationController {
       start:start, 
       end:end
     }
-    return this.service.authListFeed(cls);
+    const res = await this.service.authListFeed(cls);
+    const dto = res.map((r)=> this.authListMapper.toMapper(r))
+    return new OK(dto, code.SUCCESSFULLY_FOUND, message.SUCCESSFULLY_FOUND) 
   }
 
   @ApiOperation({ summary: 'List um feed' })
@@ -57,7 +63,9 @@ export class PublicationController {
       start:start, 
       end:end
     }
-    return this.service.publicListFeed(cls);
+    const res =  await this.service.publicListFeed(cls);
+    const dto = res.map((r)=> this.publicListMapper.toMapper(r))
+    return new OK(dto, code.SUCCESSFULLY_FOUND, message.SUCCESSFULLY_FOUND) 
   }
 
   @ApiOperation({ summary: 'Buscar por id da publicação' })
@@ -72,7 +80,9 @@ export class PublicationController {
   @ApiOperation({ summary: 'Buscar por id da publicação' })
   @Get('/public/:id')
   public async publicfindOneById(@Param('id') id: string) {
-    return await this.service.publicfindOneById(id);
+    const res =  await this.service.publicfindOneById(id);
+    const dto = this.publicFindOneMapper.toMapper(res)
+    return new OK([dto], code.SUCCESSFULLY_FOUND, message.SUCCESSFULLY_FOUND) 
   }
 
   @ApiOperation({ summary: 'Lista de publicação pesquisando por texto' })
@@ -88,7 +98,9 @@ export class PublicationController {
       start:start, 
       end:end
     }
-    return await this.service.authListSearchByText(cls);
+    const res =  await this.service.authListSearchByText(cls);
+    const dto = res.map((r)=> this.authListMapper.toMapper(r))
+    return new OK(dto, code.SUCCESSFULLY_FOUND, message.SUCCESSFULLY_FOUND) 
   }
 
   @ApiOperation({ summary: 'Lista de publicação pesquisando por texto' })
@@ -103,7 +115,9 @@ export class PublicationController {
       start:start, 
       end:end
     }
-    return await this.service.publicListSearchByText(cls);
+    const res =  await this.service.publicListSearchByText(cls);
+    const dto = res.map((r)=> this.publicListMapper.toMapper(r))
+    return new OK(dto, code.SUCCESSFULLY_FOUND, message.SUCCESSFULLY_FOUND) 
   }
 
   @ApiOperation({ summary: 'Criar uma nova publicaçao' })
@@ -118,7 +132,9 @@ export class PublicationController {
       number_of_likes:0,
       number_of_comments:0
     }
-    return await this.service.create(post);
+    const res =  await this.service.create(post);
+    const dto = this.createMapper.toMapper(res)
+    return new OK([dto], code.SUCCESSFULLY_FOUND, message.SUCCESSFULLY_FOUND) 
   }
 
   @ApiOperation({ summary: 'Alterar o texto da publicaçao' })
@@ -131,7 +147,9 @@ export class PublicationController {
       id:id,
       user_id:user.id
     }
-    return await this.service.update(put);
+    const res =  await this.service.update(put);
+    const dto = this.authFindOneMapper.toMapper(res)
+    return new OK([dto], code.SUCCESSFULLY_FOUND, message.SUCCESSFULLY_FOUND) 
   }
 
 }

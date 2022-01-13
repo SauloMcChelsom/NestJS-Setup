@@ -4,11 +4,20 @@ import { ApiOperation, ApiTags } from '@nestjs/swagger'
 import { FirebaseService } from '@modules/firebase/firebase.service'
 import { UserService } from '@modules/user/user.service'
 import { ClassificationInterface } from '@shared/interfaces'
+import { OK } from '@service/exception'
+import { code, message } from '@shared/enum'
 
 import { PageService } from './page.service'
 import { UpdateDto } from './dto/update.dto'
 import { CreateDto,  } from './dto/create.dto'
 import { CreateInterface, UpdateInterface } from './interface'
+import { 
+  CreateMapper, 
+  AuthListMapper, 
+  PublicListMapper,
+  AuthFindOneMapper,
+  PublicFindOneMapper
+} from './mapper'
 
 @ApiTags('page')
 @Controller('page')
@@ -18,32 +27,45 @@ export class PageController {
     private readonly service: PageService,
     private firebase:FirebaseService,  
     private user:UserService,
+    private createMapper:CreateMapper, 
+    private authListMapper:AuthListMapper, 
+    private publicListMapper:PublicListMapper,
+    private authFindOneMapper:AuthFindOneMapper,
+    private publicFindOneMapper:PublicFindOneMapper
   ) {}
 
   @ApiOperation({ summary: 'Buscar por nome da pagina' })
   @Get('/auth/name/:page')
   public async authFindOneByName(@Param('page') name: string, @Headers('Authorization') authorization: string) {
     const decoded = await this.firebase.validateTokenByFirebase(authorization)
-    return await this.service.authFindOneByName(name);
+    const res = await this.service.authFindOneByName(name);
+    const dto = this.createMapper.toMapper(res)
+    return new OK([dto], code.SUCCESSFULLY_CREATED, message.SUCCESSFULLY_CREATED) 
   }
 
   @ApiOperation({ summary: 'Buscar por nome da pagina' })
   @Get('/public/name/:page')
   public async publicfindOneByName(@Param('page') name: string) {
-    return await this.service.publicfindOneByName(name);
+    const res = await this.service.publicfindOneByName(name);
+    const dto = this.publicFindOneMapper.toMapper(res)
+    return new OK([dto], code.SUCCESSFULLY_FOUND, message.SUCCESSFULLY_FOUND) 
   }
 
   @ApiOperation({ summary: 'Buscar por id da pagina' })
   @Get('/auth/:id')
   public async authFindOneById(@Param('id') id: number, @Headers('Authorization') authorization: string) {
     const decoded = await this.firebase.validateTokenByFirebase(authorization)
-    return await this.service.authFindOneById(id);
+    const res = await this.service.authFindOneById(id);
+    const dto = this.authFindOneMapper.toMapper(res)
+    return new OK([dto], code.SUCCESSFULLY_FOUND, message.SUCCESSFULLY_FOUND) 
   }
 
   @ApiOperation({ summary: 'Buscar por id da pagina' })
   @Get('/public/:id')
   public async publicfindOneById(@Param('id') id: number) {
-    return await this.service.publicfindOneById(id);
+    const res = await this.service.publicfindOneById(id);
+    const dto = this.publicFindOneMapper.toMapper(res)
+    return new OK([dto], code.SUCCESSFULLY_FOUND, message.SUCCESSFULLY_FOUND)
   }
 
   @ApiOperation({ summary: 'Listar todas as paginas' })
@@ -60,7 +82,9 @@ export class PageController {
       start:start, 
       end:end
     }
-    return this.service.authListAll(cls);
+    const res = await this.service.authListAll(cls);
+    const dto = res.map((r)=> this.authListMapper.toMapper(r))
+    return new OK(dto, code.SUCCESSFULLY_FOUND, message.SUCCESSFULLY_FOUND) 
   }
 
   @ApiOperation({ summary: 'Listar todas as paginas' })
@@ -75,7 +99,9 @@ export class PageController {
       start:start, 
       end:end
     }
-    return this.service.publicListAll(cls);
+    const res = await this.service.publicListAll(cls);
+    const dto = res.map((r)=> this.publicListMapper.toMapper(r))
+    return new OK(dto, code.SUCCESSFULLY_FOUND, message.SUCCESSFULLY_FOUND) 
   }
 
   @ApiOperation({ summary: 'Criar uma pagina' })
@@ -89,7 +115,9 @@ export class PageController {
       user_id:user.id
     }
 
-    return await this.service.create(page);
+    const res = await this.service.create(page);
+    const dto = this.createMapper.toMapper(res)
+    return new OK([dto], code.SUCCESSFULLY_CREATED, message.SUCCESSFULLY_CREATED) 
   }
 
   @ApiOperation({ summary: 'Atualizar nome da pagina por id' })
@@ -103,6 +131,8 @@ export class PageController {
       user_id:user.id,
 
     }
-    return await this.service.update(page);
+    const res = await this.service.update(page);
+    const dto = this.authFindOneMapper.toMapper(res)
+    return new OK([dto], code.SUCCESSFULLY_UPDATED, message.SUCCESSFULLY_UPDATED) 
   }
 }

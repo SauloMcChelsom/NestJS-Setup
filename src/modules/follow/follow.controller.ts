@@ -4,16 +4,25 @@ import { ApiOperation, ApiTags } from '@nestjs/swagger'
 import { FirebaseService } from '@modules/firebase/firebase.service'
 import { ClassificationInterface } from '@shared/interfaces'
 import { UserService } from '@modules/user/user.service'
+import { code, message } from '@shared/enum'
+import { OK } from '@service/exception'
 
 import { FollowService } from './follow.service'
 import { CreateDto } from './dto/create.dto'
 import { CreateInterface } from './interface/create.interface'
+import { AuthListMapper, CreateMapper } from './mapper'
 
 @ApiTags('follow')
 @Controller('follow')
 export class FollowController {
 
-  constructor(private firebase:FirebaseService,private readonly service: FollowService, private user:UserService) {}
+  constructor(
+    private firebase:FirebaseService,
+    private readonly service: FollowService, 
+    private user:UserService,
+    private authListMapper:AuthListMapper,
+    private createMapper:CreateMapper
+  ) {}
   
   @ApiOperation({ summary: 'Listar usuarios da pagina' })
   @Get('/auth/page/:id')
@@ -28,7 +37,9 @@ export class FollowController {
       start:start, 
       end:end 
     }
-    return await this.service.authListByIdPage(id, cls);
+    const res = await this.service.authListByIdPage(id, cls);
+    const dto = res.map((r)=> this.authListMapper.toMapper(r))
+    return new OK(dto, code.SUCCESSFULLY_FOUND, message.SUCCESSFULLY_FOUND) 
   }
 
   @ApiOperation({ summary: 'Listar as paginas que o usuario segue' })
@@ -44,7 +55,9 @@ export class FollowController {
       start:start, 
       end:end
     }
-    return await this.service.authListByIdUser(id, cls);
+    const res = await this.service.authListByIdUser(id, cls);
+    const dto = res.map((r)=> this.authListMapper.toMapper(r))
+    return new OK(dto, code.SUCCESSFULLY_FOUND, message.SUCCESSFULLY_FOUND) 
   }
 
   @ApiOperation({ summary: 'Seguir a pagina' })
@@ -58,7 +71,9 @@ export class FollowController {
       user_id: user.id,
       i_am_following: false
     }
-    return await this.service.create(follow);
+    const res = await this.service.create(follow);
+    const dto = this.createMapper.toMapper(res)
+    return new OK([dto], code.SUCCESSFULLY_CREATED, message.SUCCESSFULLY_CREATED) 
   }
 }
 /**
