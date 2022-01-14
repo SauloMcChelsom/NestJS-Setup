@@ -86,18 +86,7 @@ export class FirebaseController {
     )
   }
 
-  @Delete('/auth')
-  @ApiOperation({ summary: 'Deletar o usuario passando o token' })
-  public async delete(@Headers('Authorization') token: string) {
-    await this.service.deleteUser(token)
-    return await new OK(
-      [],
-      code.SUCCESSFULLY_DELETED_USER,
-      message.SUCCESSFULLY_DELETED_USER
-    )
-  }
-
-  @Get('/user-display-by-email/:email')
+  @Get('/public/user-display-by-email/:email')
   @ApiOperation({ summary: 'Obter informação publica de qualquer usuario por email' })
   public async userDisplayByEmail(@Param('email') email: string) {
     let user = await this.service.userDisplayByEmail(email)
@@ -106,6 +95,17 @@ export class FirebaseController {
       [dto],
       code.USER_FOUND,
       message.USER_FOUND
+    )
+  }
+
+  @Delete('/auth')
+  @ApiOperation({ summary: 'Deletar o usuario passando o token' })
+  public async delete(@Headers('Authorization') token: string) {
+    await this.service.deleteUser(token)
+    return await new OK(
+      [],
+      code.SUCCESSFULLY_DELETED_USER,
+      message.SUCCESSFULLY_DELETED_USER
     )
   }
 }

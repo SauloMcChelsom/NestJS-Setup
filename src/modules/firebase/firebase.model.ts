@@ -1,15 +1,18 @@
-import { Injectable } from '@nestjs/common'
+import { Injectable, Inject, Scope } from '@nestjs/common'
+import { REQUEST } from '@nestjs/core';
 import * as firebase from 'firebase-admin';
 import { code, message } from '@shared/enum'
+
 import { 
   InternalServerErrorExceptions,
   NotFoundExceptions
 } from '@service/exception'
 
+@Injectable({ scope: Scope.REQUEST })
 @Injectable()
 export class FirebaseModel {
 
-  constructor() {}
+  constructor(@Inject(REQUEST) private readonly request: Request,) {}
 
   public async isToken(token:string) {
     try{
@@ -52,13 +55,16 @@ export class FirebaseModel {
       if(error == 'TOKEN_MISSING_SPECIAL_CHARACTER'){
         throw new NotFoundExceptions({
           code:code.TOKEN_MISSING_SPECIAL_CHARACTER,
-          message:message.TOKEN_MISSING_SPECIAL_CHARACTER
+          message:message.TOKEN_MISSING_SPECIAL_CHARACTER,
+          method:this.request.url,
+          path:this.request.method
         })
       }
       throw new InternalServerErrorExceptions({
         code:code.ERROR_GENERIC,
         message:message.ERROR_GENERIC,
-        description:"algo aconteceu em verificar se isso é um token"+` ::: ${error}`
+        method:this.request.url,
+        path:this.request.method
       })
     }
   }
@@ -78,12 +84,15 @@ export class FirebaseModel {
         throw new NotFoundExceptions({
           code:error.code,
           message:error.message,
+          method:this.request.url,
+          path:this.request.method
         })
       }
       throw new InternalServerErrorExceptions({
         code:code.ERROR_GENERIC,
         message:message.ERROR_GENERIC,
-        description:"algo aconteceu em verify id token"+` ::: ${error}`
+        method:this.request.url,
+        path:this.request.method
       })
     }
   }
@@ -100,12 +109,15 @@ export class FirebaseModel {
         throw new NotFoundExceptions({
           code:error.code,
           message:error.message,
+          method:this.request.url,
+          path:this.request.method
         })
       }
       throw new InternalServerErrorExceptions({
         code:code.ERROR_GENERIC,
         message:message.ERROR_GENERIC,
-        description:"algo aconteceu em destruir toke "+` ::: ${error}`
+        method:this.request.url,
+        path:this.request.method
       })
     }
   }
@@ -122,12 +134,15 @@ export class FirebaseModel {
         throw new NotFoundExceptions({
           code:error.code,
           message:error.message,
+          method:this.request.url,
+          path:this.request.method
         })
       }
       throw new InternalServerErrorExceptions({
         code:code.ERROR_GENERIC,
         message:message.ERROR_GENERIC,
-        description:"algo aconteceu em encontrar o usuario por uid"+` ::: ${error}`
+        method:this.request.url,
+        path:this.request.method
       })
     }
   }
@@ -144,12 +159,15 @@ export class FirebaseModel {
         throw new NotFoundExceptions({
           code:error.code,
           message:error.message,
+          method:this.request.url,
+          path:this.request.method
         })
       }
       throw new InternalServerErrorExceptions({
         code:code.ERROR_GENERIC,
         message:message.ERROR_GENERIC,
-        description:"algo aconteceu em encontrar o usuario por email"+` ::: ${error}`
+        method:this.request.url,
+        path:this.request.method
       })
     }
   }
@@ -165,13 +183,16 @@ export class FirebaseModel {
       if(error == true){
         throw new NotFoundExceptions({
           code:code.NOT_FOUND_USER,
-          message:message.NOT_FOUND_USER
+          message:message.NOT_FOUND_USER,
+          method:this.request.url,
+          path:this.request.method
         })
       }
       throw new InternalServerErrorExceptions({
         code:code.ERROR_GENERIC,
         message:message.ERROR_GENERIC,
-        description:"algo aconteceu em deletar o usuario"+` ::: ${error}`
+        method:this.request.url,
+        path:this.request.method
       })
     }
   }
