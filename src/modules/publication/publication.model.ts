@@ -5,7 +5,7 @@ import { Request } from 'express';
 
 import { UtilityService } from "@shared/model/utility/utility.service"
 import { code, message } from '@shared/enum'
-import { OK, InternalServerErrorExceptions, NotFoundExceptions, Exception } from '@service/exception'
+import { OK, InternalServerErrorExceptions, NotFoundExceptions, Exception } from '@root/src/shared/exception/exception'
 
 import { PublicationRepository } from './publication.repository'
 import { UpdateInterface } from './interface'

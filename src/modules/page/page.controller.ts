@@ -4,7 +4,7 @@ import { ApiOperation, ApiTags } from '@nestjs/swagger'
 import { FirebaseService } from '@modules/firebase/firebase.service'
 import { UserService } from '@modules/user/user.service'
 import { ClassificationInterface } from '@shared/interfaces'
-import { OK } from '@service/exception'
+import { OK } from '@root/src/shared/exception/exception'
 import { code, message } from '@shared/enum'
 
 import { PageService } from './page.service'

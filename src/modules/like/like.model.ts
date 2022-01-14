@@ -8,7 +8,7 @@ import {
   InternalServerErrorExceptions,
   Exception,
   NotFoundExceptions
-} from '@service/exception'
+} from '@root/src/shared/exception/exception'
 
 import { LikeRepository } from './like.repository'
 import { CreateInterface } from './interface/create.interface'

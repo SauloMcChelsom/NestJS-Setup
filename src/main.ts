@@ -3,7 +3,7 @@ import { ValidationPipe, ValidationError } from '@nestjs/common'
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { NestExpressApplication } from '@nestjs/platform-express';
 
-import { BadRequestExceptions } from './service/exception'
+import { BadRequestExceptions } from './shared/exception/exception'
 import { join } from 'path';
 import { AppModule } from './app.module';
 

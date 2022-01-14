@@ -5,7 +5,7 @@ import { FirebaseService } from '@modules/firebase/firebase.service'
 import { ClassificationInterface } from '@shared/interfaces'
 import { UserService } from '@modules/user/user.service'
 import { code, message } from '@shared/enum'
-import { OK } from '@service/exception'
+import { OK } from '@root/src/shared/exception/exception'
 
 import { FollowService } from './follow.service'
 import { CreateDto } from './dto/create.dto'

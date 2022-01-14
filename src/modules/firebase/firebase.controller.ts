@@ -1,6 +1,6 @@
 import { Controller, Render, Headers, Param, Get, Delete } from '@nestjs/common'
 import { ApiOperation, ApiTags } from '@nestjs/swagger'
-import { OK } from '@service/exception'
+import { OK } from '@root/src/shared/exception/exception'
 import { code, message } from '@shared/enum'
 import { FirebaseService } from './firebase.service'
 import { CheckUserExistsMapper } from './mapper/check-user-exists-by-email.mapper'

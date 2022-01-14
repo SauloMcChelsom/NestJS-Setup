@@ -1,18 +1,19 @@
 import { Injectable, Inject, Scope } from '@nestjs/common'
 import { REQUEST } from '@nestjs/core';
+import { Request } from 'express';
 import * as firebase from 'firebase-admin';
 import { code, message } from '@shared/enum'
 
 import { 
   InternalServerErrorExceptions,
   NotFoundExceptions
-} from '@service/exception'
+} from '@root/src/shared/exception/exception'
 
 @Injectable({ scope: Scope.REQUEST })
 @Injectable()
 export class FirebaseModel {
 
-  constructor(@Inject(REQUEST) private readonly request: Request,) {}
+  constructor(@Inject(REQUEST) private readonly request: Request) {}
 
   public async isToken(token:string) {
     try{

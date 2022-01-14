@@ -2,7 +2,7 @@ import { Controller, Headers, Param, Get, Post, Body, Put, Delete  } from '@nest
 import { ApiOperation, ApiTags } from '@nestjs/swagger'
 
 import { FirebaseService } from '@modules/firebase/firebase.service'
-import { OK } from '@service/exception'
+import { OK } from '@root/src/shared/exception/exception'
 import { code, message } from '@shared/enum'
 
 import { UserService } from './user.service'

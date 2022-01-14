@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common'
-import { ConflictExceptions } from '@service/exception'
+import { ConflictExceptions } from '@root/src/shared/exception/exception'
 import { code, message } from '@shared/enum'
 import { FirebaseModel } from './firebase.model'
 
