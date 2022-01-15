@@ -16,3 +16,15 @@ npm run start
 
 --- Pacotes Instalados
 npm install --save @nestjs/typeorm typeorm pg
+
+Se você estiver usando o Windows, use SET como prefixo:
+"scripts": {
+    "dev": "SET NODE_ENV=development && nodemon index.js",
+  },
+Mas se você estiver usando MacOS, remova a palavra - chave SET e use:
+"scripts": {
+    "dev": "NODE_ENV=development && nodemon index.js",
+},
+Então, em poucas palavras
+
+se você estiver usando o Windows, use o prefixo SET antes de seus scripts de execução e remova SET do MacOS (provavelmente LINUX também) como mostrado acima.

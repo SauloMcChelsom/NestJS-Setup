@@ -1,57 +1,87 @@
-import { Controller, Param, Get, Post, Body, Put, Delete, Headers } from '@nestjs/common';
-import {
-  ApiOperation,
-  ApiResponse,
-  ApiTags,
-} from '@nestjs/swagger'
-import { message } from '@shared/enum'
-import { CreateNewUserDto, UpdateUserDto } from './dto'
+import { Controller, Headers, Param, Get, Post, Body, Put, Delete  } from '@nestjs/common'
+import { ApiOperation, ApiTags } from '@nestjs/swagger'
+
+import { FirebaseService } from '@modules/firebase/firebase.service'
+import { OK } from '@root/src/shared/exception/exception'
+import { code, message } from '@shared/enum'
+
 import { UserService } from './user.service'
+import { UpdateDto } from './dto/update.dto'
+import { CreateDto,  } from './dto/create.dto'
+import { 
+  CreateMapper,
+  AuthFindOneMapper,
+  PublicFindOneMapper
+} from './mapper'
 
 @ApiTags('user')
 @Controller('user')
 export class UsuariosController {
-  constructor(private readonly service: UserService) {}
- 
-  @Get('/auth')
-  @ApiOperation({ summary: 'Listar todos usuarios da base' })
-  public async findAll(@Headers('Authorization') token: string) {
-    return this.service.findAll(token);
+
+  constructor(
+    private readonly service: UserService,
+    private firebase:FirebaseService,
+    private createMapper:CreateMapper,
+    private authFindOneMapper:AuthFindOneMapper,
+    private publicFindOneMapper:PublicFindOneMapper,
+  ) {}
+
+  @Get('/auth/uid/')
+  @ApiOperation({ summary: 'Buscar informação do usuario por uid' })
+  public async authFindOneByUid(@Headers('Authorization') authorization: string) {
+    const decoded = await this.firebase.validateTokenByFirebase(authorization)
+    const res = await this.service.authFindOneByUid(decoded.uid);
+    const dto = this.authFindOneMapper.toMapper(res)
+    return new OK([dto], code.SUCCESSFULLY_FOUND, message.SUCCESSFULLY_FOUND)
   }
 
-  @Get('/auth/get-user-by-uid/:uid')
-  @ApiOperation({ summary: 'Obter informação do usuario por uid' })
-  public async getUserByUid(@Param('uid') uid: string, @Headers('Authorization') token: string) {
-    return await this.service.getUserByUid(uid, token);
+  @Get('/public/uid/:uid')
+  @ApiOperation({ summary: 'Buscar informação do usuario por uid' })
+  public async publicFindOneByUid(@Param('uid') uid: string) {
+    const res = await this.service.publicFindOneByUid(uid);
+    const dto = this.publicFindOneMapper.toMapper(res)
+    return new OK([dto], code.SUCCESSFULLY_FOUND, message.SUCCESSFULLY_FOUND)
   }
 
-  @Get('/auth/get-user-by-email/:email')
-  @ApiOperation({ summary: 'Obter informação do usuario por email' })
-  public async getUserByEmail(@Param('email') email: string, @Headers('Authorization') token: string) {
-    return await this.service.getUserByEmail(email, token);
+  @Get('/auth/email/')
+  @ApiOperation({ summary: 'Buscar informação do usuario por email' })
+  public async authFindOneByEmail(@Headers('Authorization') authorization: string) {
+    const decoded = await this.firebase.validateTokenByFirebase(authorization)
+    const res = await this.service.authFindOneByEmail(decoded.email+'');
+    const dto = this.publicFindOneMapper.toMapper(res)
+    return new OK([dto], code.SUCCESSFULLY_FOUND, message.SUCCESSFULLY_FOUND)
   }
 
-  @Put('/auth/:uid')
-  @ApiOperation({ summary: 'Atualizar usuario por uid' })
-  public async update(@Param('uid') uid: string, @Body() updateDto:UpdateUserDto, @Headers('Authorization') token: string) {
-    return await this.service.updateUserByUid(uid, updateDto, token);
+  @Get('/public/email/:email')
+  @ApiOperation({ summary: 'Buscar informação do usuario por email' })
+  public async publicFindOneByEmail(@Param('email') email: string) {
+    const res = await this.service.publicFindOneByEmail(email);
+    const dto = this.publicFindOneMapper.toMapper(res)
+    return new OK([dto], code.SUCCESSFULLY_FOUND, message.SUCCESSFULLY_FOUND)
   }
 
-  @Delete('/auth/delete-account')
-  @ApiOperation({ summary: 'Excluir usuario' })
-  public async deleteUserByUid(@Headers('Authorization') token: string) {
-    return await this.service.deleteUserByUid(token);
-  }
-
-  @Post()
+  @Post('/public/')
   @ApiOperation({ summary: 'Criar um usuario' })
-  public async save(@Body() create: CreateNewUserDto) {
-    return await this.service.save(create);
+  public async create(@Body() create: CreateDto) {
+    const res = await this.service.create(create);
+    const dto = this.createMapper.toMapper(res)
+    return new OK([dto], code.USER_REGISTERED, message.USER_REGISTERED)
+  }
+  
+  @Put('/auth/')
+  @ApiOperation({ summary: 'Atualizar usuario por uid' })
+  public async update(@Body() body:UpdateDto, @Headers('Authorization') authorization: string) {
+    const decoded = await this.firebase.validateTokenByFirebase(authorization)
+    const res = await this.service.updateByUid(decoded.uid, body);
+    const dto = this.authFindOneMapper.toMapper(res)
+    return new OK([dto], code.USER_UPDATED, message.USER_UPDATED) 
   }
 
-  @Get('/check-user-exists-by-email/:email')
-  @ApiOperation({ summary: 'Checar se o usuario existe por email' })
-  public async checkUserExistsByEmail(@Param('email') email: string) {
-    return await this.service.checkUserExistsByEmail(email);
+  @Delete('/auth/')
+  @ApiOperation({ summary: 'Excluir usuario' })
+  public async deleteUserByUid(@Headers('Authorization') authorization: string) {
+    const decoded = await this.firebase.validateTokenByFirebase(authorization)
+    await this.service.deleteByUid(decoded.uid);
+    return new OK([], code.DELETED_SUCCESSFULLY, message.DELETED_SUCCESSFULLY) 
   }
 }

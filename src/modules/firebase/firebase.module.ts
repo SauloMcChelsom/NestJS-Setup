@@ -2,13 +2,13 @@ import { Module } from '@nestjs/common'
 import { FirebaseController } from './firebase.controller'
 import { FirebaseService } from './firebase.service'
 import { JwtUtilityModule } from '@shared/jwt/jwt.module'
-import { FirebaseValidate } from './firebase.validate'
+import { FirebaseModel } from './firebase.model'
 import { CheckUserExistsMapper } from './mapper/check-user-exists-by-email.mapper'
 
 @Module({
   imports: [JwtUtilityModule],
   controllers: [FirebaseController],
-  providers: [CheckUserExistsMapper, FirebaseValidate, FirebaseService],
+  providers: [CheckUserExistsMapper, FirebaseModel, FirebaseService],
   exports: [FirebaseService]
 })
 export class FirebaseModule {}

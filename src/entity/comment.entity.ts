@@ -1,14 +1,15 @@
-import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, OneToOne, ManyToOne, JoinColumn, UpdateDateColumn, } from 'typeorm';
+import { Entity, Column, Index, PrimaryGeneratedColumn, CreateDateColumn, OneToOne, ManyToOne, JoinColumn, UpdateDateColumn, } from 'typeorm';
 import { PublicationEntity as Publication } from './publication.entity'
 import { UserEntity as User } from './user.entity'
 
 @Entity('comment')
-export class ComentarioEntity {
+export class CommentEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
-  user_comment: string;
+  @Index({ fulltext: true })
+  @Column("text")
+  comment: string;
 
   @CreateDateColumn({ default: () => 'CURRENT_TIMESTAMP' })
   timestamp: Date;

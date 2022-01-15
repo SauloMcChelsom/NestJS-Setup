@@ -1,19 +1,38 @@
 import { Module } from '@nestjs/common'
 import { TypeOrmModule } from '@nestjs/typeorm'
+
 import { CryptUtilityModule } from '@shared/bcrypt/bcrypt.module'
 import { UserEntity } from '@entity/user.entity'
+import { FirebaseModule } from '@root/src/modules/firebase/firebase.module'
+
 import { UsuariosController } from './user.controller'
 import { UserService } from './user.service'
-import { UserValidate } from './user.validate'
+import { UserModel } from './user.model' 
 import { UserRepository } from './user.repository'
-import { PerfilUserMapper } from './mapper/perfil-user.mapper'
-import { CheckUserExistsByEmailMapper } from './mapper/check-user-exists-by-email.mapper'
-import { FirebaseValidate } from '@modules/firebase/firebase.validate'
+
+import { 
+  CreateMapper, 
+  AuthListMapper, 
+  PublicListMapper,
+  AuthFindOneMapper,
+  PublicFindOneMapper
+} from './mapper'
 
 @Module({
-  imports: [CryptUtilityModule, TypeOrmModule.forFeature([UserEntity, UserRepository])],
+  imports: [TypeOrmModule.forFeature([UserEntity, UserRepository]),
+  CryptUtilityModule,
+  FirebaseModule
+  ],
   controllers: [UsuariosController],
-  providers: [UserService, UserValidate, FirebaseValidate, PerfilUserMapper, CheckUserExistsByEmailMapper],
+  providers: [
+    UserService, 
+    UserModel, 
+    AuthListMapper, 
+    PublicListMapper,
+    AuthFindOneMapper,
+    PublicFindOneMapper,
+    CreateMapper,
+  ],
   exports: [UserService]
 })
 export class UserModule {}

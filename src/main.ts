@@ -3,11 +3,11 @@ import { ValidationPipe, ValidationError } from '@nestjs/common'
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { NestExpressApplication } from '@nestjs/platform-express';
 
-import { BadRequestExceptions } from './service/exception'
+import { BadRequestExceptions } from './shared/exception/exception'
 import { join } from 'path';
 import { AppModule } from './app.module';
 
-import { initializeFirebase } from '@shared/firebase/firebase.config';
+import { initializeFirebase } from '@root/src/shared/firebase/initialize-firebase';
 
 initializeFirebase();
 
@@ -35,15 +35,15 @@ async function bootstrap() {
   /*---------------------------------------------------------------*/
   /*---------------------------------------------------------------*/
 
-  /*-------------------| Paginas Web |-----------------------------*/
-  /*---------------------------------------------------------------*/
-  /*---------------------------------------------------------------*/
-  /**/app.useStaticAssets(join(__dirname, '..', './src','public'));/*------*/
-  /**/app.setBaseViewsDir(join(__dirname, '..', './src','views'));/*-------*/
-  /**/app.setViewEngine('hbs');/*----------------------------------*/
-  /*---------------------------------------------------------------*/
-  /*---------------------------------------------------------------*/
-  /*---------------------------------------------------------------*/
+  /*---------------------------------| Paginas Web |-----------------------------*/
+  /*-----------------------------------------------------------------------------*/
+  /*-----------------------------------------------------------------------------*/
+  /**/app.useStaticAssets(join(__dirname, '..', './src/views','public'));/*------*/
+  /**/app.setBaseViewsDir(join(__dirname, '..', './src','views'));/*-------------*/
+  /**/app.setViewEngine('hbs');/*------------------------------------------------*/
+  /*-----------------------------------------------------------------------------*/
+  /*-----------------------------------------------------------------------------*/
+  /*-----------------------------------------------------------------------------*/
 
   app.useGlobalPipes(
     new ValidationPipe({
@@ -75,10 +75,10 @@ async function bootstrap() {
 
   await app.listen(process.env.PORT || 3000);
 
-  console.log(`                                                    `);
-  console.log(`                                                    `);
-  console.log(`                  ${await app.getUrl()}/auth/sign-in`);
-  console.log(`                                                    `);
+  console.log(process.env.PORT || 3000);
+  console.log(process.env.TYPEORM_HOST)
+  console.log(`.env.${process.env.NODE_ENV || 'development'}`)
+                                               
 }
 
 bootstrap();
