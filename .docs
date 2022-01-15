@@ -29,8 +29,5 @@ FALTA
 -test
 -atualizar projeto
 
-
-- criar a variavel de ambiente para firebase
-- implementar o modulo web
 - testado api e paginas localmente sobir para produção
 - .env* em produção
