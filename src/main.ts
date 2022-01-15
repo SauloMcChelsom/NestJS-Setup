@@ -77,7 +77,8 @@ async function bootstrap() {
 
   console.log(process.env.PORT || 3000);
   console.log(process.env.TYPEORM_HOST)
-  console.log(`.env.${process.env.NODE_ENV || 'development'}`)
+  console.log(`.env${process.env.NODE_ENV}`)
+  console.log(`${process.env.environment}`)
                                                
 }
 
