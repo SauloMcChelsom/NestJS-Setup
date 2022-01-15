@@ -13,7 +13,7 @@ import { LikeModule } from '@modules/like/like.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
-      envFilePath: `.env.${process.env.NODE_ENV || 'production'}`,
+      envFilePath: `.env${process.env.NODE_ENV}`,
       isGlobal: true,
       expandVariables: true
     }),
