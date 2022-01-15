@@ -1,14 +1,14 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import * as path from 'path';
+import { ConfigModule } from '@nestjs/config';
+import { CommentModule } from '@modules/comment/comment.module';
 import { FirebaseModule } from '@modules/firebase/firebase.module';
+import { ViewsModule } from '@views/views.module';
 import { UserModule } from '@modules/user/user.module';
 import { PageModule } from '@modules/page/page.module';
 import { FollowModule } from '@root/src/modules/follow/follow.module';
 import { PublicationModule } from '@modules/publication/publication.module';
 import { LikeModule } from '@modules/like/like.module';
-import { CommentModule } from '@modules/comment/comment.module';
-import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
@@ -19,6 +19,7 @@ import { ConfigModule } from '@nestjs/config';
     }),
     TypeOrmModule.forRoot(),
     FirebaseModule,
+    ViewsModule,
     UserModule,
     PageModule,
     FollowModule,

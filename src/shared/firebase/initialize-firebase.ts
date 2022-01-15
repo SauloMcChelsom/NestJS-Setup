@@ -1,8 +1,8 @@
 import * as firebase from 'firebase-admin';
-import { serviceAccounts } from './env.FIREBASE';
-
+import { serviceAccount } from './service-account';
 export function initializeFirebase() {
     firebase.initializeApp({
-        credential: firebase.credential.cert(serviceAccounts),
+        credential: firebase.credential.cert(serviceAccount),
     });
+    
 }

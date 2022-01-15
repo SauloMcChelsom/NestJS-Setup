@@ -23,7 +23,7 @@ class Login {
         player.load("https://assets3.lottiefiles.com/packages/lf20_tszzqucf.json");
         
         setTimeout(()=>{
-          window.location.href = "/firebase/page/auth/home";
+          window.location.href = "/home";
         },5000)//5 segundos
         return
       }
@@ -61,7 +61,7 @@ class Login {
       player.load("https://assets3.lottiefiles.com/packages/lf20_tszzqucf.json");
 
       setTimeout(()=>{
-        window.location.href = "/firebase/page/auth/home";
+        window.location.href = "/home";
       },5500)//5 segundos
       
     })
@@ -125,7 +125,7 @@ class Login {
     await firebase.auth().onAuthStateChanged((res) => {
       if(res){
         setTimeout(()=>{
-         window.location.href = "/firebase/page/auth/home";
+         window.location.href = "/home";
         },5000)//5 segundos
       }else{
         awaits.style.display = 'none';

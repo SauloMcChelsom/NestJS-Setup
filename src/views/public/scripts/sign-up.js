@@ -33,7 +33,7 @@ class SignUp {
 
         await this.createUserDataBase(createUser)
 
-        window.location.href = "/firebase/page/auth/home";
+        window.location.href = "/home";
       })
       .catch((err) => {
         signUpBtn.style.display = ''
@@ -52,7 +52,7 @@ class SignUp {
         let {statusCode, error:_error, message:unknown_message  } = await this.checkUserExistsByEmail(user.email)
 
         if(statusCode == 200){
-          window.location.href = "/firebase/page/auth/home";
+          window.location.href = "/home";
           return
         }
         if(statusCode == 404 && unknown_message){
@@ -83,7 +83,7 @@ class SignUp {
   
         await this.createUserDataBase(createUser)
   
-        window.location.href = "/firebase/page/auth/home";
+        window.location.href = "/home";
       
       })
       .catch((err) => {
@@ -153,7 +153,7 @@ class SignUp {
       firebase.auth().onAuthStateChanged((res) => {
         if(res){
           setTimeout(()=>{
-            window.location.href = "/firebase/page/auth/home";
+            window.location.href = "/home";
           },5000)//5 segundos
         }else{
           container.style.display = '';

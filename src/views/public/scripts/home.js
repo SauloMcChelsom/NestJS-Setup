@@ -12,7 +12,6 @@ class Home {
     async isLogged() {
       await firebase.auth().onAuthStateChanged((res) => {
         if(res){
-          console.log(res)
           if(res.photoURL){
             document.getElementById("imgAccountGoogle").src = res.photoURL;
           }
@@ -25,7 +24,7 @@ class Home {
           nav.style.display = '';
           await.style.display = 'none';
         }else{
-          window.location.href = "/firebase/page/sign-in";
+          window.location.href = "/login";
         }
       });
     }

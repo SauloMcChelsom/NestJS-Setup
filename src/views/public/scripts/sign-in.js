@@ -18,7 +18,7 @@ class SignIn {
 
     firebase.auth().signInWithEmailAndPassword(email, password).then(({ user }) => {
 
-      window.location.href = "/firebase/page/auth/home";
+      window.location.href = "/home";
 
     })
     .catch(async(err) => {
@@ -65,7 +65,7 @@ class SignIn {
       let {statusCode, error:_error, message:unknown_message  } = await this.checkUserExistsByEmail(user.email)
 
       if(statusCode == 200){
-        window.location.href = "/firebase/page/auth/home";
+        window.location.href = "/home";
         return
       }
 
@@ -97,7 +97,7 @@ class SignIn {
 
       await this.createUserDataBase(createUser)
 
-      window.location.href = "/firebase/page/auth/home";
+      window.location.href = "/home";
       
     })
     .catch((err) => {
@@ -185,7 +185,7 @@ class SignIn {
     await firebase.auth().onAuthStateChanged((res) => {
       if(res){
         setTimeout(()=>{
-         window.location.href = "/firebase/page/auth/home";
+         window.location.href = "/home";
         },5000)//5 segundos
       }else{
         container.style.display = '';

@@ -1,4 +1,4 @@
-var firebaseConfig = {
+var serviceAccount = {
     apiKey: "AIzaSyC7bzUIjrIHIdAhRyRm1GRWBmAR3Wr2CZA",
     authDomain: "educando-brasil.firebaseapp.com",
     projectId: "educando-brasil",
@@ -8,8 +8,12 @@ var firebaseConfig = {
     measurementId: "G-HGLNMW873K"
 };
 
-if (!firebase.apps.length) {
-    firebase.initializeApp(firebaseConfig);
-}else {
-    firebase.app(); 
+function initializeFirebase() {
+    if (!firebase.apps.length) {
+        firebase.initializeApp(serviceAccount);
+    }else {
+        firebase.app(); 
+    }
 }
+
+initializeFirebase()
