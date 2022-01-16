@@ -11,7 +11,7 @@ if(process.env.TYPEORM_HOST === '127.0.0.1'){
     synchronize: process.env.TYPEORM_SYNCHRONIZE,
     dropSchema: false,
     logging: true,
-    entities: ['**/*.entity.js'],
+    entities: [ 'dist/**/*.entity{.ts,.js}' ],
   };
 }else{
   module.exports = {
