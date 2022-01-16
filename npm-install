@@ -10,5 +10,6 @@ npm i hbs
 npm i cross-env
 npm i swagger-ui-express
 npm install pg --save
+npm install class-transformer
 npm i @types/hbs
 npm i @types/bcryptjs
