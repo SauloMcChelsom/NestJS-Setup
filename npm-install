@@ -1,0 +1,11 @@
+npm i @nestjs/typeorm
+npm i @nestjs/config
+npm i @nestjs/swagger
+npm i @nestjs/jwt
+npm i class-validator
+npm i firebase-admin
+npm i bcryptjs
+npm i hbs
+npm i cross-env
+npm i swagger-ui-express
+npm install pg --save
