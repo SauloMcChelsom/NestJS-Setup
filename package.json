@@ -31,6 +31,7 @@
     "@types/bcryptjs": "^2.4.2",
     "@types/hbs": "^4.0.1",
     "bcryptjs": "^2.4.3",
+    "class-transformer": "^0.4.0",
     "class-validator": "^0.13.2",
     "cross-env": "^7.0.3",
     "firebase-admin": "^10.0.1",
