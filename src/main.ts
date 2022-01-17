@@ -35,15 +35,10 @@ async function bootstrap() {
   /*---------------------------------------------------------------*/
   /*---------------------------------------------------------------*/
 
-  /*---------------------------------| Paginas Web |-----------------------------*/
-  /*-----------------------------------------------------------------------------*/
-  /*-----------------------------------------------------------------------------*/
-  /**/app.useStaticAssets(join(__dirname, '..', './src/views','public'));/*------*/
-  /**/app.setBaseViewsDir(join(__dirname, '..', './src','views'));/*-------------*/
-  /**/app.setViewEngine('hbs');/*------------------------------------------------*/
-  /*-----------------------------------------------------------------------------*/
-  /*-----------------------------------------------------------------------------*/
-  /*-----------------------------------------------------------------------------*/
+  /*----------------------------| Paginas Web |--------------------*/
+  app.useStaticAssets(join(__dirname, '..', './src/views','public'));
+  app.setBaseViewsDir(join(__dirname, '..', './src/','views'));
+  app.setViewEngine('hbs');
 
   app.useGlobalPipes(
     new ValidationPipe({
@@ -72,14 +67,11 @@ async function bootstrap() {
       }, validationError: { target: false } 
     })
   );
-
+  
   await app.listen(process.env.PORT || 3000);
-
-  console.log(process.env.PORT || 3000);
-  console.log(process.env.TYPEORM_HOST)
-  console.log(`.env${process.env.NODE_ENV}`)
-  console.log(`${process.env.environment}`)
-                                               
+  console.log('DATABASE_HOST: ',process.env.TYPEORM_HOST)
+  console.log('ENV: ', `${process.env.environment}`)
+                                   
 }
 
 bootstrap();

@@ -24,10 +24,6 @@ criar audio
 
 
 FALTA
--documentação
--revisar tutorial
--test
--atualizar projeto
-
-- testado api e paginas localmente sobir para produção
-- .env* em produção
+-fazer a documentação do projeto
+-revisar tutorial em https://docs.nestjs.com/ (*)
+-testes basicos
