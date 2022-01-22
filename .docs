@@ -1,3 +1,6 @@
+nest g resource
+
+
 https://orkhan.gitbook.io/typeorm/docs/select-query-builder
 https://www.tutorialspoint.com/typeorm/typeorm_query_builder.htm
 https://www.npmjs.com/package/class-validator

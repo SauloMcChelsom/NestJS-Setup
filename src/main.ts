@@ -41,7 +41,33 @@ async function bootstrap() {
   app.setViewEngine('hbs');
 
   app.useGlobalPipes(
+
+    /**
+     * O ValidationPipefornece uma abordagem conveniente para impor regras de validação para todas as cargas de cliente recebidas
+     */
     new ValidationPipe({
+
+      /**
+       * As mensagens de erro detalhados
+       */
+      disableErrorMessages: false,
+
+      /**
+       *  qualquer propriedade não incluída na lista branca é automaticamente removida do objeto resultante
+       */
+      whitelist: true,
+
+      /**
+       * interromper o processamento da solicitação quando as propriedades não incluídas na lista
+       */
+      forbidNonWhitelisted:true,
+
+      /**
+       * As cargas que chegam pela rede são objetos JavaScript simples. 
+       * Eles ValidationPipepodem transformar automaticamente cargas úteis em objetos digitados de acordo com suas classes DTO.
+       */
+      transform: true,
+
       exceptionFactory: (validationErrors: ValidationError[] = []) => {
         var err = validationErrors
 

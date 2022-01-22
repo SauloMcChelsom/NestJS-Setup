@@ -10,12 +10,16 @@ import { FollowModule } from '@root/src/modules/follow/follow.module';
 import { PublicationModule } from '@modules/publication/publication.module';
 import { LikeModule } from '@modules/like/like.module';
 
+import { CatsModule } from './modules/LEARN-NESTJS/INTRODUCTION/cats.module'
+
 @Module({
   imports: [
     ConfigModule.forRoot({
-      envFilePath: `.env${process.env.NODE_ENV}`,
-      isGlobal: true,
-      expandVariables: true
+      envFilePath: `.env.${process.env.NODE_ENV}`,
+      isGlobal: false,
+      expandVariables: true,
+      ignoreEnvFile: false,
+      cache: true
     }),
     TypeOrmModule.forRoot(),
     FirebaseModule,
@@ -25,7 +29,8 @@ import { LikeModule } from '@modules/like/like.module';
     FollowModule,
     PublicationModule,
     LikeModule,
-    CommentModule
+    CommentModule,
+    CatsModule
   ],
   controllers: [],
   providers: [],
