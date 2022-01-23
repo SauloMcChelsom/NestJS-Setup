@@ -41,7 +41,7 @@ export class CommentModel {
     }
   }
 
-  public async findOneById(id:string){
+  public async findOneById(id:number){
     try{
       const res = await this.repository.findOne(id)
       if(res){
@@ -63,7 +63,7 @@ export class CommentModel {
   }
 
 
-  public async listByUserId(userId:string, search:string='', limit:number=3, offset:number=0, order:string='ASC', column:string='id', start:string='', end:string=''){
+  public async listByUserId(userId:number, search:string='', limit:number=3, offset:number=0, order:string='ASC', column:string='id', start:string='', end:string=''){
     try{
 
       if(limit > 15){
@@ -110,7 +110,7 @@ export class CommentModel {
     }
   }
 
-  public async listByPublicationId(publicationId:string, search:string='', limit:number=3, offset:number=0, order:string='ASC', column:string='id', start:string='', end:string=''){
+  public async listByPublicationId(publicationId:number, search:string='', limit:number=3, offset:number=0, order:string='ASC', column:string='id', start:string='', end:string=''){
     try{
 
       if(limit > 15){
@@ -133,6 +133,8 @@ export class CommentModel {
         end = this.utility.isValidTimestamp(end)
       }
 
+      console.log(publicationId, search, limit, offset, order, column, start, end)
+
       const res = await this.repository.listByPublicationId(publicationId, search, limit, offset, order, column, start, end)
       const count = await this.repository.countListByPublicationId(publicationId, search, start, end)
 
@@ -147,6 +149,7 @@ export class CommentModel {
       })
 
     }catch(e:any){
+      console.log(e)
       throw new Exception({
         code:e.response.error.code,
         message:e.response.error.message,
@@ -157,7 +160,7 @@ export class CommentModel {
     }
   }
 
-  public async deleteById(id:string){
+  public async deleteById(id:number){
     try{
       const res = await this.repository.delete(id);
       if(res){
@@ -191,7 +194,7 @@ export class CommentModel {
     }
   }
 
-  public async validateID(id:string, userId:string){
+  public async validateID(id:number, userId:number){
     try{
       const res = await this.repository.findOne({ where:{ id: id, user_id:userId }})
       if(res){

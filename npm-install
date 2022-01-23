@@ -13,3 +13,5 @@ npm install pg --save
 npm install class-transformer
 npm i @types/hbs
 npm i @types/bcryptjs
+npm install cache-manager
+npm install -D @types/cache-manager

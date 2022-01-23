@@ -26,12 +26,12 @@ export class FollowController {
   
   @ApiOperation({ summary: 'Listar usuarios da pagina' })
   @Get('/auth/page/:id')
-  public async authListByIdPage(@Param('id') id: string, @Headers('Authorization') authorization: string, @Query('search') search:string, @Query('limit') limit:number, @Query('offset') offset:number, @Query('order') order:string, @Query('column') column:string, @Query('start') start:string, @Query('end') end:string) {
+  public async authListByIdPage(@Param('id') id: number, @Headers('Authorization') authorization: string, @Query('search') search:string, @Query('limit') limit: string='3', @Query('offset') offset:string='0', @Query('order') order:string, @Query('column') column:string, @Query('start') start:string, @Query('end') end:string) {
     const decoded = await this.firebase.validateTokenByFirebase(authorization)
     const cls:ClassificationInterface = {
       search:search, 
-      limit:limit, 
-      offset:offset, 
+      limit:parseInt(limit) ? parseInt(limit) : 5, 
+      offset:parseInt(offset) ? parseInt(offset) : 0, 
       order:order, 
       column:column, 
       start:start, 
@@ -44,12 +44,12 @@ export class FollowController {
 
   @ApiOperation({ summary: 'Listar as paginas que o usuario segue' })
   @Get('/auth/user/:id')
-  public async authListByIdUser(@Param('id') id: string, @Headers('Authorization') authorization: string, @Query('search') search:string, @Query('limit') limit:number, @Query('offset') offset:number, @Query('order') order:string, @Query('column') column:string, @Query('start') start:string, @Query('end') end:string) {
+  public async authListByIdUser(@Param('id') id: number, @Headers('Authorization') authorization: string, @Query('search') search:string, @Query('limit') limit: string='3', @Query('offset') offset:string='0', @Query('order') order:string, @Query('column') column:string, @Query('start') start:string, @Query('end') end:string) {
     const decoded = await this.firebase.validateTokenByFirebase(authorization)
     const cls:ClassificationInterface = {
       search:search, 
-      limit:limit, 
-      offset:offset, 
+      limit:parseInt(limit) ? parseInt(limit) : 5, 
+      offset:parseInt(offset) ? parseInt(offset) : 0, 
       order:order, 
       column:column, 
       start:start, 

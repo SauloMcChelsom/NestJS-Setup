@@ -19,7 +19,7 @@ export class FollowModel {
     private utility:UtilityService
   ){}
 
-  public async listAllUserFollowPageByIdOfPage(userId:string, search:string='', limit:number=3, offset:number=0, order:string='ASC', column:string='id', start:string='', end:string=''){
+  public async listAllUserFollowPageByIdOfPage(userId:number, search:string='', limit:number=3, offset:number=0, order:string='ASC', column:string='id', start:string='', end:string=''){
     try{
 
       if(limit > 15){
@@ -66,7 +66,7 @@ export class FollowModel {
     }
   }
                
-  public async listAllPageUserFollowByIdOfUser(userId:string, search:string='', limit:number=3, offset:number=0, order:string='ASC', column:string='id', start:string='', end:string=''){
+  public async listAllPageUserFollowByIdOfUser(userId:number, search:string='', limit:number=3, offset:number=0, order:string='ASC', column:string='id', start:string='', end:string=''){
     try{
 
       if(limit > 15){

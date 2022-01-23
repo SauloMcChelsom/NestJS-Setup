@@ -14,11 +14,11 @@ export class FollowService {
     private page:PageService
   ) {}
 
-  public async authListByIdPage(id: string, cls:ClassificationInterface) {
+  public async authListByIdPage(id: number, cls:ClassificationInterface) {
     return await this.model.listAllUserFollowPageByIdOfPage(id, cls.search, cls.limit, cls.offset, cls.order, cls.column, cls.start, cls.end)
   }
 
-  public async authListByIdUser(id: string, cls:ClassificationInterface) {
+  public async authListByIdUser(id: number, cls:ClassificationInterface) {
     return await this.model.listAllPageUserFollowByIdOfUser(id, cls.search, cls.limit, cls.offset, cls.order, cls.column, cls.start, cls.end)
   }
 

@@ -7,7 +7,9 @@ import { code, message } from '@shared/enum'
 
 import { UserService } from './user.service'
 import { UpdateDto } from './dto/update.dto'
-import { CreateDto,  } from './dto/create.dto'
+import { CreateDto } from './dto/create.dto'
+import { UpdateUserUidWithFirebaseUidDto as UpdateUidDto } from './dto/update-user-uid-with-firebase-uid.dto'
+import { UpdateUserUidWithFirebaseUidInterface as UpdateUidInterface } from './interface'
 import { 
   CreateMapper,
   AuthFindOneMapper,
@@ -77,6 +79,18 @@ export class UsuariosController {
     return new OK([dto], code.USER_UPDATED, message.USER_UPDATED) 
   }
 
+  @Put('/auth/uid')
+  @ApiOperation({ summary: 'Atualizar uid usuario com  uid firebase' })
+  public async updateUserUidWithFirebaseUid(@Body() body:UpdateUidDto, @Headers('Authorization') authorization: string) {
+    const decoded = await this.firebase.validateTokenByFirebase(authorization)
+    const updateUid:UpdateUidInterface = {
+      uid: body.firebaseUid
+    }
+    const res = await this.service.updateUserUidWithFirebaseUid(body.userUid, updateUid);
+    const dto = this.authFindOneMapper.toMapper(res)
+    return new OK([dto], code.USER_UPDATED, message.USER_UPDATED) 
+  }
+
   @Delete('/auth/')
   @ApiOperation({ summary: 'Excluir usuario' })
   public async deleteUserByUid(@Headers('Authorization') authorization: string) {
@@ -84,4 +98,4 @@ export class UsuariosController {
     await this.service.deleteByUid(decoded.uid);
     return new OK([], code.DELETED_SUCCESSFULLY, message.DELETED_SUCCESSFULLY) 
   }
-}
+} 

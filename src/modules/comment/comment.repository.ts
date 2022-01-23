@@ -4,7 +4,7 @@ import { CommentEntity } from '@root/src/entity/comment.entity'
 @EntityRepository(CommentEntity)
 export class CommentRepository extends Repository<CommentEntity> {
     
-    async listByUserId(userId:string, search:string = '',  limit:number=3, offset:number=0, order:any='ASC', column:string='id', timestampStart:string='', timestampEnd:string=''){
+    async listByUserId(userId:number, search:string = '',  limit:number=3, offset:number=0, order:any='ASC', column:string='id', timestampStart:string='', timestampEnd:string=''){
         return await this.createQueryBuilder('comment')
         .where("comment.user_id = :userId", { userId: userId })
         .andWhere('comment.comment ILIKE :searchQuery', {searchQuery: `%${search}%`})
@@ -16,7 +16,7 @@ export class CommentRepository extends Repository<CommentEntity> {
         .getMany();
     }
 
-    async countListByUserId(userId:string, search:string = '',timestampStart:any=false, timestampEnd:any=false){
+    async countListByUserId(userId:number, search:string = '',timestampStart:any=false, timestampEnd:any=false){
         return await this.createQueryBuilder('comment')
         .where("comment.user_id = :userId", { userId: userId })
         .andWhere('comment.comment ILIKE :searchQuery', {searchQuery: `%${search}%`})
@@ -26,7 +26,7 @@ export class CommentRepository extends Repository<CommentEntity> {
         .getCount()
     }
 
-    async listByPublicationId(publicationId:string, search:string = '',  limit:number=3, offset:number=0, order:any='ASC', column:string='id', timestampStart:string='', timestampEnd:string=''){
+    async listByPublicationId(publicationId:number, search:string = '',  limit:number=3, offset:number=0, order:any='ASC', column:string='id', timestampStart:string='', timestampEnd:string=''){
         return await this.createQueryBuilder('comment')
         .where("comment.publication_id = :publicationId", { publicationId: publicationId })
         .andWhere('comment.comment ILIKE :searchQuery', {searchQuery: `%${search}%`})
@@ -38,7 +38,7 @@ export class CommentRepository extends Repository<CommentEntity> {
         .getMany();
     }
 
-    async countListByPublicationId(publicationId:string, search:string = '',timestampStart:any=false, timestampEnd:any=false){
+    async countListByPublicationId(publicationId:number, search:string = '',timestampStart:any=false, timestampEnd:any=false){
         return await this.createQueryBuilder('comment')
         .where("comment.publication_id = :publicationId", { publicationId: publicationId })
         .andWhere('comment.comment ILIKE :searchQuery', {searchQuery: `%${search}%`})

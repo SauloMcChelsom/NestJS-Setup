@@ -1,4 +1,5 @@
-import { Module } from '@nestjs/common';
+import { CacheModule, CacheInterceptor, Module } from '@nestjs/common';
+import { APP_INTERCEPTOR } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
 import { CommentModule } from '@modules/comment/comment.module';
@@ -14,6 +15,11 @@ import { CatsModule } from './modules/LEARN-NESTJS/INTRODUCTION/cats.module'
 
 @Module({
   imports: [
+    CacheModule.register({
+      ttl: 0.1, // seconds
+      max: 15, // maximum number of items in cache
+      isGlobal: true,
+    }),
     ConfigModule.forRoot({
       envFilePath: `.env.${process.env.NODE_ENV}`,
       isGlobal: false,
@@ -33,7 +39,16 @@ import { CatsModule } from './modules/LEARN-NESTJS/INTRODUCTION/cats.module'
     CatsModule
   ],
   controllers: [],
-  providers: [],
+  providers: [
+    /**
+     * Para reduzir a quantidade de clichê necessária, 
+     * você pode vincular CacheInterceptora todos os endpoints globalmente
+     */
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: CacheInterceptor,
+    },
+  ],
   exports: [],
 })
 export class AppModule {}

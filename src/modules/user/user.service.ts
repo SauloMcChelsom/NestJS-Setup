@@ -4,7 +4,7 @@ import { FirebaseService } from '@modules/firebase/firebase.service'
 import { CryptUtilityService } from '@shared/bcrypt/bcrypt.service'
 
 import { UserModel } from './user.model'
-import { CreateInterface, UpdateInterface } from './interface'
+import { CreateInterface, UpdateInterface, UpdateUserUidWithFirebaseUidInterface as UpdateUID } from './interface'
 
 
 @Injectable()
@@ -48,7 +48,12 @@ export class UserService {
     const { id } = await this.model.getUserByUid(uid)
     await this.model.updateUserByUid(id, body)
     return await this.model.getUserByUid(uid)
+  }
 
+  public async updateUserUidWithFirebaseUid(uid:string, body:UpdateUID) {
+    const { id } = await this.model.getUserByUid(uid)
+    await this.model.updateUserByUid(id, body)
+    return await this.model.getUserByUid(body.uid)
   }
 
   public async deleteByUid(uid:string) {

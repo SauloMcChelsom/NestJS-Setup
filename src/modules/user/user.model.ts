@@ -7,7 +7,7 @@ import { code, message } from '@shared/enum'
 import { ConflictExceptions, BadRequestExceptions, NotFoundExceptions, Exception } from '@root/src/shared/exception/exception'
 
 import { UserRepository } from './user.repository'
-import { UpdateInterface } from './interface'
+import { UpdateInterface, UpdateUserUidWithFirebaseUidInterface as UpdateUID } from './interface'
 
 @Injectable({ scope: Scope.REQUEST })
 export class UserModel {
@@ -120,7 +120,7 @@ export class UserModel {
     }
   }
 
-  public async updateUserByUid(id:number, body:UpdateInterface) {
+  public async updateUserByUid(id:number, body:UpdateInterface | UpdateUID) {
     try{
       const res = await this.repository.update(id, body)
       if(res){

@@ -7,23 +7,34 @@ class Login {
     this.isLogged()
   }
 
+  goHome(){
+    window.location.href = "/home";
+  }
+
   async authenticationByGoogle() {
     container.style.display = 'none';
     awaits.style.display = '';
     
     return await firebase.auth().signInWithPopup(new firebase.auth.GoogleAuthProvider()).then(async({user}) => {
 
-      let {statusCode, error:_error, message:unknown_message  } = await this.checkUserExistsByEmail(user.email)
+      let {ok, statusCode, error:_error, message:unknown_message  } = await this.checkUserExistsByEmail(user.email)
 
       if(statusCode == 200){
         lottie.style.display = '';
         awaits.style.display = 'none';
 
+        let firebase_uid = user.uid
+        let nestjs_uid = ok.results[0].uid
+  
+        if(firebase_uid != nestjs_uid){
+          this.updateUserUidWithFirebaseUid(nestjs_uid, firebase_uid, user.Aa)
+        }
+
         const player = document.querySelector("lottie-player");
         player.load("https://assets3.lottiefiles.com/packages/lf20_tszzqucf.json");
         
         setTimeout(()=>{
-          window.location.href = "/home";
+          this.goHome()
         },5000)//5 segundos
         return
       }
@@ -61,9 +72,9 @@ class Login {
       player.load("https://assets3.lottiefiles.com/packages/lf20_tszzqucf.json");
 
       setTimeout(()=>{
-        window.location.href = "/home";
+        this.goHome()
       },5500)//5 segundos
-      
+
     })
     .catch((err) => {
       container.style.display = '';
@@ -116,6 +127,28 @@ class Login {
     });
   }
 
+  async updateUserUidWithFirebaseUid(userUid, firebaseUid, token) {
+
+    const requestOptions = {
+      method: 'PUT',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify({ userUid: userUid,  firebaseUid:firebaseUid})
+    };
+
+    return await fetch(`/user/auth/uid`, requestOptions)
+    .then(res => res.json())
+    .then(async(res)=>{
+      return await res
+    }).catch((err) => {
+      error.style.display = 'block';
+      error.innerHTML = err;
+    });
+  }
+
   cutString(str, cut){
     const text = str;
     return text.slice(0, str.lastIndexOf(cut));
@@ -125,7 +158,7 @@ class Login {
     await firebase.auth().onAuthStateChanged((res) => {
       if(res){
         setTimeout(()=>{
-         window.location.href = "/home";
+          this.goHome()
         },5000)//5 segundos
       }else{
         awaits.style.display = 'none';
