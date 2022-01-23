@@ -1,5 +1,5 @@
 import { NestFactory } from '@nestjs/core';
-import { ValidationPipe, ValidationError } from '@nestjs/common'
+import { VersioningType, ValidationPipe, ValidationError } from '@nestjs/common'
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { NestExpressApplication } from '@nestjs/platform-express';
 
@@ -40,6 +40,9 @@ async function bootstrap() {
   app.setBaseViewsDir(join(__dirname, '..', './src/','views'));
   app.setViewEngine('hbs');
 
+  app.enableVersioning({
+    type: VersioningType.URI,
+  });
   app.useGlobalPipes(
 
     /**

@@ -1,4 +1,4 @@
-import { UseInterceptors, CacheInterceptor, CacheKey, CacheTTL, Controller, Headers, Param, Get, Query, Post, Body, Put, Delete  } from '@nestjs/common'
+import { Version, UseInterceptors, CacheInterceptor, CacheKey, CacheTTL, Controller, Headers, Param, Get, Query, Post, Body, Put, Delete  } from '@nestjs/common'
 import { ApiOperation, ApiTags } from '@nestjs/swagger'
 
 import { FirebaseService } from '@modules/firebase/firebase.service'
@@ -20,8 +20,8 @@ import {
   UpdateMapper
 } from './mapper'
 
-@ApiTags('comment')
 @Controller('comment')
+@ApiTags('comment')
 export class CommentController {
 
   constructor(
@@ -36,10 +36,11 @@ export class CommentController {
     private updateMapper:UpdateMapper
   ) {}
 
-  @ApiOperation({ summary: 'Listar comentarios pelo token do usuario' })
   @Get('/auth/user/')
+  @Version('1')
   @CacheTTL(20)
   @UseInterceptors(CacheInterceptor)
+  @ApiOperation({ summary: 'Listar comentarios pelo token do usuario' })
   public async authListByUserToken(@Headers('Authorization') authorization: string, @Query('search') search:string, @Query('limit') limit: string='3', @Query('offset') offset:string='0', @Query('order') order:string, @Query('column') column:string, @Query('start') start:string, @Query('end') end:string) {
     const decoded = await this.firebase.validateTokenByFirebase(authorization)
     const user = await this.user.getUserByUid(decoded.uid)
@@ -57,10 +58,11 @@ export class CommentController {
     return new OK(dto, code.SUCCESSFULLY_FOUND, message.SUCCESSFULLY_FOUND)
   }
 
-  @ApiOperation({ summary: 'Listar comentarios por id do usuario' })
   @Get('/auth/user/:id')
+  @Version('1')
   @CacheTTL(20)
   @UseInterceptors(CacheInterceptor)
+  @ApiOperation({ summary: 'Listar comentarios por id do usuario' })
   public async authListByUserId(@Param('id') id: number, @Headers('Authorization') authorization: string, @Query('search') search:string, @Query('limit') limit: string='3', @Query('offset') offset:string='0', @Query('order') order:string, @Query('column') column:string, @Query('start') start:string, @Query('end') end:string) {
     await this.firebase.validateTokenByFirebase(authorization)
     const cls:ClassificationInterface = {
@@ -77,10 +79,11 @@ export class CommentController {
     return new OK(dto, code.SUCCESSFULLY_FOUND, message.SUCCESSFULLY_FOUND)
   }
 
-  @ApiOperation({ summary: 'Listar comentarios por id do usuario' })
   @Get('/public/user/:id')
+  @Version('1')
   @CacheTTL(20)
   @UseInterceptors(CacheInterceptor)
+  @ApiOperation({ summary: 'Listar comentarios por id do usuario' })
   public async publicListByUserId(@Param('id') id: number, @Query('search') search:string, @Query('limit') limit: string='3', @Query('offset') offset:string='0', @Query('order') order:string, @Query('column') column:string, @Query('start') start:string, @Query('end') end:string) {
     const cls:ClassificationInterface = {
       search:search, 
@@ -96,10 +99,11 @@ export class CommentController {
     return new OK(dto, code.SUCCESSFULLY_FOUND, message.SUCCESSFULLY_FOUND) 
   }
 
-  @ApiOperation({ summary: 'Listar comentarios por id da publicacao' })
   @Get('/public/publication/:id')
+  @Version('1')
   @CacheTTL(20)
   @UseInterceptors(CacheInterceptor)
+  @ApiOperation({ summary: 'Listar comentarios por id da publicacao' })
   public async publicListByPublicationId(@Param('id') id: number, @Query('search') search:string, @Query('limit') limit: string='3', @Query('offset') offset:string='0', @Query('order') order:string, @Query('column') column:string, @Query('start') start:string, @Query('end') end:string) {
     const cls:ClassificationInterface = { 
       search:search, 
@@ -115,10 +119,11 @@ export class CommentController {
     return new OK(dto, code.SUCCESSFULLY_FOUND, message.SUCCESSFULLY_FOUND) 
   }
 
-  @ApiOperation({ summary: 'Buscar comentario por id' })
   @Get('/auth/:id')
+  @Version('1')
   @CacheTTL(5)
   @UseInterceptors(CacheInterceptor)
+  @ApiOperation({ summary: 'Buscar comentario por id' })
   public async authFindOneCommentById(@Param('id') id: number, @Headers('Authorization') authorization: string) {
     const decoded = await this.firebase.validateTokenByFirebase(authorization)
     const user = await this.user.getUserByUid(decoded.uid)
@@ -127,18 +132,20 @@ export class CommentController {
     return new OK([dto], code.SUCCESSFULLY_FOUND, message.SUCCESSFULLY_FOUND) 
   }
 
-  @ApiOperation({ summary: 'Buscar comentario por id' })
   @Get('/public/:id')
+  @Version('1')
   @CacheTTL(5)
   @UseInterceptors(CacheInterceptor)
+  @ApiOperation({ summary: 'Buscar comentario por id' })
   public async publicFindOneById(@Param('id') id: number) {
     let res = await this.service.publicFindOneById(id);
     const dto = this.publicFindOneMapper.toMapper(res)
     return new OK([dto], code.SUCCESSFULLY_FOUND, message.SUCCESSFULLY_FOUND) 
   }
 
-  @ApiOperation({ summary: 'Criar um comentario' })
   @Post('/auth/')
+  @Version('1')
+  @ApiOperation({ summary: 'Criar um comentario' })
   public async create(@Body() body: CreateDto, @Headers('Authorization') authorization: string) {
     const decoded = await this.firebase.validateTokenByFirebase(authorization)
     const user = await this.user.getUserByUid(decoded.uid)
@@ -149,8 +156,9 @@ export class CommentController {
     return new OK([dto], code.SUCCESSFULLY_CREATED, message.SUCCESSFULLY_CREATED) 
   }
 
-  @ApiOperation({ summary: 'Atualizar um comentario' })
   @Put('/auth/:id')
+  @Version('1')
+  @ApiOperation({ summary: 'Atualizar um comentario' })
   public async update(@Param('id') id: number, @Body() body: UpdateDto, @Headers('Authorization') authorization: string) {
     const decoded = await this.firebase.validateTokenByFirebase(authorization)
     const user = await this.user.getUserByUid(decoded.uid)
@@ -160,8 +168,9 @@ export class CommentController {
     return new OK([dto], code.SUCCESSFULLY_UPDATED, message.SUCCESSFULLY_UPDATED) 
   }
 
-  @ApiOperation({ summary: 'Deletar um comentario' })
   @Delete('/auth/:id')
+  @Version('1')
+  @ApiOperation({ summary: 'Deletar um comentario' })
   public async delete(@Param('id') id: number, @Headers('Authorization') authorization: string) {
     const decoded = await this.firebase.validateTokenByFirebase(authorization)
     const user = await this.user.getUserByUid(decoded.uid)

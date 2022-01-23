@@ -1,4 +1,4 @@
-import { Controller, Headers, Param, Get, Post, Body, Put, Delete  } from '@nestjs/common'
+import { Version, Controller, Headers, Param, Get, Post, Body, Put, Delete  } from '@nestjs/common'
 import { ApiOperation, ApiTags } from '@nestjs/swagger'
 
 import { FirebaseService } from '@modules/firebase/firebase.service'
@@ -16,8 +16,8 @@ import {
   PublicFindOneMapper
 } from './mapper'
 
-@ApiTags('user')
 @Controller('user')
+@ApiTags('user')
 export class UsuariosController {
 
   constructor(
@@ -29,6 +29,7 @@ export class UsuariosController {
   ) {}
 
   @Get('/auth/uid/')
+  @Version('1')
   @ApiOperation({ summary: 'Buscar informação do usuario por uid' })
   public async authFindOneByUid(@Headers('Authorization') authorization: string) {
     const decoded = await this.firebase.validateTokenByFirebase(authorization)
@@ -38,6 +39,7 @@ export class UsuariosController {
   }
 
   @Get('/public/uid/:uid')
+  @Version('1')
   @ApiOperation({ summary: 'Buscar informação do usuario por uid' })
   public async publicFindOneByUid(@Param('uid') uid: string) {
     const res = await this.service.publicFindOneByUid(uid);
@@ -46,6 +48,7 @@ export class UsuariosController {
   }
 
   @Get('/auth/email/')
+  @Version('1')
   @ApiOperation({ summary: 'Buscar informação do usuario por email' })
   public async authFindOneByEmail(@Headers('Authorization') authorization: string) {
     const decoded = await this.firebase.validateTokenByFirebase(authorization)
@@ -55,6 +58,7 @@ export class UsuariosController {
   }
 
   @Get('/public/email/:email')
+  @Version('1')
   @ApiOperation({ summary: 'Buscar informação do usuario por email' })
   public async publicFindOneByEmail(@Param('email') email: string) {
     const res = await this.service.publicFindOneByEmail(email);
@@ -63,6 +67,7 @@ export class UsuariosController {
   }
 
   @Post('/public/')
+  @Version('1')
   @ApiOperation({ summary: 'Criar um usuario' })
   public async create(@Body() create: CreateDto) {
     const res = await this.service.create(create);
@@ -71,6 +76,7 @@ export class UsuariosController {
   }
   
   @Put('/auth/')
+  @Version('1')
   @ApiOperation({ summary: 'Atualizar usuario por uid' })
   public async update(@Body() body:UpdateDto, @Headers('Authorization') authorization: string) {
     const decoded = await this.firebase.validateTokenByFirebase(authorization)
@@ -80,6 +86,7 @@ export class UsuariosController {
   }
 
   @Put('/auth/uid')
+  @Version('1')
   @ApiOperation({ summary: 'Atualizar uid usuario com  uid firebase' })
   public async updateUserUidWithFirebaseUid(@Body() body:UpdateUidDto, @Headers('Authorization') authorization: string) {
     const decoded = await this.firebase.validateTokenByFirebase(authorization)
@@ -92,6 +99,7 @@ export class UsuariosController {
   }
 
   @Delete('/auth/')
+  @Version('1')
   @ApiOperation({ summary: 'Excluir usuario' })
   public async deleteUserByUid(@Headers('Authorization') authorization: string) {
     const decoded = await this.firebase.validateTokenByFirebase(authorization)

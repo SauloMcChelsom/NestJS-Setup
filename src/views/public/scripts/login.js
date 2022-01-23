@@ -111,7 +111,7 @@ class Login {
   }
 
   async checkUserExistsByEmail(email) {
-    return await fetch(`/user/public/email/${email}`, {
+    return await fetch(`/v1/user/public/email/${email}`, {
       method: 'GET',
       headers: {
         'Accept': 'application/json',
@@ -139,7 +139,7 @@ class Login {
       body: JSON.stringify({ userUid: userUid,  firebaseUid:firebaseUid})
     };
 
-    return await fetch(`/user/auth/uid`, requestOptions)
+    return await fetch(`/v1/user/auth/uid`, requestOptions)
     .then(res => res.json())
     .then(async(res)=>{
       return await res
