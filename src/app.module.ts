@@ -4,7 +4,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
 import { ScheduleModule } from '@nestjs/schedule';
 
-import { TasksModule } from '@shared/tasks/tasks.module'
+//import { TasksModule } from '@shared/tasks/tasks.module'
 
 import { CommentModule } from '@modules/comment/comment.module';
 import { FirebaseModule } from '@modules/firebase/firebase.module';
@@ -33,7 +33,7 @@ import { LikeModule } from '@modules/like/like.module';
       cache: true
     }),
     TypeOrmModule.forRoot(),
-    TasksModule,
+    //TasksModule,
     FirebaseModule,
     ViewsModule,
     UserModule,

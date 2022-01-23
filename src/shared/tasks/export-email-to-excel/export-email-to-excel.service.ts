@@ -30,10 +30,10 @@ export class ExportEmailExcelService {
     /**
      * o método será executado uma vez por minuto, na marca de 45 segundos
      */
-    /*@Cron('45 * * * * *')
-    handleCron() {
+    @Cron('45 * * * * *')
+    triggerNotifications() {
       this.logger.debug('Called when the current second is 45');
-    }*/
+    }
 
     /**
      * método será chamado a cada 30segundo
@@ -43,12 +43,5 @@ export class ExportEmailExcelService {
       this.logger.debug('Called every 30 seconds');
     }
 
-    /**
-     * De segunda a sexta às 11h30
-     */
-    /*@Cron(CronExpression.MONDAY_TO_FRIDAY_AT_11_30AM)
-    handleCron() {
-      this.logger.debug('De segunda a sexta às 11h30');
-    }*/
 
 }
