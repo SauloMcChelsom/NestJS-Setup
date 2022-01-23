@@ -3,29 +3,9 @@ import { code } from '@shared/enum'
 import { ConflictExceptions } from '@root/src/shared/exception/exception'
 
 @Injectable()
-export class UtilityService {
-  constructor() {}
+export class IsValidTimestampService {
 
-  public empty(e:any) {
-    e = typeof(e) == "string" ? e.trim() :e
-    switch (e) {
-      case "":
-      case 0:
-      case "0":
-      case null:
-      case 'null':
-      case false:
-      case 'false':
-      case undefined:
-      case 'undefined':
-      case typeof(e) == "undefined":
-        return true;
-      default:
-        return false;
-    }
-  }
-
-  public isValidTimestamp(timestamp:string){
+  public run(timestamp:string){
     //'2021-12-20 23:59:59',
     const ano =  parseInt(timestamp.substr(0, 4) )
     const trace_1 = timestamp.substr(4, 1)

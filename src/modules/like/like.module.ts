@@ -1,7 +1,8 @@
 import { Module } from '@nestjs/common'
 import { TypeOrmModule } from '@nestjs/typeorm'
 
-import { UtilityModule } from '@shared/model/utility/utility.module'
+import { IsValidTimestampModule } from "@shared/utility/is-valid-timestamp/is-valid-timestamp.module"
+import { EmptyModule } from "@shared/utility/empty/empty.module"
 import { PublicationModule } from '@modules/publication/publication.module'
 import { UserModule } from '@modules/user/user.module'
 import { FirebaseModule } from '@modules/firebase/firebase.module'
@@ -17,7 +18,8 @@ import { CreateMapper } from './mapper/create.mapper'
 @Module({
   imports: [TypeOrmModule.forFeature([LikeEntity, LikeRepository]),
     FirebaseModule,
-    UtilityModule,
+    IsValidTimestampModule,
+    EmptyModule,
     PublicationModule,
     UserModule
   ],

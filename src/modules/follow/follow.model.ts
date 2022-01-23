@@ -4,7 +4,8 @@ import { REQUEST } from '@nestjs/core';
 import { Request } from 'express';
 
 import { code, message } from '@shared/enum'
-import { UtilityService } from "@shared/model/utility/utility.service"
+import { IsValidTimestampService } from "@shared/utility/is-valid-timestamp/is-valid-timestamp.service"
+import { EmptyService } from "@shared/utility/empty/empty.service"
 import { OK, InternalServerErrorExceptions, NotFoundExceptions, Exception } from '@root/src/shared/exception/exception'
 
 import { FollowRepository } from './follow.repository'
@@ -16,7 +17,8 @@ export class FollowModel {
   constructor(
     @InjectRepository(FollowRepository) private readonly repository: FollowRepository,
     @Inject(REQUEST) private readonly request: Request,
-    private utility:UtilityService
+    private isValidTimestamp:IsValidTimestampService,
+    private empty:EmptyService
   ){}
 
   public async listAllUserFollowPageByIdOfPage(userId:number, search:string='', limit:number=3, offset:number=0, order:string='ASC', column:string='id', start:string='', end:string=''){
@@ -26,7 +28,7 @@ export class FollowModel {
         limit = 15
       }
     
-      if(this.utility.empty(column)){
+      if(this.empty.run(column)){
         column = "id"
       }
 
@@ -35,11 +37,11 @@ export class FollowModel {
       }
 
       if(start){
-        start = this.utility.isValidTimestamp(start)
+        start = this.isValidTimestamp.run(start)
       }
 
       if(end){
-        end = this.utility.isValidTimestamp(end)
+        end = this.isValidTimestamp.run(end)
       }
       
       const res = await this.repository.listAllUserFollowPageByIdOfPage(userId, search, limit, offset, order, column, start, end)
@@ -73,7 +75,7 @@ export class FollowModel {
         limit = 15
       }
     
-      if(this.utility.empty(column)){
+      if(this.empty.run(column)){
         column = "id"
       }
 
@@ -82,11 +84,11 @@ export class FollowModel {
       }
 
       if(start){
-        start = this.utility.isValidTimestamp(start)
+        start = this.isValidTimestamp.run(start)
       }
 
       if(end){
-        end = this.utility.isValidTimestamp(end)
+        end = this.isValidTimestamp.run(end)
       }
                                         
       const res = await this.repository.listAllPageUserFollowByIdOfUser(userId, search, limit, offset, order, column, start, end)

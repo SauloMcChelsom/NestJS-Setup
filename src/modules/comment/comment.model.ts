@@ -3,7 +3,8 @@ import { InjectRepository} from '@nestjs/typeorm'
 import { REQUEST } from '@nestjs/core';
 import { Request } from 'express';
 
-import { UtilityService } from "@shared/model/utility/utility.service"
+import { IsValidTimestampService } from "@shared/utility/is-valid-timestamp/is-valid-timestamp.service"
+import { EmptyService } from "@shared/utility/empty/empty.service"
 import { code, message } from '@shared/enum'
 import { OK, InternalServerErrorExceptions, NotFoundExceptions, ConflictExceptions, Exception } from '@root/src/shared/exception/exception'
 
@@ -17,7 +18,8 @@ export class CommentModel {
   constructor(
     @InjectRepository(CommentRepository) private readonly repository: CommentRepository,
     @Inject(REQUEST) private readonly request: Request,
-    private utility:UtilityService
+    private isValidTimestamp:IsValidTimestampService,
+    private empty:EmptyService
   ) {}
 
   public async create(body:any){
@@ -70,7 +72,7 @@ export class CommentModel {
         limit = 15
       }
     
-      if(this.utility.empty(column)){
+      if(this.empty.run(column)){
         column = "id"
       }
 
@@ -79,11 +81,11 @@ export class CommentModel {
       }
 
       if(start){
-        start = this.utility.isValidTimestamp(start)
+        start = this.isValidTimestamp.run(start)
       }
 
       if(end){
-        end = this.utility.isValidTimestamp(end)
+        end = this.isValidTimestamp.run(end)
       }
       
       const res = await this.repository.listByUserId(userId, search, limit, offset, order, column, start, end)
@@ -117,7 +119,7 @@ export class CommentModel {
         limit = 15
       }
 
-      if(this.utility.empty(column)){
+      if(this.empty.run(column)){
         column = "id"
       }
 
@@ -126,11 +128,11 @@ export class CommentModel {
       }
 
       if(start){
-        start = this.utility.isValidTimestamp(start)
+        start = this.isValidTimestamp.run(start)
       }
 
       if(end){
-        end = this.utility.isValidTimestamp(end)
+        end = this.isValidTimestamp.run(end)
       }
 
       console.log(publicationId, search, limit, offset, order, column, start, end)

@@ -3,7 +3,8 @@ import { InjectRepository} from '@nestjs/typeorm'
 import { REQUEST } from '@nestjs/core';
 import { Request } from 'express';
 
-import { UtilityService } from "@shared/model/utility/utility.service"
+import { IsValidTimestampService } from "@shared/utility/is-valid-timestamp/is-valid-timestamp.service"
+import { EmptyService } from "@shared/utility/empty/empty.service"
 import { code, message } from '@shared/enum'
 import { OK, InternalServerErrorExceptions, NotFoundExceptions, ConflictExceptions, Exception } from '@root/src/shared/exception/exception'
 
@@ -18,7 +19,8 @@ export class PageModel {
   constructor(
     @InjectRepository(PageRepository) private readonly repository: PageRepository,
     @Inject(REQUEST) private readonly request: Request,
-    private utility:UtilityService
+    private isValidTimestamp:IsValidTimestampService,
+    private empty:EmptyService
   ) {}
 
   public async create(body:CreateInterface){
@@ -91,7 +93,7 @@ export class PageModel {
         limit = 15
       }
     
-      if(this.utility.empty(column)){
+      if(this.empty.run(column)){
         column = "id"
       }
 
@@ -100,11 +102,11 @@ export class PageModel {
       }
 
       if(start){
-        start = this.utility.isValidTimestamp(start)
+        start = this.isValidTimestamp.run(start)
       }
 
       if(end){
-        end = this.utility.isValidTimestamp(end)
+        end = this.isValidTimestamp.run(end)
       }
       
       const res = await this.repository.listAll(search, limit, offset, order, column, start, end)

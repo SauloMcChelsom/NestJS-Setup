@@ -2,6 +2,10 @@ import { CacheModule, CacheInterceptor, Module } from '@nestjs/common';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
+import { ScheduleModule } from '@nestjs/schedule';
+
+import { TasksModule } from '@shared/tasks/tasks.module'
+
 import { CommentModule } from '@modules/comment/comment.module';
 import { FirebaseModule } from '@modules/firebase/firebase.module';
 import { ViewsModule } from '@root/src/views/views.module';
@@ -11,10 +15,11 @@ import { FollowModule } from '@root/src/modules/follow/follow.module';
 import { PublicationModule } from '@modules/publication/publication.module';
 import { LikeModule } from '@modules/like/like.module';
 
-import { CatsModule } from './modules/LEARN-NESTJS/INTRODUCTION/cats.module'
+//import { CatsModule } from './modules/LEARN-NESTJS/INTRODUCTION/cats.module'
 
 @Module({
   imports: [
+    ScheduleModule.forRoot(),
     CacheModule.register({
       ttl: 0.1, // seconds
       max: 15, // maximum number of items in cache
@@ -28,6 +33,7 @@ import { CatsModule } from './modules/LEARN-NESTJS/INTRODUCTION/cats.module'
       cache: true
     }),
     TypeOrmModule.forRoot(),
+    TasksModule,
     FirebaseModule,
     ViewsModule,
     UserModule,
@@ -35,8 +41,7 @@ import { CatsModule } from './modules/LEARN-NESTJS/INTRODUCTION/cats.module'
     FollowModule,
     PublicationModule,
     LikeModule,
-    CommentModule,
-    CatsModule
+    CommentModule
   ],
   controllers: [],
   providers: [

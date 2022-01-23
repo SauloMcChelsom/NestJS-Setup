@@ -11,7 +11,9 @@ npm i cross-env
 npm i swagger-ui-express
 npm install pg --save
 npm install class-transformer
+npm install --save @nestjs/schedule
+npm install cache-manager
 npm i @types/hbs
 npm i @types/bcryptjs
-npm install cache-manager
 npm install -D @types/cache-manager
+npm install --save-dev @types/cron
