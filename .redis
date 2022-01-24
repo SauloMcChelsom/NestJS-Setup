@@ -1,0 +1,38 @@
+#download for windows
+https://github.com/microsoftarchive/redis/releases
+
+execute ./redis-server.exe
+execute ./redis-cli.exe
+
+#alterar senha
+config set requirepass p@ss$12E45
+
+#para fazer login via redis-cli
+AUTH p@ss$12E45
+
+#acessar no serviço remoto
+redis-cli -h host -p port -a password
+redis-cli -h 127.0.0.1 -p 6379 -a "mypass"
+
+#start
+cd C:/workspaces/redis/
+redis-server.exe
+
+#cli
+cd C:/workspaces/redis/
+redis-cli.exe
+
+#
+#
+#
+#
+#
+#
+
+#install via Windows Subsystem for Linux (WSL)
+> sudo apt-get update
+> sudo apt-get upgrade
+> sudo apt-get install redis-server
+> redis-cli -v
+> redis-cli
+> redis-server

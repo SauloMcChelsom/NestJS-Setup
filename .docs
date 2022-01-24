@@ -1,5 +1,4 @@
-nest g resource
-
+https://github.com/microsoftarchive/redis/releases
 
 https://orkhan.gitbook.io/typeorm/docs/select-query-builder
 https://www.tutorialspoint.com/typeorm/typeorm_query_builder.htm
@@ -26,7 +25,7 @@ share screen and video call
 criar audio
 
 
-FALTA
+#FALTA
 -fazer a documentação do projeto
 -revisar tutorial em https://docs.nestjs.com/ (*)
 -testes basicos

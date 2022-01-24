@@ -1,11 +1,8 @@
 import { Module } from '@nestjs/common'
-import { ExportEmailExcelModule } from './export-email-to-excel/export-email-to-excel.module'
-import { SendEmailUpdateCredentialsModule } from './send-email-to-update-credentials/send-email-to-update-credentials.module'
-
+import { SendMailModule } from './send-mail.monday_to_fridat_at_11_30am/send-mail.module'
 @Module({
   imports: [
-    ExportEmailExcelModule,
-    SendEmailUpdateCredentialsModule
+    SendMailModule
   ],
   providers: [],
   exports: []

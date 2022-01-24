@@ -3,8 +3,10 @@ import { APP_INTERCEPTOR } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
 import { ScheduleModule } from '@nestjs/schedule';
+import { BullModule } from '@nestjs/bull';
 
-//import { TasksModule } from '@shared/tasks/tasks.module'
+import { TasksModule } from '@shared/tasks/tasks.module'
+import { JobsModule } from '@shared/jobs/jobs.module'
 
 import { CommentModule } from '@modules/comment/comment.module';
 import { FirebaseModule } from '@modules/firebase/firebase.module';
@@ -14,8 +16,6 @@ import { PageModule } from '@modules/page/page.module';
 import { FollowModule } from '@root/src/modules/follow/follow.module';
 import { PublicationModule } from '@modules/publication/publication.module';
 import { LikeModule } from '@modules/like/like.module';
-
-//import { CatsModule } from './modules/LEARN-NESTJS/INTRODUCTION/cats.module'
 
 @Module({
   imports: [
@@ -33,7 +33,14 @@ import { LikeModule } from '@modules/like/like.module';
       cache: true
     }),
     TypeOrmModule.forRoot(),
-    //TasksModule,
+    BullModule.forRoot({
+      redis: {
+        host: process.env.REDIS_HOST,
+        port: parseInt(process.env.REDIS_PORT)
+      },
+    }),
+    TasksModule,
+    JobsModule,
     FirebaseModule,
     ViewsModule,
     UserModule,

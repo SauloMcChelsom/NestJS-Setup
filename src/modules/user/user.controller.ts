@@ -5,6 +5,7 @@ import { FirebaseService } from '@modules/firebase/firebase.service'
 import { OK } from '@root/src/shared/exception/exception'
 import { code, message } from '@shared/enum'
 
+import { SendEmailService } from'@shared/jobs/send-mail/send-mail.service'
 import { UserService } from './user.service'
 import { UpdateDto } from './dto/update.dto'
 import { CreateDto } from './dto/create.dto'
@@ -26,6 +27,7 @@ export class UsuariosController {
     private createMapper:CreateMapper,
     private authFindOneMapper:AuthFindOneMapper,
     private publicFindOneMapper:PublicFindOneMapper,
+    private sendEmailService:SendEmailService
   ) {}
 
   @Get('/auth/uid/')
@@ -73,6 +75,14 @@ export class UsuariosController {
     const res = await this.service.create(create);
     const dto = this.createMapper.toMapper(res)
     return new OK([dto], code.USER_REGISTERED, message.USER_REGISTERED)
+  }
+
+  @Post('/auth/send-mail')
+  @Version('1')
+  @ApiOperation({ summary: 'Criar um usuario' })
+  public async authSendMail(@Body() create: CreateDto) {
+    await this.sendEmailService.sendMail(create);
+    return new OK([{message:'Foi adicionado a uma fila'}], code.USER_REGISTERED, message.USER_REGISTERED)
   }
   
   @Put('/auth/')
