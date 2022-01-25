@@ -1,21 +1,24 @@
-import { Controller, Headers, Param, Get, Post, Body, Put, Delete  } from '@nestjs/common'
+import { Version, Controller, Headers, Param, Get, Post, Body, Put, Delete  } from '@nestjs/common'
 import { ApiOperation, ApiTags } from '@nestjs/swagger'
 
 import { FirebaseService } from '@modules/firebase/firebase.service'
 import { OK } from '@root/src/shared/exception/exception'
 import { code, message } from '@shared/enum'
 
+import { SendEmailService } from'@shared/jobs/send-mail/send-mail.service'
 import { UserService } from './user.service'
 import { UpdateDto } from './dto/update.dto'
-import { CreateDto,  } from './dto/create.dto'
+import { CreateDto } from './dto/create.dto'
+import { UpdateUserUidWithFirebaseUidDto as UpdateUidDto } from './dto/update-user-uid-with-firebase-uid.dto'
+import { UpdateUserUidWithFirebaseUidInterface as UpdateUidInterface } from './interface'
 import { 
   CreateMapper,
   AuthFindOneMapper,
   PublicFindOneMapper
 } from './mapper'
 
-@ApiTags('user')
 @Controller('user')
+@ApiTags('user')
 export class UsuariosController {
 
   constructor(
@@ -24,9 +27,11 @@ export class UsuariosController {
     private createMapper:CreateMapper,
     private authFindOneMapper:AuthFindOneMapper,
     private publicFindOneMapper:PublicFindOneMapper,
+    private sendEmailService:SendEmailService
   ) {}
 
   @Get('/auth/uid/')
+  @Version('1')
   @ApiOperation({ summary: 'Buscar informação do usuario por uid' })
   public async authFindOneByUid(@Headers('Authorization') authorization: string) {
     const decoded = await this.firebase.validateTokenByFirebase(authorization)
@@ -36,6 +41,7 @@ export class UsuariosController {
   }
 
   @Get('/public/uid/:uid')
+  @Version('1')
   @ApiOperation({ summary: 'Buscar informação do usuario por uid' })
   public async publicFindOneByUid(@Param('uid') uid: string) {
     const res = await this.service.publicFindOneByUid(uid);
@@ -44,6 +50,7 @@ export class UsuariosController {
   }
 
   @Get('/auth/email/')
+  @Version('1')
   @ApiOperation({ summary: 'Buscar informação do usuario por email' })
   public async authFindOneByEmail(@Headers('Authorization') authorization: string) {
     const decoded = await this.firebase.validateTokenByFirebase(authorization)
@@ -53,6 +60,7 @@ export class UsuariosController {
   }
 
   @Get('/public/email/:email')
+  @Version('1')
   @ApiOperation({ summary: 'Buscar informação do usuario por email' })
   public async publicFindOneByEmail(@Param('email') email: string) {
     const res = await this.service.publicFindOneByEmail(email);
@@ -61,14 +69,24 @@ export class UsuariosController {
   }
 
   @Post('/public/')
+  @Version('1')
   @ApiOperation({ summary: 'Criar um usuario' })
   public async create(@Body() create: CreateDto) {
     const res = await this.service.create(create);
     const dto = this.createMapper.toMapper(res)
     return new OK([dto], code.USER_REGISTERED, message.USER_REGISTERED)
   }
+
+  @Post('/auth/send-mail')
+  @Version('1')
+  @ApiOperation({ summary: 'Criar um usuario' })
+  public async authSendMail(@Body() create: CreateDto) {
+    await this.sendEmailService.sendMail(create);
+    return new OK([{message:'Foi adicionado a uma fila'}], code.USER_REGISTERED, message.USER_REGISTERED)
+  }
   
   @Put('/auth/')
+  @Version('1')
   @ApiOperation({ summary: 'Atualizar usuario por uid' })
   public async update(@Body() body:UpdateDto, @Headers('Authorization') authorization: string) {
     const decoded = await this.firebase.validateTokenByFirebase(authorization)
@@ -77,11 +95,25 @@ export class UsuariosController {
     return new OK([dto], code.USER_UPDATED, message.USER_UPDATED) 
   }
 
+  @Put('/auth/uid')
+  @Version('1')
+  @ApiOperation({ summary: 'Atualizar uid usuario com  uid firebase' })
+  public async updateUserUidWithFirebaseUid(@Body() body:UpdateUidDto, @Headers('Authorization') authorization: string) {
+    const decoded = await this.firebase.validateTokenByFirebase(authorization)
+    const updateUid:UpdateUidInterface = {
+      uid: body.firebaseUid
+    }
+    const res = await this.service.updateUserUidWithFirebaseUid(body.userUid, updateUid);
+    const dto = this.authFindOneMapper.toMapper(res)
+    return new OK([dto], code.USER_UPDATED, message.USER_UPDATED) 
+  }
+
   @Delete('/auth/')
+  @Version('1')
   @ApiOperation({ summary: 'Excluir usuario' })
   public async deleteUserByUid(@Headers('Authorization') authorization: string) {
     const decoded = await this.firebase.validateTokenByFirebase(authorization)
     await this.service.deleteByUid(decoded.uid);
     return new OK([], code.DELETED_SUCCESSFULLY, message.DELETED_SUCCESSFULLY) 
   }
-}
+} 

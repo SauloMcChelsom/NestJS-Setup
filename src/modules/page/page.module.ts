@@ -2,7 +2,8 @@ import { Module } from '@nestjs/common'
 import { TypeOrmModule } from '@nestjs/typeorm'
 
 import { FirebaseModule } from '@modules/firebase/firebase.module'
-import { UtilityModule } from "@shared/model/utility/utility.module"
+import { IsValidTimestampModule } from "@shared/utility/is-valid-timestamp/is-valid-timestamp.module"
+import { EmptyModule } from "@shared/utility/empty/empty.module"
 import { UserModule } from '@modules/user/user.module'
 import { PageEntity } from '@entity/page.entity'
 
@@ -22,7 +23,8 @@ import {
 @Module({
   imports: [TypeOrmModule.forFeature([PageEntity, PageRepository]),
     UserModule,
-    UtilityModule,
+    IsValidTimestampModule,
+    EmptyModule,
     FirebaseModule
   ],
   controllers: [PageController],

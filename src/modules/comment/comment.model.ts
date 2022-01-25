@@ -3,7 +3,8 @@ import { InjectRepository} from '@nestjs/typeorm'
 import { REQUEST } from '@nestjs/core';
 import { Request } from 'express';
 
-import { UtilityService } from "@shared/model/utility/utility.service"
+import { IsValidTimestampService } from "@shared/utility/is-valid-timestamp/is-valid-timestamp.service"
+import { EmptyService } from "@shared/utility/empty/empty.service"
 import { code, message } from '@shared/enum'
 import { OK, InternalServerErrorExceptions, NotFoundExceptions, ConflictExceptions, Exception } from '@root/src/shared/exception/exception'
 
@@ -17,7 +18,8 @@ export class CommentModel {
   constructor(
     @InjectRepository(CommentRepository) private readonly repository: CommentRepository,
     @Inject(REQUEST) private readonly request: Request,
-    private utility:UtilityService
+    private isValidTimestamp:IsValidTimestampService,
+    private empty:EmptyService
   ) {}
 
   public async create(body:any){
@@ -41,7 +43,7 @@ export class CommentModel {
     }
   }
 
-  public async findOneById(id:string){
+  public async findOneById(id:number){
     try{
       const res = await this.repository.findOne(id)
       if(res){
@@ -63,14 +65,14 @@ export class CommentModel {
   }
 
 
-  public async listByUserId(userId:string, search:string='', limit:number=3, offset:number=0, order:string='ASC', column:string='id', start:string='', end:string=''){
+  public async listByUserId(userId:number, search:string='', limit:number=3, offset:number=0, order:string='ASC', column:string='id', start:string='', end:string=''){
     try{
 
       if(limit > 15){
         limit = 15
       }
     
-      if(this.utility.empty(column)){
+      if(this.empty.run(column)){
         column = "id"
       }
 
@@ -79,11 +81,11 @@ export class CommentModel {
       }
 
       if(start){
-        start = this.utility.isValidTimestamp(start)
+        start = this.isValidTimestamp.run(start)
       }
 
       if(end){
-        end = this.utility.isValidTimestamp(end)
+        end = this.isValidTimestamp.run(end)
       }
       
       const res = await this.repository.listByUserId(userId, search, limit, offset, order, column, start, end)
@@ -110,14 +112,14 @@ export class CommentModel {
     }
   }
 
-  public async listByPublicationId(publicationId:string, search:string='', limit:number=3, offset:number=0, order:string='ASC', column:string='id', start:string='', end:string=''){
+  public async listByPublicationId(publicationId:number, search:string='', limit:number=3, offset:number=0, order:string='ASC', column:string='id', start:string='', end:string=''){
     try{
 
       if(limit > 15){
         limit = 15
       }
 
-      if(this.utility.empty(column)){
+      if(this.empty.run(column)){
         column = "id"
       }
 
@@ -126,12 +128,14 @@ export class CommentModel {
       }
 
       if(start){
-        start = this.utility.isValidTimestamp(start)
+        start = this.isValidTimestamp.run(start)
       }
 
       if(end){
-        end = this.utility.isValidTimestamp(end)
+        end = this.isValidTimestamp.run(end)
       }
+
+      console.log(publicationId, search, limit, offset, order, column, start, end)
 
       const res = await this.repository.listByPublicationId(publicationId, search, limit, offset, order, column, start, end)
       const count = await this.repository.countListByPublicationId(publicationId, search, start, end)
@@ -147,6 +151,7 @@ export class CommentModel {
       })
 
     }catch(e:any){
+      console.log(e)
       throw new Exception({
         code:e.response.error.code,
         message:e.response.error.message,
@@ -157,7 +162,7 @@ export class CommentModel {
     }
   }
 
-  public async deleteById(id:string){
+  public async deleteById(id:number){
     try{
       const res = await this.repository.delete(id);
       if(res){
@@ -191,7 +196,7 @@ export class CommentModel {
     }
   }
 
-  public async validateID(id:string, userId:string){
+  public async validateID(id:number, userId:number){
     try{
       const res = await this.repository.findOne({ where:{ id: id, user_id:userId }})
       if(res){

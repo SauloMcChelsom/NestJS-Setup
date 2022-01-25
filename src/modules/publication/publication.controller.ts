@@ -1,4 +1,4 @@
-import { Controller, Headers, Param, Get, Query, Post, Body, Put  } from '@nestjs/common'
+import { Version, Controller, Headers, Param, Get, Query, Post, Body, Put  } from '@nestjs/common'
 import { ApiOperation, ApiTags } from '@nestjs/swagger'
 
 import { FirebaseService } from '@modules/firebase/firebase.service'
@@ -20,8 +20,8 @@ import {
   PublicFindOneMapper
 } from './mapper'
 
-@ApiTags('publication')
 @Controller('publication')
+@ApiTags('publication')
 export class PublicationController {
   
   constructor(
@@ -35,13 +35,15 @@ export class PublicationController {
     private publicFindOneMapper:PublicFindOneMapper,
   ) {}
 
-  @ApiOperation({ summary: 'List um feed' })
+
   @Get('/auth/feed')
-  public async authListFeed(@Headers('Authorization') authorization: string, @Query('limit') limit:number, @Query('offset') offset:number, @Query('order') order:string, @Query('column') column:string, @Query('start') start:string, @Query('end') end:string) {
+  @Version('1')
+  @ApiOperation({ summary: 'List um feed' })
+  public async authListFeed(@Headers('Authorization') authorization: string, @Query('limit') limit: string='3', @Query('offset') offset:string='0', @Query('order') order:string, @Query('column') column:string, @Query('start') start:string, @Query('end') end:string) {
     const decoded = await this.firebase.validateTokenByFirebase(authorization)
     const cls:ClassificationInterface = {
-      limit:limit, 
-      offset:offset, 
+      limit:parseInt(limit) ? parseInt(limit) : 5, 
+      offset:parseInt(offset) ? parseInt(offset) : 0,
       order:order, 
       column:column, 
       start:start, 
@@ -52,12 +54,14 @@ export class PublicationController {
     return new OK(dto, code.SUCCESSFULLY_FOUND, message.SUCCESSFULLY_FOUND) 
   }
 
-  @ApiOperation({ summary: 'List um feed' })
+ 
   @Get('/public/feed')
-  public async publicListFeed(@Query('limit') limit:number, @Query('offset') offset:number, @Query('order') order:string, @Query('column') column:string, @Query('start') start:string, @Query('end') end:string) {
+  @Version('1')
+  @ApiOperation({ summary: 'List um feed' })
+  public async publicListFeed(@Query('limit') limit: string='3', @Query('offset') offset:string='0', @Query('order') order:string, @Query('column') column:string, @Query('start') start:string, @Query('end') end:string) {
     const cls:ClassificationInterface = {
-      limit:limit, 
-      offset:offset, 
+      limit:parseInt(limit) ? parseInt(limit) : 5, 
+      offset:parseInt(offset) ? parseInt(offset) : 0,
       order:order, 
       column:column, 
       start:start, 
@@ -68,31 +72,37 @@ export class PublicationController {
     return new OK(dto, code.SUCCESSFULLY_FOUND, message.SUCCESSFULLY_FOUND) 
   }
 
-  @ApiOperation({ summary: 'Buscar por id da publicação' })
+
   @Get('/auth/:id')
-  public async authFindOneById(@Param('id') id: string, @Headers('Authorization') authorization: string) {
+  @Version('1')
+  @ApiOperation({ summary: 'Buscar por id da publicação' })
+  public async authFindOneById(@Param('id') id: number, @Headers('Authorization') authorization: string) {
     const decoded = await this.firebase.validateTokenByFirebase(authorization)
     const res = await this.service.authFindOneById(id);
     const dto = this.authFindOneMapper.toMapper(res)
     return new OK([dto], code.SUCCESSFULLY_FOUND, message.SUCCESSFULLY_FOUND) 
   }
 
-  @ApiOperation({ summary: 'Buscar por id da publicação' })
+
   @Get('/public/:id')
-  public async publicfindOneById(@Param('id') id: string) {
+  @Version('1')
+  @ApiOperation({ summary: 'Buscar por id da publicação' })
+  public async publicfindOneById(@Param('id') id: number) {
     const res =  await this.service.publicfindOneById(id);
     const dto = this.publicFindOneMapper.toMapper(res)
     return new OK([dto], code.SUCCESSFULLY_FOUND, message.SUCCESSFULLY_FOUND) 
   }
 
-  @ApiOperation({ summary: 'Lista de publicação pesquisando por texto' })
+
   @Get('/auth/search/text')
-  public async authListSearchByText(@Headers('Authorization') authorization: string, @Query('text') search:string, @Query('limit') limit:number, @Query('offset') offset:number, @Query('order') order:string, @Query('column') column:string, @Query('start') start:string, @Query('end') end:string) {
+  @Version('1')
+  @ApiOperation({ summary: 'Lista de publicação pesquisando por texto' })
+  public async authListSearchByText(@Headers('Authorization') authorization: string, @Query('text') search:string, @Query('limit') limit: string='3', @Query('offset') offset:string='0', @Query('order') order:string, @Query('column') column:string, @Query('start') start:string, @Query('end') end:string) {
     const decoded = await this.firebase.validateTokenByFirebase(authorization)
     const cls:ClassificationInterface = { 
       search:search, 
-      limit:limit, 
-      offset:offset, 
+      limit:parseInt(limit) ? parseInt(limit) : 5, 
+      offset:parseInt(offset) ? parseInt(offset) : 0,
       order:order, 
       column:column, 
       start:start, 
@@ -103,13 +113,15 @@ export class PublicationController {
     return new OK(dto, code.SUCCESSFULLY_FOUND, message.SUCCESSFULLY_FOUND) 
   }
 
-  @ApiOperation({ summary: 'Lista de publicação pesquisando por texto' })
+
   @Get('/public/search/text')
-  public async publicListSearchByText(@Query('search') search:string, @Query('limit') limit:number, @Query('offset') offset:number, @Query('order') order:string, @Query('column') column:string, @Query('start') start:string, @Query('end') end:string) {
+  @Version('1')
+  @ApiOperation({ summary: 'Lista de publicação pesquisando por texto' })
+  public async publicListSearchByText(@Query('search') search:string, @Query('limit') limit: string='3', @Query('offset') offset:string='0', @Query('order') order:string, @Query('column') column:string, @Query('start') start:string, @Query('end') end:string) {
     const cls:ClassificationInterface = { 
       search:search, 
-      limit:limit, 
-      offset:offset, 
+      limit:parseInt(limit) ? parseInt(limit) : 5, 
+      offset:parseInt(offset) ? parseInt(offset) : 0,
       order:order, 
       column:column, 
       start:start, 
@@ -120,8 +132,10 @@ export class PublicationController {
     return new OK(dto, code.SUCCESSFULLY_FOUND, message.SUCCESSFULLY_FOUND) 
   }
 
-  @ApiOperation({ summary: 'Criar uma nova publicaçao' })
+
   @Post('/auth/')
+  @Version('1')
+  @ApiOperation({ summary: 'Criar uma nova publicaçao' })
   public async create(@Body() body: CreateDto, @Headers('Authorization') authorization: string) {
     const decoded = await this.firebase.validateTokenByFirebase(authorization)
     const user = await this.user.getUserByUid(decoded.uid)
@@ -137,8 +151,10 @@ export class PublicationController {
     return new OK([dto], code.SUCCESSFULLY_FOUND, message.SUCCESSFULLY_FOUND) 
   }
 
-  @ApiOperation({ summary: 'Alterar o texto da publicaçao' })
+
   @Put('/auth/:id')
+  @Version('1')
+  @ApiOperation({ summary: 'Alterar o texto da publicaçao' })
   public async update(@Body() body: UpdateDto, @Param('id') id: number, @Headers('Authorization') authorization: string) {
     const decoded = await this.firebase.validateTokenByFirebase(authorization)
     const user = await this.user.getUserByUid(decoded.uid)

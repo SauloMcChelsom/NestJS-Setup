@@ -1,4 +1,4 @@
-import { Controller, Headers, Post, Body } from '@nestjs/common'
+import { Version, Controller, Headers, Post, Body } from '@nestjs/common'
 import { ApiOperation, ApiTags } from '@nestjs/swagger'
 
 import { FirebaseService } from '@modules/firebase/firebase.service'
@@ -11,8 +11,8 @@ import { CreateDto } from './dto/create.dto'
 import { CreateInterface } from './interface/create.interface'
 import { CreateMapper } from './mapper/create.mapper'
 
-@ApiTags('like')
 @Controller('like')
+@ApiTags('like')
 export class LikeController {
 
   constructor(
@@ -22,8 +22,10 @@ export class LikeController {
     private createMapper:CreateMapper
   ) {}
 
-  @ApiOperation({ summary: 'Curtir uma publicação' })
+
   @Post('/auth/')
+  @Version('1')
+  @ApiOperation({ summary: 'Curtir uma publicação' })
   public async create(@Body() body: CreateDto, @Headers('Authorization') authorization: string) {
     const decoded = await this.firebase.validateTokenByFirebase(authorization)
     const user = await this.user.getUserByUid(decoded.uid)

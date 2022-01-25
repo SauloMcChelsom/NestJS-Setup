@@ -1,4 +1,4 @@
-import { Controller, Headers, Param, Get, Post, Body, Query } from '@nestjs/common'
+import { Version, Controller, Headers, Param, Get, Post, Body, Query } from '@nestjs/common'
 import { ApiOperation, ApiTags } from '@nestjs/swagger'
 
 import { FirebaseService } from '@modules/firebase/firebase.service'
@@ -12,8 +12,8 @@ import { CreateDto } from './dto/create.dto'
 import { CreateInterface } from './interface/create.interface'
 import { AuthListMapper, CreateMapper } from './mapper'
 
-@ApiTags('follow')
 @Controller('follow')
+@ApiTags('follow')
 export class FollowController {
 
   constructor(
@@ -24,14 +24,15 @@ export class FollowController {
     private createMapper:CreateMapper
   ) {}
   
-  @ApiOperation({ summary: 'Listar usuarios da pagina' })
   @Get('/auth/page/:id')
-  public async authListByIdPage(@Param('id') id: string, @Headers('Authorization') authorization: string, @Query('search') search:string, @Query('limit') limit:number, @Query('offset') offset:number, @Query('order') order:string, @Query('column') column:string, @Query('start') start:string, @Query('end') end:string) {
+  @Version('1')
+  @ApiOperation({ summary: 'Listar usuarios da pagina' })
+  public async authListByIdPage(@Param('id') id: number, @Headers('Authorization') authorization: string, @Query('search') search:string, @Query('limit') limit: string='3', @Query('offset') offset:string='0', @Query('order') order:string, @Query('column') column:string, @Query('start') start:string, @Query('end') end:string) {
     const decoded = await this.firebase.validateTokenByFirebase(authorization)
     const cls:ClassificationInterface = {
       search:search, 
-      limit:limit, 
-      offset:offset, 
+      limit:parseInt(limit) ? parseInt(limit) : 5, 
+      offset:parseInt(offset) ? parseInt(offset) : 0, 
       order:order, 
       column:column, 
       start:start, 
@@ -42,14 +43,15 @@ export class FollowController {
     return new OK(dto, code.SUCCESSFULLY_FOUND, message.SUCCESSFULLY_FOUND) 
   }
 
-  @ApiOperation({ summary: 'Listar as paginas que o usuario segue' })
   @Get('/auth/user/:id')
-  public async authListByIdUser(@Param('id') id: string, @Headers('Authorization') authorization: string, @Query('search') search:string, @Query('limit') limit:number, @Query('offset') offset:number, @Query('order') order:string, @Query('column') column:string, @Query('start') start:string, @Query('end') end:string) {
+  @Version('1')
+  @ApiOperation({ summary: 'Listar as paginas que o usuario segue' })
+  public async authListByIdUser(@Param('id') id: number, @Headers('Authorization') authorization: string, @Query('search') search:string, @Query('limit') limit: string='3', @Query('offset') offset:string='0', @Query('order') order:string, @Query('column') column:string, @Query('start') start:string, @Query('end') end:string) {
     const decoded = await this.firebase.validateTokenByFirebase(authorization)
     const cls:ClassificationInterface = {
       search:search, 
-      limit:limit, 
-      offset:offset, 
+      limit:parseInt(limit) ? parseInt(limit) : 5, 
+      offset:parseInt(offset) ? parseInt(offset) : 0, 
       order:order, 
       column:column, 
       start:start, 
@@ -60,8 +62,9 @@ export class FollowController {
     return new OK(dto, code.SUCCESSFULLY_FOUND, message.SUCCESSFULLY_FOUND) 
   }
 
-  @ApiOperation({ summary: 'Seguir a pagina' })
   @Post('/auth/')
+  @Version('1')
+  @ApiOperation({ summary: 'Seguir a pagina' })
   public async create(@Body() body: CreateDto, @Headers('Authorization') authorization: string) {
     const decoded = await this.firebase.validateTokenByFirebase(authorization)
     const user = await this.user.getUserByUid(decoded.uid)

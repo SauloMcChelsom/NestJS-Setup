@@ -1,4 +1,4 @@
-import { Controller, Headers, Param, Get, Query, Post, Body, Put  } from '@nestjs/common'
+import { Version, Controller, Headers, Param, Get, Query, Post, Body, Put  } from '@nestjs/common'
 import { ApiOperation, ApiTags } from '@nestjs/swagger'
 
 import { FirebaseService } from '@modules/firebase/firebase.service'
@@ -19,8 +19,8 @@ import {
   PublicFindOneMapper
 } from './mapper'
 
-@ApiTags('page')
 @Controller('page')
+@ApiTags('page')
 export class PageController {
 
   constructor(
@@ -36,6 +36,7 @@ export class PageController {
 
   @ApiOperation({ summary: 'Buscar por nome da pagina' })
   @Get('/auth/name/:page')
+  @Version('1')
   public async authFindOneByName(@Param('page') name: string, @Headers('Authorization') authorization: string) {
     const decoded = await this.firebase.validateTokenByFirebase(authorization)
     const res = await this.service.authFindOneByName(name);
@@ -43,16 +44,19 @@ export class PageController {
     return new OK([dto], code.SUCCESSFULLY_CREATED, message.SUCCESSFULLY_CREATED) 
   }
 
-  @ApiOperation({ summary: 'Buscar por nome da pagina' })
   @Get('/public/name/:page')
+  @Version('1')
+  @ApiOperation({ summary: 'Buscar por nome da pagina' })
   public async publicfindOneByName(@Param('page') name: string) {
     const res = await this.service.publicfindOneByName(name);
     const dto = this.publicFindOneMapper.toMapper(res)
     return new OK([dto], code.SUCCESSFULLY_FOUND, message.SUCCESSFULLY_FOUND) 
   }
 
-  @ApiOperation({ summary: 'Buscar por id da pagina' })
+
   @Get('/auth/:id')
+  @Version('1')
+  @ApiOperation({ summary: 'Buscar por id da pagina' })
   public async authFindOneById(@Param('id') id: number, @Headers('Authorization') authorization: string) {
     const decoded = await this.firebase.validateTokenByFirebase(authorization)
     const res = await this.service.authFindOneById(id);
@@ -60,23 +64,27 @@ export class PageController {
     return new OK([dto], code.SUCCESSFULLY_FOUND, message.SUCCESSFULLY_FOUND) 
   }
 
-  @ApiOperation({ summary: 'Buscar por id da pagina' })
+
   @Get('/public/:id')
+  @Version('1')
+  @ApiOperation({ summary: 'Buscar por id da pagina' })
   public async publicfindOneById(@Param('id') id: number) {
     const res = await this.service.publicfindOneById(id);
     const dto = this.publicFindOneMapper.toMapper(res)
     return new OK([dto], code.SUCCESSFULLY_FOUND, message.SUCCESSFULLY_FOUND)
   }
 
-  @ApiOperation({ summary: 'Listar todas as paginas' })
+
   @Get('/auth/')
-  public async authListAll(@Headers('Authorization') authorization: string, @Query('search') search:string, @Query('limit') limit:number, @Query('offset') offset:number, @Query('order') order:string, @Query('column') column:string, @Query('start') start:string, @Query('end') end:string) {
+  @Version('1')
+  @ApiOperation({ summary: 'Listar todas as paginas' })
+  public async authListAll(@Headers('Authorization') authorization: string, @Query('search') search:string, @Query('limit') limit: string='3', @Query('offset') offset:string='0', @Query('order') order:string, @Query('column') column:string, @Query('start') start:string, @Query('end') end:string) {
     const decoded = await this.firebase.validateTokenByFirebase(authorization)
     
     const cls:ClassificationInterface = { 
       search:search, 
-      limit:limit, 
-      offset:offset, 
+      limit:parseInt(limit) ? parseInt(limit) : 5, 
+      offset:parseInt(offset) ? parseInt(offset) : 0, 
       order:order, 
       column:column, 
       start:start, 
@@ -87,13 +95,15 @@ export class PageController {
     return new OK(dto, code.SUCCESSFULLY_FOUND, message.SUCCESSFULLY_FOUND) 
   }
 
-  @ApiOperation({ summary: 'Listar todas as paginas' })
+
   @Get('/public/')
-  public async publicListAll(@Query('search') search:string, @Query('limit') limit:number, @Query('offset') offset:number, @Query('order') order:string, @Query('column') column:string, @Query('start') start:string, @Query('end') end:string) {
+  @Version('1')
+  @ApiOperation({ summary: 'Listar todas as paginas' })
+  public async publicListAll(@Query('search') search:string, @Query('limit') limit: string='3', @Query('offset') offset:string='0', @Query('order') order:string, @Query('column') column:string, @Query('start') start:string, @Query('end') end:string) {
     const cls:ClassificationInterface = {
       search:search, 
-      limit:limit, 
-      offset:offset, 
+      limit:parseInt(limit) ? parseInt(limit) : 5, 
+      offset:parseInt(offset) ? parseInt(offset) : 0, 
       order:order, 
       column:column, 
       start:start, 
@@ -104,8 +114,10 @@ export class PageController {
     return new OK(dto, code.SUCCESSFULLY_FOUND, message.SUCCESSFULLY_FOUND) 
   }
 
-  @ApiOperation({ summary: 'Criar uma pagina' })
+
   @Post('/auth')
+  @Version('1')
+  @ApiOperation({ summary: 'Criar uma pagina' })
   public async create(@Body() body: CreateDto, @Headers('Authorization') authorization: string) { 
     const decoded = await this.firebase.validateTokenByFirebase(authorization)
     const user = await this.user.getUserByUid(decoded.uid)
@@ -120,8 +132,10 @@ export class PageController {
     return new OK([dto], code.SUCCESSFULLY_CREATED, message.SUCCESSFULLY_CREATED) 
   }
 
-  @ApiOperation({ summary: 'Atualizar nome da pagina por id' })
+
   @Put('/auth/:id')
+  @Version('1')
+  @ApiOperation({ summary: 'Atualizar nome da pagina por id' })
   public async update(@Body() body: UpdateDto, @Param('id') id: number, @Headers('Authorization') authorization: string) {
     const decoded = await this.firebase.validateTokenByFirebase(authorization)
     const user = await this.user.getUserByUid(decoded.uid)

@@ -13,7 +13,20 @@
 ##############################################################
 ##############################################################
 
+#listar aplicativos
+heroku apps
 
+heroku addons:create heroku-redis:hobby-dev -a redis-app-db
+heroku login
+
+my-project/
+git init
+heroku git:remote -a redis-app-db
+
+
+
+#Atualizar
+heroku update
 
 #Execute o aplicativo localmente
 heroku local web
@@ -102,3 +115,5 @@ heroku ps:scale web=1
     heroku git:remote -a YOUR_APP
     RESPONSE:set git remote heroku to https://git.heroku.com/nestjs-setup.git
 -----------FIM
+
+heroku  git@heroku.com:redis-app-db.git

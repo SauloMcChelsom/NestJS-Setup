@@ -1,5 +1,5 @@
 import { NestFactory } from '@nestjs/core';
-import { ValidationPipe, ValidationError } from '@nestjs/common'
+import { VersioningType, ValidationPipe, ValidationError } from '@nestjs/common'
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { NestExpressApplication } from '@nestjs/platform-express';
 
@@ -40,8 +40,37 @@ async function bootstrap() {
   app.setBaseViewsDir(join(__dirname, '..', './src/','views'));
   app.setViewEngine('hbs');
 
+  app.enableVersioning({
+    type: VersioningType.URI,
+  });
   app.useGlobalPipes(
+
+    /**
+     * O ValidationPipefornece uma abordagem conveniente para impor regras de validação para todas as cargas de cliente recebidas
+     */
     new ValidationPipe({
+
+      /**
+       * As mensagens de erro detalhados
+       */
+      disableErrorMessages: false,
+
+      /**
+       *  qualquer propriedade não incluída na lista branca é automaticamente removida do objeto resultante
+       */
+      whitelist: true,
+
+      /**
+       * interromper o processamento da solicitação quando as propriedades não incluídas na lista
+       */
+      forbidNonWhitelisted:true,
+
+      /**
+       * As cargas que chegam pela rede são objetos JavaScript simples. 
+       * Eles ValidationPipepodem transformar automaticamente cargas úteis em objetos digitados de acordo com suas classes DTO.
+       */
+      transform: true,
+
       exceptionFactory: (validationErrors: ValidationError[] = []) => {
         var err = validationErrors
 
@@ -71,6 +100,12 @@ async function bootstrap() {
   await app.listen(process.env.PORT || 3000);
   console.log('DATABASE_HOST: ',process.env.TYPEORM_HOST)
   console.log('ENV: ', `${process.env.environment}`)
+
+  console.log({
+    host: process.env.REDIS_HOST,
+    port: parseInt(process.env.REDIS_PORT),
+    password: process.env.REDIS_PASSWORD
+  })
                                    
 }
 

@@ -22,11 +22,11 @@ export class PublicationService {
     return await this.model.findOneById(body.id)
   }
 
-  public async authFindOneById(id:any) {
+  public async authFindOneById(id:number) {
     return await this.model.findOneById(id)
   }
 
-  public async publicfindOneById(id:any) {
+  public async publicfindOneById(id:number) {
     return await this.model.findOneById(id)
   }
 

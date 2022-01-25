@@ -4,7 +4,7 @@ import { FollowEntity } from '../../entity/follow.entity'
 @EntityRepository(FollowEntity)
 export class FollowRepository extends Repository<FollowEntity> {
 
-    async listAllPageUserFollowByIdOfUser(userId:string, search:string = '',  limit:number=3, offset:number=0, order:any='ASC', column:string='id', timestampStart:string='', timestampEnd:string=''){
+    async listAllPageUserFollowByIdOfUser(userId:number, search:string = '',  limit:number=3, offset:number=0, order:any='ASC', column:string='id', timestampStart:string='', timestampEnd:string=''){
         return await  this.createQueryBuilder("follow")
         .innerJoinAndSelect("follow.page_id", "page.id")
         .where("follow.user_id = :user_id", { user_id: userId })
@@ -17,7 +17,7 @@ export class FollowRepository extends Repository<FollowEntity> {
         .getMany();
     }
 
-    async countListAllPageUserFollowByIdOfUser(userId:string, search:string = '', timestampStart:any=false, timestampEnd:any=false){
+    async countListAllPageUserFollowByIdOfUser(userId:number, search:string = '', timestampStart:any=false, timestampEnd:any=false){
         return await  this.createQueryBuilder("follow")
         .innerJoinAndSelect("follow.page_id", "page.id")
         .where("follow.user_id = :user_id", { user_id: userId })
@@ -28,7 +28,7 @@ export class FollowRepository extends Repository<FollowEntity> {
         .getCount()
     }
 
-    async listAllUserFollowPageByIdOfPage(pageId:string, search:string = '',  limit:number=3, offset:number=0, order:any='ASC', column:string='id', timestampStart:string='', timestampEnd:string=''){
+    async listAllUserFollowPageByIdOfPage(pageId:number, search:string = '',  limit:number=3, offset:number=0, order:any='ASC', column:string='id', timestampStart:string='', timestampEnd:string=''){
         return await this.createQueryBuilder('follow')
         .innerJoinAndSelect("follow.user_id", "page")
         .where("follow.page_id = :page_id", { page_id: pageId })
@@ -41,7 +41,7 @@ export class FollowRepository extends Repository<FollowEntity> {
         .getMany();
     }
 
-    async countListAllUserFollowPageByIdOfPage(pageId:string, search:string = '', timestampStart:any=false, timestampEnd:any=false){
+    async countListAllUserFollowPageByIdOfPage(pageId:number, search:string = '', timestampStart:any=false, timestampEnd:any=false){
         return await this.createQueryBuilder('follow')
         .innerJoinAndSelect("follow.user_id", "page")
         .where("follow.page_id = :page_id", { page_id: pageId })
