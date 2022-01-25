@@ -3,10 +3,9 @@ import { Global, Module } from '@nestjs/common';
 import { SendMailComponent } from './send-mail.component'
 import { SendEmailService } from './send-mail.service'
 
-@Global()
 @Module({
   imports: [
-    BullModule.registerQueue({
+    BullModule.registerQueueAsync({
       name: 'send-mail'
     }),
   ],

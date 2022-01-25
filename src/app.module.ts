@@ -33,12 +33,8 @@ import { LikeModule } from '@modules/like/like.module';
       cache: true
     }),
     TypeOrmModule.forRoot(),
-    BullModule.forRoot({
-      redis: {
-        host: process.env.REDIS_HOST,
-        port: parseInt(process.env.REDIS_PORT),
-        password: process.env.REDIS_PASSWORD
-      },
+    BullModule.forRootAsync({
+      useFactory: () => (redisOptions()),
     }),
     TasksModule,
     JobsModule,
@@ -65,3 +61,26 @@ import { LikeModule } from '@modules/like/like.module';
   exports: [],
 })
 export class AppModule {}
+
+const  redisOptions=()=>{
+
+  let REDIS_URL = {
+    redis: {
+      host: process.env.REDIS_HOST,
+      port: parseInt(process.env.REDIS_PORT),
+      password: process.env.REDIS_PASSWORD,
+      tls: {
+        rejectUnauthorized: false,
+      },
+    },
+  }
+
+  const env = process.env.environment
+
+  if(env === 'development'){
+    delete REDIS_URL.redis.tls
+    delete REDIS_URL.redis.password
+  }
+
+  return REDIS_URL
+}

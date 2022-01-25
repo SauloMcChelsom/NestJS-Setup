@@ -4,6 +4,7 @@ import { TypeOrmModule } from '@nestjs/typeorm'
 import { CryptUtilityModule } from '@shared/bcrypt/bcrypt.module'
 import { UserEntity } from '@entity/user.entity'
 import { FirebaseModule } from '@root/src/modules/firebase/firebase.module'
+import { SendEmailModule } from '@shared/jobs/send-mail/send-mail.module'
 
 import { UsuariosController } from './user.controller'
 import { UserService } from './user.service'
@@ -21,7 +22,8 @@ import {
 @Module({
   imports: [TypeOrmModule.forFeature([UserEntity, UserRepository]),
   CryptUtilityModule,
-  FirebaseModule
+  FirebaseModule,
+  SendEmailModule
   ],
   controllers: [UsuariosController],
   providers: [
