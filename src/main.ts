@@ -7,7 +7,7 @@ import { BadRequestExceptions } from './shared/exception/exception'
 import { join } from 'path';
 import { AppModule } from './app.module';
 
-import { initializeFirebase } from '@root/src/shared/firebase/initialize-firebase';
+import { initializeFirebase } from '@root/src/conf/firebase/initialize-firebase';
 
 initializeFirebase();
 

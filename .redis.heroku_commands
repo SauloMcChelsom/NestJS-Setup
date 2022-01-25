@@ -1,10 +1,15 @@
 #download for windows
 https://github.com/microsoftarchive/redis/releases
 
-execute ./redis-server.exe
-execute ./redis-cli.exe
+cd C:\workspaces\redis
+redis-server.exe
+redis-cli.exe
 
-#alterar senha
+cd C:\workspaces\redis\heroku
+heroku addons:info redis-flat-06335
+heroku redis:cli -a redis-app-db  -c redis-app-db
+
+#alterar senha - LOCAL
 config set requirepass p@ss$12E45
 
 #para fazer login via redis-cli
@@ -15,19 +20,12 @@ redis-cli -h host -p port -a password
 redis-cli -h 127.0.0.1 -p 6379 -a "mypass"
 redis-cli -h ec2-50-19-16-41.compute-1.amazonaws.com -p 7850 -a "p1f96eeb18d421aca4a6c69cfa190f41fdb4cec10ece28f5787a886bf451e6f7c"
 
-#start
-cd C:/workspaces/redis/
-redis-server.exe
-
-#cli
-cd C:/workspaces/redis/
-redis-cli.exe
 
 #
 #
 #
 #
-#
+# 
 #
 
 #install via Windows Subsystem for Linux (WSL)
@@ -37,16 +35,3 @@ redis-cli.exe
 > redis-cli -v
 > redis-cli
 > redis-server
-
-
-heroku addons:info redis-flat-06335
-heroku redis:cli -a redis-app-db  -c redis-app-db
-
-heroku apps
-
-heroku addons:create heroku-redis:hobby-dev -a redis-app-db
-heroku login
-
-my-project/
-git init
-heroku git:remote -a redis-app-db

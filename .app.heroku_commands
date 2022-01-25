@@ -16,15 +16,6 @@
 #listar aplicativos
 heroku apps
 
-heroku addons:create heroku-redis:hobby-dev -a redis-app-db
-heroku login
-
-my-project/
-git init
-heroku git:remote -a redis-app-db
-
-
-
 #Atualizar
 heroku update
 
@@ -60,6 +51,16 @@ heroku config:set NPM_CONFIG_PRODUCTION=false
 heroku config:set NODE_MODULES_CACHE=false
 heroku config
 
+----------CRIAR APP
+mkdir redis
+cd redis/
+heroku login
+heroku addons:create heroku-redis:hobby-dev -a redis-app-db
+git init
+heroku git:remote -a redis-app-db
+---------FIM
+
+
 ----------INICIAR UM DESENVOLVIMENTO
 brew install heroku/brew/heroku
 
@@ -70,7 +71,7 @@ cd node-js-getting-started
 
 heroku create nestjs-saulo
 RESPONSE: https://nestjs-saulo.herokuapp.com/ | https://git.heroku.com/nestjs-saulo.git
------------
+---------FIM
 
 -----------TUTORIAL DE CLICO DE DESENVOLVIMENTO
     #adicionando uma dependência
