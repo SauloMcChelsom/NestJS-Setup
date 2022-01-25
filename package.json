@@ -10,7 +10,7 @@
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "cross-env NODE_ENV=production nest start",
-    "start:local": "heroku local web",
+    "start:heroku": "heroku local web",
     "start:dev": "cross-env NODE_ENV=development nest start --watch",
     "start:web": "cross-env NODE_ENV=production nest start --watch",
     "start:prod": "cross-env NODE_ENV=production node dist/main.js",
