@@ -98,15 +98,10 @@ async function bootstrap() {
   );
   
   await app.listen(process.env.PORT || 3000);
-  console.log('DATABASE_HOST: ',process.env.TYPEORM_HOST)
-  console.log('ENV: ', `${process.env.environment}`)
+  console.log('POSTGRES_HOST: ',process.env.TYPEORM_HOST)
+  console.log('REDIS_HOST :   ',process.env.REDIS_HOST)
+  console.log('ENV:           ',process.env.environment)
 
-  console.log({
-    host: process.env.REDIS_HOST,
-    port: parseInt(process.env.REDIS_PORT),
-    password: process.env.REDIS_PASSWORD
-  })
-                                   
 }
 
 bootstrap();
