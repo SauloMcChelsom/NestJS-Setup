@@ -11,7 +11,7 @@ export class SendMailService {
   /**
   * De segunda a sexta às 11h30
   */
-  @Cron(CronExpression.EVERY_30_SECONDS)
+  @Cron(CronExpression.MONDAY_TO_FRIDAY_AT_11_30AM)
   async handleCron() {
     this.logger.debug('Email foi adicionado a uma fila');
     await this.sendEmail.sendMail({

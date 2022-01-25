@@ -13,6 +13,7 @@ AUTH p@ss$12E45
 #acessar no serviço remoto
 redis-cli -h host -p port -a password
 redis-cli -h 127.0.0.1 -p 6379 -a "mypass"
+redis-cli -h ec2-50-19-16-41.compute-1.amazonaws.com -p 7850 -a "p1f96eeb18d421aca4a6c69cfa190f41fdb4cec10ece28f5787a886bf451e6f7c"
 
 #start
 cd C:/workspaces/redis/
@@ -36,3 +37,16 @@ redis-cli.exe
 > redis-cli -v
 > redis-cli
 > redis-server
+
+
+heroku addons:info redis-flat-06335
+heroku redis:cli -a redis-app-db  -c redis-app-db
+
+heroku apps
+
+heroku addons:create heroku-redis:hobby-dev -a redis-app-db
+heroku login
+
+my-project/
+git init
+heroku git:remote -a redis-app-db
