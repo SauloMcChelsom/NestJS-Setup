@@ -24,7 +24,7 @@
 	"paths": {
       "@root/*": ["./*"],
       "@conf/*": ["src/conf/*"],
-      "@shared/*": ["src/shared/*"],
+      "@shared/*": ["src/lib/*"],
       "@entity/*": ["src/entity/*"],
       "@modules/*": ["src/modules/*"],
       "@views/*": ["src/views/*"]

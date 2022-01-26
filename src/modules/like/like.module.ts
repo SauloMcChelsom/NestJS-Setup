@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common'
 import { TypeOrmModule } from '@nestjs/typeorm'
 
-import { IsValidTimestampModule } from "@shared/utility/is-valid-timestamp/is-valid-timestamp.module"
-import { EmptyModule } from "@shared/utility/empty/empty.module"
+import { IsValidTimestampModule } from "@root/src/lib/utility/is-valid-timestamp/is-valid-timestamp.module"
+import { EmptyModule } from "@root/src/lib/utility/empty/empty.module"
 import { PublicationModule } from '@modules/publication/publication.module'
 import { UserModule } from '@modules/user/user.module'
 import { FirebaseModule } from '@modules/firebase/firebase.module'

@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common'
 
-import { ClassificationInterface } from '@shared/interfaces'
+import { ClassificationInterface } from '@root/src/lib/interfaces'
 import { PageService } from '@modules/page/page.service'
 
 import { FollowModel } from './follow.model'

@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { EventEmitter2, OnEvent } from "@nestjs/event-emitter";
-import { CreateOrderEvent, UpdateOrderEvent } from '@shared/interfaces/events/order-event.interface'
+import { CreateOrderEvent, UpdateOrderEvent } from '@root/src/lib/interfaces/events/order-event.interface'
 
 @Injectable()
 export class OrderEvent {

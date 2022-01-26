@@ -3,12 +3,12 @@ import { InjectRepository} from '@nestjs/typeorm'
 import { REQUEST } from '@nestjs/core';
 import { Request } from 'express';
 
-import { code, message } from '@shared/enum'
+import { code, message } from '@root/src/lib/enum'
 import { 
   InternalServerErrorExceptions,
   Exception,
   NotFoundExceptions
-} from '@root/src/shared/exception/exception'
+} from '@root/src/lib/exception/exception'
 
 import { LikeRepository } from './like.repository'
 import { CreateInterface } from './interface/create.interface'

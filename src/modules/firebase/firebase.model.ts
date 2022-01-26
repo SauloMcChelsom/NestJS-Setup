@@ -2,12 +2,12 @@ import { Injectable, Inject, Scope } from '@nestjs/common'
 import { REQUEST } from '@nestjs/core';
 import { Request } from 'express';
 import * as firebase from 'firebase-admin';
-import { code, message } from '@shared/enum'
+import { code, message } from '@root/src/lib/enum'
 
 import { 
   InternalServerErrorExceptions,
   NotFoundExceptions
-} from '@root/src/shared/exception/exception'
+} from '@root/src/lib/exception/exception'
 
 @Injectable({ scope: Scope.REQUEST })
 @Injectable()

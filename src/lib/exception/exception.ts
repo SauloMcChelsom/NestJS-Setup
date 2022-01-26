@@ -9,7 +9,7 @@ import {
   InternalServerErrorException,
 } from '@nestjs/common'
   
-import  { Ok, Error, Body }  from './body/'
+import  { Ok, Error, Body }  from './body'
 
 export class OK extends Body {
 

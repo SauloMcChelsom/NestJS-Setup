@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common'
 import { TypeOrmModule } from '@nestjs/typeorm'
 
-import { CryptUtilityModule } from '@shared/bcrypt/bcrypt.module'
+import { CryptUtilityModule } from '@root/src/lib/bcrypt/bcrypt.module'
 import { UserEntity } from '@entity/user.entity'
 import { FirebaseModule } from '@root/src/modules/firebase/firebase.module'
-import { SendEmailModule } from '@shared/jobs/send-mail/send-mail.module'
+import { SendEmailModule } from '@root/src/lib/jobs/send-mail/send-mail.module'
 
 import { UsuariosController } from './user.controller'
 import { UserService } from './user.service'

@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common'
-import { code } from '@shared/enum'
-import { ConflictExceptions } from '@root/src/shared/exception/exception'
+import { code } from '@root/src/lib/enum'
+import { ConflictExceptions } from '@root/src/lib/exception/exception'
 
 @Injectable()
 export class IsValidTimestampService {

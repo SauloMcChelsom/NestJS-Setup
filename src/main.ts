@@ -4,7 +4,7 @@ import { NestExpressApplication } from '@nestjs/platform-express';
 import { join } from 'path';
 
 import { AppModule } from './app.module';
-import { BadRequestExceptions } from '@shared/exception/exception'
+import { BadRequestExceptions } from '@root/src/lib/exception/exception'
 import { InitializeFirebase } from '@root/src/conf/firebase/initialize-firebase';
 import { SwaggerDocument } from '@root/src/conf/swagger/swagger.conf';
 

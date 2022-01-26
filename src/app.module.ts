@@ -7,9 +7,9 @@ import { BullModule } from '@nestjs/bull';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 
 import * as option from '@conf/options/options.conf'
-import { TasksModule } from '@shared/tasks/tasks.module'
-import { JobsModule } from '@shared/jobs/jobs.module'
-import { EventModule } from '@shared/events/events.module'
+import { TasksModule } from '@root/src/lib/tasks/tasks.module'
+import { JobsModule } from '@root/src/lib/jobs/jobs.module'
+import { EventModule } from '@root/src/lib/events/events.module'
 
 import { CommentModule } from '@modules/comment/comment.module';
 import { FirebaseModule } from '@modules/firebase/firebase.module';
