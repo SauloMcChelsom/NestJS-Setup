@@ -3,6 +3,7 @@ npm i @nestjs/config
 npm i @nestjs/swagger
 npm i @nestjs/jwt
 npm i @nestjs/bull
+npm i --save @nestjs/event-emitter
 npm i typeorm
 npm i class-validator
 npm i firebase-admin

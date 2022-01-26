@@ -1,7 +1,6 @@
 import { NestFactory } from '@nestjs/core';
 import { VersioningType, ValidationPipe, ValidationError } from '@nestjs/common'
 import { NestExpressApplication } from '@nestjs/platform-express';
-import * as cookieParser from 'cookie-parser';
 import { join } from 'path';
 
 import { AppModule } from './app.module';
@@ -26,8 +25,6 @@ async function bootstrap() {
   app.enableVersioning({
     type: VersioningType.URI,
   });
-
-  app.use(cookieParser());
   
   app.useGlobalPipes(
 
