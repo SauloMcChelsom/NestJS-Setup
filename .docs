@@ -36,6 +36,3 @@ npm -v or npm –version
 
 sudo apt-get install python-software-properties
 sudo apt-get install nodejs
-
-
-why use eventemitter in node js

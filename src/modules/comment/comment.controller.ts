@@ -1,7 +1,6 @@
 import { Version, UseInterceptors, CacheInterceptor, CacheKey, CacheTTL, Controller, Headers, Param, Get, Query, Post, Body, Put, Delete  } from '@nestjs/common'
 import { ApiOperation, ApiTags } from '@nestjs/swagger'
 
-import { OrderEvent } from '@shared/events/order/order.events'
 import { FirebaseService } from '@modules/firebase/firebase.service'
 import { UserService } from '@modules/user/user.service'
 import { ClassificationInterface } from '@shared/interfaces'
@@ -34,8 +33,7 @@ export class CommentController {
     private publicListMapper:PublicListMapper,
     private authFindOneMapper:AuthFindOneMapper,
     private publicFindOneMapper:PublicFindOneMapper,
-    private updateMapper:UpdateMapper,
-    private readonly eventOrder: OrderEvent
+    private updateMapper:UpdateMapper
   ) {}
 
   @Get('/auth/user/')
@@ -179,10 +177,5 @@ export class CommentController {
     await this.service.delete(id, user.id);
     return new OK([], code.DELETED_SUCCESSFULLY, message.DELETED_SUCCESSFULLY) 
   }
-
-  @Get('event/create')
-  sayHello() {
-    this.eventOrder.created();
-    return {}
-  }
+ 
 }

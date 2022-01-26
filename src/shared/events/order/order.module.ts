@@ -1,8 +1,7 @@
 
-import { Global, Module } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { OrderEvent } from './order.events'
 
-@Global()
 @Module({
   imports: [],
   providers: [

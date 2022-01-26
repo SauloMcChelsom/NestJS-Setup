@@ -1,9 +1,12 @@
 export interface CreateOrderEvent  {
-    orderId: number,
-    payload: any,
+    numberOrder:string,
+    statusOrderClient: string,
+    clientMethodPayment: string,
+    taxaDelivery:number
+    totalOrderValue:number
 }
 
 export interface UpdateOrderEvent  {
-    orderId: number,
-    payload: any,
+    numberOrder:string,
+    statusOrderClient: string
 }
