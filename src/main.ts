@@ -1,48 +1,34 @@
 import { NestFactory } from '@nestjs/core';
 import { VersioningType, ValidationPipe, ValidationError } from '@nestjs/common'
-import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { NestExpressApplication } from '@nestjs/platform-express';
-
-import { BadRequestExceptions } from './shared/exception/exception'
+import * as cookieParser from 'cookie-parser';
 import { join } from 'path';
+
 import { AppModule } from './app.module';
-
-import { initializeFirebase } from '@root/src/conf/firebase/initialize-firebase';
-
-initializeFirebase();
+import { BadRequestExceptions } from '@shared/exception/exception'
+import { InitializeFirebase } from '@root/src/conf/firebase/initialize-firebase';
+import { SwaggerDocument } from '@root/src/conf/swagger/swagger.conf';
 
 async function bootstrap() {
   
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
-
-  /*---------------------| Documentação Swagger |------------------*/
-  /*---------------------------------------------------------------*/
-  /*---------------------------------------------------------------*/
-  /*---------------------------------------------------------------*/
-  /*---------------------------------------------------------------*/
-  /**/const config = new DocumentBuilder()/*-----------------------*/
-  /**/.setTitle('Rede Social')/*-----------------------------------*/
-  /**/.setDescription('Documentação da API Rede Social')/*---------*/
-  /**/.setVersion('1.0')/*-----------------------------------------*/
-  /**///.addBearerAuth()/*-----------------------------------------*/
-  /**/.build();/*--------------------------------------------------*/
-  /**/const document = SwaggerModule.createDocument(app, config);/**/
-  /**/SwaggerModule.setup('/', app, document);/*-------------------*/
-  /*---------------------------------------------------------------*/
-  /*---------------------------------------------------------------*/
-  /*---------------------------------------------------------------*/
-  /*---------------------------------------------------------------*/
-  /*---------------------------------------------------------------*/
+  new InitializeFirebase()
+  new SwaggerDocument(app)
 
   /*----------------------------| Paginas Web |--------------------*/
   app.useStaticAssets(join(__dirname, '..', './src/views','public'));
   app.setBaseViewsDir(join(__dirname, '..', './src/','views'));
   app.setViewEngine('hbs');
 
+  
+
   app.enableVersioning({
     type: VersioningType.URI,
   });
+
+  app.use(cookieParser());
+  
   app.useGlobalPipes(
 
     /**
