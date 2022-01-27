@@ -4,9 +4,12 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
 import { ScheduleModule } from '@nestjs/schedule';
 import { BullModule } from '@nestjs/bull';
+import { EventEmitterModule } from '@nestjs/event-emitter';
 
-import { TasksModule } from '@shared/tasks/tasks.module'
-import { JobsModule } from '@shared/jobs/jobs.module'
+import * as option from '@conf/options/options.conf'
+import { TasksModule } from '@root/src/lib/tasks/tasks.module'
+import { JobsModule } from '@root/src/lib/jobs/jobs.module'
+import { EventModule } from '@root/src/lib/events/events.module'
 
 import { CommentModule } from '@modules/comment/comment.module';
 import { FirebaseModule } from '@modules/firebase/firebase.module';
@@ -20,24 +23,16 @@ import { LikeModule } from '@modules/like/like.module';
 @Module({
   imports: [
     ScheduleModule.forRoot(),
-    CacheModule.register({
-      ttl: 0.1, // seconds
-      max: 15, // maximum number of items in cache
-      isGlobal: true,
-    }),
-    ConfigModule.forRoot({
-      envFilePath: `.env.${process.env.NODE_ENV}`,
-      isGlobal: false,
-      expandVariables: true,
-      ignoreEnvFile: false,
-      cache: true
-    }),
+    CacheModule.register(option.cache()),
+    ConfigModule.forRoot(option.typeorm()),
     TypeOrmModule.forRoot(),
     BullModule.forRootAsync({
-      useFactory: () => (redisOptions()),
+      useFactory: () => (option.redis()),
     }),
+    EventEmitterModule.forRoot(option.eventEmitter()),
     TasksModule,
     JobsModule,
+    EventModule,
     FirebaseModule,
     ViewsModule,
     UserModule,
@@ -62,25 +57,5 @@ import { LikeModule } from '@modules/like/like.module';
 })
 export class AppModule {}
 
-const  redisOptions=()=>{
 
-  let REDIS_URL = {
-    redis: {
-      host: process.env.REDIS_HOST,
-      port: parseInt(process.env.REDIS_PORT),
-      password: process.env.REDIS_PASSWORD,
-      tls: {
-        rejectUnauthorized: false,
-      },
-    },
-  }
 
-  const env = process.env.environment
-
-  if(env === 'development'){
-    delete REDIS_URL.redis.tls
-    delete REDIS_URL.redis.password
-  }
-
-  return REDIS_URL
-}

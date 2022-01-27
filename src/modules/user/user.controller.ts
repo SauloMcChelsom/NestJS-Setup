@@ -2,10 +2,10 @@ import { Version, Controller, Headers, Param, Get, Post, Body, Put, Delete  } fr
 import { ApiOperation, ApiTags } from '@nestjs/swagger'
 
 import { FirebaseService } from '@modules/firebase/firebase.service'
-import { OK } from '@root/src/shared/exception/exception'
-import { code, message } from '@shared/enum'
+import { OK } from '@root/src/lib/exception/exception'
+import { code, message } from '@root/src/lib/enum'
 
-import { SendEmailService } from'@shared/jobs/send-mail/send-mail.service'
+import { SendEmailService } from'@root/src/lib/jobs/send-mail/send-mail.service'
 import { UserService } from './user.service'
 import { UpdateDto } from './dto/update.dto'
 import { CreateDto } from './dto/create.dto'

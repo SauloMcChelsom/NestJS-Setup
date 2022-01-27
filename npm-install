@@ -3,6 +3,8 @@ npm i @nestjs/config
 npm i @nestjs/swagger
 npm i @nestjs/jwt
 npm i @nestjs/bull
+npm i --save @nestjs/event-emitter
+npm i --save compression
 npm i typeorm
 npm i class-validator
 npm i firebase-admin
@@ -17,6 +19,6 @@ npm install --save @nestjs/schedule
 npm install cache-manager
 npm i @types/hbs
 npm i @types/bcryptjs
+npm i --save-dev @types/bull
 npm install -D @types/cache-manager
 npm install --save-dev @types/cron
-npm i --save-dev @types/bull

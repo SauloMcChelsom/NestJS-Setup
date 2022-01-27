@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common'
 
-import { ClassificationInterface } from '@shared/interfaces'
+import { ClassificationInterface } from '@root/src/lib/interfaces'
 
 import { PublicationModel } from './publication.model'
 import { CreateInterface, UpdateInterface } from './interface'

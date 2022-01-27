@@ -23,11 +23,10 @@
     "resolveJsonModule": true,
 	"paths": {
       "@root/*": ["./*"],
-      "@shared/*": ["src/shared/*"],
+      "@conf/*": ["src/conf/*"],
+      "@shared/*": ["src/lib/*"],
       "@entity/*": ["src/entity/*"],
       "@modules/*": ["src/modules/*"],
-      "@public/*": ["src/public/*"],
-      "@service/*": ["src/service/*"],
       "@views/*": ["src/views/*"]
     }
   }

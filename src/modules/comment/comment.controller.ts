@@ -3,9 +3,9 @@ import { ApiOperation, ApiTags } from '@nestjs/swagger'
 
 import { FirebaseService } from '@modules/firebase/firebase.service'
 import { UserService } from '@modules/user/user.service'
-import { ClassificationInterface } from '@shared/interfaces'
-import { OK } from '@root/src/shared/exception/exception'
-import { code, message } from '@shared/enum'
+import { ClassificationInterface } from '@root/src/lib/interfaces'
+import { OK } from '@root/src/lib/exception/exception'
+import { code, message } from '@root/src/lib/enum'
 
 import { CommentService } from './comment.service'
 import { CreateDto } from './dto/create.dto'
@@ -177,4 +177,5 @@ export class CommentController {
     await this.service.delete(id, user.id);
     return new OK([], code.DELETED_SUCCESSFULLY, message.DELETED_SUCCESSFULLY) 
   }
+ 
 }

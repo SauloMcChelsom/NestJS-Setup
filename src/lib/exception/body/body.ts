@@ -1,5 +1,5 @@
 import  { ApiProperty } from '@nestjs/swagger'
-import  { Ok, Error }  from './'
+import  { Ok, Error }  from '.'
 
 export class  Body {
 

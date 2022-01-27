@@ -3,10 +3,10 @@ import { InjectRepository} from '@nestjs/typeorm'
 import { REQUEST } from '@nestjs/core';
 import { Request } from 'express';
 
-import { IsValidTimestampService } from "@shared/utility/is-valid-timestamp/is-valid-timestamp.service"
-import { EmptyService } from "@shared/utility/empty/empty.service"
-import { code, message } from '@shared/enum'
-import { OK, InternalServerErrorExceptions, NotFoundExceptions, Exception } from '@root/src/shared/exception/exception'
+import { IsValidTimestampService } from "@root/src/lib/utility/is-valid-timestamp/is-valid-timestamp.service"
+import { EmptyService } from "@root/src/lib/utility/empty/empty.service"
+import { code, message } from '@root/src/lib/enum'
+import { OK, InternalServerErrorExceptions, NotFoundExceptions, Exception } from '@root/src/lib/exception/exception'
 
 import { PublicationRepository } from './publication.repository'
 import { UpdateInterface } from './interface'
