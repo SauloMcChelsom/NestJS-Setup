@@ -1,6 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { VersioningType, ValidationPipe, ValidationError } from '@nestjs/common'
 import { NestExpressApplication } from '@nestjs/platform-express';
+import * as compression from 'compression';
 import { join } from 'path';
 
 import { AppModule } from './app.module';
@@ -11,7 +12,7 @@ import { SwaggerDocument } from '@root/src/conf/swagger/swagger.conf';
 async function bootstrap() {
   
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
-
+  app.use(compression());
   new InitializeFirebase()
   new SwaggerDocument(app)
 
@@ -80,6 +81,7 @@ async function bootstrap() {
     })
   );
   
+ 
   await app.listen(process.env.PORT || 3000);
   console.log('POSTGRES_HOST: ',process.env.TYPEORM_HOST)
   console.log('REDIS_HOST :   ',process.env.REDIS_HOST)
