@@ -22,7 +22,7 @@ import { PageModule } from '@modules/page/page.module';
 import { FollowModule } from '@root/src/modules/follow/follow.module';
 import { PublicationModule } from '@modules/publication/publication.module';
 import { LikeModule } from '@modules/like/like.module';
-import { StreamingModule } from '@modules/streaming/streaming.module';
+import { ContentDeliveryNetworkModule } from '@modules/CDN/cdn.module';
 
 @Module({
   imports: [
@@ -35,7 +35,7 @@ import { StreamingModule } from '@modules/streaming/streaming.module';
     }),
     EventEmitterModule.forRoot(option.eventEmitter()),
     MulterModule.register({
-      dest: './files',
+      dest: './CDN',
     }),
     TasksModule,
     JobsModule,
@@ -48,7 +48,7 @@ import { StreamingModule } from '@modules/streaming/streaming.module';
     PublicationModule,
     LikeModule,
     CommentModule,
-    StreamingModule
+    ContentDeliveryNetworkModule
   ],
   controllers: [],
   providers: [
