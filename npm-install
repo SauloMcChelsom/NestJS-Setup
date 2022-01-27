@@ -20,5 +20,6 @@ npm install cache-manager
 npm i @types/hbs
 npm i @types/bcryptjs
 npm i --save-dev @types/bull
+npm i -D @types/multer
 npm install -D @types/cache-manager
 npm install --save-dev @types/cron
