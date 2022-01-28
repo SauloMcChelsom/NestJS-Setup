@@ -5,11 +5,14 @@ import { ConfigModule } from '@nestjs/config';
 import { ScheduleModule } from '@nestjs/schedule';
 import { BullModule } from '@nestjs/bull';
 import { EventEmitterModule } from '@nestjs/event-emitter';
+import { MulterModule } from '@nestjs/platform-express';
+import { join } from 'path';
 
 import * as option from '@conf/options/options.conf'
 import { TasksModule } from '@root/src/lib/tasks/tasks.module'
 import { JobsModule } from '@root/src/lib/jobs/jobs.module'
 import { EventModule } from '@root/src/lib/events/events.module'
+
 
 import { CommentModule } from '@modules/comment/comment.module';
 import { FirebaseModule } from '@modules/firebase/firebase.module';
@@ -19,6 +22,7 @@ import { PageModule } from '@modules/page/page.module';
 import { FollowModule } from '@root/src/modules/follow/follow.module';
 import { PublicationModule } from '@modules/publication/publication.module';
 import { LikeModule } from '@modules/like/like.module';
+import { ServicesModule } from '@modules/services/services.module';
 
 @Module({
   imports: [
@@ -30,6 +34,9 @@ import { LikeModule } from '@modules/like/like.module';
       useFactory: () => (option.redis()),
     }),
     EventEmitterModule.forRoot(option.eventEmitter()),
+    MulterModule.register({
+      dest: './CDN',
+    }),
     TasksModule,
     JobsModule,
     EventModule,
@@ -40,7 +47,8 @@ import { LikeModule } from '@modules/like/like.module';
     FollowModule,
     PublicationModule,
     LikeModule,
-    CommentModule
+    CommentModule,
+    ServicesModule
   ],
   controllers: [],
   providers: [

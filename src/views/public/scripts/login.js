@@ -85,7 +85,7 @@ class Login {
   }
 
   async createUserDataBase(user) {
-    await fetch('/user/public/', { 
+    await fetch('/v1/user/public/', { 
       method: 'POST',
       headers: {
         'Accept': 'application/json',
