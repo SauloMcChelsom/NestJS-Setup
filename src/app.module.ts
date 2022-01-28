@@ -22,7 +22,7 @@ import { PageModule } from '@modules/page/page.module';
 import { FollowModule } from '@root/src/modules/follow/follow.module';
 import { PublicationModule } from '@modules/publication/publication.module';
 import { LikeModule } from '@modules/like/like.module';
-import { ContentDeliveryNetworkModule } from '@modules/CDN/cdn.module';
+import { ServicesModule } from '@modules/services/services.module';
 
 @Module({
   imports: [
@@ -48,7 +48,7 @@ import { ContentDeliveryNetworkModule } from '@modules/CDN/cdn.module';
     PublicationModule,
     LikeModule,
     CommentModule,
-    ContentDeliveryNetworkModule
+    ServicesModule
   ],
   controllers: [],
   providers: [

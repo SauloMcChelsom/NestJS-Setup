@@ -8,8 +8,8 @@ import { FirebaseService } from '@modules/firebase/firebase.service'
 import { UserService } from '@modules/user/user.service'
 import { filterExtensionFiles, editNameFiles } from '@lib/utility/files/files.service';
 
-@Controller('cdn/upload')
-@ApiTags('cdn/upload')
+@Controller('services/upload')
+@ApiTags('services/upload')
 export class UploadController {
 
   constructor(private firebase:FirebaseService,private user:UserService) {}

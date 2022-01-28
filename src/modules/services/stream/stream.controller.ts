@@ -4,8 +4,8 @@ import { ApiOperation, ApiTags } from '@nestjs/swagger'
 import { FirebaseService } from '@modules/firebase/firebase.service'
 import { UserService } from '@modules/user/user.service'
 
-@Controller('cdn/stream')
-@ApiTags('cdn/stream')
+@Controller('services/stream')
+@ApiTags('services/stream')
 export class StreamController {
 
   constructor(private firebase:FirebaseService, private user:UserService) {}
