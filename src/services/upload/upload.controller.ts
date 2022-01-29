@@ -27,8 +27,8 @@ export class UploadController {
   )
   @ApiOperation({ summary: 'Upload de um arquivo' })
   public async oneFile(@UploadedFile() file: Express.Multer.File, @Headers('Authorization') authorization: string) {
-    const decoded = await this.firebase.validateTokenByFirebase(authorization)
-    const user = await this.user.getUserByUid(decoded.uid)
+    //const decoded = await this.firebase.validateTokenByFirebase(authorization)
+    //const user = await this.user.getUserByUid(decoded.uid)
 
     const response = {
       originalname: file.originalname,
@@ -50,8 +50,8 @@ export class UploadController {
   )
   @ApiOperation({ summary: 'Upload de até 20 arquivos' })
   async multipleFiles(@UploadedFiles() files, @Headers('Authorization') authorization: string) {
-    const decoded = await this.firebase.validateTokenByFirebase(authorization)
-    const user = await this.user.getUserByUid(decoded.uid)
+    //const decoded = await this.firebase.validateTokenByFirebase(authorization)
+    //const user = await this.user.getUserByUid(decoded.uid)
 
     const response = [];
     files.forEach(file => {

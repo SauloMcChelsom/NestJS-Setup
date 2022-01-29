@@ -3,13 +3,15 @@ import { UploadModule } from './upload/upload.module'
 import { StreamModule } from './stream/stream.module'
 import { RedisModule } from './redis/redis.module'
 import { EvenstModule } from './events/events.module'
+import { DownloadModule } from './download/download.module'
 
 @Module({
   imports: [
     UploadModule,
     StreamModule,
     RedisModule,
-    EvenstModule
+    EvenstModule,
+    DownloadModule
   ],
   controllers: [],
   providers: [],
