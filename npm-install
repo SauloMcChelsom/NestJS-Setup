@@ -5,11 +5,13 @@ npm i @nestjs/jwt
 npm i @nestjs/bull
 npm i --save @nestjs/event-emitter
 npm i --save compression
+npm i --save @nestjs/axios
 npm i typeorm
 npm i class-validator
 npm i firebase-admin
 npm i bcryptjs
 npm i hbs
+npm i axios
 npm i cross-env
 npm i swagger-ui-express
 npm i bull

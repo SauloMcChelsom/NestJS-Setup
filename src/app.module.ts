@@ -6,13 +6,14 @@ import { ScheduleModule } from '@nestjs/schedule';
 import { BullModule } from '@nestjs/bull';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { MulterModule } from '@nestjs/platform-express';
-import { join } from 'path';
+import { HttpModule  } from '@nestjs/axios'
 
 import * as option from '@conf/options/options.conf'
 import { TasksModule } from '@root/src/lib/tasks/tasks.module'
 import { JobsModule } from '@root/src/lib/jobs/jobs.module'
 import { EventModule } from '@root/src/lib/events/events.module'
-
+import { ServicesModule } from '@root/src/services/services.module';
+import { AxiosModule } from '@root/src/lib/axios/axios.module';
 
 import { CommentModule } from '@modules/comment/comment.module';
 import { FirebaseModule } from '@modules/firebase/firebase.module';
@@ -22,7 +23,7 @@ import { PageModule } from '@modules/page/page.module';
 import { FollowModule } from '@root/src/modules/follow/follow.module';
 import { PublicationModule } from '@modules/publication/publication.module';
 import { LikeModule } from '@modules/like/like.module';
-import { ServicesModule } from '@modules/services/services.module';
+
 
 @Module({
   imports: [
@@ -30,16 +31,15 @@ import { ServicesModule } from '@modules/services/services.module';
     CacheModule.register(option.cache()),
     ConfigModule.forRoot(option.typeorm()),
     TypeOrmModule.forRoot(),
-    BullModule.forRootAsync({
-      useFactory: () => (option.redis()),
-    }),
+    BullModule.forRootAsync({useFactory: () => (option.redis())}),
     EventEmitterModule.forRoot(option.eventEmitter()),
-    MulterModule.register({
-      dest: './CDN',
-    }),
+    MulterModule.register(option.multer()),
+    HttpModule.register(option.http()),
     TasksModule,
     JobsModule,
     EventModule,
+    AxiosModule,
+    ServicesModule,
     FirebaseModule,
     ViewsModule,
     UserModule,
@@ -47,8 +47,7 @@ import { ServicesModule } from '@modules/services/services.module';
     FollowModule,
     PublicationModule,
     LikeModule,
-    CommentModule,
-    ServicesModule
+    CommentModule
   ],
   controllers: [],
   providers: [

@@ -57,4 +57,17 @@ const typeorm=()=>{
   }
 }
 
-export { redis, eventEmitter, cache, typeorm }
+const multer=()=>{
+  return {
+    dest: './CDN',
+  }
+}
+
+const http=()=>{
+  return {
+    timeout: 5000,
+    maxRedirects: 5,
+  }
+}
+
+export { redis, eventEmitter, cache, typeorm, multer, http }

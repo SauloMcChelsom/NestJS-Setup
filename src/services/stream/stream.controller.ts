@@ -12,6 +12,7 @@ export class StreamController {
 
   @Get('/public/:path')
   @Version('1')
+  @ApiOperation({ summary: 'Criar um comentario' })
   public async publicStream(@Param('path') path, @Res() res) {
     return res.sendFile(path, { root: './CDN' });
   }
