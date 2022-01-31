@@ -21,8 +21,6 @@ async function bootstrap() {
   app.setBaseViewsDir(join(__dirname, '..', './src/','views'));
   app.setViewEngine('hbs');
 
-  console.log(join(__dirname, '..', './src/views','public'))
-
   
 
   app.enableVersioning({
