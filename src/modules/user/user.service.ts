@@ -66,30 +66,5 @@ export class UserService {
   public async getUserByUid(uid:string) {
     return await this.model.getUserByUid(uid)
   }
-
-
-
-  private readonly users: any= [
-    {
-      userId: 1,
-      username: 'john',
-      password: 'changeme',
-    },
-    {
-      userId: 2,
-      username: 'chris',
-      password: 'secret',
-    },
-    {
-      userId: 3,
-      username: 'maria',
-      password: 'guess',
-    },
-  ]
-  async findOne(username: string): Promise<any | undefined> {
-    return this.users.find(user => user.username === username);
-  }
-
-  
 }
 

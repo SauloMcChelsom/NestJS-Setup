@@ -10,6 +10,7 @@ npm i typeorm
 npm i class-validator
 npm i firebase-admin
 npm i bcryptjs
+npm i uuid
 npm i hbs
 npm i axios
 npm i cross-env
