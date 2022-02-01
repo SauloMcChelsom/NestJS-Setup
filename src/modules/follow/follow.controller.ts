@@ -1,5 +1,10 @@
-import { Version, Controller, Headers, Param, Get, Post, Body, Query } from '@nestjs/common'
+import { Version, Controller, Param, Get, Post, Body, Query } from '@nestjs/common'
 import { ApiOperation, ApiTags } from '@nestjs/swagger'
+import { UseGuards } from '@nestjs/common';
+
+import { JwtAuthGuard } from '@lib/guard/jwt-auth.guard'
+import { UID } from '@lib/pipe/uid.pipe'
+import { Header } from '@lib/decorator/header.decorator';
 
 import { FirebaseService } from '@modules/firebase/firebase.service'
 import { ClassificationInterface } from '@root/src/lib/interfaces'
@@ -26,9 +31,9 @@ export class FollowController {
   
   @Get('/auth/page/:id')
   @Version('1')
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Listar usuarios da pagina' })
-  public async authListByIdPage(@Param('id') id: number, @Headers('Authorization') authorization: string, @Query('search') search:string, @Query('limit') limit: string='3', @Query('offset') offset:string='0', @Query('order') order:string, @Query('column') column:string, @Query('start') start:string, @Query('end') end:string) {
-    const decoded = await this.firebase.validateTokenByFirebase(authorization)
+  public async authListByIdPage(@Param('id') id: number, @Query('search') search:string, @Query('limit') limit: string='3', @Query('offset') offset:string='0', @Query('order') order:string, @Query('column') column:string, @Query('start') start:string, @Query('end') end:string) {
     const cls:ClassificationInterface = {
       search:search, 
       limit:parseInt(limit) ? parseInt(limit) : 5, 
@@ -45,9 +50,9 @@ export class FollowController {
 
   @Get('/auth/user/:id')
   @Version('1')
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Listar as paginas que o usuario segue' })
-  public async authListByIdUser(@Param('id') id: number, @Headers('Authorization') authorization: string, @Query('search') search:string, @Query('limit') limit: string='3', @Query('offset') offset:string='0', @Query('order') order:string, @Query('column') column:string, @Query('start') start:string, @Query('end') end:string) {
-    const decoded = await this.firebase.validateTokenByFirebase(authorization)
+  public async authListByIdUser(@Param('id') id: number, @Query('search') search:string, @Query('limit') limit: string='3', @Query('offset') offset:string='0', @Query('order') order:string, @Query('column') column:string, @Query('start') start:string, @Query('end') end:string) {
     const cls:ClassificationInterface = {
       search:search, 
       limit:parseInt(limit) ? parseInt(limit) : 5, 
@@ -65,9 +70,8 @@ export class FollowController {
   @Post('/auth/')
   @Version('1')
   @ApiOperation({ summary: 'Seguir a pagina' })
-  public async create(@Body() body: CreateDto, @Headers('Authorization') authorization: string) {
-    const decoded = await this.firebase.validateTokenByFirebase(authorization)
-    const user = await this.user.getUserByUid(decoded.uid)
+  public async create(@Body() body: CreateDto, @Header(new UID()) uid:string) {
+    const user = await this.user.getUserByUid(uid)
 
     const follow:CreateInterface = {
       ...body,

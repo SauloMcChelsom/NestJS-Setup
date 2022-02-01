@@ -1,5 +1,10 @@
 import { Version, Controller, Headers, Param, Get, Query, Post, Body, Put  } from '@nestjs/common'
 import { ApiOperation, ApiTags } from '@nestjs/swagger'
+import { UseGuards } from '@nestjs/common';
+
+import { JwtAuthGuard } from '@lib/guard/jwt-auth.guard'
+import { UID } from '@lib/pipe/uid.pipe'
+import { Header } from '@lib/decorator/header.decorator'
 
 import { FirebaseService } from '@modules/firebase/firebase.service'
 import { UserService } from '@modules/user/user.service'
@@ -38,6 +43,7 @@ export class PublicationController {
 
   @Get('/auth/feed')
   @Version('1')
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'List um feed' })
   public async authListFeed(@Headers('Authorization') authorization: string, @Query('limit') limit: string='3', @Query('offset') offset:string='0', @Query('order') order:string, @Query('column') column:string, @Query('start') start:string, @Query('end') end:string) {
     const decoded = await this.firebase.validateTokenByFirebase(authorization)
@@ -75,9 +81,9 @@ export class PublicationController {
 
   @Get('/auth/:id')
   @Version('1')
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Buscar por id da publicação' })
-  public async authFindOneById(@Param('id') id: number, @Headers('Authorization') authorization: string) {
-    const decoded = await this.firebase.validateTokenByFirebase(authorization)
+  public async authFindOneById(@Param('id') id: number) {
     const res = await this.service.authFindOneById(id);
     const dto = this.authFindOneMapper.toMapper(res)
     return new OK([dto], code.SUCCESSFULLY_FOUND, message.SUCCESSFULLY_FOUND) 
@@ -96,9 +102,9 @@ export class PublicationController {
 
   @Get('/auth/search/text')
   @Version('1')
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Lista de publicação pesquisando por texto' })
-  public async authListSearchByText(@Headers('Authorization') authorization: string, @Query('text') search:string, @Query('limit') limit: string='3', @Query('offset') offset:string='0', @Query('order') order:string, @Query('column') column:string, @Query('start') start:string, @Query('end') end:string) {
-    const decoded = await this.firebase.validateTokenByFirebase(authorization)
+  public async authListSearchByText(@Query('text') search:string, @Query('limit') limit: string='3', @Query('offset') offset:string='0', @Query('order') order:string, @Query('column') column:string, @Query('start') start:string, @Query('end') end:string) {
     const cls:ClassificationInterface = { 
       search:search, 
       limit:parseInt(limit) ? parseInt(limit) : 5, 
@@ -135,10 +141,10 @@ export class PublicationController {
 
   @Post('/auth/')
   @Version('1')
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Criar uma nova publicaçao' })
-  public async create(@Body() body: CreateDto, @Headers('Authorization') authorization: string) {
-    const decoded = await this.firebase.validateTokenByFirebase(authorization)
-    const user = await this.user.getUserByUid(decoded.uid)
+  public async create(@Body() body: CreateDto, @Header(new UID()) uid:string) {
+    const user = await this.user.getUserByUid(uid)
 
     const post:CreateInterface = {
       ...body,
@@ -154,10 +160,10 @@ export class PublicationController {
 
   @Put('/auth/:id')
   @Version('1')
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Alterar o texto da publicaçao' })
-  public async update(@Body() body: UpdateDto, @Param('id') id: number, @Headers('Authorization') authorization: string) {
-    const decoded = await this.firebase.validateTokenByFirebase(authorization)
-    const user = await this.user.getUserByUid(decoded.uid)
+  public async update(@Body() body: UpdateDto, @Param('id') id: number, @Header(new UID()) uid:string) {
+    const user = await this.user.getUserByUid(uid)
     const put:UpdateInterface = {
       ...body,
       id:id,

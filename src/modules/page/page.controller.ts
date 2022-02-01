@@ -1,7 +1,11 @@
-import { Version, Controller, Headers, Param, Get, Query, Post, Body, Put  } from '@nestjs/common'
+import { Version, Controller, Param, Get, Query, Post, Body, Put  } from '@nestjs/common'
 import { ApiOperation, ApiTags } from '@nestjs/swagger'
+import { UseGuards } from '@nestjs/common';
 
-import { FirebaseService } from '@modules/firebase/firebase.service'
+import { JwtAuthGuard } from '@lib/guard/jwt-auth.guard'
+import { UID } from '@lib/pipe/uid.pipe'
+import { Header } from '@lib/decorator/header.decorator'; 
+
 import { UserService } from '@modules/user/user.service'
 import { ClassificationInterface } from '@root/src/lib/interfaces'
 import { OK } from '@root/src/lib/exception/exception'
@@ -25,7 +29,6 @@ export class PageController {
 
   constructor(
     private readonly service: PageService,
-    private firebase:FirebaseService,  
     private user:UserService,
     private createMapper:CreateMapper, 
     private authListMapper:AuthListMapper, 
@@ -34,11 +37,12 @@ export class PageController {
     private publicFindOneMapper:PublicFindOneMapper
   ) {}
 
-  @ApiOperation({ summary: 'Buscar por nome da pagina' })
+
   @Get('/auth/name/:page')
+  @UseGuards(JwtAuthGuard)
   @Version('1')
-  public async authFindOneByName(@Param('page') name: string, @Headers('Authorization') authorization: string) {
-    const decoded = await this.firebase.validateTokenByFirebase(authorization)
+  @ApiOperation({ summary: 'Buscar por nome da pagina' })
+  public async authFindOneByName(@Param('page') name: string) {
     const res = await this.service.authFindOneByName(name);
     const dto = this.createMapper.toMapper(res)
     return new OK([dto], code.SUCCESSFULLY_CREATED, message.SUCCESSFULLY_CREATED) 
@@ -56,9 +60,9 @@ export class PageController {
 
   @Get('/auth/:id')
   @Version('1')
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Buscar por id da pagina' })
-  public async authFindOneById(@Param('id') id: number, @Headers('Authorization') authorization: string) {
-    const decoded = await this.firebase.validateTokenByFirebase(authorization)
+  public async authFindOneById(@Param('id') id: number) {
     const res = await this.service.authFindOneById(id);
     const dto = this.authFindOneMapper.toMapper(res)
     return new OK([dto], code.SUCCESSFULLY_FOUND, message.SUCCESSFULLY_FOUND) 
@@ -76,10 +80,10 @@ export class PageController {
 
 
   @Get('/auth/')
-  @Version('1')
+  @Version('1') 
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Listar todas as paginas' })
-  public async authListAll(@Headers('Authorization') authorization: string, @Query('search') search:string, @Query('limit') limit: string='3', @Query('offset') offset:string='0', @Query('order') order:string, @Query('column') column:string, @Query('start') start:string, @Query('end') end:string) {
-    const decoded = await this.firebase.validateTokenByFirebase(authorization)
+  public async authListAll(@Query('search') search:string, @Query('limit') limit: string='3', @Query('offset') offset:string='0', @Query('order') order:string, @Query('column') column:string, @Query('start') start:string, @Query('end') end:string) {
     
     const cls:ClassificationInterface = { 
       search:search, 
@@ -117,10 +121,10 @@ export class PageController {
 
   @Post('/auth')
   @Version('1')
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Criar uma pagina' })
-  public async create(@Body() body: CreateDto, @Headers('Authorization') authorization: string) { 
-    const decoded = await this.firebase.validateTokenByFirebase(authorization)
-    const user = await this.user.getUserByUid(decoded.uid)
+  public async create(@Body() body: CreateDto, @Header(new UID()) uid:string) {
+    const user = await this.user.getUserByUid(uid)
 
     const page:CreateInterface = {
       ...body,
@@ -135,10 +139,10 @@ export class PageController {
 
   @Put('/auth/:id')
   @Version('1')
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Atualizar nome da pagina por id' })
-  public async update(@Body() body: UpdateDto, @Param('id') id: number, @Headers('Authorization') authorization: string) {
-    const decoded = await this.firebase.validateTokenByFirebase(authorization)
-    const user = await this.user.getUserByUid(decoded.uid)
+  public async update(@Body() body: UpdateDto, @Param('id') id: number, @Header(new UID()) uid:string) {
+    const user = await this.user.getUserByUid(uid)
     const page:UpdateInterface = {
       ...body,
       id:id,

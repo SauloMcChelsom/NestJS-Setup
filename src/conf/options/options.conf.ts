@@ -50,7 +50,7 @@ const cache=()=>{
 const typeorm=()=>{
   return {
     envFilePath: `.env.${process.env.NODE_ENV}`,
-    isGlobal: true,
+    isGlobal: false,
     expandVariables: true,
     ignoreEnvFile: false,
     cache: true

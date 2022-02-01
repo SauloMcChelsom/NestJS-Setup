@@ -1,7 +1,11 @@
-import { Version, UseInterceptors, CacheInterceptor, CacheKey, CacheTTL, Controller, Headers, Param, Get, Query, Post, Body, Put, Delete  } from '@nestjs/common'
+import { Version, UseInterceptors, CacheInterceptor, CacheTTL, Controller, Param, Get, Query, Post, Body, Put, Delete  } from '@nestjs/common'
 import { ApiOperation, ApiTags } from '@nestjs/swagger'
+import { UseGuards } from '@nestjs/common';
 
-import { FirebaseService } from '@modules/firebase/firebase.service'
+import { JwtAuthGuard } from '@lib/guard/jwt-auth.guard'
+import { UID } from '@lib/pipe/uid.pipe'
+import { Header } from '@lib/decorator/header.decorator'
+
 import { UserService } from '@modules/user/user.service'
 import { ClassificationInterface } from '@root/src/lib/interfaces'
 import { OK } from '@root/src/lib/exception/exception'
@@ -26,7 +30,6 @@ export class CommentController {
 
   constructor(
     private readonly service: CommentService,
-    private firebase:FirebaseService,
     private user:UserService,
     private createMapper:CreateMapper, 
     private authListMapper:AuthListMapper, 
@@ -39,11 +42,11 @@ export class CommentController {
   @Get('/auth/user/')
   @Version('1')
   @CacheTTL(20)
+  @UseGuards(JwtAuthGuard)
   @UseInterceptors(CacheInterceptor)
   @ApiOperation({ summary: 'Listar comentarios pelo token do usuario' })
-  public async authListByUserToken(@Headers('Authorization') authorization: string, @Query('search') search:string, @Query('limit') limit: string='3', @Query('offset') offset:string='0', @Query('order') order:string, @Query('column') column:string, @Query('start') start:string, @Query('end') end:string) {
-    const decoded = await this.firebase.validateTokenByFirebase(authorization)
-    const user = await this.user.getUserByUid(decoded.uid)
+  public async authListByUserToken(@Header(new UID()) uid:string, @Query('search') search:string, @Query('limit') limit: string='3', @Query('offset') offset:string='0', @Query('order') order:string, @Query('column') column:string, @Query('start') start:string, @Query('end') end:string) {
+    const user = await this.user.getUserByUid(uid)
     const cls:ClassificationInterface = {
       search:search, 
       limit:parseInt(limit) ? parseInt(limit) : 5, 
@@ -61,10 +64,10 @@ export class CommentController {
   @Get('/auth/user/:id')
   @Version('1')
   @CacheTTL(20)
+  @UseGuards(JwtAuthGuard)
   @UseInterceptors(CacheInterceptor)
   @ApiOperation({ summary: 'Listar comentarios por id do usuario' })
-  public async authListByUserId(@Param('id') id: number, @Headers('Authorization') authorization: string, @Query('search') search:string, @Query('limit') limit: string='3', @Query('offset') offset:string='0', @Query('order') order:string, @Query('column') column:string, @Query('start') start:string, @Query('end') end:string) {
-    await this.firebase.validateTokenByFirebase(authorization)
+  public async authListByUserId(@Param('id') id: number, @Query('search') search:string, @Query('limit') limit: string='3', @Query('offset') offset:string='0', @Query('order') order:string, @Query('column') column:string, @Query('start') start:string, @Query('end') end:string) {
     const cls:ClassificationInterface = {
       search:search, 
       limit:parseInt(limit) ? parseInt(limit) : 5, 
@@ -122,11 +125,11 @@ export class CommentController {
   @Get('/auth/:id')
   @Version('1')
   @CacheTTL(5)
+  @UseGuards(JwtAuthGuard)
   @UseInterceptors(CacheInterceptor)
   @ApiOperation({ summary: 'Buscar comentario por id' })
-  public async authFindOneCommentById(@Param('id') id: number, @Headers('Authorization') authorization: string) {
-    const decoded = await this.firebase.validateTokenByFirebase(authorization)
-    const user = await this.user.getUserByUid(decoded.uid)
+  public async authFindOneCommentById(@Param('id') id: number, @Header(new UID()) uid:string) {
+    const user = await this.user.getUserByUid(uid)
     let res = await this.service.authFindOneById(id, user.id);
     const dto = this.authFindOneMapper.toMapper(res)
     return new OK([dto], code.SUCCESSFULLY_FOUND, message.SUCCESSFULLY_FOUND) 
@@ -146,9 +149,8 @@ export class CommentController {
   @Post('/auth/')
   @Version('1')
   @ApiOperation({ summary: 'Criar um comentario' })
-  public async create(@Body() body: CreateDto, @Headers('Authorization') authorization: string) {
-    const decoded = await this.firebase.validateTokenByFirebase(authorization)
-    const user = await this.user.getUserByUid(decoded.uid)
+  public async create(@Body() body: CreateDto, @Header(new UID()) uid:string) {
+    const user = await this.user.getUserByUid(uid)
     let commet:CreateInterface = { ...body }
     commet.user_id = user.id
     let res = await this.service.create(commet);
@@ -158,10 +160,10 @@ export class CommentController {
 
   @Put('/auth/:id')
   @Version('1')
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Atualizar um comentario' })
-  public async update(@Param('id') id: number, @Body() body: UpdateDto, @Headers('Authorization') authorization: string) {
-    const decoded = await this.firebase.validateTokenByFirebase(authorization)
-    const user = await this.user.getUserByUid(decoded.uid)
+  public async update(@Param('id') id: number, @Body() body: UpdateDto, @Header(new UID()) uid:string) {
+    const user = await this.user.getUserByUid(uid)
     let commet:UpdateInterface = { ...body, id:  id, user_id: user.id}
     let res = await this.service.update(commet);
     const dto = this.updateMapper.toMapper(res)
@@ -170,10 +172,10 @@ export class CommentController {
 
   @Delete('/auth/:id')
   @Version('1')
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Deletar um comentario' })
-  public async delete(@Param('id') id: number, @Headers('Authorization') authorization: string) {
-    const decoded = await this.firebase.validateTokenByFirebase(authorization)
-    const user = await this.user.getUserByUid(decoded.uid)
+  public async delete(@Param('id') id: number, @Header(new UID()) uid:string) {
+    const user = await this.user.getUserByUid(uid)
     await this.service.delete(id, user.id);
     return new OK([], code.DELETED_SUCCESSFULLY, message.DELETED_SUCCESSFULLY) 
   }

@@ -1,7 +1,11 @@
-import { Version, Controller, Headers, Post, Body } from '@nestjs/common'
+import { Version, Controller, Post, Body } from '@nestjs/common'
 import { ApiOperation, ApiTags } from '@nestjs/swagger'
+import { UseGuards } from '@nestjs/common';
 
-import { FirebaseService } from '@modules/firebase/firebase.service'
+import { JwtAuthGuard } from '@lib/guard/jwt-auth.guard'
+import { UID } from '@lib/pipe/uid.pipe'
+import { Header } from '@lib/decorator/header.decorator';
+
 import { UserService } from '@modules/user/user.service'
 import { OK } from '@root/src/lib/exception/exception'
 import { code, message } from '@root/src/lib/enum'
@@ -16,8 +20,7 @@ import { CreateMapper } from './mapper/create.mapper'
 export class LikeController {
 
   constructor(
-    private readonly service: LikeService, 
-    private firebase:FirebaseService, 
+    private readonly service: LikeService,
     private user:UserService,
     private createMapper:CreateMapper
   ) {}
@@ -25,10 +28,10 @@ export class LikeController {
 
   @Post('/auth/')
   @Version('1')
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Curtir uma publicação' })
-  public async create(@Body() body: CreateDto, @Headers('Authorization') authorization: string) {
-    const decoded = await this.firebase.validateTokenByFirebase(authorization)
-    const user = await this.user.getUserByUid(decoded.uid)
+  public async create(@Body() body: CreateDto, @Header(new UID()) uid:string) {
+    const user = await this.user.getUserByUid(uid)
 
     const like:CreateInterface = {
       ...body,

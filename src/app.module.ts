@@ -15,7 +15,6 @@ import { EventModule } from '@root/src/lib/events/events.module'
 import { ServicesModule } from '@root/src/services/services.module';
 import { AxiosModule } from '@root/src/lib/axios/axios.module';
 
-import { AuthModule } from '@modules/auth/auth.module'
 import { CommentModule } from '@modules/comment/comment.module';
 import { FirebaseModule } from '@modules/firebase/firebase.module';
 import { ViewsModule } from '@root/src/views/views.module';
@@ -42,7 +41,6 @@ import { LikeModule } from '@modules/like/like.module';
     AxiosModule,
     ServicesModule,
     FirebaseModule,
-    AuthModule,
     ViewsModule,
     UserModule,
     PageModule,
