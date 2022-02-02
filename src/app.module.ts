@@ -1,5 +1,5 @@
 import { CacheModule, CacheInterceptor, Module } from '@nestjs/common';
-import { APP_INTERCEPTOR } from '@nestjs/core';
+import { APP_INTERCEPTOR, APP_GUARD } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
 import { ScheduleModule } from '@nestjs/schedule';
@@ -7,6 +7,7 @@ import { BullModule } from '@nestjs/bull';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { MulterModule } from '@nestjs/platform-express';
 import { HttpModule  } from '@nestjs/axios'
+import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 
 import * as option from '@conf/options/options.conf'
 import { TasksModule } from '@root/src/lib/tasks/tasks.module'
@@ -35,6 +36,10 @@ import { LikeModule } from '@modules/like/like.module';
     EventEmitterModule.forRoot(option.eventEmitter()),
     MulterModule.register(option.multer()),
     HttpModule.register(option.http()),
+    ThrottlerModule.forRoot({
+      ttl: 60,
+      limit: 10,
+    }),
     TasksModule,
     JobsModule,
     EventModule,
@@ -59,6 +64,10 @@ import { LikeModule } from '@modules/like/like.module';
       provide: APP_INTERCEPTOR,
       useClass: CacheInterceptor,
     },
+    {
+      provide: APP_GUARD,
+      useClass: ThrottlerGuard
+    }
   ],
   exports: [],
 })

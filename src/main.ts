@@ -1,9 +1,11 @@
 import { NestFactory } from '@nestjs/core';
 import { VersioningType, ValidationPipe, ValidationError } from '@nestjs/common'
 import { NestExpressApplication } from '@nestjs/platform-express';
-import * as compression from 'compression';
 import { join } from 'path';
-
+import  helmet from 'helmet';
+import * as csurf from 'csurf';
+import * as compression from 'compression';
+import * as options from '@conf/cors/index.cors';
 import { AppModule } from './app.module';
 import { BadRequestExceptions } from '@root/src/lib/exception/exception'
 import { InitializeFirebase } from '@root/src/conf/firebase/initialize-firebase';
@@ -12,17 +14,34 @@ import { SwaggerDocument } from '@root/src/conf/swagger/swagger.conf';
 async function bootstrap() {
   
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
+
+  app.enableCors(options.cors())
+
   app.use(compression());
+
+  /*app.use(helmet())*/
+
+  /*app.use(
+    helmet.contentSecurityPolicy({
+      useDefaults: true,
+      directives: {
+        "img-src": ["'self'", "https: data:"],
+        "script-src": ["'self'", "https: data:"],
+        "script-src-attr": ["'self'", "https: data:"],
+      }
+    })
+  )*/
+
+ /*app.use(csurf());*/
+
   new InitializeFirebase()
   new SwaggerDocument(app)
 
-  /*----------------------------| Paginas Web |--------------------*/
   app.useStaticAssets(join(__dirname, '..', './src/views','public'));
   app.setBaseViewsDir(join(__dirname, '..', './src/','views'));
   app.setViewEngine('hbs');
 
   
-
   app.enableVersioning({
     type: VersioningType.URI,
   });
@@ -81,7 +100,6 @@ async function bootstrap() {
     })
   );
   
- 
   await app.listen(process.env.PORT || 3000);
   console.log('POSTGRES_HOST: ',process.env.TYPEORM_HOST)
   console.log('REDIS_HOST :   ',process.env.REDIS_HOST)

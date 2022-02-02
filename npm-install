@@ -4,8 +4,11 @@ npm i @nestjs/swagger
 npm i @nestjs/jwt
 npm i @nestjs/bull
 npm i --save @nestjs/event-emitter
+npm i --save @nestjs/throttler
 npm i --save compression
 npm i --save @nestjs/axios
+npm i --save helmet
+npm i --save csurf
 npm i typeorm
 npm i class-validator
 npm i firebase-admin
