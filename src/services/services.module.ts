@@ -5,7 +5,7 @@ import { RedisModule } from './redis/redis.module'
 import { EvenstModule } from './events/events.module'
 import { DownloadModule } from './download/download.module'
 import { ServerSentEventsModule } from './server-sent-events/server-sent-events.module'
-
+import { WebSocketsModule } from './websockets/websockets.module'
 @Module({
   imports: [
     UploadModule,
@@ -13,7 +13,8 @@ import { ServerSentEventsModule } from './server-sent-events/server-sent-events.
     RedisModule,
     EvenstModule,
     DownloadModule,
-    ServerSentEventsModule
+    ServerSentEventsModule,
+    WebSocketsModule
   ],
   controllers: [],
   providers: [],
