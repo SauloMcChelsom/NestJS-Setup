@@ -1,4 +1,5 @@
-import { Injectable, Inject, Scope } from '@nestjs/common'
+import { Injectable, Inject, Scope, } from '@nestjs/common'
+import { HttpException } from '@nestjs/common';
 import { InjectRepository} from '@nestjs/typeorm'
 import { REQUEST } from '@nestjs/core';
 import { Request } from 'express';
@@ -92,23 +93,13 @@ export class CommentModel {
       const count = await this.repository.countListByUserId(userId, search, start, end)
  
       if(Object.keys(res).length != 0){
-        new OK().options(search, this.request.url, this.request.method, parseInt(limit+'') , parseInt(offset+''), count, order, column, start, end)        
-        return res
+        return { res: res, count: count }
       }
 
-      throw new NotFoundExceptions({
-        code:code.NOT_FOUND,
-        message:message.NOT_FOUND,
-      })
+      throw new HttpException(code.NOT_FOUND,404)
       
     }catch(e:any){
-      throw new Exception({
-        code:e.response.error.code,
-        message:e.response.error.message,
-        description:e.response.error.description,
-        method:this.request.url,
-        path:this.request.method,
-      },e.response.statusCode);
+      throw new HttpException(e.response, e.status);
     }
   }
 

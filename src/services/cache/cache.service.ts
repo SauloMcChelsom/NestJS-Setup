@@ -1,16 +1,16 @@
-/*import {CACHE_MANAGER, Inject, Injectable } from '@nestjs/common';
+import {CACHE_MANAGER, Inject, Injectable } from '@nestjs/common';
 import {Cache} from 'cache-manager';
 
 @Injectable()
-export class AppService {
+export class CacheService {
 
   constructor(@Inject(CACHE_MANAGER) private cacheManager: Cache) {}
 
-  async addToCache(key: string, item: string) {
+  async add(key: string, item: string) {
     await this.cacheManager.set(key, item);
   }
 
-  async getFromCache(key: string) {
+  async get(key: string) {
     const value = await this.cacheManager.get(key);
     return value;
   }
@@ -22,4 +22,4 @@ export class AppService {
   async reset() {
     await this.cacheManager.reset()
   }
-}*/
+}

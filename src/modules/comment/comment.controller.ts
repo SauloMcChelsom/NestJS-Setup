@@ -1,4 +1,4 @@
-import { Version, UseInterceptors, CacheInterceptor, CacheTTL, Controller, Param, Get, Query, Post, Body, Put, Delete  } from '@nestjs/common'
+import { Version, UseInterceptors, CacheInterceptor, UseFilters, CacheTTL, Controller, Param, Get, Query, Post, Body, Put, Delete  } from '@nestjs/common'
 import { ApiOperation, ApiTags } from '@nestjs/swagger'
 import { UseGuards } from '@nestjs/common';
 
@@ -8,8 +8,11 @@ import { Header } from '@lib/decorator/header.decorator'
 
 import { UserService } from '@modules/user/user.service'
 import { ClassificationInterface } from '@root/src/lib/interfaces'
-import { OK } from '@root/src/lib/exception/exception'
+import { OK as OK2 } from '@root/src/lib/exception/exception'
 import { code, message } from '@root/src/lib/enum'
+import { HttpExceptionFilter } from '@lib/exception/http-exception.filter'
+import { OK } from '@lib/exception/http-status-ok'
+import { HttpStatusOkInterceptor } from '@lib/exception/http-status-ok.interceptor'
 
 import { CommentService } from './comment.service'
 import { CreateDto } from './dto/create.dto'
@@ -56,9 +59,9 @@ export class CommentController {
       start:start, 
       end:end
     }
-    const  res = await this.service.authListByUserId(user.id, cls);
+    const { res, count } = await this.service.authListByUserId(user.id, cls);
     const dto = res.map((r)=> this.authListMapper.toMapper(r))
-    return new OK(dto, code.SUCCESSFULLY_FOUND, message.SUCCESSFULLY_FOUND)
+    return new OK2(dto, code.SUCCESSFULLY_FOUND, message.SUCCESSFULLY_FOUND)
   }
 
   @Get('/auth/user/:id')
@@ -77,14 +80,16 @@ export class CommentController {
       start:start, 
       end:end
     }
-    const  res = await this.service.authListByUserId(id, cls);
+    const  { res, count } = await this.service.authListByUserId(id, cls);
     const dto = res.map((r)=> this.authListMapper.toMapper(r))
-    return new OK(dto, code.SUCCESSFULLY_FOUND, message.SUCCESSFULLY_FOUND)
+    return new OK2(dto, code.SUCCESSFULLY_FOUND, message.SUCCESSFULLY_FOUND)
   }
 
   @Get('/public/user/:id')
   @Version('1')
   @CacheTTL(20)
+  @UseFilters(HttpExceptionFilter)
+  @UseInterceptors(HttpStatusOkInterceptor)
   @UseInterceptors(CacheInterceptor)
   @ApiOperation({ summary: 'Listar comentarios por id do usuario' })
   public async publicListByUserId(@Param('id') id: number, @Query('search') search:string, @Query('limit') limit: string='3', @Query('offset') offset:string='0', @Query('order') order:string, @Query('column') column:string, @Query('start') start:string, @Query('end') end:string) {
@@ -97,9 +102,10 @@ export class CommentController {
       start:start, 
       end:end
     }
-    const  res = await this.service.publicListByUserId(id, cls);
+    
+    const { res, count } = await this.service.publicListByUserId(id, cls);
     const dto = res.map((r)=> this.publicListMapper.toMapper(r))
-    return new OK(dto, code.SUCCESSFULLY_FOUND, message.SUCCESSFULLY_FOUND) 
+    return new OK(dto, code.SUCCESSFULLY_FOUND, 'Listar comentarios por id do usuario', count) 
   }
 
   @Get('/public/publication/:id')
@@ -119,7 +125,7 @@ export class CommentController {
     }
     let res = await this.service.publicListByPublicationId(id, cls);
     const dto = res.map((r)=> this.publicListMapper.toMapper(r))
-    return new OK(dto, code.SUCCESSFULLY_FOUND, message.SUCCESSFULLY_FOUND) 
+    return new OK2(dto, code.SUCCESSFULLY_FOUND, message.SUCCESSFULLY_FOUND) 
   }
 
   @Get('/auth/:id')
@@ -132,7 +138,7 @@ export class CommentController {
     const user = await this.user.getUserByUid(uid)
     let res = await this.service.authFindOneById(id, user.id);
     const dto = this.authFindOneMapper.toMapper(res)
-    return new OK([dto], code.SUCCESSFULLY_FOUND, message.SUCCESSFULLY_FOUND) 
+    return new OK2([dto], code.SUCCESSFULLY_FOUND, message.SUCCESSFULLY_FOUND) 
   }
 
   @Get('/public/:id')
@@ -143,7 +149,7 @@ export class CommentController {
   public async publicFindOneById(@Param('id') id: number) {
     let res = await this.service.publicFindOneById(id);
     const dto = this.publicFindOneMapper.toMapper(res)
-    return new OK([dto], code.SUCCESSFULLY_FOUND, message.SUCCESSFULLY_FOUND) 
+    return new OK2([dto], code.SUCCESSFULLY_FOUND, message.SUCCESSFULLY_FOUND) 
   }
 
   @Post('/auth/')
@@ -155,7 +161,7 @@ export class CommentController {
     commet.user_id = user.id
     let res = await this.service.create(commet);
     const dto = this.createMapper.toMapper(res)
-    return new OK([dto], code.SUCCESSFULLY_CREATED, message.SUCCESSFULLY_CREATED) 
+    return new OK2([dto], code.SUCCESSFULLY_CREATED, message.SUCCESSFULLY_CREATED) 
   }
 
   @Put('/auth/:id')
@@ -167,7 +173,7 @@ export class CommentController {
     let commet:UpdateInterface = { ...body, id:  id, user_id: user.id}
     let res = await this.service.update(commet);
     const dto = this.updateMapper.toMapper(res)
-    return new OK([dto], code.SUCCESSFULLY_UPDATED, message.SUCCESSFULLY_UPDATED) 
+    return new OK2([dto], code.SUCCESSFULLY_UPDATED, message.SUCCESSFULLY_UPDATED) 
   }
 
   @Delete('/auth/:id')
@@ -177,7 +183,7 @@ export class CommentController {
   public async delete(@Param('id') id: number, @Header(new UID()) uid:string) {
     const user = await this.user.getUserByUid(uid)
     await this.service.delete(id, user.id);
-    return new OK([], code.DELETED_SUCCESSFULLY, message.DELETED_SUCCESSFULLY) 
+    return new OK2([], code.DELETED_SUCCESSFULLY, message.DELETED_SUCCESSFULLY) 
   }
  
 }

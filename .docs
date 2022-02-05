@@ -30,17 +30,3 @@ criar audio
 
 
 
-
-providers 
-google : email+semha
-<senha-aleatorio>definir uma senha unicar ou enviar um email de confirmação para atualizar a senha imformada
-<uid> tabela uids
-
-google_email_password : email+semha<uid>
-local_email_password :  email+senha<uid>
-
-user login
-user registe
-
-import { v4 as uuidv4 } from 'uuid';
-uuidv4()

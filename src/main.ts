@@ -48,6 +48,8 @@ async function bootstrap() {
   
   app.useGlobalPipes(
 
+
+
     /**
      * O ValidationPipefornece uma abordagem conveniente para impor regras de validação para todas as cargas de cliente recebidas
      */
@@ -74,6 +76,9 @@ async function bootstrap() {
        */
       transform: true,
 
+
+      validationError: { target: false },
+
       exceptionFactory: (validationErrors: ValidationError[] = []) => {
         var err = validationErrors
 
@@ -96,7 +101,10 @@ async function bootstrap() {
           code:"property_"+property+"_"+key+"_pipe",
           message: values,
         })
-      }, validationError: { target: false } 
+      }, 
+      
+
+
     })
   );
   
