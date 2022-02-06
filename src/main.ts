@@ -1,5 +1,5 @@
 import { NestFactory } from '@nestjs/core';
-import { VersioningType, ValidationPipe, ValidationError } from '@nestjs/common'
+import { VersioningType, HttpException, ValidationPipe, ValidationError } from '@nestjs/common'
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { join } from 'path';
 import  helmet from 'helmet';
@@ -7,7 +7,6 @@ import * as csurf from 'csurf';
 import * as compression from 'compression';
 import * as options from '@conf/cors/index.cors';
 import { AppModule } from './app.module';
-import { BadRequestExceptions } from '@root/src/lib/exception/exception'
 import { InitializeFirebase } from '@root/src/conf/firebase/initialize-firebase';
 import { SwaggerDocument } from '@root/src/conf/swagger/swagger.conf';
 
@@ -96,11 +95,14 @@ async function bootstrap() {
           key = Object.keys(constraints)[0]
           values = Object.values(constraints)[0]
         }
-        
-        throw new BadRequestExceptions({
-          code:"property_"+property+"_"+key+"_pipe",
-          message: values,
-        })
+      
+        throw new HttpException(
+          [
+            "property_"+property+"_"+key+"_pipe",
+            values
+          ],
+          401
+        )
       }, 
       
 
