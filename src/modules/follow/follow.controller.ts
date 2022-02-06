@@ -6,11 +6,13 @@ import { JwtAuthGuard } from '@lib/guard/jwt-auth.guard'
 import { UID } from '@lib/pipe/uid.pipe'
 import { Header } from '@lib/decorator/header.decorator';
 
-import { FirebaseService } from '@modules/firebase/firebase.service'
+import { UseInterceptors, UseFilters } from '@nestjs/common'
+import { HttpExceptionFilter } from '@lib/exception/http-exception.filter'
+import { OK } from '@lib/exception/http-status-ok'
+import { HttpStatusOkInterceptor } from '@lib/exception/http-status-ok.interceptor'
 import { ClassificationInterface } from '@root/src/lib/interfaces'
 import { UserService } from '@modules/user/user.service'
-import { code, message } from '@root/src/lib/enum'
-import { OK } from '@root/src/lib/exception/exception'
+import { code } from '@root/src/lib/enum'
 
 import { FollowService } from './follow.service'
 import { CreateDto } from './dto/create.dto'
@@ -22,7 +24,6 @@ import { AuthListMapper, CreateMapper } from './mapper'
 export class FollowController {
 
   constructor(
-    private firebase:FirebaseService,
     private readonly service: FollowService, 
     private user:UserService,
     private authListMapper:AuthListMapper,
@@ -32,6 +33,8 @@ export class FollowController {
   @Get('/auth/page/:id')
   @Version('1')
   @UseGuards(JwtAuthGuard)
+  @UseFilters(HttpExceptionFilter)
+  @UseInterceptors(HttpStatusOkInterceptor)
   @ApiOperation({ summary: 'Listar usuarios da pagina' })
   public async authListByIdPage(@Param('id') id: number, @Query('search') search:string, @Query('limit') limit: string='3', @Query('offset') offset:string='0', @Query('order') order:string, @Query('column') column:string, @Query('start') start:string, @Query('end') end:string) {
     const cls:ClassificationInterface = {
@@ -43,14 +46,16 @@ export class FollowController {
       start:start, 
       end:end 
     }
-    const res = await this.service.authListByIdPage(id, cls);
+    const { res, count } = await this.service.authListByIdPage(id, cls);
     const dto = res.map((r)=> this.authListMapper.toMapper(r))
-    return new OK(dto, code.SUCCESSFULLY_FOUND, message.SUCCESSFULLY_FOUND) 
+    return new OK(dto, code.SUCCESSFULLY_FOUND, null, count) 
   }
 
   @Get('/auth/user/:id')
   @Version('1')
   @UseGuards(JwtAuthGuard)
+  @UseFilters(HttpExceptionFilter)
+  @UseInterceptors(HttpStatusOkInterceptor)
   @ApiOperation({ summary: 'Listar as paginas que o usuario segue' })
   public async authListByIdUser(@Param('id') id: number, @Query('search') search:string, @Query('limit') limit: string='3', @Query('offset') offset:string='0', @Query('order') order:string, @Query('column') column:string, @Query('start') start:string, @Query('end') end:string) {
     const cls:ClassificationInterface = {
@@ -62,13 +67,15 @@ export class FollowController {
       start:start, 
       end:end
     }
-    const res = await this.service.authListByIdUser(id, cls);
+    const { res, count } = await this.service.authListByIdUser(id, cls);
     const dto = res.map((r)=> this.authListMapper.toMapper(r))
-    return new OK(dto, code.SUCCESSFULLY_FOUND, message.SUCCESSFULLY_FOUND) 
+    return new OK(dto, code.SUCCESSFULLY_FOUND, null, count) 
   }
 
   @Post('/auth/')
   @Version('1')
+  @UseFilters(HttpExceptionFilter)
+  @UseInterceptors(HttpStatusOkInterceptor)
   @ApiOperation({ summary: 'Seguir a pagina' })
   public async create(@Body() body: CreateDto, @Header(new UID()) uid:string) {
     const user = await this.user.getUserByUid(uid)
@@ -80,7 +87,7 @@ export class FollowController {
     }
     const res = await this.service.create(follow);
     const dto = this.createMapper.toMapper(res)
-    return new OK([dto], code.SUCCESSFULLY_CREATED, message.SUCCESSFULLY_CREATED) 
+    return new OK([dto], code.SUCCESSFULLY_CREATED) 
   }
 }
 /**
