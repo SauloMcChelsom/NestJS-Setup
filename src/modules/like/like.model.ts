@@ -1,37 +1,25 @@
-import { Injectable, Inject, Scope } from '@nestjs/common'
+import { HttpException } from '@nestjs/common'
 import { InjectRepository} from '@nestjs/typeorm'
-import { REQUEST } from '@nestjs/core';
-import { Request } from 'express';
 
 import { code, message } from '@root/src/lib/enum'
-import { 
-  InternalServerErrorExceptions,
-  Exception,
-  NotFoundExceptions
-} from '@root/src/lib/exception/exception'
-
 import { LikeRepository } from './like.repository'
 import { CreateInterface } from './interface/create.interface'
 
-
-@Injectable({ scope: Scope.REQUEST })
 export class LikeModel {
 
-  constructor(
-    @InjectRepository(LikeRepository) private readonly repository: LikeRepository,
-    @Inject(REQUEST) private readonly request: Request,
-  ) {}
+  constructor(@InjectRepository(LikeRepository) private readonly repository: LikeRepository) {}
 
   public async save(body:CreateInterface){
     try{
       await this.repository.save(body)
     }catch(error){
-      throw new InternalServerErrorExceptions({
-        code:code.ERROR_GENERIC,
-        message:message.ERROR_GENERIC,
-        method:this.request.url,
-        path:this.request.method,
-      })
+      throw new HttpException(
+        [
+          code.ERROR_GENERIC,
+          message.ERROR_GENERIC
+        ],
+        500
+      )
     }
   }
 
@@ -46,12 +34,13 @@ export class LikeModel {
       }
 
     }catch(error){
-      throw new InternalServerErrorExceptions({
-        code:code.ERROR_GENERIC,
-        message:message.ERROR_GENERIC,
-        method:this.request.url,
-        path:this.request.method,
-      })
+      throw new HttpException(
+        [
+          code.ERROR_GENERIC,
+          message.ERROR_GENERIC
+        ],
+        500
+      )
     }
   }
 
@@ -63,18 +52,16 @@ export class LikeModel {
         return true
       }
 
-      throw new NotFoundExceptions({
-        code:code.NOT_FOUND,
-        message:message.NOT_FOUND,
-      })
+      throw new HttpException(code.NOT_FOUND,404)
 
     }catch(error){
-      throw new InternalServerErrorExceptions({
-        code:code.ERROR_GENERIC,
-        message:message.ERROR_GENERIC,
-        method:this.request.url,
-        path:this.request.method,
-      })
+      throw new HttpException(
+        [
+          code.ERROR_GENERIC,
+          message.ERROR_GENERIC
+        ],
+        500
+      )
     }
   }
 
@@ -84,18 +71,10 @@ export class LikeModel {
       if(res){
         return res
       }
-      throw new NotFoundExceptions({
-        code:code.NOT_FOUND,
-        message:message.NOT_FOUND,
-      })
+      throw new HttpException(code.NOT_FOUND,404)
+      
     }catch(e:any){
-      throw new Exception({
-        code:e.response.error.code,
-        message:e.response.error.message,
-        description:e.response.error.description,
-        method:this.request.url,
-        path:this.request.method,
-      },e.response.statusCode);
+      throw new HttpException(e.response, e.status);
     }
   }
 
@@ -106,12 +85,13 @@ export class LikeModel {
         return res
       }
     }catch(error){
-      throw new InternalServerErrorExceptions({
-        code:code.ERROR_GENERIC,
-        message:message.ERROR_GENERIC,
-        method:this.request.url,
-        path:this.request.method,
-      })
+      throw new HttpException(
+        [
+          code.ERROR_GENERIC,
+          message.ERROR_GENERIC
+        ],
+        500
+      )
     }
   }
 }

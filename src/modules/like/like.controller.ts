@@ -6,9 +6,12 @@ import { JwtAuthGuard } from '@lib/guard/jwt-auth.guard'
 import { UID } from '@lib/pipe/uid.pipe'
 import { Header } from '@lib/decorator/header.decorator';
 
+import { UseInterceptors, UseFilters } from '@nestjs/common'
+import { HttpExceptionFilter } from '@lib/exception/http-exception.filter'
+import { OK } from '@lib/exception/http-status-ok'
+import { HttpStatusOkInterceptor } from '@lib/exception/http-status-ok.interceptor'
 import { UserService } from '@modules/user/user.service'
-import { OK } from '@root/src/lib/exception/exception'
-import { code, message } from '@root/src/lib/enum'
+import { code } from '@root/src/lib/enum'
 
 import { LikeService } from './like.service'
 import { CreateDto } from './dto/create.dto'
@@ -25,10 +28,11 @@ export class LikeController {
     private createMapper:CreateMapper
   ) {}
 
-
   @Post('/auth/')
   @Version('1')
   @UseGuards(JwtAuthGuard)
+  @UseFilters(HttpExceptionFilter)
+  @UseInterceptors(HttpStatusOkInterceptor)
   @ApiOperation({ summary: 'Curtir uma publicação' })
   public async create(@Body() body: CreateDto, @Header(new UID()) uid:string) {
     const user = await this.user.getUserByUid(uid)
@@ -39,6 +43,6 @@ export class LikeController {
     }
     let res = await this.service.create(like);
     const dto = this.createMapper.toMapper(res)
-    return new OK([dto], code.SUCCESSFULLY_UPDATED, message.SUCCESSFULLY_UPDATED) 
+    return new OK([dto], code.SUCCESSFULLY_UPDATED)
   }
 }
