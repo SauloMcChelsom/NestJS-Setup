@@ -1,2 +1,2 @@
-import { PageEntity } from '@entity/page.entity'
-export interface ReturnInterface extends  PageEntity  {}
+import { PageEntity } from '@entity/page.entity';
+export type ReturnInterface = PageEntity;

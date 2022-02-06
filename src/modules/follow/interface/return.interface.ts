@@ -1,2 +1,2 @@
-import { FollowEntity } from '@entity/follow.entity'
-export interface ReturnInterface extends  FollowEntity  {}
+import { FollowEntity } from '@entity/follow.entity';
+export type ReturnInterface = FollowEntity;

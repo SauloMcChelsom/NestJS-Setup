@@ -1,4 +1,4 @@
-export interface UpdateInterface  {
+export interface UpdateInterface {
   id: number;
   page_description: string;
   page_name: string;

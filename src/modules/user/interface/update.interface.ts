@@ -1,3 +1,3 @@
-export interface UpdateInterface  {
+export interface UpdateInterface {
   name: string;
 }

@@ -1,10 +1,7 @@
-import { IsNumber, IsNotEmpty, IsEmpty } from 'class-validator';
+import { IsNumber, IsNotEmpty } from 'class-validator';
 
-export class CreateDto  {  
+export class CreateDto {
   @IsNumber()
   @IsNotEmpty()
-  page_id: number
+  page_id: number;
 }
-
-
-

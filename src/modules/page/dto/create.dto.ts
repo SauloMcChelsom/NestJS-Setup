@@ -1,6 +1,6 @@
 import { MinLength, IsString, IsNotEmpty } from 'class-validator';
 
-export class CreateDto  {
+export class CreateDto {
   @IsNotEmpty()
   @IsString()
   @MinLength(3)
@@ -11,4 +11,3 @@ export class CreateDto  {
   @MinLength(3)
   page_name: string;
 }
-

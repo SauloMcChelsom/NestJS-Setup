@@ -1,13 +1,11 @@
 import { join } from 'path';
 
 export class SetViewEngineHbs {
-    constructor(app){
+  constructor(app) {
+    console.log(join(__dirname));
 
-        console.log(join(__dirname))
-
-        app.useStaticAssets(join(__dirname,'../src/views','public'));
-        app.setBaseViewsDir(join(__dirname, '../src/','views'));
-        app.setViewEngine('hbs');
-    }
-
+    app.useStaticAssets(join(__dirname, '../src/views', 'public'));
+    app.setBaseViewsDir(join(__dirname, '../src/', 'views'));
+    app.setViewEngine('hbs');
+  }
 }

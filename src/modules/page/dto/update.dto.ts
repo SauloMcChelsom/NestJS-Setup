@@ -1,7 +1,6 @@
 import { MinLength, IsString, IsNotEmpty } from 'class-validator';
 
-export class UpdateDto  {
-  
+export class UpdateDto {
   @IsNotEmpty()
   @IsString()
   @MinLength(3)

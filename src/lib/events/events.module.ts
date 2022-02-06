@@ -1,11 +1,9 @@
-import { Module } from '@nestjs/common'
-import { OrderEventModule } from './order/order.module'
+import { Module } from '@nestjs/common';
+import { OrderEventModule } from './order/order.module';
 
 @Module({
-  imports: [
-    OrderEventModule
-  ],
+  imports: [OrderEventModule],
   providers: [],
-  exports: []
+  exports: [],
 })
 export class EventModule {}

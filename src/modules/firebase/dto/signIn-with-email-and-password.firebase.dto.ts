@@ -9,12 +9,12 @@ export class signInWithEmailAndPasswordFirebaseDto {
   public email: string;
   public email_verified: boolean;
   public uid: string;
-  public firebase:Firebase;
+  public firebase: Firebase;
 }
 
 class Firebase {
-  public identities:{
-    email:[]
-  }
-  public sign_in_provider:string
+  public identities: {
+    email: [];
+  };
+  public sign_in_provider: string;
 }

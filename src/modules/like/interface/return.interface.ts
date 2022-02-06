@@ -1,2 +1,2 @@
-import { LikeEntity } from '@entity/like.entity'
-export interface ReturnInterface extends  LikeEntity  {}
+import { LikeEntity } from '@entity/like.entity';
+export type ReturnInterface = LikeEntity;

@@ -1,12 +1,9 @@
-import { Controller, Render, Get } from '@nestjs/common'
-import { ApiOperation, ApiTags } from '@nestjs/swagger'
+import { Controller, Render, Get } from '@nestjs/common';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('')
 @Controller('')
 export class ViewsController {
-
-  constructor(){}
-
   @Get('/login')
   @Render('pages/login.hbs')
   @ApiOperation({ summary: 'Pagina de login, logar usando o gmail' })
@@ -34,5 +31,4 @@ export class ViewsController {
   public home() {
     return;
   }
-
 }

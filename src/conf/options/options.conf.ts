@@ -1,4 +1,4 @@
-const eventEmitter=()=>{
+const eventEmitter = () => {
   return {
     // set this to `true` to use wildcards
     wildcard: true,
@@ -14,11 +14,11 @@ const eventEmitter=()=>{
     verboseMemoryLeak: false,
     // disable throwing uncaughtException if an error event is emitted and it has no listeners
     ignoreErrors: false,
-  }
-}
+  };
+};
 
-const  redis=()=>{  
-  let REDIS_URL = {
+const redis = () => {
+  const REDIS_URL = {
     redis: {
       host: process.env.REDIS_HOST,
       port: parseInt(process.env.REDIS_PORT),
@@ -27,47 +27,47 @@ const  redis=()=>{
         rejectUnauthorized: false,
       },
     },
+  };
+
+  const env = process.env.environment;
+
+  if (env === 'development') {
+    delete REDIS_URL.redis.tls;
+    delete REDIS_URL.redis.password;
   }
 
-  const env = process.env.environment
+  return REDIS_URL;
+};
 
-  if(env === 'development'){
-    delete REDIS_URL.redis.tls
-    delete REDIS_URL.redis.password
-  }
-
-  return REDIS_URL
-}
-
-const cache=()=>{
+const cache = () => {
   return {
     ttl: 0.1, // seconds
     max: 15, // maximum number of items in cache
     isGlobal: true,
-  }
-}
+  };
+};
 
-const typeorm=()=>{
+const typeorm = () => {
   return {
     envFilePath: `.env.${process.env.NODE_ENV}`,
     isGlobal: false,
     expandVariables: true,
     ignoreEnvFile: false,
-    cache: true
-  }
-}
+    cache: true,
+  };
+};
 
-const multer=()=>{
+const multer = () => {
   return {
     dest: './CDN',
-  }
-}
+  };
+};
 
-const http=()=>{
+const http = () => {
   return {
     timeout: 5000,
     maxRedirects: 5,
-  }
-}
+  };
+};
 
-export { redis, eventEmitter, cache, typeorm, multer, http }
+export { redis, eventEmitter, cache, typeorm, multer, http };

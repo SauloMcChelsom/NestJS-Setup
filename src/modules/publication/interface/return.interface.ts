@@ -1,2 +1,2 @@
-import { PublicationEntity } from '@entity/publication.entity'
-export interface ReturnInterface extends  PublicationEntity  {}
+import { PublicationEntity } from '@entity/publication.entity';
+export type ReturnInterface = PublicationEntity;

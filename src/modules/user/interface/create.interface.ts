@@ -1,4 +1,4 @@
-export interface CreateInterface  {
+export interface CreateInterface {
   uid: string;
   name: string;
   email: string;

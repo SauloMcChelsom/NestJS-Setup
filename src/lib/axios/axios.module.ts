@@ -1,11 +1,9 @@
-import { Module } from '@nestjs/common'
-import { WebserviceCepModule } from './webservice-cep/webservice-cep.module'
+import { Module } from '@nestjs/common';
+import { WebserviceCepModule } from './webservice-cep/webservice-cep.module';
 
 @Module({
-  imports: [
-    WebserviceCepModule
-  ],
+  imports: [WebserviceCepModule],
   providers: [],
-  exports: []
+  exports: [],
 })
 export class AxiosModule {}

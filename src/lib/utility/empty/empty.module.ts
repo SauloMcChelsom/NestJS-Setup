@@ -1,10 +1,9 @@
-import { Module } from '@nestjs/common'
-import { EmptyService } from './empty.service'
-
+import { Module } from '@nestjs/common';
+import { EmptyService } from './empty.service';
 
 @Module({
   imports: [],
   providers: [EmptyService],
-  exports: [EmptyService]
+  exports: [EmptyService],
 })
 export class EmptyModule {}

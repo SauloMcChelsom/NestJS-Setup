@@ -1,19 +1,12 @@
-import { Module } from '@nestjs/common'
-import { FirebaseModule } from '@modules/firebase/firebase.module'
-import { UserModule } from '@modules/user/user.module'
-import { UploadController } from './upload.controller'
+import { Module } from '@nestjs/common';
+import { FirebaseModule } from '@modules/firebase/firebase.module';
+import { UserModule } from '@modules/user/user.module';
+import { UploadController } from './upload.controller';
 
 @Module({
-  imports: [
-    UserModule,
-    FirebaseModule
-  ],
-  controllers: [
-    UploadController
-  ],
+  imports: [UserModule, FirebaseModule],
+  controllers: [UploadController],
   providers: [],
-  exports: []
+  exports: [],
 })
 export class UploadModule {}
-
-

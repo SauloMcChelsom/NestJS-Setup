@@ -1,2 +1,2 @@
-import { CommentEntity } from '@entity/comment.entity'
-export interface ReturnInterface extends  CommentEntity  {}
+import { CommentEntity } from '@entity/comment.entity';
+export type ReturnInterface = CommentEntity;

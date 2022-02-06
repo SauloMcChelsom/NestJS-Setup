@@ -1,4 +1,4 @@
-export interface CreateInterface  {
+export interface CreateInterface {
   id?: number;
   comment?: string;
   timestamp?: Date;

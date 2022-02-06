@@ -1,4 +1,13 @@
-import { Body, Controller, Get, Delete, HttpStatus, Param, Post, Res } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Delete,
+  HttpStatus,
+  Param,
+  Post,
+  Res,
+} from '@nestjs/common';
 import { CacheService } from './cache.service';
 
 @Controller('cache')
@@ -25,5 +34,4 @@ export class CacheController {
   async reset() {
     return await this.appService.reset();
   }
-
 }

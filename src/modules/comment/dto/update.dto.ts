@@ -1,6 +1,6 @@
-import { MinLength, IsNotEmpty  } from 'class-validator';
+import { MinLength, IsNotEmpty } from 'class-validator';
 
-export class UpdateDto  {
+export class UpdateDto {
   @IsNotEmpty()
   @IsNotEmpty()
   @MinLength(1)

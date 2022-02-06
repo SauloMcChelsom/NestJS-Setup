@@ -1,3 +1,3 @@
-export interface UpdateUserUidWithFirebaseUidInterface  {
+export interface UpdateUserUidWithFirebaseUidInterface {
   uid: string;
 }

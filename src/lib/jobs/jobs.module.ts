@@ -1,11 +1,9 @@
-import { Module } from '@nestjs/common'
-import { SendEmailModule } from './send-mail/send-mail.module'
+import { Module } from '@nestjs/common';
+import { SendEmailModule } from './send-mail/send-mail.module';
 
 @Module({
-  imports: [
-    SendEmailModule
-  ],
+  imports: [SendEmailModule],
   providers: [],
-  exports: []
+  exports: [],
 })
 export class JobsModule {}

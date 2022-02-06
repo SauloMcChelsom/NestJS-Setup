@@ -6,13 +6,13 @@ import { ScheduleModule } from '@nestjs/schedule';
 import { BullModule } from '@nestjs/bull';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { MulterModule } from '@nestjs/platform-express';
-import { HttpModule  } from '@nestjs/axios'
+import { HttpModule } from '@nestjs/axios';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 
-import * as option from '@conf/options/options.conf'
-import { TasksModule } from '@root/src/lib/tasks/tasks.module'
-import { JobsModule } from '@root/src/lib/jobs/jobs.module'
-import { EventModule } from '@root/src/lib/events/events.module'
+import * as option from '@conf/options/options.conf';
+import { TasksModule } from '@root/src/lib/tasks/tasks.module';
+import { JobsModule } from '@root/src/lib/jobs/jobs.module';
+import { EventModule } from '@root/src/lib/events/events.module';
 import { ServicesModule } from '@root/src/services/services.module';
 import { AxiosModule } from '@root/src/lib/axios/axios.module';
 
@@ -31,7 +31,7 @@ import { LikeModule } from '@modules/like/like.module';
     CacheModule.register(option.cache()),
     ConfigModule.forRoot(option.typeorm()),
     TypeOrmModule.forRoot(),
-    BullModule.forRootAsync({useFactory: () => (option.redis())}),
+    BullModule.forRootAsync({ useFactory: () => option.redis() }),
     EventEmitterModule.forRoot(option.eventEmitter()),
     MulterModule.register(option.multer()),
     HttpModule.register(option.http()),
@@ -51,12 +51,12 @@ import { LikeModule } from '@modules/like/like.module';
     FollowModule,
     PublicationModule,
     LikeModule,
-    CommentModule
+    CommentModule,
   ],
   controllers: [],
   providers: [
     /**
-     * Para reduzir a quantidade de clichê necessária, 
+     * Para reduzir a quantidade de clichê necessária,
      * você pode vincular CacheInterceptora todos os endpoints globalmente
      */
     {
@@ -65,12 +65,9 @@ import { LikeModule } from '@modules/like/like.module';
     },
     {
       provide: APP_GUARD,
-      useClass: ThrottlerGuard
-    }
+      useClass: ThrottlerGuard,
+    },
   ],
   exports: [],
 })
 export class AppModule {}
-
-
-

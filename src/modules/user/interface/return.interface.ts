@@ -1,2 +1,2 @@
-import { UserEntity } from '@entity/user.entity'
-export interface ReturnInterface extends  UserEntity  {}
+import { UserEntity } from '@entity/user.entity';
+export type ReturnInterface = UserEntity;
