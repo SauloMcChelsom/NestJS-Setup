@@ -22,6 +22,7 @@ npm i bull
 npm install pg --save
 npm install class-transformer
 npm install --save @nestjs/schedule
+npm i --save-dev @nestjs/testing
 npm install cache-manager
 npm i @types/hbs
 npm i @types/bcryptjs
