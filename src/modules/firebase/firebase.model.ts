@@ -1,19 +1,11 @@
-import { Injectable, Inject, Scope } from '@nestjs/common'
-import { REQUEST } from '@nestjs/core';
-import { Request } from 'express';
+import { Injectable, HttpException } from '@nestjs/common'
 import * as firebase from 'firebase-admin';
-import { code, message } from '@root/src/lib/enum'
+import { code } from '@root/src/lib/enum'
 
-import { 
-  InternalServerErrorExceptions,
-  NotFoundExceptions
-} from '@root/src/lib/exception/exception'
-
-@Injectable({ scope: Scope.REQUEST })
 @Injectable()
 export class FirebaseModel {
 
-  constructor(@Inject(REQUEST) private readonly request: Request) {}
+  constructor() {}
 
   public async isToken(token:string) {
     try{
@@ -36,37 +28,30 @@ export class FirebaseModel {
       return token.replace('Bearer ', '');
     }catch(error) {
       if(error == 'TOKEN_IS_NULL'){
-        throw new NotFoundExceptions({
-          code:code.TOKEN_IS_NULL,
-          message:message.TOKEN_IS_NULL
-        })
+        throw new HttpException(
+          code.TOKEN_IS_NULL,
+          404
+        )
       }
       if(error == 'NOT_BEARER'){
-        throw new NotFoundExceptions({
-          code:code.NOT_BEARER,
-          message:message.NOT_BEARER
-        })
+        throw new HttpException(
+         code.NOT_BEARER,
+         404
+        )
       }
       if(error == 'SMALL_TOKEN'){
-        throw new NotFoundExceptions({
-          code:code.SMALL_TOKEN,
-          message:message.SMALL_TOKEN
-        })
+        throw new HttpException(
+          code.SMALL_TOKEN,
+          404
+        )
       }
       if(error == 'TOKEN_MISSING_SPECIAL_CHARACTER'){
-        throw new NotFoundExceptions({
-          code:code.TOKEN_MISSING_SPECIAL_CHARACTER,
-          message:message.TOKEN_MISSING_SPECIAL_CHARACTER,
-          method:this.request.url,
-          path:this.request.method
-        })
+        throw new HttpException(
+          code.TOKEN_MISSING_SPECIAL_CHARACTER,
+          404
+        )
       }
-      throw new InternalServerErrorExceptions({
-        code:code.ERROR_GENERIC,
-        message:message.ERROR_GENERIC,
-        method:this.request.url,
-        path:this.request.method
-      })
+      throw new HttpException(code.ERROR_GENERIC, 500)
     }
   }
 
@@ -82,19 +67,15 @@ export class FirebaseModel {
 
     }catch(error:any) {
       if(error.code){
-        throw new NotFoundExceptions({
-          code:error.code,
-          message:error.message,
-          method:this.request.url,
-          path:this.request.method
-        })
+        throw new HttpException(
+          [
+            'verify_id_token'.toUpperCase(),
+            error.message
+          ],
+          error.code
+        )
       }
-      throw new InternalServerErrorExceptions({
-        code:code.ERROR_GENERIC,
-        message:message.ERROR_GENERIC,
-        method:this.request.url,
-        path:this.request.method
-      })
+      throw new HttpException(code.ERROR_GENERIC, 500)
     }
   }
 
@@ -107,19 +88,15 @@ export class FirebaseModel {
       throw revoke
     }catch(error:any) {
       if(error.code){
-        throw new NotFoundExceptions({
-          code:error.code,
-          message:error.message,
-          method:this.request.url,
-          path:this.request.method
-        })
+        throw new HttpException(
+          [
+            'revoke_refresh_tokens'.toUpperCase(),
+            error.message
+          ],
+          error.code
+        )
       }
-      throw new InternalServerErrorExceptions({
-        code:code.ERROR_GENERIC,
-        message:message.ERROR_GENERIC,
-        method:this.request.url,
-        path:this.request.method
-      })
+      throw new HttpException(code.ERROR_GENERIC, 500)
     }
   }
 
@@ -132,19 +109,15 @@ export class FirebaseModel {
      throw user
     }catch(error:any) {
       if(error.code){
-        throw new NotFoundExceptions({
-          code:error.code,
-          message:error.message,
-          method:this.request.url,
-          path:this.request.method
-        })
+        throw new HttpException(
+          [
+            'get_user'.toUpperCase(),
+            error.message
+          ],
+          error.code
+        )
       }
-      throw new InternalServerErrorExceptions({
-        code:code.ERROR_GENERIC,
-        message:message.ERROR_GENERIC,
-        method:this.request.url,
-        path:this.request.method
-      })
+      throw new HttpException(code.ERROR_GENERIC, 500)
     }
   }
 
@@ -157,19 +130,15 @@ export class FirebaseModel {
      throw user
     }catch(error:any) {
       if(error.code){
-        throw new NotFoundExceptions({
-          code:error.code,
-          message:error.message,
-          method:this.request.url,
-          path:this.request.method
-        })
+        throw new HttpException(
+          [
+            'get_user_by_email'.toUpperCase(),
+            error.message
+          ],
+          error.code
+        )
       }
-      throw new InternalServerErrorExceptions({
-        code:code.ERROR_GENERIC,
-        message:message.ERROR_GENERIC,
-        method:this.request.url,
-        path:this.request.method
-      })
+      throw new HttpException(code.ERROR_GENERIC, 500)
     }
   }
 
@@ -182,19 +151,12 @@ export class FirebaseModel {
      throw true
     }catch(error) {
       if(error == true){
-        throw new NotFoundExceptions({
-          code:code.NOT_FOUND_USER,
-          message:message.NOT_FOUND_USER,
-          method:this.request.url,
-          path:this.request.method
-        })
+        throw new HttpException(
+          code.NOT_FOUND_USER,
+          404
+        )
       }
-      throw new InternalServerErrorExceptions({
-        code:code.ERROR_GENERIC,
-        message:message.ERROR_GENERIC,
-        method:this.request.url,
-        path:this.request.method
-      })
+      throw new HttpException(code.ERROR_GENERIC, 500)
     }
   }
 

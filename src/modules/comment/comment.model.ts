@@ -1,10 +1,9 @@
-import { Injectable, Inject, Scope, } from '@nestjs/common'
 import { HttpException } from '@nestjs/common';
 import { InjectRepository} from '@nestjs/typeorm'
 
 import { IsValidTimestampService } from "@root/src/lib/utility/is-valid-timestamp/is-valid-timestamp.service"
 import { EmptyService } from "@root/src/lib/utility/empty/empty.service"
-import { code, message } from '@root/src/lib/enum'
+import { code } from '@root/src/lib/enum'
 
 import { CommentRepository } from './comment.repository'
 import { UpdateInterface } from './interface'

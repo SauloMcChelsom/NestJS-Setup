@@ -1,5 +1,4 @@
-import { Injectable } from '@nestjs/common'
-import { ConflictExceptions } from '@root/src/lib/exception/exception'
+import { Injectable, HttpException } from '@nestjs/common'
 import { code, message } from '@root/src/lib/enum'
 import { FirebaseModel } from './firebase.model'
 
@@ -23,11 +22,14 @@ export class FirebaseService {
     let body = await this.model.isToken(token)
     let decoded = await this.model.validateTokenByFirebase(body)
     if(decoded.email != email){
-      return await new ConflictExceptions({
-        code:code.EMAIL_INVALID,
-        message:message.EMAIL_INVALID,
-        description:message.EMAIL_INVALID_CONFLICT_TOKEN_DESCRIPTION
-      })
+      return await new HttpException(
+        [
+          code.EMAIL_INVALID,
+          message.EMAIL_INVALID,
+          message.EMAIL_INVALID_CONFLICT_TOKEN_DESCRIPTION
+        ],
+        500
+      )
     }
     return  await this.model.getUserByEmail(email)
   } 
@@ -37,11 +39,14 @@ export class FirebaseService {
     let decoded = await this.model.validateTokenByFirebase(body)
 
     if(decoded.uid != uid){
-      return await new ConflictExceptions({
-        code:code.UID_INVALID,
-        message:message.UID_INVALID,
-        description:message.UID_INVALID_CONFLICT_TOKEN_DESCRIPTION
-      })
+      return await new HttpException(
+        [
+          code.UID_INVALID,
+          message.UID_INVALID,
+          message.UID_INVALID_CONFLICT_TOKEN_DESCRIPTION
+        ],
+        500
+      )
     }
     return  await this.model.getUserByUid(uid)
   }
