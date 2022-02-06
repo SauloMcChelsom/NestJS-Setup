@@ -25,11 +25,6 @@ import { FollowModule } from '@root/src/modules/follow/follow.module';
 import { PublicationModule } from '@modules/publication/publication.module';
 import { LikeModule } from '@modules/like/like.module';
 
-
-//------------
-import { CatsModule } from '@modules/LEARN-NESTJS/cats.module';
-//------------
-
 @Module({
   imports: [
     ScheduleModule.forRoot(),
@@ -56,10 +51,7 @@ import { CatsModule } from '@modules/LEARN-NESTJS/cats.module';
     FollowModule,
     PublicationModule,
     LikeModule,
-    CommentModule,
-
-
-    CatsModule//------------
+    CommentModule
   ],
   controllers: [],
   providers: [
