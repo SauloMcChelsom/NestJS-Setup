@@ -1,16 +1,13 @@
 import { Controller, Param, Response, Version, Get, StreamableFile } from '@nestjs/common';
-import { ApiOperation, ApiTags } from '@nestjs/swagger'
+import { ApiTags } from '@nestjs/swagger'
 import { createReadStream } from 'fs';
 import { join } from 'path';
-
-import { FirebaseService } from '@modules/firebase/firebase.service'
-import { UserService } from '@modules/user/user.service'
 
 @Controller('services/download')
 @ApiTags('services/download')
 export class DownloadController {
 
-  constructor(private firebase:FirebaseService, private user:UserService) {}
+  constructor() {}
 
   @Get(':path')
   @Version('1')

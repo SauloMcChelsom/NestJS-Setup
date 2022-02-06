@@ -1,22 +1,19 @@
-import { Injectable, Inject, Scope } from '@nestjs/common'
+import { HttpException } from '@nestjs/common'
 import { InjectRepository} from '@nestjs/typeorm'
-import { REQUEST } from '@nestjs/core';
-import { Request } from 'express';
+
 
 import { IsValidTimestampService } from "@root/src/lib/utility/is-valid-timestamp/is-valid-timestamp.service"
 import { EmptyService } from "@root/src/lib/utility/empty/empty.service"
 import { code, message } from '@root/src/lib/enum'
-import { OK, InternalServerErrorExceptions, NotFoundExceptions, Exception } from '@root/src/lib/exception/exception'
 
 import { PublicationRepository } from './publication.repository'
 import { UpdateInterface } from './interface'
 
-@Injectable({ scope: Scope.REQUEST })
+
 export class PublicationModel {
 
     constructor(
         @InjectRepository(PublicationRepository) private readonly repository: PublicationRepository,
-        @Inject(REQUEST) private readonly request: Request,
         private isValidTimestamp:IsValidTimestampService,
         private empty:EmptyService
     ) {}
@@ -30,12 +27,13 @@ export class PublicationModel {
                 await this.repository.update(publication.id, { number_of_likes: publication.number_of_likes });
             }
         }catch(error){
-            throw new InternalServerErrorExceptions({
-                code:code.ERROR_GENERIC,
-                message:message.ERROR_GENERIC,
-                method:this.request.url,
-                path:this.request.method
-            })
+          throw new HttpException(
+            [
+              code.ERROR_GENERIC,
+              message.ERROR_GENERIC
+            ],
+            500
+          )
         }
     }
 
@@ -47,12 +45,13 @@ export class PublicationModel {
               await this.repository.update(publication.id, { number_of_comments: publication.number_of_comments });
           }
       }catch(error){
-          throw new InternalServerErrorExceptions({
-              code:code.ERROR_GENERIC,
-              message:message.ERROR_GENERIC,
-              method:this.request.url,
-              path:this.request.method
-          })
+        throw new HttpException(
+          [
+            code.ERROR_GENERIC,
+            message.ERROR_GENERIC
+          ],
+          500
+        )
       }
     }
 
@@ -65,12 +64,13 @@ export class PublicationModel {
               await this.repository.update(publication.id, { number_of_comments: publication.number_of_comments });
           }
       }catch(error){
-          throw new InternalServerErrorExceptions({
-              code:code.ERROR_GENERIC,
-              message:message.ERROR_GENERIC,
-              method:this.request.url,
-              path:this.request.method
-          })
+        throw new HttpException(
+          [
+            code.ERROR_GENERIC,
+            message.ERROR_GENERIC
+          ],
+          500
+        )
       }
   }
 
@@ -82,12 +82,13 @@ export class PublicationModel {
                 await this.repository.update(publication.id, { number_of_likes: publication.number_of_likes });
             }
         }catch(error){
-            throw new InternalServerErrorExceptions({
-                code:code.ERROR_GENERIC,
-                message:message.ERROR_GENERIC,
-                method:this.request.url,
-                path:this.request.method
-            })
+          throw new HttpException(
+            [
+              code.ERROR_GENERIC,
+              message.ERROR_GENERIC
+            ],
+            500
+          )
         }
     }
 
@@ -97,18 +98,9 @@ export class PublicationModel {
           if(res){
             return res
           }
-          throw new NotFoundExceptions({
-            code:code.NOT_FOUND,
-            message:message.NOT_FOUND
-          })
+          throw new HttpException(code.NOT_FOUND,404)
         }catch(e:any){
-          throw new Exception({
-            code:e.response.error.code,
-            message:e.response.error.message,
-            description:e.response.error.description,
-            method:this.request.url,
-            path:this.request.method,
-          },e.response.statusCode);
+          throw new HttpException(e.response, e.status);
         }
     }
     
@@ -139,23 +131,13 @@ export class PublicationModel {
           const count = await this.repository.countListFeed(search, start, end)
      
           if(Object.keys(res).length != 0){
-            new OK().options(search, this.request.url, this.request.method, parseInt(limit+'') , parseInt(offset+''), count, order, column, start, end)        
-            return res
+            return { res: res, count: count }
           }
     
-          throw new NotFoundExceptions({
-            code:code.NOT_FOUND,
-            message:message.NOT_FOUND,
-          })
+          throw new HttpException(code.NOT_FOUND,404)
           
         }catch(e:any){
-          throw new Exception({
-            code:e.response.error.code,
-            message:e.response.error.message,
-            description:e.response.error.description,
-            method:this.request.url,
-            path:this.request.method,
-          },e.response.statusCode);
+          throw new HttpException(e.response, e.status);
         }
     }
 
@@ -186,23 +168,13 @@ export class PublicationModel {
           const count = await this.repository.countListSearchByText(search, start, end)
      
           if(Object.keys(res).length != 0){
-            new OK().options(search, this.request.url, this.request.method, parseInt(limit+'') , parseInt(offset+''), count, order, column, start, end)        
-            return res
+            return { res: res, count: count }
           }
     
-          throw new NotFoundExceptions({
-            code:code.NOT_FOUND,
-            message:message.NOT_FOUND,
-          })
+          throw new HttpException(code.NOT_FOUND,404)
           
         }catch(e:any){
-          throw new Exception({
-            code:e.response.error.code,
-            message:e.response.error.message,
-            description:e.response.error.description,
-            method:this.request.url,
-            path:this.request.method,
-          },e.response.statusCode);
+          throw new HttpException(e.response, e.status);
         }
     }
 
@@ -212,18 +184,9 @@ export class PublicationModel {
           if(res){
             return res
           }
-          throw new NotFoundExceptions({
-            code:code.NOT_FOUND,
-            message:message.NOT_FOUND
-          })
+          throw new HttpException(code.NOT_FOUND,404)
         }catch(e:any){
-          throw new Exception({
-            code:e.response.error.code,
-            message:e.response.error.message,
-            description:e.response.error.description,
-            method:this.request.url,
-            path:this.request.method,
-          },e.response.statusCode);
+          throw new HttpException(e.response, e.status);
         }
     }
 
@@ -234,43 +197,29 @@ export class PublicationModel {
             return res
           }
         }catch(e){
-          throw new InternalServerErrorExceptions({
-            code:code.ERROR_GENERIC,
-            message:message.ERROR_GENERIC,
-            method:this.request.url,
-            path:this.request.method
-          })
+          throw new HttpException(
+            [
+              code.ERROR_GENERIC,
+              message.ERROR_GENERIC
+            ],
+            500
+          )
         }
     }
 
     public validateSearchByText(text:any){
         if(typeof(text) === "number"){
-            return  new NotFoundExceptions({
-                code:code.NOT_FOUND,
-                message:message.NOT_FOUND,
-                method:this.request.url,
-                path:this.request.method
-            })
+            return new HttpException(code.NOT_FOUND,404)
         }
         if(typeof(text) !== "string"){
-            return  new NotFoundExceptions({
-                code:code.NOT_FOUND,
-                message:message.NOT_FOUND,
-                method:this.request.url,
-                path:this.request.method
-            })
+            return new HttpException(code.NOT_FOUND,404)
         }
         text = text.trim() 
         switch (text) {
             case "":
             case null:
             case undefined:
-            return  new NotFoundExceptions({
-                code:code.NOT_FOUND,
-                message:message.NOT_FOUND,
-                method:this.request.url,
-                path:this.request.method
-            })
+            return new HttpException(code.NOT_FOUND,404)
             default:
             return false;
         }

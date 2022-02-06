@@ -6,10 +6,13 @@ import { JwtAuthGuard } from '@lib/guard/jwt-auth.guard'
 import { UID } from '@lib/pipe/uid.pipe'
 import { Header } from '@lib/decorator/header.decorator'
 
+import { UseInterceptors, UseFilters } from '@nestjs/common'
+import { HttpExceptionFilter } from '@lib/exception/http-exception.filter'
+import { OK } from '@lib/exception/http-status-ok'
+import { HttpStatusOkInterceptor } from '@lib/exception/http-status-ok.interceptor'
 import { FirebaseService } from '@modules/firebase/firebase.service'
 import { UserService } from '@modules/user/user.service'
 import { ClassificationInterface } from '@root/src/lib/interfaces'
-import { OK } from '@root/src/lib/exception/exception'
 import { code, message } from '@root/src/lib/enum'
 
 import { PublicationService } from './publication.service'
@@ -44,6 +47,8 @@ export class PublicationController {
   @Get('/auth/feed')
   @Version('1')
   @UseGuards(JwtAuthGuard)
+  @UseFilters(HttpExceptionFilter)
+  @UseInterceptors(HttpStatusOkInterceptor)
   @ApiOperation({ summary: 'List um feed' })
   public async authListFeed(@Headers('Authorization') authorization: string, @Query('limit') limit: string='3', @Query('offset') offset:string='0', @Query('order') order:string, @Query('column') column:string, @Query('start') start:string, @Query('end') end:string) {
     const decoded = await this.firebase.validateTokenByFirebase(authorization)
@@ -55,14 +60,16 @@ export class PublicationController {
       start:start, 
       end:end
     }
-    const res = await this.service.authListFeed(cls);
+    const { res, count } = await this.service.authListFeed(cls);
     const dto = res.map((r)=> this.authListMapper.toMapper(r))
-    return new OK(dto, code.SUCCESSFULLY_FOUND, message.SUCCESSFULLY_FOUND) 
+    return new OK(dto, code.SUCCESSFULLY_FOUND, null, count) 
   }
 
  
   @Get('/public/feed')
   @Version('1')
+  @UseFilters(HttpExceptionFilter)
+  @UseInterceptors(HttpStatusOkInterceptor)
   @ApiOperation({ summary: 'List um feed' })
   public async publicListFeed(@Query('limit') limit: string='3', @Query('offset') offset:string='0', @Query('order') order:string, @Query('column') column:string, @Query('start') start:string, @Query('end') end:string) {
     const cls:ClassificationInterface = {
@@ -73,36 +80,42 @@ export class PublicationController {
       start:start, 
       end:end
     }
-    const res =  await this.service.publicListFeed(cls);
+    const { res, count } =  await this.service.publicListFeed(cls);
     const dto = res.map((r)=> this.publicListMapper.toMapper(r))
-    return new OK(dto, code.SUCCESSFULLY_FOUND, message.SUCCESSFULLY_FOUND) 
+    return new OK(dto, code.SUCCESSFULLY_FOUND, null, count) 
   }
 
 
   @Get('/auth/:id')
   @Version('1')
   @UseGuards(JwtAuthGuard)
+  @UseFilters(HttpExceptionFilter)
+  @UseInterceptors(HttpStatusOkInterceptor)
   @ApiOperation({ summary: 'Buscar por id da publicação' })
   public async authFindOneById(@Param('id') id: number) {
     const res = await this.service.authFindOneById(id);
     const dto = this.authFindOneMapper.toMapper(res)
-    return new OK([dto], code.SUCCESSFULLY_FOUND, message.SUCCESSFULLY_FOUND) 
+    return new OK([dto], code.SUCCESSFULLY_FOUND) 
   }
 
 
   @Get('/public/:id')
   @Version('1')
+  @UseFilters(HttpExceptionFilter)
+  @UseInterceptors(HttpStatusOkInterceptor)
   @ApiOperation({ summary: 'Buscar por id da publicação' })
   public async publicfindOneById(@Param('id') id: number) {
     const res =  await this.service.publicfindOneById(id);
     const dto = this.publicFindOneMapper.toMapper(res)
-    return new OK([dto], code.SUCCESSFULLY_FOUND, message.SUCCESSFULLY_FOUND) 
+    return new OK([dto], code.SUCCESSFULLY_FOUND) 
   }
 
 
   @Get('/auth/search/text')
   @Version('1')
   @UseGuards(JwtAuthGuard)
+  @UseFilters(HttpExceptionFilter)
+  @UseInterceptors(HttpStatusOkInterceptor)
   @ApiOperation({ summary: 'Lista de publicação pesquisando por texto' })
   public async authListSearchByText(@Query('text') search:string, @Query('limit') limit: string='3', @Query('offset') offset:string='0', @Query('order') order:string, @Query('column') column:string, @Query('start') start:string, @Query('end') end:string) {
     const cls:ClassificationInterface = { 
@@ -114,14 +127,16 @@ export class PublicationController {
       start:start, 
       end:end
     }
-    const res =  await this.service.authListSearchByText(cls);
+    const { res, count } =  await this.service.authListSearchByText(cls);
     const dto = res.map((r)=> this.authListMapper.toMapper(r))
-    return new OK(dto, code.SUCCESSFULLY_FOUND, message.SUCCESSFULLY_FOUND) 
+    return new OK(dto, code.SUCCESSFULLY_FOUND, null, count) 
   }
 
 
   @Get('/public/search/text')
   @Version('1')
+  @UseFilters(HttpExceptionFilter)
+  @UseInterceptors(HttpStatusOkInterceptor)
   @ApiOperation({ summary: 'Lista de publicação pesquisando por texto' })
   public async publicListSearchByText(@Query('search') search:string, @Query('limit') limit: string='3', @Query('offset') offset:string='0', @Query('order') order:string, @Query('column') column:string, @Query('start') start:string, @Query('end') end:string) {
     const cls:ClassificationInterface = { 
@@ -133,15 +148,17 @@ export class PublicationController {
       start:start, 
       end:end
     }
-    const res =  await this.service.publicListSearchByText(cls);
+    const { res, count } =  await this.service.publicListSearchByText(cls);
     const dto = res.map((r)=> this.publicListMapper.toMapper(r))
-    return new OK(dto, code.SUCCESSFULLY_FOUND, message.SUCCESSFULLY_FOUND) 
+    return new OK(dto, code.SUCCESSFULLY_FOUND, null, count) 
   }
 
 
   @Post('/auth/')
   @Version('1')
   @UseGuards(JwtAuthGuard)
+  @UseFilters(HttpExceptionFilter)
+  @UseInterceptors(HttpStatusOkInterceptor)
   @ApiOperation({ summary: 'Criar uma nova publicaçao' })
   public async create(@Body() body: CreateDto, @Header(new UID()) uid:string) {
     const user = await this.user.getUserByUid(uid)
@@ -154,13 +171,15 @@ export class PublicationController {
     }
     const res =  await this.service.create(post);
     const dto = this.createMapper.toMapper(res)
-    return new OK([dto], code.SUCCESSFULLY_FOUND, message.SUCCESSFULLY_FOUND) 
+    return new OK([dto], code.SUCCESSFULLY_FOUND) 
   }
 
 
   @Put('/auth/:id')
   @Version('1')
   @UseGuards(JwtAuthGuard)
+  @UseFilters(HttpExceptionFilter)
+  @UseInterceptors(HttpStatusOkInterceptor)
   @ApiOperation({ summary: 'Alterar o texto da publicaçao' })
   public async update(@Body() body: UpdateDto, @Param('id') id: number, @Header(new UID()) uid:string) {
     const user = await this.user.getUserByUid(uid)
@@ -171,7 +190,7 @@ export class PublicationController {
     }
     const res =  await this.service.update(put);
     const dto = this.authFindOneMapper.toMapper(res)
-    return new OK([dto], code.SUCCESSFULLY_FOUND, message.SUCCESSFULLY_FOUND) 
+    return new OK([dto], code.SUCCESSFULLY_FOUND) 
   }
 
 }

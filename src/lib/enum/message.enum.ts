@@ -38,5 +38,6 @@ export enum message {
     SUCCESSFULLY_UPDATED = "Atualizado com sucesso",
     ALREADY_IN_USE = "em uso",
     NO_REGISTRY = "Sem registro",
-    DATA_CONFLICT = "houve um conflito de dados"
+    DATA_CONFLICT = "houve um conflito de dados",
+    SEND_WITH_SUCCESS = "Send with success"
 }

@@ -1,9 +1,13 @@
-import { Version, UploadedFile,  UploadedFiles, Res, UseInterceptors, Controller, Headers, Param, Get, Query, Post, Body, Put  } from '@nestjs/common'
+import { Version, UploadedFile,  UploadedFiles, Res, Controller, Headers, Param, Get, Query, Post, Body, Put  } from '@nestjs/common'
 import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { ApiOperation, ApiTags } from '@nestjs/swagger'
 
-import { OK } from '@root/src/lib/exception/exception'
+import { UseInterceptors, UseFilters } from '@nestjs/common'
+import { HttpExceptionFilter } from '@lib/exception/http-exception.filter'
+import { OK } from '@lib/exception/http-status-ok'
+import { HttpStatusOkInterceptor } from '@lib/exception/http-status-ok.interceptor'
+import { code } from '@root/src/lib/enum'
 import { FirebaseService } from '@modules/firebase/firebase.service'
 import { UserService } from '@modules/user/user.service'
 import { filterExtensionFiles, editNameFiles } from '@lib/utility/files/files.service';
@@ -25,6 +29,8 @@ export class UploadController {
       fileFilter: filterExtensionFiles,
     }),
   )
+  @UseFilters(HttpExceptionFilter)
+  @UseInterceptors(HttpStatusOkInterceptor)
   @ApiOperation({ summary: 'Upload de um arquivo' })
   public async oneFile(@UploadedFile() file: Express.Multer.File, @Headers('Authorization') authorization: string) {
     //const decoded = await this.firebase.validateTokenByFirebase(authorization)
@@ -34,7 +40,7 @@ export class UploadController {
       originalname: file.originalname,
       filename: file.filename,
     };
-    return new OK([response], 'SEND_WITH_SUCCESS','Send with success')
+    return new OK([response], code.SEND_WITH_SUCCESS)
   }
 
   @Post('/auth/multiple-file')
@@ -48,6 +54,8 @@ export class UploadController {
       fileFilter: filterExtensionFiles,
     }),
   )
+  @UseFilters(HttpExceptionFilter)
+  @UseInterceptors(HttpStatusOkInterceptor)
   @ApiOperation({ summary: 'Upload de até 20 arquivos' })
   async multipleFiles(@UploadedFiles() files, @Headers('Authorization') authorization: string) {
     //const decoded = await this.firebase.validateTokenByFirebase(authorization)
@@ -61,7 +69,7 @@ export class UploadController {
       };
       response.push(fileReponse);
     });
-    return new OK([response], 'SEND_WITH_SUCCESS','Send with success')
+    return new OK([response], code.SEND_WITH_SUCCESS)
   }
   
 }

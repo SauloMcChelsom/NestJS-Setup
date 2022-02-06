@@ -1,24 +1,18 @@
-import { Injectable, Inject, Scope } from '@nestjs/common'
+import { HttpException } from '@nestjs/common';
 import { InjectRepository} from '@nestjs/typeorm'
-import { REQUEST } from '@nestjs/core';
-import { Request } from 'express';
 
 import { IsValidTimestampService } from "@root/src/lib/utility/is-valid-timestamp/is-valid-timestamp.service"
 import { EmptyService } from "@root/src/lib/utility/empty/empty.service"
 import { code, message } from '@root/src/lib/enum'
-import { OK, InternalServerErrorExceptions, NotFoundExceptions, ConflictExceptions, Exception } from '@root/src/lib/exception/exception'
 
 import { PageRepository } from './page.repository'
 import { UpdateInterface } from './interface'
 import { CreateInterface } from './interface'
 
-
-@Injectable({ scope: Scope.REQUEST })
 export class PageModel {
 
   constructor(
     @InjectRepository(PageRepository) private readonly repository: PageRepository,
-    @Inject(REQUEST) private readonly request: Request,
     private isValidTimestamp:IsValidTimestampService,
     private empty:EmptyService
   ) {}
@@ -29,18 +23,10 @@ export class PageModel {
       if(res){
         return res
       }
-      throw new NotFoundExceptions({
-        code:code.NOT_FOUND,
-        message:message.NOT_FOUND
-      })
+      throw new HttpException(code.NOT_FOUND,404)
+      
     }catch(e:any){
-      throw new Exception({
-        code:e.response.error.code,
-        message:e.response.error.message,
-        description:e.response.error.description,
-        method:this.request.url,
-        path:this.request.method,
-      },e.response.statusCode);
+      throw new HttpException(e.response, e.status);
     }
   }
 
@@ -50,18 +36,10 @@ export class PageModel {
       if(res){
         return res
       }
-      throw new NotFoundExceptions({
-        code:code.NOT_FOUND,
-        message:message.NOT_FOUND
-      })
+      throw new HttpException(code.NOT_FOUND,404)
+      
     }catch(e:any){
-      throw new Exception({
-        code:e.response.error.code,
-        message:e.response.error.message,
-        description:e.response.error.description,
-        method:this.request.url,
-        path:this.request.method,
-      },e.response.statusCode);
+      throw new HttpException(e.response, e.status);
     }
   }
 
@@ -71,18 +49,10 @@ export class PageModel {
       if(res){
         return res
       }
-      throw new NotFoundExceptions({
-        code:code.NOT_FOUND,
-        message:message.NOT_FOUND
-      })
+      throw new HttpException(code.NOT_FOUND,404)
+      
     }catch(e:any){
-      throw new Exception({
-        code:e.response.error.code,
-        message:e.response.error.message,
-        description:e.response.error.description,
-        method:this.request.url,
-        path:this.request.method,
-      },e.response.statusCode);
+      throw new HttpException(e.response, e.status);
     }
   }
 
@@ -113,23 +83,13 @@ export class PageModel {
       const count = await this.repository.countListAll(search, start, end)
  
       if(Object.keys(res).length != 0){
-        new OK().options(search, this.request.url, this.request.method, parseInt(limit+'') , parseInt(offset+''), count, order, column, start, end)        
-        return res
+        return { res: res, count: count }
       }
 
-      throw new NotFoundExceptions({
-        code:code.NOT_FOUND,
-        message:message.NOT_FOUND,
-      })
+      throw new HttpException(code.NOT_FOUND,404)
       
     }catch(e:any){
-      throw new Exception({
-        code:e.response.error.code,
-        message:e.response.error.message,
-        description:e.response.error.description,
-        method:this.request.url,
-        path:this.request.method,
-      },e.response.statusCode);
+      throw new HttpException(e.response, e.status);
     }
   }
 
@@ -139,13 +99,8 @@ export class PageModel {
       if(res){
         return res
       }
-    }catch(e){
-      throw new InternalServerErrorExceptions({
-        code:code.ERROR_GENERIC,
-        message:message.ERROR_GENERIC,
-        method:this.request.url,
-        path:this.request.method
-      })
+    }catch(e:any){
+      throw new HttpException(e.response, e.status);
     }
   }
 
@@ -153,19 +108,13 @@ export class PageModel {
     try{
       const res = await this.repository.findOne({ where:{ page_name: name }})
       if(res){
-        throw new ConflictExceptions({
-          code:code.PAGE_ALREADY_IN_USE,
-          message:message.PAGE_ALREADY_IN_USE,
-        })
+        throw new HttpException(
+          code.PAGE_ALREADY_IN_USE,
+          409
+        )
       }
     }catch(e:any){
-      throw new Exception({
-        code:e.response.error.code,
-        message:e.response.error.message,
-        description:e.response.error.description,
-        method:this.request.url,
-        path:this.request.method,
-      },e.response.statusCode);
+      throw new HttpException(e.response, e.status);
     }
   }
 
@@ -175,20 +124,17 @@ export class PageModel {
       if(res){
         return res
       }
-     
-      throw new ConflictExceptions({
-        code:code.DATA_CONFLICT,
-        message:"id do usuario e id da pagina, não coincide como chave composta",
-      })
+
+      throw new HttpException(
+        [
+          code.DATA_CONFLICT,
+          "id do usuario e id da pagina, não coincide como chave composta"
+        ],
+        409
+      )
       
     }catch(e:any){
-      throw new Exception({
-        code:e.response.error.code,
-        message:e.response.error.message,
-        description:e.response.error.description,
-        method:this.request.url,
-        path:this.request.method,
-      },e.response.statusCode);
+      throw new HttpException(e.response, e.status);
     }
   }
 
@@ -202,10 +148,13 @@ export class PageModel {
       }
 
     }catch(error){
-      throw new InternalServerErrorExceptions({
-        code:code.ERROR_GENERIC,
-        message:message.ERROR_GENERIC
-      })
+      throw new HttpException(
+        [
+          code.ERROR_GENERIC,
+          message.ERROR_GENERIC
+        ],
+        500
+      )
     }
   }
 
@@ -219,10 +168,13 @@ export class PageModel {
       }
       
     }catch(error){
-      throw new InternalServerErrorExceptions({
-        code:code.ERROR_GENERIC,
-        message:message.ERROR_GENERIC
-      })
+      throw new HttpException(
+        [
+          code.ERROR_GENERIC,
+          message.ERROR_GENERIC
+        ],
+        500
+      )
     }
   }
 }
