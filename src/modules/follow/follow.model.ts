@@ -53,12 +53,12 @@ export class FollowModel {
         order,
         column,
         start,
-        end
+        end,
       );
       const count = await this.repository.countListAllUserFollowPageByIdOfPage(
         userId,
         start,
-        end
+        end,
       );
 
       if (Object.keys(res).length != 0) {
