@@ -31,7 +31,7 @@ const redis = () => {
 
   const env = process.env.environment;
 
-  if (env === 'development') {
+  if (env === 'development' || env === 'test') {
     delete REDIS_URL.redis.tls;
     delete REDIS_URL.redis.password;
   }

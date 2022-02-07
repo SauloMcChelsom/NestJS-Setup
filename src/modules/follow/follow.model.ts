@@ -48,19 +48,17 @@ export class FollowModel {
 
       const res = await this.repository.listAllUserFollowPageByIdOfPage(
         userId,
-        search,
         limit,
         offset,
         order,
         column,
         start,
-        end,
+        end
       );
       const count = await this.repository.countListAllUserFollowPageByIdOfPage(
         userId,
-        search,
         start,
-        end,
+        end
       );
 
       if (Object.keys(res).length != 0) {
@@ -106,7 +104,6 @@ export class FollowModel {
 
       const res = await this.repository.listAllPageUserFollowByIdOfUser(
         userId,
-        search,
         limit,
         offset,
         order,
@@ -116,7 +113,6 @@ export class FollowModel {
       );
       const count = await this.repository.countListAllPageUserFollowByIdOfUser(
         userId,
-        search,
         start,
         end,
       );

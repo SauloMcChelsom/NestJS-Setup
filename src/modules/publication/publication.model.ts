@@ -116,7 +116,6 @@ export class PublicationModel {
       }
 
       const res = await this.repository.listFeed(
-        search,
         limit,
         offset,
         order,
@@ -124,7 +123,7 @@ export class PublicationModel {
         start,
         end,
       );
-      const count = await this.repository.countListFeed(search, start, end);
+      const count = await this.repository.countListFeed(search, start);
 
       if (Object.keys(res).length != 0) {
         return { res: res, count: count };
