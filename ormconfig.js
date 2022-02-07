@@ -20,7 +20,7 @@ let ENV = {
 
 const env = process.env.environment
 
-if(env === 'development' || env === 'test'){
+if(env === 'development' || env === 'tests'){
   delete ENV.ssl
   delete ENV.extra
 }

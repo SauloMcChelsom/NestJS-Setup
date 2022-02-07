@@ -25,8 +25,11 @@ criar audio
 
 #FALTA
 -fazer a documentação do projeto
--revisar tutorial em https://docs.nestjs.com/ (*)
--testes basicos
+-revisar tutorial em https://docs.nestjs.com/
+-verificar importação de modulos, ou coloco no mudulo pricipal ou na modulo que chama
+ex. lib/bcrypt colocar no modulo principal "app.module.ts" ou na chamada "modules/user/user.module.ts"
 
-
-
+-testes
+https://www.youtube.com/watch?v=2G_mWfG0DZE&t=3127s
+https://www.youtube.com/watch?v=VH_RfTFBgKE
+https://sharklabs.com.br/testes-unitarios-com-nodejs-jest-typescript/

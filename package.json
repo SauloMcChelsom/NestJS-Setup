@@ -11,15 +11,15 @@
     "format": "prettier --write \"src/**/*.ts\" \"__tests__/**/*.ts\"",
     "start": "cross-env NODE_ENV=production nest start",
     "start:heroku": "heroku local web",
-    "start:dev": "cross-env NODE_ENV=development nest start --watch",
+    "start:dev": "cross-env NODE_ENV=tests nest start --watch",
     "start:web": "cross-env NODE_ENV=production nest start --watch",
     "start:prod": "cross-env NODE_ENV=production node dist/main.js",
     "lint": "eslint \"{src}/**/*.ts\" \"__tests__/**/*.ts\" --fix",
-    "test": "jest",
+    "test": "cross-env NODE_ENV=tests jest",
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./jest.e2e.ts"
+    "test:e2e": "cross-env NODE_ENV=tests jest --config ./jest.e2e.ts"
   },
   "dependencies": {
     "@nestjs/axios": "^0.0.5",
