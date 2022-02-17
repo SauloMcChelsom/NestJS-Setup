@@ -3,6 +3,7 @@ import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
 import { AppModule } from '@root/src/app.module';
 
+
 describe('AppController (e2e)', () => {
   let app: INestApplication;
 
@@ -15,10 +16,23 @@ describe('AppController (e2e)', () => {
     await app.init();
   });
 
-  it('/ (GET)', () => {
-    return request(app.getHttpServer())
-      .get('/')
+  
+  beforeAll(async () => {
+    const mockAppModule: TestingModule = await Test.createTestingModule({
+      imports: [AppModule],
+      providers: [],
+    }).compile();
+
+    app = mockAppModule.createNestApplication();
+
+    await app.init();
+  });
+
+  it('/public/email/:email', async () => {
+    const response = await request(app.getHttpServer())
+      .get('/v1/user/public/email/2033.xyz@gmail.com')
       .expect(200)
       .expect('Hello World!');
   });
+
 });

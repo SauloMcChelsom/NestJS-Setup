@@ -3,7 +3,7 @@ import { CommentEntity } from '@root/src/entity/comment.entity';
 
 @EntityRepository(CommentEntity)
 export class CommentRepository extends Repository<CommentEntity> {
-  async listByUserId(
+   async listByUserId(
     userId: number,
     search = '',
     limit = 3,

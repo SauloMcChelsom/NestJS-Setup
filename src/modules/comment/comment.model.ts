@@ -5,13 +5,20 @@ import { IsValidTimestampService } from '@root/src/lib/utility/is-valid-timestam
 import { EmptyService } from '@root/src/lib/utility/empty/empty.service';
 import { code } from '@root/src/lib/enum';
 
-import { CommentRepository } from './comment.repository';
+import { CommentRepository as Comment } from './comment.repository';
 import { UpdateInterface } from './interface';
+
+import { Repository } from 'typeorm';
+
 
 export class CommentModel {
   constructor(
-    @InjectRepository(CommentRepository)
-    private readonly repository: CommentRepository,
+    @InjectRepository(Comment)
+    private readonly repository: Comment,
+
+    @InjectRepository(Comment)
+    private readonly repositorys: Repository<Comment>,
+
     private isValidTimestamp: IsValidTimestampService,
     private empty: EmptyService,
   ) {}
@@ -30,12 +37,14 @@ export class CommentModel {
 
   public async findOneById(id: number) {
     try {
-      const res = await this.repository.findOne(id);
+      const res = await this.repositorys.findOne(id);
       if (res) {
         return res;
       }
-      throw new HttpException(code.NOT_FOUND, 404);
+      throw new HttpException(code.ERROR_FETCHING_USER_DATA, 404);
     } catch (e: any) {
+      console.log('------->',e.response, e.status)
+      console.log('------->',e)
       throw new HttpException(e.response, e.status);
     }
   }
