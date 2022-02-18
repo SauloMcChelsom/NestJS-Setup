@@ -1,50 +1,41 @@
-import { HttpException } from '@nestjs/common';
+import { HttpException, HttpStatus } from '@nestjs/common';
+import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 
+import { CommentEntity } from '@entity/comment.entity';
 import { IsValidTimestampService } from '@root/src/lib/utility/is-valid-timestamp/is-valid-timestamp.service';
 import { EmptyService } from '@root/src/lib/utility/empty/empty.service';
 import { code } from '@root/src/lib/enum';
 
-import { CommentRepository as Comment } from './comment.repository';
+import { CommentRepository } from './comment.repository';
 import { UpdateInterface } from './interface';
-
-import { Repository } from 'typeorm';
-
 
 export class CommentModel {
   constructor(
-    @InjectRepository(Comment)
-    private readonly repository: Comment,
-
-    @InjectRepository(Comment)
-    private readonly repositorys: Repository<Comment>,
-
+    @InjectRepository(CommentRepository)
+    private readonly repositorys: CommentRepository,
+    @InjectRepository(CommentEntity)
+    private readonly repository: Repository<CommentEntity>,
     private isValidTimestamp: IsValidTimestampService,
     private empty: EmptyService,
   ) {}
 
-  public async create(body: any) {
+  public async create(body: any): Promise<CommentEntity> {
     try {
-      const res = await this.repository.save(body);
-      if (res) {
-        return res;
-      }
-      throw new HttpException(code.NOT_FOUND, 404);
-    } catch (e: any) {
-      throw new HttpException(e.response, e.status);
+      return await this.repository.save(body);
+    } catch (e) {
+      throw new HttpException(e, HttpStatus.BAD_REQUEST);
     }
   }
 
   public async findOneById(id: number) {
     try {
-      const res = await this.repositorys.findOne(id);
+      const res = await this.repository.findOne(id);
       if (res) {
         return res;
       }
-      throw new HttpException(code.ERROR_FETCHING_USER_DATA, 404);
+      throw new HttpException(code.NOT_FOUND, 404);
     } catch (e: any) {
-      console.log('------->',e.response, e.status)
-      console.log('------->',e)
       throw new HttpException(e.response, e.status);
     }
   }
@@ -80,7 +71,7 @@ export class CommentModel {
         end = this.isValidTimestamp.run(end);
       }
 
-      const res = await this.repository.listByUserId(
+      const res = await this.repositorys.listByUserId(
         userId,
         search,
         limit,
@@ -90,7 +81,7 @@ export class CommentModel {
         start,
         end,
       );
-      const count = await this.repository.countListByUserId(
+      const count = await this.repositorys.countListByUserId(
         userId,
         search,
         start,
@@ -138,7 +129,7 @@ export class CommentModel {
         end = this.isValidTimestamp.run(end);
       }
 
-      const res = await this.repository.listByPublicationId(
+      const res = await this.repositorys.listByPublicationId(
         publicationId,
         search,
         limit,
@@ -148,7 +139,7 @@ export class CommentModel {
         start,
         end,
       );
-      const count = await this.repository.countListByPublicationId(
+      const count = await this.repositorys.countListByPublicationId(
         publicationId,
         search,
         start,

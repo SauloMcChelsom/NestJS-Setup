@@ -3,6 +3,12 @@ import { CommentEntity } from '@root/src/entity/comment.entity';
 
 @EntityRepository(CommentEntity)
 export class CommentRepository extends Repository<CommentEntity> {
+
+  async saulo(id:number){
+    return await this.findOne(id);
+  }
+
+
    async listByUserId(
     userId: number,
     search = '',
