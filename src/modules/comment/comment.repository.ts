@@ -1,15 +1,14 @@
-import { EntityRepository, Repository } from 'typeorm';
+import { EntityRepository, Repository, AbstractRepository } from 'typeorm';
 import { CommentEntity } from '@root/src/entity/comment.entity';
 
 @EntityRepository(CommentEntity)
-export class CommentRepository extends Repository<CommentEntity> {
+export class CommentRepository extends AbstractRepository<CommentEntity> {
 
   async saulo(id:number){
-    return await this.findOne(id);
+    return await this.repository.findOne(id)
   }
 
-
-   async listByUserId(
+  async listByUserId(
     userId: number,
     search = '',
     limit = 3,

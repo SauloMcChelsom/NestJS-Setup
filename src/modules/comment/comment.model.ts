@@ -14,8 +14,10 @@ export class CommentModel {
   constructor(
     @InjectRepository(CommentRepository)
     private readonly repositorys: CommentRepository,
+
     @InjectRepository(CommentEntity)
     private readonly repository: Repository<CommentEntity>,
+    
     private isValidTimestamp: IsValidTimestampService,
     private empty: EmptyService,
   ) {}

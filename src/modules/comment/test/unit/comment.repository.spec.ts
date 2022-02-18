@@ -3,6 +3,11 @@ import { Test, TestingModule, } from '@nestjs/testing';
 import { getRepositoryToken, } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
+
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { getConnectionManager } from 'typeorm';
+import { connectionDataBaseForTest } from '@conf/options/options.conf';
+
 import { CommentService } from '@root/src/modules/comment/comment.service';
 import { CommentEntity } from '@root/src/entity/comment.entity';
 import { PublicationService } from '@root/src/modules/publication/publication.service';
@@ -22,41 +27,34 @@ import { UserRepository } from '@root/src/modules/user/user.repository';
 */
 
 describe('CommentRepository', () => {
-    let repository: CommentRepository;
+  let repository: CommentRepository;
 
-    beforeEach(async () => {
-      const module: TestingModule = await Test.createTestingModule({
-        providers: [
-          {
-            provide: getRepositoryToken(CommentEntity),
-            useClass: Repository
-          },
-          CommentService, 
-          CommentModel,
-          PublicationService,
-          CommentRepository,
-          IsValidTimestampService,
-          EmptyService,
-          PublicationModel,
-          PublicationRepository
-        ],
-      })
-      .compile();
-      repository = module.get<CommentRepository>(getRepositoryToken(CommentRepository));
+  beforeEach(async () => {
+    const module: TestingModule = await Test.createTestingModule({
+      imports: [
+        ...connectionDataBaseForTest(), 
+        TypeOrmModule.forFeature([CommentEntity, CommentRepository])
+      ],
+      providers: [
+        CommentService, 
+        CommentModel,
+        PublicationService,
+        CommentRepository,
+        IsValidTimestampService,
+        EmptyService,
+        PublicationModel,
+        PublicationRepository
+      ],
+    })
+    .compile();
+    repository = module.get<CommentRepository>(CommentRepository);
+  });
+
+  describe('saulo', () => {
+    it('SUCCESSFULLY_FOUND', async () => {
+      const comment = await repository.saulo(2);
+      expect(typeof comment).toEqual('object')
+      // expect(comment.id).toEqual(2)
     });
-
-
-    describe('saulo', () => {
-
-        it('SUCCESSFULLY_FOUND', async () => {
-          
-            jest.spyOn(repository, 'findOne')
-
-            const comment = await repository.saulo(2);
-    
-            expect(typeof comment).toEqual('object')
-           // expect(comment.id).toEqual(2)
-            
-        });
-    });
+  });
 });
