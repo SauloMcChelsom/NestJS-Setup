@@ -20,11 +20,12 @@ export class HttpStatusOkInterceptor implements NestInterceptor {
         const status = HttpStatus.OK;
         const path = request.url.slice(0, request.url.lastIndexOf('?'));
         const url = request.url.substring(request.url.lastIndexOf('?') + 1);
-        const options = JSON.parse(
+        const options = '/v1/comment/public/2'
+        /*JSON.parse(
           '{"' +
             decodeURI(url.replace(/&/g, '","').replace(/=/g, '":"')) +
             '"}',
-        );
+        );*/
 
         const body = {
           ...flow,
@@ -32,7 +33,7 @@ export class HttpStatusOkInterceptor implements NestInterceptor {
           limit: 3,
           path: path,
           method: request.method,
-          ...options,
+          
         };
         body.count = parseInt(body.count || 0);
         body.limit = parseInt(body.limit || 0);

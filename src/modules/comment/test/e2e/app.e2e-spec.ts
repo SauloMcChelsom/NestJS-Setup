@@ -37,11 +37,12 @@ describe('CommentController (e2e)', () => {
   it('GET /comment/public/:id', async () => {
     const { body } = await supertest
       .agent(app.getHttpServer())
-      .get('/v1/comment/public/2')
+      .get('/comment/public/2')
       .set('Accept', 'application/json')
       .expect('Content-Type', /json/)
-      .expect(404);
+      .expect(200);
       
+      console.log(body)
       /*expect(body).toEqual([
         {
           id: 2,

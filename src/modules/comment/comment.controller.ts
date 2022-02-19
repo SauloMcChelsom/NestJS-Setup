@@ -203,7 +203,6 @@ export class CommentController {
   }
 
   @Get('/public/:id')
-  @Version('1')
   @CacheTTL(5)
   @UseFilters(HttpExceptionFilter)
   @UseInterceptors(HttpStatusOkInterceptor)

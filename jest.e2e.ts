@@ -1,6 +1,7 @@
 export default {
   moduleFileExtensions: ["js", "json", "ts"],
   rootDir: ".",
+  clearMocks: true,
   testEnvironment: "node",
   testRegex: ".e2e-spec.ts$",
   transform: {
