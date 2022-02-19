@@ -2,7 +2,7 @@ import { HttpException } from '@nestjs/common';
 import { Test, TestingModule, } from '@nestjs/testing';
 import { getRepositoryToken, } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-
+import request from 'supertest'
 
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { getConnectionManager } from 'typeorm';
@@ -51,11 +51,16 @@ describe('CommentRepository', () => {
     done()
   })
 
-  describe('saulo', () => {
+  describe('listByUserId', () => {
     it('SUCCESSFULLY_FOUND', async () => {
-      const comment = await repository.saulo(2);
-      expect(typeof comment).toEqual('object')
-      // expect(comment.id).toEqual(2)
+      const comment = await repository.listByUserId(2);
+      await expect(typeof comment).toEqual('object')
+    });
+
+    it('NOT_FOUND', async () => {
+      const comment = await repository.listByUserId(1);
+      expect(comment).toHaveLength(0)
     });
   });
+
 });

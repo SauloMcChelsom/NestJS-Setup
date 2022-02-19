@@ -36,15 +36,8 @@ ex. lib/bcrypt colocar no modulo principal "app.module.ts" ou na chamada "module
 -testes
 https://www.youtube.com/watch?v=2G_mWfG0DZE&t=3127s
 https://www.youtube.com/watch?v=VH_RfTFBgKE
-https://sharklabs.com.br/testes-unitarios-com-nodejs-jest-typescript/
 
-
-https://medium.com/@gokulc/configuring-module-resolution-on-typescript-and-jest-b17a93ebf54d
-
-
-https://dev.to/wnqueiroz/drops-03-usando-aliases-para-importacao-de-modulos-em-typescript-1fe9
 
 
 https://github.com/p-salmon/nestjs-typeorm-integration-tests/blob/master/src/user/user.e2e-spec.ts
 
-https://dev.to/webeleon/unit-testing-nestjs-with-typeorm-in-memory-l6m
