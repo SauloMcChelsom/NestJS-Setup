@@ -49,8 +49,8 @@ describe('CommentModel', () => {
   describe('findOneById', () => {
 
     it('SUCCESSFULLY_FOUND', async () => {
-      const spaceships = await service.findOneById(2);
-      await expect(typeof spaceships).toEqual('object')
+      const comment = await service.findOneById(2);
+      await expect(typeof comment).toEqual('object')
     });
   
     it('NOT_FOUND', async () => {
