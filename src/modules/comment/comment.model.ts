@@ -13,7 +13,7 @@ import { UpdateInterface } from './interface';
 export class CommentModel {
   constructor(
     @InjectRepository(CommentRepository)
-    private readonly repositorys: CommentRepository,
+    private readonly  repository_custom: CommentRepository,
 
     @InjectRepository(CommentEntity)
     private readonly repository: Repository<CommentEntity>,
@@ -73,7 +73,7 @@ export class CommentModel {
         end = this.isValidTimestamp.run(end);
       }
 
-      const res = await this.repositorys.listByUserId(
+      const res = await this.repository_custom.listByUserId(
         userId,
         search,
         limit,
@@ -83,7 +83,7 @@ export class CommentModel {
         start,
         end,
       );
-      const count = await this.repositorys.countListByUserId(
+      const count = await this.repository_custom.countListByUserId(
         userId,
         search,
         start,
@@ -131,7 +131,7 @@ export class CommentModel {
         end = this.isValidTimestamp.run(end);
       }
 
-      const res = await this.repositorys.listByPublicationId(
+      const res = await this.repository_custom.listByPublicationId(
         publicationId,
         search,
         limit,
@@ -141,7 +141,7 @@ export class CommentModel {
         start,
         end,
       );
-      const count = await this.repositorys.countListByPublicationId(
+      const count = await this.repository_custom.countListByPublicationId(
         publicationId,
         search,
         start,

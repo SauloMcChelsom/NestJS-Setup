@@ -18,14 +18,6 @@ import { EmptyService } from '@root/src/lib/utility/empty/empty.service';
 import { PublicationModel } from '@root/src/modules/publication/publication.model';
 import { PublicationRepository } from '@root/src/modules/publication/publication.repository';
 
-/** 
-import { FirebaseService } from '@modules/firebase/firebase.service';
-import { CryptUtilityService } from '@root/src/lib/bcrypt/bcrypt.service';
-import { UserModel } from '@root/src/modules/user/user.model';
-import { FirebaseModel } from '@root/src/modules/firebase/firebase.model';
-import { UserRepository } from '@root/src/modules/user/user.repository';
-*/
-
 describe('CommentRepository', () => {
   let repository: CommentRepository;
 
@@ -49,6 +41,15 @@ describe('CommentRepository', () => {
     .compile();
     repository = module.get<CommentRepository>(CommentRepository);
   });
+
+  beforeAll(done => {
+    done()
+  })
+  
+  afterAll(done => {
+    getConnectionManager().get().close()
+    done()
+  })
 
   describe('saulo', () => {
     it('SUCCESSFULLY_FOUND', async () => {
