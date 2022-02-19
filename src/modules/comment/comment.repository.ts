@@ -1,4 +1,4 @@
-import { EntityRepository, Repository, AbstractRepository } from 'typeorm';
+import { EntityRepository, AbstractRepository } from 'typeorm';
 import { CommentEntity } from '@root/src/entity/comment.entity';
 
 @EntityRepository(CommentEntity)

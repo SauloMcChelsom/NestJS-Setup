@@ -8,7 +8,6 @@ import { UserModule } from '@modules/user/user.module';
 import { PublicationModule } from '@modules/publication/publication.module';
 
 import { CommentEntity } from '@entity/comment.entity';
-import { PhotoService } from './photo.service';
 import { CommentController } from './comment.controller';
 import { CommentService } from './comment.service';
 import { CommentModel } from './comment.model';
@@ -35,7 +34,6 @@ import {
   controllers: [CommentController],
   providers: [
     CommentService,
-    PhotoService,
     CommentModel,
     AuthListMapper,
     PublicListMapper,
