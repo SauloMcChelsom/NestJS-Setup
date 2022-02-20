@@ -43,15 +43,15 @@ describe('CommentController (e2e)', () => {
       .expect(200);
       
       console.log(body)
-      /*expect(body).toEqual([
+      expect(body.results).toEqual([
         {
           id: 2,
           comment: 'Esse vídeo é tão bom, que atrai até minhas cachorras pra procurar kkkk super funciona pra gatos e cachorros',
-          timestamp: '2022-01-23T03:34:25.594Z',
+          timestamp: 'Sun Jan 23 2022 00:34:25 GMT-0300 (GMT-03:00)',
           publication_id: 1,
           user_id: 2
         }
-      ]);*/
+      ]);
   });
 
 });
