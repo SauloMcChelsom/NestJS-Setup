@@ -23,7 +23,7 @@ import { PageModule } from '@modules/page/page.module';
 import { FollowModule } from '@root/src/modules/follow/follow.module';
 import { PublicationModule } from '@modules/publication/publication.module';
 import { LikeModule } from '@modules/like/like.module';
-
+import { SeniorModule } from '@modules/senior/senior.module';
 
 @Module({
   imports: [
@@ -47,7 +47,8 @@ import { LikeModule } from '@modules/like/like.module';
     FollowModule,
     PublicationModule,
     LikeModule,
-    CommentModule
+    CommentModule,
+    SeniorModule
   ],
   controllers: [],
   providers: [
