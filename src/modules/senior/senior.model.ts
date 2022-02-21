@@ -58,8 +58,8 @@ export class SeniorModel {
   public async pessoasAindaPresentes(limit:number=3, offset:number=0, order:string='ASC', column:string='id'){
     try{
 
-      if(limit > 15){
-        limit = 15
+      if(limit > 3){
+        limit = 3
       }
 
       if(!(order === "ASC" || order === "DESC")){
@@ -78,8 +78,8 @@ export class SeniorModel {
 
   public async pessoasQueJaDeixaramHotel(limit:number=3, offset:number=0, order:string='ASC', column:string='id'){
     try{
-      if(limit > 15){
-        limit = 15
+      if(limit > 3){
+        limit = 3
       }
 
       if(!(order === "ASC" || order === "DESC")){
@@ -91,7 +91,7 @@ export class SeniorModel {
       }
       throw new HttpException('Cliente não encontrado', HttpStatus.NOT_FOUND)
     }catch(e:any){
-      throw new HttpException(e, HttpStatus.BAD_REQUEST);
+      throw new HttpException(e, HttpStatus.NOT_FOUND);
     }
   }
 
@@ -104,6 +104,18 @@ export class SeniorModel {
       throw Error
     }catch(e){
       throw new HttpException('Cliente não encontrado', HttpStatus.NOT_FOUND);
+    }
+  }
+
+  public async validarDocumentos(doc:string){
+    try{
+      const res = await this.pessoa.findOne({ where:{ documents: doc}})
+      if(res){
+        throw Error
+      }
+      return 'documento disponivel para cadastro'
+    }catch(e){
+      throw new HttpException('Cliente já existe', HttpStatus.NOT_FOUND);
     }
   }
 }

@@ -30,6 +30,12 @@ export class SeniorController {
     return new OK([res], code.SUCCESSFULLY_CREATED, message.SUCCESSFULLY_CREATED) 
   }
 
+  @Get('/validar/documentos/:doc')
+  public async validarDocumentos(@Param('doc') doc: string) {
+    let res = await this.service.validarDocumentos(doc);
+    return new OK([res], code.SUCCESSFULLY_CREATED, message.SUCCESSFULLY_CREATED) 
+  }
+
 
   @Get('/filtro/pessoas-ainda-presentes')
   public async filtroPessoasAindaPresentes(@Query('limit') limit: string='3', @Query('offset') offset:string='0', @Query('order') order:string, @Query('column') column:string) {

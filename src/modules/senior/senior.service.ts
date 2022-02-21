@@ -30,5 +30,8 @@ export class SeniorService {
     return await this.model.consultarDocumentos(doc)
   }
 
+  public async validarDocumentos(doc:string) {
+    return await this.model.validarDocumentos(doc)
+  }
 
 }

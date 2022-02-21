@@ -16,6 +16,11 @@ async function bootstrap() {
   new InitializeFirebase()
   new SwaggerDocument(app)
 
+  app.enableCors({
+    allowedHeaders:"*",
+    origin: "*"
+  });
+
   /*----------------------------| Paginas Web |--------------------*/
   app.useStaticAssets(join(__dirname, '..', './src/views','public'));
   app.setBaseViewsDir(join(__dirname, '..', './src/','views'));
