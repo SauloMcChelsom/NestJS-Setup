@@ -56,7 +56,7 @@ async function bootstrap() {
       /**
        * As mensagens de erro detalhados
        */
-      disableErrorMessages: false,
+      disableErrorMessages: true,
 
       /**
        *  qualquer propriedade não incluída na lista branca é automaticamente removida do objeto resultante

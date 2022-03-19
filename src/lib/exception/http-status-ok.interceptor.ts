@@ -20,27 +20,37 @@ export class HttpStatusOkInterceptor implements NestInterceptor {
         const status = HttpStatus.OK;
         const path = request.url.slice(0, request.url.lastIndexOf('?'));
         const url = request.url.substring(request.url.lastIndexOf('?') + 1);
-        const options = '/v1/comment/public/2'
-        /*JSON.parse(
-          '{"' +
-            decodeURI(url.replace(/&/g, '","').replace(/=/g, '":"')) +
-            '"}',
-        );*/
+       
+        let parameters:any = {}
 
+        if (url.indexOf('=') > -1){
+           parameters = JSON.parse(
+            '{"' +
+              decodeURI(url.replace(/&/g, '","').replace(/=/g, '":"')) +
+            '"}',
+          );
+        }
+ 
         const body = {
           ...flow,
           statusCode: status,
           limit: 3,
           path: path,
           method: request.method,
-          
+          offset: parameters.offset || 0,
+          order:  parameters.order.toUpperCase() || 'asc',
+          column: parameters.column.toLowerCase() || 'id',
+          search: parameters.search || null,
+          start:  parameters.start || null,
+          end:    parameters.end || null
         };
+        
         body.count = parseInt(body.count || 0);
         body.limit = parseInt(body.limit || 0);
         body.offset = parseInt(body.offset || 0);
 
         return body;
       }),
-    );
+    )
   }
 }

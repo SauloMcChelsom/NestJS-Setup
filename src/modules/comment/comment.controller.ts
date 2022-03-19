@@ -152,7 +152,7 @@ export class CommentController {
 
   @Get('/public/publication/:id')
   @Version('1')
-  @CacheTTL(20)
+  @CacheTTL(20) 
   @UseFilters(HttpExceptionFilter)
   @UseInterceptors(HttpStatusOkInterceptor)
   @UseInterceptors(CacheInterceptor)
@@ -162,8 +162,8 @@ export class CommentController {
     @Query('search') search: string,
     @Query('limit') limit = '3',
     @Query('offset') offset = '0',
-    @Query('order') order: string,
-    @Query('column') column: string,
+    @Query('order') order = 'asc',
+    @Query('column') column = 'id',
     @Query('start') start: string,
     @Query('end') end: string,
   ) {
@@ -171,8 +171,8 @@ export class CommentController {
       search: search,
       limit: parseInt(limit) ? parseInt(limit) : 5,
       offset: parseInt(offset) ? parseInt(offset) : 0,
-      order: order,
-      column: column,
+      order: order.toUpperCase(),
+      column: column.toLowerCase(),
       start: start,
       end: end,
     };

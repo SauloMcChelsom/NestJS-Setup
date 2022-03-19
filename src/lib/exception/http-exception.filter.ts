@@ -15,10 +15,22 @@ export class HttpExceptionFilter implements ExceptionFilter {
     const request = ctx.getRequest<Request>();
     const status = exception.getStatus();
     const res = exception.getResponse();
+    const path = request.path
+    const params = request.params
+    const url = request.url.substring(request.url.lastIndexOf('?') + 1);
 
     let _description;
     let _code;
     let _message;
+    let parameters:any = {}
+
+    if (url.indexOf('=') > -1){
+       parameters = JSON.parse(
+        '{"' +
+          decodeURI(url.replace(/&/g, '","').replace(/=/g, '":"')) +
+        '"}',
+      );
+    }
 
     if (typeof res === 'object') {
       _code = res[0];
@@ -35,13 +47,19 @@ export class HttpExceptionFilter implements ExceptionFilter {
       code: _code,
       message: _message,
       description: _description,
-      path: request.url,
+      timestamp: new Date().toISOString(),
+      path: path,
       method: request.method,
+      params:params,
+      offset: parameters.offset || 0,
+      order:  parameters.order.toUpperCase() || 'asc',
+      column: parameters.column.toLowerCase() || 'id',
+      search: parameters.search || null,
+      start:  parameters.start || null,
+      end:    parameters.end || null,
       body: request.body,
-      file: request.file,
       protocol: request.protocol,
       headers: request.headers,
-      timestamp: new Date().toISOString(),
     });
   }
 }

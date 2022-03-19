@@ -11,7 +11,6 @@ export class OK {
 
   constructor(results: any[] = [], code: codes, description = '', count = 0) {
     this.results = results;
-    this.size = results.length;
     this.description = description;
     this.message = message[code];
     this.code = code;

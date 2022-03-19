@@ -9,7 +9,6 @@ import { MulterModule } from '@nestjs/platform-express';
 import { HttpModule } from '@nestjs/axios';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 
-import * as option from '@conf/options/options.conf';
 import { TasksModule } from '@root/src/lib/tasks/tasks.module';
 import { JobsModule } from '@root/src/lib/jobs/jobs.module';
 import { EventModule } from '@root/src/lib/events/events.module';
@@ -90,7 +89,7 @@ import { SeniorModule } from '@modules/senior/senior.module';
     }),
     ThrottlerModule.forRoot({
       ttl: 60,
-      limit: 100,
+      limit: 10,
     }),
     TasksModule,
     JobsModule,

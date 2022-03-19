@@ -15,7 +15,7 @@ let ENV = {
       rejectUnauthorized: false
     }
   },
-  entities: ['**/*.entity.js'],
+  entities: ['./dist/src/entity/*.entity.js'],
 }
 
 const env = process.env.environment
