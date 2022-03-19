@@ -15,7 +15,7 @@ import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { UseGuards } from '@nestjs/common';
 
 import { JwtAuthGuard } from '@lib/guard/jwt-auth.guard';
-import { UID } from '@lib/pipe/uid.pipe';
+import { TOKEN } from '@lib/pipe/token.pipe';
 import { Header } from '@lib/decorator/header.decorator';
 
 import { UseInterceptors, UseFilters } from '@nestjs/common';
@@ -62,7 +62,7 @@ export class CommentController {
   @UseInterceptors(CacheInterceptor)
   @ApiOperation({ summary: 'Listar comentarios pelo token do usuario' })
   public async authListByUserToken(
-    @Header(new UID()) uid: string,
+    @Header(new TOKEN()) token: string,
     @Query('search') search: string,
     @Query('limit') limit = '3',
     @Query('offset') offset = '0',
@@ -71,7 +71,7 @@ export class CommentController {
     @Query('start') start: string,
     @Query('end') end: string,
   ) {
-    const user = await this.user.getUserByUid(uid);
+    const user = await this.user.getUserByUid(token);
     const cls: ClassificationInterface = {
       search: search,
       limit: parseInt(limit) ? parseInt(limit) : 5,
@@ -150,7 +150,7 @@ export class CommentController {
     return new OK(dto, code.SUCCESSFULLY_FOUND, null, count);
   }
 
-  @Get('/public/publication/:id')
+  @Get('/public/publication/:publication_id')
   @Version('1')
   @CacheTTL(20) 
   @UseFilters(HttpExceptionFilter)
@@ -158,7 +158,7 @@ export class CommentController {
   @UseInterceptors(CacheInterceptor)
   @ApiOperation({ summary: 'Listar comentarios por id da publicacao' })
   public async publicListByPublicationId(
-    @Param('id') id: number,
+    @Param('publication_id') publication_id: number,
     @Query('search') search: string,
     @Query('limit') limit = '3',
     @Query('offset') offset = '0',
@@ -177,7 +177,7 @@ export class CommentController {
       end: end,
     };
     const { res, count } = await this.service.publicListByPublicationId(
-      id,
+      publication_id,
       cls,
     );
     const dto = res.map((r) => this.publicListMapper.toMapper(r));
@@ -194,9 +194,9 @@ export class CommentController {
   @ApiOperation({ summary: 'Buscar comentario por id' })
   public async authFindOneCommentById(
     @Param('id') id: number,
-    @Header(new UID()) uid: string,
+    @Header(new TOKEN()) token: string,
   ) {
-    const user = await this.user.getUserByUid(uid);
+    const user = await this.user.getUserByUid(token);
     const res = await this.service.authFindOneById(id, user.id);
     const dto = this.authFindOneMapper.toMapper(res);
     return new OK([dto], code.SUCCESSFULLY_FOUND);
@@ -220,10 +220,23 @@ export class CommentController {
   @UseFilters(HttpExceptionFilter)
   @UseInterceptors(HttpStatusOkInterceptor)
   @ApiOperation({ summary: 'Criar um comentario' })
-  public async create(@Body() body: CreateDto, @Header(new UID()) uid: string) {
-    const user = await this.user.getUserByUid(uid);
+  public async create(@Body() body: CreateDto, @Header(new TOKEN()) token: string) {
+    const user = await this.user.getUserByUid(token);
     const commet: CreateInterface = { ...body };
     commet.user_id = user.id;
+    const res = await this.service.create(commet);
+    const dto = this.createMapper.toMapper(res);
+    return new OK([dto], code.SUCCESSFULLY_CREATED);
+  }
+
+  @Post('/public/:user_id')
+  @Version('1')
+  @UseFilters(HttpExceptionFilter)
+  @UseInterceptors(HttpStatusOkInterceptor)
+  @ApiOperation({ summary: 'Criar um comentario' })
+  public async createPublic(@Body() body: CreateDto, @Param('user_id') user_id: number) {
+    const commet: CreateInterface = { ...body };
+    commet.user_id = user_id;
     const res = await this.service.create(commet);
     const dto = this.createMapper.toMapper(res);
     return new OK([dto], code.SUCCESSFULLY_CREATED);
@@ -238,10 +251,26 @@ export class CommentController {
   public async update(
     @Param('id') id: number,
     @Body() body: UpdateDto,
-    @Header(new UID()) uid: string,
+    @Header(new TOKEN()) token: string,
   ) {
-    const user = await this.user.getUserByUid(uid);
+    const user = await this.user.getUserByUid(token);
     const commet: UpdateInterface = { ...body, id: id, user_id: user.id };
+    const res = await this.service.update(commet);
+    const dto = this.updateMapper.toMapper(res);
+    return new OK([dto], code.SUCCESSFULLY_UPDATED);
+  }
+
+  @Put('/public/:user_id/:publication_id')
+  @Version('1')
+  @UseFilters(HttpExceptionFilter)
+  @UseInterceptors(HttpStatusOkInterceptor)
+  @ApiOperation({ summary: 'Atualizar um comentario' })
+  public async updatePublic(
+    @Param('user_id') user_id: number,
+    @Param('publication_id') publication_id: number,
+    @Body() body: UpdateDto
+  ) {
+    const commet: UpdateInterface = { ...body, id: publication_id, user_id: user_id };
     const res = await this.service.update(commet);
     const dto = this.updateMapper.toMapper(res);
     return new OK([dto], code.SUCCESSFULLY_UPDATED);
@@ -253,9 +282,22 @@ export class CommentController {
   @UseFilters(HttpExceptionFilter)
   @UseInterceptors(HttpStatusOkInterceptor)
   @ApiOperation({ summary: 'Deletar um comentario' })
-  public async delete(@Param('id') id: number, @Header(new UID()) uid: string) {
-    const user = await this.user.getUserByUid(uid);
+  public async delete(@Param('id') id: number, @Header(new TOKEN()) token: string) {
+    const user = await this.user.getUserByUid(token);
     await this.service.delete(id, user.id);
+    return new OK([], code.DELETED_SUCCESSFULLY);
+  }
+
+  @Delete('/public/:user_id/:comment_id')
+  @Version('1')
+  @UseFilters(HttpExceptionFilter)
+  @UseInterceptors(HttpStatusOkInterceptor)
+  @ApiOperation({ summary: 'Deletar um comentario' })
+  public async deletePublic(
+    @Param('user_id') user_id: number,
+    @Param('comment_id') comment_id: number,
+  ) {
+    await this.service.delete(comment_id, user_id);
     return new OK([], code.DELETED_SUCCESSFULLY);
   }
 }

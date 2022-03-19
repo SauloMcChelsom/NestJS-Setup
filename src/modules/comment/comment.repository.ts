@@ -82,6 +82,7 @@ export class CommentRepository extends AbstractRepository<CommentEntity> {
     timestampStart = '',
     timestampEnd = '',
   ) {
+    console.log('limit ---->', limit)
     return await this.createQueryBuilder('comment')
       .where('comment.publication_id = :publicationId', {
         publicationId: publicationId,

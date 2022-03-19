@@ -78,10 +78,10 @@ export class CommentService {
     return await this.model.findOneById(body.id);
   }
 
-  public async delete(id: number, userId: number) {
-    await this.model.validateID(id, userId);
-    const comment = await this.model.findOneById(id);
-    await this.model.deleteById(id);
+  public async delete(comment_id: number, user_id: number) {
+    await this.model.validateID(comment_id, user_id);
+    const comment = await this.model.findOneById(comment_id);
+    await this.model.deleteById(comment_id);
 
   }
 }

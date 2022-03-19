@@ -16,7 +16,7 @@ import { HttpExceptionFilter } from '@lib/exception/http-exception.filter';
 import { OK } from '@lib/exception/http-status-ok';
 import { HttpStatusOkInterceptor } from '@lib/exception/http-status-ok.interceptor';
 import { JwtAuthGuard } from '@lib/guard/jwt-auth.guard';
-import { UID } from '@lib/pipe/uid.pipe';
+import { UID } from '@root/src/lib/pipe/token.pipe';
 import { Header } from '@lib/decorator/header.decorator';
 import { code } from '@root/src/lib/enum';
 

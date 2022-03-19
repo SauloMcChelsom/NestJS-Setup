@@ -13,7 +13,7 @@ import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { UseGuards } from '@nestjs/common';
 
 import { JwtAuthGuard } from '@lib/guard/jwt-auth.guard';
-import { UID } from '@lib/pipe/uid.pipe';
+import { UID } from '@root/src/lib/pipe/token.pipe';
 import { Header } from '@lib/decorator/header.decorator';
 
 import { UseInterceptors, UseFilters } from '@nestjs/common';
