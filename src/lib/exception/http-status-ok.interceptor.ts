@@ -20,7 +20,17 @@ export class HttpStatusOkInterceptor implements NestInterceptor {
         const status = HttpStatus.OK;
         const path = request.url.slice(0, request.url.lastIndexOf('?'));
         const url = request.url.substring(request.url.lastIndexOf('?') + 1);
-       
+       const conf:any = request
+
+       const req = {
+        rawHeaders: conf.rawHeaders,
+        httpVersion: conf.httpVersion,
+        keepAliveTimeout: conf.keepAliveTimeout,
+        params: conf.params,
+        protocol: conf.protocol,
+       }
+
+
         let parameters:any = {}
 
         if (url.indexOf('=') > -1){
@@ -37,12 +47,14 @@ export class HttpStatusOkInterceptor implements NestInterceptor {
           limit: 3,
           path: path,
           method: request.method,
+          req,
           offset: parameters.offset || 0,
           order:  parameters.order.toUpperCase() || 'asc',
           column: parameters.column.toLowerCase() || 'id',
           search: parameters.search || null,
           start:  parameters.start || null,
-          end:    parameters.end || null
+          end:    parameters.end || null,
+          body: request.body,
         };
         
         body.count = parseInt(body.count || 0);

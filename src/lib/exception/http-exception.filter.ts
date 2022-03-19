@@ -16,8 +16,16 @@ export class HttpExceptionFilter implements ExceptionFilter {
     const status = exception.getStatus();
     const res = exception.getResponse();
     const path = request.path
-    const params = request.params
     const url = request.url.substring(request.url.lastIndexOf('?') + 1);
+    const conf:any = request
+
+    const req = {
+      rawHeaders: conf.rawHeaders,
+      httpVersion: conf.httpVersion,
+      keepAliveTimeout: conf.keepAliveTimeout,
+      params: conf.params,
+      protocol: request.protocol,
+    }
 
     let _description;
     let _code;
@@ -50,7 +58,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
       timestamp: new Date().toISOString(),
       path: path,
       method: request.method,
-      params:params,
+      req,
       offset: parameters.offset || 0,
       order:  parameters.order.toUpperCase() || 'asc',
       column: parameters.column.toLowerCase() || 'id',
@@ -58,8 +66,6 @@ export class HttpExceptionFilter implements ExceptionFilter {
       start:  parameters.start || null,
       end:    parameters.end || null,
       body: request.body,
-      protocol: request.protocol,
-      headers: request.headers,
     });
   }
 }
