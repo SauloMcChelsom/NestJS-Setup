@@ -40,8 +40,9 @@ async function bootstrap() {
   new InitializeFirebase();
   new SwaggerDocument(app);
 
-  app.useStaticAssets(join(__dirname, '..', './src/views', 'public'));
-  app.setBaseViewsDir(join(__dirname, '..', './src/', 'views'));
+  app.useStaticAssets(join(__dirname, '..', '..', 'src', 'views', 'public'));
+  app.setBaseViewsDir(join(__dirname, '..', '..', 'src', 'views'));
+  
   app.setViewEngine('hbs');
 
   app.enableVersioning({
