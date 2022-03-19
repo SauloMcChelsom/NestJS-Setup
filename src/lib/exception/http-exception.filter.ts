@@ -13,12 +13,12 @@ export class HttpExceptionFilter implements ExceptionFilter {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
     const request = ctx.getRequest<Request>();
+    const conf:any = request
     const status = exception.getStatus();
     const res = exception.getResponse();
-    const path = request.path
+    const path = conf.originalUrl
     const url = request.url.substring(request.url.lastIndexOf('?') + 1);
-    const conf:any = request
-
+    
     const req = {
       rawHeaders: conf.rawHeaders,
       httpVersion: conf.httpVersion,

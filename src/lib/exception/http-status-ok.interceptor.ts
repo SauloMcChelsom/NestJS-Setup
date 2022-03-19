@@ -17,19 +17,18 @@ export class HttpStatusOkInterceptor implements NestInterceptor {
       map((flow) => {
         const ctx = _context.switchToHttp();
         const request = ctx.getRequest<Request>();
+        const conf:any = request
         const status = HttpStatus.OK;
-        const path = request.url.slice(0, request.url.lastIndexOf('?'));
+        const path = conf.originalUrl
         const url = request.url.substring(request.url.lastIndexOf('?') + 1);
-       const conf:any = request
 
-       const req = {
-        rawHeaders: conf.rawHeaders,
-        httpVersion: conf.httpVersion,
-        keepAliveTimeout: conf.keepAliveTimeout,
-        params: conf.params,
-        protocol: conf.protocol,
-       }
-
+        const req = {
+          rawHeaders: conf.rawHeaders,
+          httpVersion: conf.httpVersion,
+          keepAliveTimeout: conf.keepAliveTimeout,
+          params: conf.params,
+          protocol: conf.protocol,
+        }
 
         let parameters:any = {}
 
