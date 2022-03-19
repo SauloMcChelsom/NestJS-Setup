@@ -115,8 +115,6 @@ export class CommentModel {
         limit = 15;
       }
 
-      console.log('limit ---->', limit)
-
       if (this.empty.run(column)) {
         column = 'id';
       }
