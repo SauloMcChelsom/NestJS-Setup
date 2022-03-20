@@ -16,7 +16,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
     const conf:any = request
     const status = exception.getStatus();
     const res = exception.getResponse();
-    const path = conf.originalUrl
+    const path = conf._parsedUrl.pathname
     const url = request.url.substring(request.url.lastIndexOf('?') + 1);
     
     const req = {

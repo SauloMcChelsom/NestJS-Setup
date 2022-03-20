@@ -19,7 +19,7 @@ export class HttpStatusOkInterceptor implements NestInterceptor {
         const request = ctx.getRequest<Request>();
         const conf:any = request
         const status = HttpStatus.OK;
-        const path = conf.originalUrl
+        const path = conf._parsedUrl.pathname
         const url = request.url.substring(request.url.lastIndexOf('?') + 1);
 
         const req = {

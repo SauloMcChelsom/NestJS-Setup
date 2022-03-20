@@ -53,8 +53,8 @@ export class CommentController {
     private updateMapper: UpdateMapper,
   ) {}
 
-  @Get('/auth/user/')
-  @Version('1')
+  @Get('/user/')
+  @Version('1/private')
   @CacheTTL(20)
   @UseGuards(JwtAuthGuard)
   @UseFilters(HttpExceptionFilter)
@@ -86,8 +86,8 @@ export class CommentController {
     return new OK(dto, code.SUCCESSFULLY_FOUND, null, count);
   }
 
-  @Get('/auth/user/:id')
-  @Version('1')
+  @Get('/user/:id')
+  @Version('1/private')
   @CacheTTL(20)
   @UseGuards(JwtAuthGuard)
   @UseFilters(HttpExceptionFilter)
@@ -118,8 +118,8 @@ export class CommentController {
     return new OK(dto, code.SUCCESSFULLY_FOUND, null, count);
   }
 
-  @Get('/public/user/:id')
-  @Version('1')
+  @Get('/user/:id')
+  @Version('1/public')
   @CacheTTL(20)
   @UseFilters(HttpExceptionFilter)
   @UseInterceptors(HttpStatusOkInterceptor)
@@ -150,8 +150,8 @@ export class CommentController {
     return new OK(dto, code.SUCCESSFULLY_FOUND, null, count);
   }
 
-  @Get('/public/publication/:publication_id')
-  @Version('1')
+  @Get('/publication/:publication_id')
+  @Version('1/public')
   @CacheTTL(20) 
   @UseFilters(HttpExceptionFilter)
   @UseInterceptors(HttpStatusOkInterceptor)
@@ -184,8 +184,8 @@ export class CommentController {
     return new OK(dto, code.SUCCESSFULLY_FOUND, null, count);
   }
 
-  @Get('/auth/:id')
-  @Version('1')
+  @Get(':id')
+  @Version('1/private')
   @CacheTTL(5)
   @UseGuards(JwtAuthGuard)
   @UseFilters(HttpExceptionFilter)
@@ -202,8 +202,8 @@ export class CommentController {
     return new OK([dto], code.SUCCESSFULLY_FOUND);
   }
 
-  @Get('/public/:id')
-  @Version('1')
+  @Get(':id')
+  @Version('1/public')
   @CacheTTL(5)
   @UseFilters(HttpExceptionFilter)
   @UseInterceptors(HttpStatusOkInterceptor)
@@ -215,8 +215,8 @@ export class CommentController {
     return new OK([dto], code.SUCCESSFULLY_FOUND);
   }
 
-  @Post('/auth/')
-  @Version('1')
+  @Post()
+  @Version('1/private')
   @UseFilters(HttpExceptionFilter)
   @UseInterceptors(HttpStatusOkInterceptor)
   @ApiOperation({ summary: 'Criar um comentario' })
@@ -229,8 +229,8 @@ export class CommentController {
     return new OK([dto], code.SUCCESSFULLY_CREATED);
   }
 
-  @Post('/public/:user_id')
-  @Version('1')
+  @Post('user/:user_id')
+  @Version('1/public')
   @UseFilters(HttpExceptionFilter)
   @UseInterceptors(HttpStatusOkInterceptor)
   @ApiOperation({ summary: 'Criar um comentario' })
@@ -242,8 +242,8 @@ export class CommentController {
     return new OK([dto], code.SUCCESSFULLY_CREATED);
   }
 
-  @Put('/auth/:id')
-  @Version('1')
+  @Put(':id')
+  @Version('1/private')
   @UseGuards(JwtAuthGuard)
   @UseFilters(HttpExceptionFilter)
   @UseInterceptors(HttpStatusOkInterceptor)
@@ -260,24 +260,24 @@ export class CommentController {
     return new OK([dto], code.SUCCESSFULLY_UPDATED);
   }
 
-  @Put('/public/:user_id/:publication_id')
-  @Version('1')
+  @Put(':comment_id/user/:user_id/')
+  @Version('1/public')
   @UseFilters(HttpExceptionFilter)
   @UseInterceptors(HttpStatusOkInterceptor)
   @ApiOperation({ summary: 'Atualizar um comentario' })
   public async updatePublic(
     @Param('user_id') user_id: number,
-    @Param('publication_id') publication_id: number,
+    @Param('comment_id') comment_id: number,
     @Body() body: UpdateDto
   ) {
-    const commet: UpdateInterface = { ...body, id: publication_id, user_id: user_id };
+    const commet: UpdateInterface = { ...body, id: comment_id, user_id: user_id };
     const res = await this.service.update(commet);
     const dto = this.updateMapper.toMapper(res);
     return new OK([dto], code.SUCCESSFULLY_UPDATED);
   }
 
-  @Delete('/auth/:id')
-  @Version('1')
+  @Delete(':id')
+  @Version('1/private')
   @UseGuards(JwtAuthGuard)
   @UseFilters(HttpExceptionFilter)
   @UseInterceptors(HttpStatusOkInterceptor)
@@ -288,8 +288,8 @@ export class CommentController {
     return new OK([], code.DELETED_SUCCESSFULLY);
   }
 
-  @Delete('/public/:user_id/:comment_id')
-  @Version('1')
+  @Delete(':comment_id/user/:user_id/')
+  @Version('1/public')
   @UseFilters(HttpExceptionFilter)
   @UseInterceptors(HttpStatusOkInterceptor)
   @ApiOperation({ summary: 'Deletar um comentario' })

@@ -188,7 +188,7 @@ export class CommentModel {
       if (res) {
         return true;
       }
-      throw new HttpException(code.DATA_CONFLICT, 409);
+      throw new HttpException(code.NOT_FOUND, 404);
     } catch (e: any) {
       throw new HttpException(e.response, e.status);
     }

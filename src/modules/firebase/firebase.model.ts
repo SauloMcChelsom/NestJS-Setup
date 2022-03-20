@@ -51,10 +51,7 @@ export class FirebaseModel {
       throw decodedToken;
     } catch (error: any) {
       if (error.code) {
-        throw new HttpException(
-          ['verify_id_token'.toUpperCase(), error.message],
-          error.code,
-        );
+        throw new HttpException(error.message, 409);
       }
       throw new HttpException(code.ERROR_GENERIC, 500);
     }
