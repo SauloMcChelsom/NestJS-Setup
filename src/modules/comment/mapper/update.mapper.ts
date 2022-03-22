@@ -1,7 +1,7 @@
 import { ReturnInterface } from '../interface/return.interface';
 
 export class UpdateMapper {
-  public toMapper(field: any) {
+  public toMapper(field: ReturnInterface) {
     return {
       id: field.id,
       user_id: field.user_id,

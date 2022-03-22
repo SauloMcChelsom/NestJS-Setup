@@ -18,10 +18,9 @@ export class HttpResponse implements NestInterceptor {
         const ctx = _context.switchToHttp();
         const request = ctx.getRequest<Request>();
         const conf:any = request
-        const status = HttpStatus.OK;
+        const status = ctx.getResponse().statusCode
         const path = conf._parsedUrl.pathname
         const url = request.url.substring(request.url.lastIndexOf('?') + 1);
-
         const req = {
           rawHeaders: conf.rawHeaders,
           httpVersion: conf.httpVersion,

@@ -1,10 +1,10 @@
-import { CreateInterface } from '../interface/create.interface';
+import { ReturnInterface } from '../interface/return.interface';
 
 export class PublicListCommentByUserIdMapper {
-  public toMapper(comment: CreateInterface) {
+  public toMapper(comment: ReturnInterface) {
     return {
       comment: comment.comment,
-      timestamp: comment.timestamp?.toString(),
+      timestamp: comment.timestamp.toString(),
     };
   }
 }

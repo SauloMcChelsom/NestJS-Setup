@@ -86,7 +86,7 @@ export class CommentController {
     return new OK(dto, code.SUCCESSFULLY_FOUND, null, count);
   }
 
-  @Get('/user/:id')
+  @Get('/user/:user_id')
   @Version('1/private')
   @CacheTTL(20)
   @UseGuards(JwtAuthGuard)
@@ -95,7 +95,7 @@ export class CommentController {
   @UseInterceptors(CacheInterceptor)
   @ApiOperation({ summary: 'Listar comentarios por id do usuario' })
   public async authListByUserId(
-    @Param('id') id: number,
+    @Param('user_id') user_id: number,
     @Query('search') search: string,
     @Query('limit') limit = '3',
     @Query('offset') offset = '0',
@@ -113,12 +113,12 @@ export class CommentController {
       start: start,
       end: end,
     };
-    const { res, count } = await this.service.authListByUserId(id, cls);
+    const { res, count } = await this.service.authListByUserId(user_id, cls);
     const dto = res.map((r) => this.authListMapper.toMapper(r));
     return new OK(dto, code.SUCCESSFULLY_FOUND, null, count);
   }
 
-  @Get('/user/:id')
+  @Get('/user/:user_id')
   @Version('1/public')
   @CacheTTL(20)
   @UseFilters(HttpExceptions)
@@ -126,7 +126,7 @@ export class CommentController {
   @UseInterceptors(CacheInterceptor)
   @ApiOperation({ summary: 'Listar comentarios por id do usuario' })
   public async publicListByUserId(
-    @Param('id') id: number,
+    @Param('user_id') user_id: number,
     @Query('search') search: string,
     @Query('limit') limit = '3',
     @Query('offset') offset = '0',
@@ -145,7 +145,7 @@ export class CommentController {
       end: end,
     };
 
-    const { res, count } = await this.service.publicListByUserId(id, cls);
+    const { res, count } = await this.service.publicListByUserId(user_id, cls);
     const dto = res.map((r) => this.publicListMapper.toMapper(r));
     return new OK(dto, code.SUCCESSFULLY_FOUND, null, count);
   }
@@ -184,7 +184,7 @@ export class CommentController {
     return new OK(dto, code.SUCCESSFULLY_FOUND, null, count);
   }
 
-  @Get(':id')
+  @Get(':comment_id')
   @Version('1/private')
   @CacheTTL(5)
   @UseGuards(JwtAuthGuard)
@@ -193,24 +193,24 @@ export class CommentController {
   @UseInterceptors(CacheInterceptor)
   @ApiOperation({ summary: 'Buscar comentario por id' })
   public async authFindOneCommentById(
-    @Param('id') id: number,
+    @Param('comment_id') comment_id: number,
     @Header(new TOKEN()) token: string,
   ) {
     const user = await this.user.getUserByUid(token);
-    const res = await this.service.authFindOneById(id, user.id);
+    const res = await this.service.authFindOneById(comment_id, user.id);
     const dto = this.authFindOneMapper.toMapper(res);
     return new OK([dto], code.SUCCESSFULLY_FOUND);
   }
 
-  @Get(':id')
+  @Get(':comment_id')
   @Version('1/public')
   @CacheTTL(5)
   @UseFilters(HttpExceptions)
   @UseInterceptors(HttpResponse)
   @UseInterceptors(CacheInterceptor)
   @ApiOperation({ summary: 'Buscar comentario por id' })
-  public async publicFindOneById(@Param('id') id: number) {
-    const res = await this.service.publicFindOneById(id);
+  public async publicFindOneById(@Param('comment_id') comment_id: number) {
+    const res = await this.service.publicFindOneById(comment_id);
     const dto = this.publicFindOneMapper.toMapper(res);
     return new OK([dto], code.SUCCESSFULLY_FOUND);
   }
@@ -222,8 +222,10 @@ export class CommentController {
   @ApiOperation({ summary: 'Criar um comentario' })
   public async create(@Body() body: CreateDto, @Header(new TOKEN()) token: string) {
     const user = await this.user.getUserByUid(token);
-    const commet: CreateInterface = { ...body };
-    commet.user_id = user.id;
+    const commet: CreateInterface = {
+      ...body,
+      user_id:user.id
+    }
     const res = await this.service.create(commet);
     const dto = this.createMapper.toMapper(res);
     return new OK([dto], code.SUCCESSFULLY_CREATED);
@@ -235,26 +237,32 @@ export class CommentController {
   @UseInterceptors(HttpResponse)
   @ApiOperation({ summary: 'Criar um comentario' })
   public async createPublic(@Body() body: CreateDto, @Param('user_id') user_id: number) {
-    const commet: CreateInterface = { ...body };
-    commet.user_id = user_id;
+    const commet: CreateInterface = {
+      ...body,
+      user_id:user_id
+    }
     const res = await this.service.create(commet);
     const dto = this.createMapper.toMapper(res);
     return new OK([dto], code.SUCCESSFULLY_CREATED);
   }
 
-  @Put(':id')
+  @Put(':comment_id')
   @Version('1/private')
   @UseGuards(JwtAuthGuard)
   @UseFilters(HttpExceptions)
   @UseInterceptors(HttpResponse)
   @ApiOperation({ summary: 'Atualizar um comentario' })
   public async update(
-    @Param('id') id: number,
+    @Param('comment_id') comment_id: number,
     @Body() body: UpdateDto,
     @Header(new TOKEN()) token: string,
   ) {
     const user = await this.user.getUserByUid(token);
-    const commet: UpdateInterface = { ...body, id: id, user_id: user.id };
+    const commet: UpdateInterface = { 
+      ...body, 
+      id: comment_id, 
+      user_id: user.id 
+    };
     const res = await this.service.update(commet);
     const dto = this.updateMapper.toMapper(res);
     return new OK([dto], code.SUCCESSFULLY_UPDATED);
@@ -270,21 +278,25 @@ export class CommentController {
     @Param('comment_id') comment_id: number,
     @Body() body: UpdateDto
   ) {
-    const commet: UpdateInterface = { ...body, id: comment_id, user_id: user_id };
+    const commet: UpdateInterface = { 
+      ...body, 
+      id: comment_id, 
+      user_id: user_id 
+    };
     const res = await this.service.update(commet);
     const dto = this.updateMapper.toMapper(res);
     return new OK([dto], code.SUCCESSFULLY_UPDATED);
   }
 
-  @Delete(':id')
+  @Delete(':comment_id')
   @Version('1/private')
   @UseGuards(JwtAuthGuard)
   @UseFilters(HttpExceptions)
   @UseInterceptors(HttpResponse)
   @ApiOperation({ summary: 'Deletar um comentario' })
-  public async delete(@Param('id') id: number, @Header(new TOKEN()) token: string) {
+  public async delete(@Param('comment_id') comment_id: number, @Header(new TOKEN()) token: string) {
     const user = await this.user.getUserByUid(token);
-    await this.service.delete(id, user.id);
+    await this.service.delete(comment_id, user.id);
     return new OK([], code.DELETED_SUCCESSFULLY);
   }
 
