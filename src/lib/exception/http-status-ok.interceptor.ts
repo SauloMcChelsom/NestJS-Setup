@@ -14,7 +14,7 @@ export class HttpStatusOkInterceptor implements NestInterceptor {
     next: CallHandler,
   ): Observable<any> {
     return next.handle().pipe(
-      map((flow) => {
+      map((res_count) => {
         const ctx = _context.switchToHttp();
         const request = ctx.getRequest<Request>();
         const conf:any = request
@@ -41,7 +41,7 @@ export class HttpStatusOkInterceptor implements NestInterceptor {
         }
  
         const body = {
-          ...flow,
+          ...res_count,
           statusCode: status,
           limit: 3,
           path: path,

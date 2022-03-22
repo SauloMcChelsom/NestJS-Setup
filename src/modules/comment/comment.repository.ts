@@ -40,7 +40,15 @@ export class CommentRepository extends AbstractRepository<CommentEntity> {
       .orderBy(`comment.${column}`, order)
       .limit(limit)
       .offset(offset)
-      .getMany();
+      .getMany()
+      .catch(err => {
+        throw new HttpException({
+          code : code.QUERY_FAILED,
+          message : `${err.detail || err.hint || err.routine}`,
+          description : ''
+        }, HttpStatus.BAD_REQUEST);
+      });
+
   }
 
   async countListByUserId(
@@ -71,7 +79,14 @@ export class CommentRepository extends AbstractRepository<CommentEntity> {
         { timestampEnd: timestampEnd },
       )
       .limit(1)
-      .getCount();
+      .getCount()
+      .catch(err => {
+        throw new HttpException({
+          code : code.QUERY_FAILED,
+          message : `${err.detail || err.hint || err.routine}`,
+          description : ''
+        }, HttpStatus.BAD_REQUEST);
+      });
   }
 
   async listByPublicationId(
@@ -150,6 +165,13 @@ export class CommentRepository extends AbstractRepository<CommentEntity> {
         { timestampEnd: timestampEnd },
       )
       .limit(1)
-      .getCount();
+      .getCount()
+      .catch(err => {
+        throw new HttpException({
+          code : code.QUERY_FAILED,
+          message : `${err.detail || err.hint || err.routine}`,
+          description : ''
+        }, HttpStatus.BAD_REQUEST);
+      });
   }
 }
