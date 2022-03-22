@@ -43,4 +43,5 @@ export enum message {
   BAD_REQUEST = 'Bad Request',
   QUERY_FAILED = 'Falha no processamento da expressão',
   TIMESTAMP_FAILED = 'Falha no processamento da expressão',
+  CLASS_VALIDATOR_FAILED = 'Falha no processamento da expressão'
 }

@@ -2,9 +2,9 @@ import { Controller, Headers, Param, Get, Delete } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 
 import { UseInterceptors, UseFilters } from '@nestjs/common';
-import { HttpExceptionFilter } from '@lib/exception/http-exception.filter';
-import { OK } from '@lib/exception/http-status-ok';
-import { HttpStatusOkInterceptor } from '@lib/exception/http-status-ok.interceptor';
+import { HttpExceptions } from '@root/src/lib/http-status/http-exception';
+import { OK } from '@root/src/lib/http-status/ok';
+import { HttpResponse } from '@root/src/lib/http-status/http-response';
 import { code, message } from '@root/src/lib/enum';
 import { FirebaseService } from './firebase.service';
 import { CheckUserExistsMapper } from './mapper/check-user-exists-by-email.mapper';
@@ -18,8 +18,8 @@ export class FirebaseController {
   ) {}
 
   @Get('/auth/revoke-refresh-token')
-  @UseFilters(HttpExceptionFilter)
-  @UseInterceptors(HttpStatusOkInterceptor)
+  @UseFilters(HttpExceptions)
+  @UseInterceptors(HttpResponse)
   @ApiOperation({ summary: 'Destruir o teken' })
   public async revokeRefreshTokens(@Headers('Authorization') token: string) {
     await this.service.revokeRefreshTokens(token);
@@ -27,8 +27,8 @@ export class FirebaseController {
   }
 
   @Get('/auth/verify-token')
-  @UseFilters(HttpExceptionFilter)
-  @UseInterceptors(HttpStatusOkInterceptor)
+  @UseFilters(HttpExceptions)
+  @UseInterceptors(HttpResponse)
   @ApiOperation({ summary: 'Verificar se o token existe ou esta valido' })
   public async verifyToken(@Headers('Authorization') token: string) {
     await this.service.verifyToken(token);
@@ -36,8 +36,8 @@ export class FirebaseController {
   }
 
   @Get('/auth/get-user-by-uid/:uid')
-  @UseFilters(HttpExceptionFilter)
-  @UseInterceptors(HttpStatusOkInterceptor)
+  @UseFilters(HttpExceptions)
+  @UseInterceptors(HttpResponse)
   @ApiOperation({ summary: 'Obter informação privada do usuario por uid' })
   public async getUserByUid(
     @Param('uid') uid: string,
@@ -48,8 +48,8 @@ export class FirebaseController {
   }
 
   @Get('/auth/get-user-by-email/:email')
-  @UseFilters(HttpExceptionFilter)
-  @UseInterceptors(HttpStatusOkInterceptor)
+  @UseFilters(HttpExceptions)
+  @UseInterceptors(HttpResponse)
   @ApiOperation({ summary: 'Obter informação privada do usuario por email' })
   public async getUserByEmail(
     @Param('email') email: string,
@@ -60,8 +60,8 @@ export class FirebaseController {
   }
 
   @Get('/public/user-display-by-email/:email')
-  @UseFilters(HttpExceptionFilter)
-  @UseInterceptors(HttpStatusOkInterceptor)
+  @UseFilters(HttpExceptions)
+  @UseInterceptors(HttpResponse)
   @ApiOperation({
     summary: 'Obter informação publica de qualquer usuario por email',
   })
@@ -72,8 +72,8 @@ export class FirebaseController {
   }
 
   @Delete('/auth')
-  @UseFilters(HttpExceptionFilter)
-  @UseInterceptors(HttpStatusOkInterceptor)
+  @UseFilters(HttpExceptions)
+  @UseInterceptors(HttpResponse)
   @ApiOperation({ summary: 'Deletar o usuario passando o token' })
   public async delete(@Headers('Authorization') token: string) {
     await this.service.deleteUser(token);

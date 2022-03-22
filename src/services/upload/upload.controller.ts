@@ -10,9 +10,9 @@ import { diskStorage } from 'multer';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 
 import { UseInterceptors, UseFilters } from '@nestjs/common';
-import { HttpExceptionFilter } from '@lib/exception/http-exception.filter';
-import { OK } from '@lib/exception/http-status-ok';
-import { HttpStatusOkInterceptor } from '@lib/exception/http-status-ok.interceptor';
+import { HttpExceptions } from '@root/src/lib/http-status/http-exception';
+import { OK } from '@root/src/lib/http-status/ok';
+import { HttpResponse } from '@root/src/lib/http-status/http-response';
 import { code } from '@root/src/lib/enum';
 import {
   filterExtensionFiles,
@@ -33,8 +33,8 @@ export class UploadController {
       fileFilter: filterExtensionFiles,
     }),
   )
-  @UseFilters(HttpExceptionFilter)
-  @UseInterceptors(HttpStatusOkInterceptor)
+  @UseFilters(HttpExceptions)
+  @UseInterceptors(HttpResponse)
   @ApiOperation({ summary: 'Upload de um arquivo' })
   public async oneFile(
     @UploadedFile() file: Express.Multer.File,
@@ -61,8 +61,8 @@ export class UploadController {
       fileFilter: filterExtensionFiles,
     }),
   )
-  @UseFilters(HttpExceptionFilter)
-  @UseInterceptors(HttpStatusOkInterceptor)
+  @UseFilters(HttpExceptions)
+  @UseInterceptors(HttpResponse)
   @ApiOperation({ summary: 'Upload de até 20 arquivos' })
   async multipleFiles(
     @UploadedFiles() files,

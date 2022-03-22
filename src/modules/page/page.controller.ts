@@ -16,9 +16,9 @@ import { UID } from '@root/src/lib/pipe/token.pipe';
 import { Header } from '@lib/decorator/header.decorator';
 
 import { UseInterceptors, UseFilters } from '@nestjs/common';
-import { HttpExceptionFilter } from '@lib/exception/http-exception.filter';
-import { OK } from '@lib/exception/http-status-ok';
-import { HttpStatusOkInterceptor } from '@lib/exception/http-status-ok.interceptor';
+import { HttpExceptions } from '@root/src/lib/http-status/http-exception';
+import { OK } from '@root/src/lib/http-status/ok';
+import { HttpResponse } from '@root/src/lib/http-status/http-response';
 import { UserService } from '@modules/user/user.service';
 import { ClassificationInterface } from '@root/src/lib/interfaces';
 import { code } from '@root/src/lib/enum';
@@ -51,8 +51,8 @@ export class PageController {
   @Get('/auth/name/:page')
   @UseGuards(JwtAuthGuard)
   @Version('1')
-  @UseFilters(HttpExceptionFilter)
-  @UseInterceptors(HttpStatusOkInterceptor)
+  @UseFilters(HttpExceptions)
+  @UseInterceptors(HttpResponse)
   @ApiOperation({ summary: 'Buscar por nome da pagina' })
   public async authFindOneByName(@Param('page') name: string) {
     const res = await this.service.authFindOneByName(name);
@@ -62,8 +62,8 @@ export class PageController {
 
   @Get('/public/name/:page')
   @Version('1')
-  @UseFilters(HttpExceptionFilter)
-  @UseInterceptors(HttpStatusOkInterceptor)
+  @UseFilters(HttpExceptions)
+  @UseInterceptors(HttpResponse)
   @ApiOperation({ summary: 'Buscar por nome da pagina' })
   public async publicfindOneByName(@Param('page') name: string) {
     const res = await this.service.publicfindOneByName(name);
@@ -73,8 +73,8 @@ export class PageController {
 
   @Get('/auth/:id')
   @Version('1')
-  @UseFilters(HttpExceptionFilter)
-  @UseInterceptors(HttpStatusOkInterceptor)
+  @UseFilters(HttpExceptions)
+  @UseInterceptors(HttpResponse)
   @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Buscar por id da pagina' })
   public async authFindOneById(@Param('id') id: number) {
@@ -85,8 +85,8 @@ export class PageController {
 
   @Get('/public/:id')
   @Version('1')
-  @UseFilters(HttpExceptionFilter)
-  @UseInterceptors(HttpStatusOkInterceptor)
+  @UseFilters(HttpExceptions)
+  @UseInterceptors(HttpResponse)
   @ApiOperation({ summary: 'Buscar por id da pagina' })
   public async publicfindOneById(@Param('id') id: number) {
     const res = await this.service.publicfindOneById(id);
@@ -97,8 +97,8 @@ export class PageController {
   @Get('/auth/')
   @Version('1')
   @UseGuards(JwtAuthGuard)
-  @UseFilters(HttpExceptionFilter)
-  @UseInterceptors(HttpStatusOkInterceptor)
+  @UseFilters(HttpExceptions)
+  @UseInterceptors(HttpResponse)
   @ApiOperation({ summary: 'Listar todas as paginas' })
   public async authListAll(
     @Query('search') search: string,
@@ -125,8 +125,8 @@ export class PageController {
 
   @Get('/public/')
   @Version('1')
-  @UseFilters(HttpExceptionFilter)
-  @UseInterceptors(HttpStatusOkInterceptor)
+  @UseFilters(HttpExceptions)
+  @UseInterceptors(HttpResponse)
   @ApiOperation({ summary: 'Listar todas as paginas' })
   public async publicListAll(
     @Query('search') search: string,
@@ -154,8 +154,8 @@ export class PageController {
   @Post('/auth')
   @Version('1')
   @UseGuards(JwtAuthGuard)
-  @UseFilters(HttpExceptionFilter)
-  @UseInterceptors(HttpStatusOkInterceptor)
+  @UseFilters(HttpExceptions)
+  @UseInterceptors(HttpResponse)
   @ApiOperation({ summary: 'Criar uma pagina' })
   public async create(@Body() body: CreateDto, @Header(new UID()) uid: string) {
     const user = await this.user.getUserByUid(uid);
@@ -173,8 +173,8 @@ export class PageController {
   @Put('/auth/:id')
   @Version('1')
   @UseGuards(JwtAuthGuard)
-  @UseFilters(HttpExceptionFilter)
-  @UseInterceptors(HttpStatusOkInterceptor)
+  @UseFilters(HttpExceptions)
+  @UseInterceptors(HttpResponse)
   @ApiOperation({ summary: 'Atualizar nome da pagina por id' })
   public async update(
     @Body() body: UpdateDto,

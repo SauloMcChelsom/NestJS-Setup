@@ -1,7 +1,7 @@
 import { EntityRepository, AbstractRepository } from 'typeorm';
 import { HttpException, HttpStatus } from '@nestjs/common';
 import { CommentEntity } from '@root/src/entity/comment.entity';
-import { code, message } from '@root/src/lib/enum';
+import { code } from '@root/src/lib/enum';
 
 @EntityRepository(CommentEntity)
 export class CommentRepository extends AbstractRepository<CommentEntity> {

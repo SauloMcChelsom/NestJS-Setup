@@ -15,9 +15,9 @@ import { UID } from '@root/src/lib/pipe/token.pipe';
 import { Header } from '@lib/decorator/header.decorator';
 
 import { UseInterceptors, UseFilters } from '@nestjs/common';
-import { HttpExceptionFilter } from '@lib/exception/http-exception.filter';
-import { OK } from '@lib/exception/http-status-ok';
-import { HttpStatusOkInterceptor } from '@lib/exception/http-status-ok.interceptor';
+import { HttpExceptions } from '@root/src/lib/http-status/http-exception';
+import { OK } from '@root/src/lib/http-status/ok';
+import { HttpResponse } from '@root/src/lib/http-status/http-response';
 import { ClassificationInterface } from '@root/src/lib/interfaces';
 import { UserService } from '@modules/user/user.service';
 import { code } from '@root/src/lib/enum';
@@ -40,8 +40,8 @@ export class FollowController {
   @Get('/auth/page/:id')
   @Version('1')
   @UseGuards(JwtAuthGuard)
-  @UseFilters(HttpExceptionFilter)
-  @UseInterceptors(HttpStatusOkInterceptor)
+  @UseFilters(HttpExceptions)
+  @UseInterceptors(HttpResponse)
   @ApiOperation({ summary: 'Listar usuarios da pagina' })
   public async authListByIdPage(
     @Param('id') id: number,
@@ -70,8 +70,8 @@ export class FollowController {
   @Get('/auth/user/:id')
   @Version('1')
   @UseGuards(JwtAuthGuard)
-  @UseFilters(HttpExceptionFilter)
-  @UseInterceptors(HttpStatusOkInterceptor)
+  @UseFilters(HttpExceptions)
+  @UseInterceptors(HttpResponse)
   @ApiOperation({ summary: 'Listar as paginas que o usuario segue' })
   public async authListByIdUser(
     @Param('id') id: number,
@@ -99,8 +99,8 @@ export class FollowController {
 
   @Post('/auth/')
   @Version('1')
-  @UseFilters(HttpExceptionFilter)
-  @UseInterceptors(HttpStatusOkInterceptor)
+  @UseFilters(HttpExceptions)
+  @UseInterceptors(HttpResponse)
   @ApiOperation({ summary: 'Seguir a pagina' })
   public async create(@Body() body: CreateDto, @Header(new UID()) uid: string) {
     const user = await this.user.getUserByUid(uid);

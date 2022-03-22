@@ -11,10 +11,10 @@ export class OK {
 
   constructor(results: any[] = [], code: codes, description = '', count = 0) {
     this.results = results;
-    this.description = description;
-    this.message = message[code];
     this.code = code;
-    this.timestamp = new Date();
+    this.description = description;
     this.count = count;
+    this.message = message[code];
+    this.timestamp = new Date();
   }
-}
+} 

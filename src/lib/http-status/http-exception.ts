@@ -9,7 +9,7 @@ import { Request, Response } from 'express';
 import { message as text, code as codes } from '@root/src/lib/enum';
 
 @Catch(HttpException)
-export class HttpExceptionFilter implements ExceptionFilter {
+export class HttpExceptions implements ExceptionFilter {
   catch(exception: HttpException, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
@@ -47,9 +47,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
       message = res.message;
       description = res.description
       statusCode = status || 500
-    }
-
-    if(!res.code){
+    }else{
       code = codes.ERROR_GENERIC;
       message = res;
       description = ''

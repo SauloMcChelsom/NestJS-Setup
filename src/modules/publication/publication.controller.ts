@@ -17,9 +17,9 @@ import { UID } from '@root/src/lib/pipe/token.pipe';
 import { Header } from '@lib/decorator/header.decorator';
 
 import { UseInterceptors, UseFilters } from '@nestjs/common';
-import { HttpExceptionFilter } from '@lib/exception/http-exception.filter';
-import { OK } from '@lib/exception/http-status-ok';
-import { HttpStatusOkInterceptor } from '@lib/exception/http-status-ok.interceptor';
+import { HttpExceptions } from '@root/src/lib/http-status/http-exception';
+import { OK } from '@root/src/lib/http-status/ok';
+import { HttpResponse } from '@root/src/lib/http-status/http-response';
 import { FirebaseService } from '@modules/firebase/firebase.service';
 import { UserService } from '@modules/user/user.service';
 import { ClassificationInterface } from '@root/src/lib/interfaces';
@@ -55,8 +55,8 @@ export class PublicationController {
   @Get('/auth/feed')
   @Version('1')
   @UseGuards(JwtAuthGuard)
-  @UseFilters(HttpExceptionFilter)
-  @UseInterceptors(HttpStatusOkInterceptor)
+  @UseFilters(HttpExceptions)
+  @UseInterceptors(HttpResponse)
   @ApiOperation({ summary: 'List um feed' })
   public async authListFeed(
     @Headers('Authorization') authorization: string,
@@ -83,8 +83,8 @@ export class PublicationController {
 
   @Get('/public/feed')
   @Version('1')
-  @UseFilters(HttpExceptionFilter)
-  @UseInterceptors(HttpStatusOkInterceptor)
+  @UseFilters(HttpExceptions)
+  @UseInterceptors(HttpResponse)
   @ApiOperation({ summary: 'List um feed' })
   public async publicListFeed(
     @Query('limit') limit = '3',
@@ -110,8 +110,8 @@ export class PublicationController {
   @Get('/auth/:id')
   @Version('1')
   @UseGuards(JwtAuthGuard)
-  @UseFilters(HttpExceptionFilter)
-  @UseInterceptors(HttpStatusOkInterceptor)
+  @UseFilters(HttpExceptions)
+  @UseInterceptors(HttpResponse)
   @ApiOperation({ summary: 'Buscar por id da publicação' })
   public async authFindOneById(@Param('id') id: number) {
     const res = await this.service.authFindOneById(id);
@@ -121,8 +121,8 @@ export class PublicationController {
 
   @Get('/public/:id')
   @Version('1')
-  @UseFilters(HttpExceptionFilter)
-  @UseInterceptors(HttpStatusOkInterceptor)
+  @UseFilters(HttpExceptions)
+  @UseInterceptors(HttpResponse)
   @ApiOperation({ summary: 'Buscar por id da publicação' })
   public async publicfindOneById(@Param('id') id: number) {
     const res = await this.service.publicfindOneById(id);
@@ -133,8 +133,8 @@ export class PublicationController {
   @Get('/auth/search/text')
   @Version('1')
   @UseGuards(JwtAuthGuard)
-  @UseFilters(HttpExceptionFilter)
-  @UseInterceptors(HttpStatusOkInterceptor)
+  @UseFilters(HttpExceptions)
+  @UseInterceptors(HttpResponse)
   @ApiOperation({ summary: 'Lista de publicação pesquisando por texto' })
   public async authListSearchByText(
     @Query('text') search: string,
@@ -161,8 +161,8 @@ export class PublicationController {
 
   @Get('/public/search/text')
   @Version('1')
-  @UseFilters(HttpExceptionFilter)
-  @UseInterceptors(HttpStatusOkInterceptor)
+  @UseFilters(HttpExceptions)
+  @UseInterceptors(HttpResponse)
   @ApiOperation({ summary: 'Lista de publicação pesquisando por texto' })
   public async publicListSearchByText(
     @Query('search') search: string,
@@ -190,8 +190,8 @@ export class PublicationController {
   @Post('/auth/')
   @Version('1')
   @UseGuards(JwtAuthGuard)
-  @UseFilters(HttpExceptionFilter)
-  @UseInterceptors(HttpStatusOkInterceptor)
+  @UseFilters(HttpExceptions)
+  @UseInterceptors(HttpResponse)
   @ApiOperation({ summary: 'Criar uma nova publicaçao' })
   public async create(@Body() body: CreateDto, @Header(new UID()) uid: string) {
     const user = await this.user.getUserByUid(uid);
@@ -210,8 +210,8 @@ export class PublicationController {
   @Put('/auth/:id')
   @Version('1')
   @UseGuards(JwtAuthGuard)
-  @UseFilters(HttpExceptionFilter)
-  @UseInterceptors(HttpStatusOkInterceptor)
+  @UseFilters(HttpExceptions)
+  @UseInterceptors(HttpResponse)
   @ApiOperation({ summary: 'Alterar o texto da publicaçao' })
   public async update(
     @Body() body: UpdateDto,

@@ -2,6 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import {
   VersioningType,
   HttpException,
+  HttpStatus,
   ValidationPipe,
   ValidationError,
 } from '@nestjs/common';
@@ -14,6 +15,7 @@ import * as options from '@conf/cors/index.cors';
 import { AppModule } from './app.module';
 import { InitializeFirebase } from '@root/src/conf/firebase/initialize-firebase';
 import { SwaggerDocument } from '@root/src/conf/swagger/swagger.conf';
+import { code } from '@root/src/lib/enum';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
@@ -79,26 +81,11 @@ async function bootstrap() {
 
       exceptionFactory: (validationErrors: ValidationError[] = []) => {
         const err = validationErrors;
-
-        let property = 'not_property';
-        let key = 'not_key';
-        let values = 'not values';
-
-        const constraints = err[0].constraints;
-
-        if (property) {
-          property = err[0].property;
-        }
-
-        if (constraints) {
-          key = Object.keys(constraints)[0];
-          values = Object.values(constraints)[0];
-        }
-
-        throw new HttpException(
-          ['property_' + property + '_' + key + '_pipe', values],
-          401,
-        );
+        throw new HttpException({
+          code : code.CLASS_VALIDATOR_FAILED,
+          message : Object.values(err[0].constraints)[0],
+          description : ''
+        }, HttpStatus.BAD_REQUEST)
       },
     }),
   );

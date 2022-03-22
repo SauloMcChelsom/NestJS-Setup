@@ -19,9 +19,9 @@ import { TOKEN } from '@lib/pipe/token.pipe';
 import { Header } from '@lib/decorator/header.decorator';
 
 import { UseInterceptors, UseFilters } from '@nestjs/common';
-import { HttpExceptionFilter } from '@lib/exception/http-exception.filter';
-import { OK } from '@lib/exception/http-status-ok';
-import { HttpStatusOkInterceptor } from '@lib/exception/http-status-ok.interceptor';
+import { HttpExceptions } from '@root/src/lib/http-status/http-exception';
+import { OK } from '@root/src/lib/http-status/ok';
+import { HttpResponse } from '@root/src/lib/http-status/http-response';
 import { UserService } from '@modules/user/user.service';
 import { ClassificationInterface } from '@root/src/lib/interfaces';
 import { code } from '@root/src/lib/enum';
@@ -57,8 +57,8 @@ export class CommentController {
   @Version('1/private')
   @CacheTTL(20)
   @UseGuards(JwtAuthGuard)
-  @UseFilters(HttpExceptionFilter)
-  @UseInterceptors(HttpStatusOkInterceptor)
+  @UseFilters(HttpExceptions)
+  @UseInterceptors(HttpResponse)
   @UseInterceptors(CacheInterceptor)
   @ApiOperation({ summary: 'Listar comentarios pelo token do usuario' })
   public async authListByUserToken(
@@ -90,8 +90,8 @@ export class CommentController {
   @Version('1/private')
   @CacheTTL(20)
   @UseGuards(JwtAuthGuard)
-  @UseFilters(HttpExceptionFilter)
-  @UseInterceptors(HttpStatusOkInterceptor)
+  @UseFilters(HttpExceptions)
+  @UseInterceptors(HttpResponse)
   @UseInterceptors(CacheInterceptor)
   @ApiOperation({ summary: 'Listar comentarios por id do usuario' })
   public async authListByUserId(
@@ -121,8 +121,8 @@ export class CommentController {
   @Get('/user/:id')
   @Version('1/public')
   @CacheTTL(20)
-  @UseFilters(HttpExceptionFilter)
-  @UseInterceptors(HttpStatusOkInterceptor)
+  @UseFilters(HttpExceptions)
+  @UseInterceptors(HttpResponse)
   @UseInterceptors(CacheInterceptor)
   @ApiOperation({ summary: 'Listar comentarios por id do usuario' })
   public async publicListByUserId(
@@ -153,8 +153,8 @@ export class CommentController {
   @Get('/publication/:publication_id')
   @Version('1/public')
   @CacheTTL(20) 
-  @UseFilters(HttpExceptionFilter)
-  @UseInterceptors(HttpStatusOkInterceptor)
+  @UseFilters(HttpExceptions)
+  @UseInterceptors(HttpResponse)
   @UseInterceptors(CacheInterceptor)
   @ApiOperation({ summary: 'Listar comentarios por id da publicacao' })
   public async publicListByPublicationId(
@@ -188,8 +188,8 @@ export class CommentController {
   @Version('1/private')
   @CacheTTL(5)
   @UseGuards(JwtAuthGuard)
-  @UseFilters(HttpExceptionFilter)
-  @UseInterceptors(HttpStatusOkInterceptor)
+  @UseFilters(HttpExceptions)
+  @UseInterceptors(HttpResponse)
   @UseInterceptors(CacheInterceptor)
   @ApiOperation({ summary: 'Buscar comentario por id' })
   public async authFindOneCommentById(
@@ -205,8 +205,8 @@ export class CommentController {
   @Get(':id')
   @Version('1/public')
   @CacheTTL(5)
-  @UseFilters(HttpExceptionFilter)
-  @UseInterceptors(HttpStatusOkInterceptor)
+  @UseFilters(HttpExceptions)
+  @UseInterceptors(HttpResponse)
   @UseInterceptors(CacheInterceptor)
   @ApiOperation({ summary: 'Buscar comentario por id' })
   public async publicFindOneById(@Param('id') id: number) {
@@ -217,8 +217,8 @@ export class CommentController {
 
   @Post()
   @Version('1/private')
-  @UseFilters(HttpExceptionFilter)
-  @UseInterceptors(HttpStatusOkInterceptor)
+  @UseFilters(HttpExceptions)
+  @UseInterceptors(HttpResponse)
   @ApiOperation({ summary: 'Criar um comentario' })
   public async create(@Body() body: CreateDto, @Header(new TOKEN()) token: string) {
     const user = await this.user.getUserByUid(token);
@@ -231,8 +231,8 @@ export class CommentController {
 
   @Post('user/:user_id')
   @Version('1/public')
-  @UseFilters(HttpExceptionFilter)
-  @UseInterceptors(HttpStatusOkInterceptor)
+  @UseFilters(HttpExceptions)
+  @UseInterceptors(HttpResponse)
   @ApiOperation({ summary: 'Criar um comentario' })
   public async createPublic(@Body() body: CreateDto, @Param('user_id') user_id: number) {
     const commet: CreateInterface = { ...body };
@@ -245,8 +245,8 @@ export class CommentController {
   @Put(':id')
   @Version('1/private')
   @UseGuards(JwtAuthGuard)
-  @UseFilters(HttpExceptionFilter)
-  @UseInterceptors(HttpStatusOkInterceptor)
+  @UseFilters(HttpExceptions)
+  @UseInterceptors(HttpResponse)
   @ApiOperation({ summary: 'Atualizar um comentario' })
   public async update(
     @Param('id') id: number,
@@ -262,8 +262,8 @@ export class CommentController {
 
   @Put(':comment_id/user/:user_id/')
   @Version('1/public')
-  @UseFilters(HttpExceptionFilter)
-  @UseInterceptors(HttpStatusOkInterceptor)
+  @UseFilters(HttpExceptions)
+  @UseInterceptors(HttpResponse)
   @ApiOperation({ summary: 'Atualizar um comentario' })
   public async updatePublic(
     @Param('user_id') user_id: number,
@@ -279,8 +279,8 @@ export class CommentController {
   @Delete(':id')
   @Version('1/private')
   @UseGuards(JwtAuthGuard)
-  @UseFilters(HttpExceptionFilter)
-  @UseInterceptors(HttpStatusOkInterceptor)
+  @UseFilters(HttpExceptions)
+  @UseInterceptors(HttpResponse)
   @ApiOperation({ summary: 'Deletar um comentario' })
   public async delete(@Param('id') id: number, @Header(new TOKEN()) token: string) {
     const user = await this.user.getUserByUid(token);
@@ -290,8 +290,8 @@ export class CommentController {
 
   @Delete(':comment_id/user/:user_id/')
   @Version('1/public')
-  @UseFilters(HttpExceptionFilter)
-  @UseInterceptors(HttpStatusOkInterceptor)
+  @UseFilters(HttpExceptions)
+  @UseInterceptors(HttpResponse)
   @ApiOperation({ summary: 'Deletar um comentario' })
   public async deletePublic(
     @Param('user_id') user_id: number,
