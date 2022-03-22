@@ -3,9 +3,10 @@ import {
   Catch,
   ArgumentsHost,
   HttpException,
+  HttpStatus,
 } from '@nestjs/common';
 import { Request, Response } from 'express';
-import { message } from '@root/src/lib/enum';
+import { message as text, code as codes } from '@root/src/lib/enum';
 
 @Catch(HttpException)
 export class HttpExceptionFilter implements ExceptionFilter {
@@ -15,7 +16,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
     const request = ctx.getRequest<Request>();
     const conf:any = request
     const status = exception.getStatus();
-    const res = exception.getResponse();
+    const res:any = exception.getResponse();
     const path = conf._parsedUrl.pathname
     const url = request.url.substring(request.url.lastIndexOf('?') + 1);
     
@@ -27,9 +28,10 @@ export class HttpExceptionFilter implements ExceptionFilter {
       protocol: request.protocol,
     }
 
-    let _description;
-    let _code;
-    let _message;
+    let description = ''
+    let code:string = 'INTERNAL_SERVER_ERROR'
+    let message:string = 'http-exeption-filtro'
+    let statusCode:number = 501
     let parameters:any = {}
 
     if (url.indexOf('=') > -1){
@@ -40,21 +42,25 @@ export class HttpExceptionFilter implements ExceptionFilter {
       );
     }
 
-    if (typeof res === 'object') {
-      _code = res[0];
-      _message = res[1];
-      _description = res[2] ? res[2] : '';
-    } else {
-      _code = res;
-      _message = message[res + ''];
-      _description = '';
+    if(res.code){
+      code = res.code;
+      message = res.message;
+      description = res.description
+      statusCode = status || 500
     }
 
-    response.status(status).json({
-      statusCode: status,
-      code: _code,
-      message: _message,
-      description: _description,
+    if(!res.code){
+      code = codes.ERROR_GENERIC;
+      message = res;
+      description = ''
+      statusCode = status || 500
+    }
+
+    response.status(statusCode).json({
+      statusCode: statusCode,
+      code: code,
+      message: message,
+      description: description,
       timestamp: new Date().toISOString(),
       path: path,
       method: request.method,

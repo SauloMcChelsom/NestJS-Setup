@@ -40,4 +40,7 @@ export enum message {
   NO_REGISTRY = 'Sem registro',
   DATA_CONFLICT = 'houve um conflito de dados',
   SEND_WITH_SUCCESS = 'Send with success',
+  BAD_REQUEST = 'Bad Request',
+  QUERY_FAILED = 'Falha no processamento da expressão',
+  TIMESTAMP_FAILED = 'Falha no processamento da expressão',
 }

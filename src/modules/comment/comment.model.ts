@@ -5,7 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { CommentEntity } from '@entity/comment.entity';
 import { IsValidTimestampService } from '@root/src/lib/utility/is-valid-timestamp/is-valid-timestamp.service';
 import { EmptyService } from '@root/src/lib/utility/empty/empty.service';
-import { code } from '@root/src/lib/enum';
+import { code, message } from '@root/src/lib/enum';
 
 import { CommentRepository } from './comment.repository';
 import { UpdateInterface } from './interface';
@@ -23,11 +23,13 @@ export class CommentModel {
   ) {}
 
   public async create(body: any): Promise<CommentEntity> {
-    try {
-      return await this.repository.save(body);
-    } catch (e) {
-      throw new HttpException(e, HttpStatus.BAD_REQUEST);
-    }
+    return await this.repository.save(body).catch((err) => {
+      throw new HttpException({
+        code : code.QUERY_FAILED,
+        message : `${err.detail || err.hint || err.routine}`,
+        description : ''
+      }, HttpStatus.BAD_REQUEST);
+    });
   }
 
   public async findOneById(id: number) {
