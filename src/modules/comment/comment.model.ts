@@ -5,7 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { CommentEntity } from '@entity/comment.entity';
 import { IsValidTimestampService } from '@root/src/lib/utility/is-valid-timestamp/is-valid-timestamp.service';
 import { EmptyService } from '@root/src/lib/utility/empty/empty.service';
-import { code, message } from '@root/src/lib/enum';
+import { code } from '@root/src/lib/enum';
 
 import { CommentRepository } from './comment.repository';
 import { UpdateInterface } from './interface';
@@ -28,17 +28,27 @@ export class CommentModel {
         code : code.QUERY_FAILED,
         message : `${err.detail || err.hint || err.routine}`,
         description : ''
-      }, HttpStatus.BAD_REQUEST);
+      }, HttpStatus.BAD_REQUEST)
     });
   }
 
   public async findOneById(id: number) {
     try {
-      const res = await this.repository.findOne(id);
+      const res = await this.repository.findOne(id).catch((err) => {
+        throw new HttpException({
+          code : code.QUERY_FAILED,
+          message : `${err.detail || err.hint || err.routine}`,
+          description : ''
+        }, HttpStatus.BAD_REQUEST)
+      });
       if (res) {
         return res;
       }
-      throw new HttpException(code.NOT_FOUND, 404);
+      throw new HttpException({
+        code : code.NOT_FOUND,
+        message : 'not found find one by id',
+        description : ''
+      }, HttpStatus.NOT_FOUND)
     } catch (e: any) {
       throw new HttpException(e.response, e.status);
     }
@@ -96,7 +106,12 @@ export class CommentModel {
         return { res: res, count: count };
       }
 
-      throw new HttpException(code.NOT_FOUND, 404);
+      throw new HttpException({
+        code : code.NOT_FOUND,
+        message : 'not found list by user id',
+        description : ''
+      }, HttpStatus.NOT_FOUND);
+      
     } catch (e: any) {
       throw new HttpException(e.response, e.status);
     }
@@ -154,15 +169,25 @@ export class CommentModel {
         return { res: res, count: count };
       }
 
-      throw new HttpException(code.NOT_FOUND, 404);
+      throw new HttpException({
+        code : code.NOT_FOUND,
+        message : 'not found list by publication id',
+        description : ''
+      }, HttpStatus.NOT_FOUND)
     } catch (e: any) {
-      throw new HttpException(e.response, e.status);
+      throw new HttpException(e.response, e.status)
     }
   }
 
   public async deleteById(id: number) {
     try {
-      const res = await this.repository.delete(id);
+      const res = await this.repository.delete(id).catch((err) => {
+        throw new HttpException({
+          code : code.QUERY_FAILED,
+          message : `${err.detail || err.hint || err.routine}`,
+          description : ''
+        }, HttpStatus.BAD_REQUEST)
+      });
       if (res) {
         return res;
       }
@@ -173,7 +198,13 @@ export class CommentModel {
 
   public async updateById(id: number, body: UpdateInterface) {
     try {
-      const res = await this.repository.update(id, { ...(body as any) });
+      const res = await this.repository.update(id, { ...(body as any) }).catch((err) => {
+        throw new HttpException({
+          code : code.QUERY_FAILED,
+          message : `${err.detail || err.hint || err.routine}`,
+          description : ''
+        }, HttpStatus.BAD_REQUEST)
+      });
       if (res) {
         return res;
       }
@@ -186,11 +217,21 @@ export class CommentModel {
     try {
       const res = await this.repository.findOne({
         where: { id: id, user_id: userId },
+      }).catch((err) => {
+        throw new HttpException({
+          code : code.QUERY_FAILED,
+          message : `${err.detail || err.hint || err.routine}`,
+          description : ''
+        }, HttpStatus.BAD_REQUEST)
       });
       if (res) {
         return true;
       }
-      throw new HttpException(code.NOT_FOUND, 404);
+      throw new HttpException({
+        code : code.NOT_FOUND,
+        message : 'not found validate id',
+        description : ''
+      }, HttpStatus.NOT_FOUND);
     } catch (e: any) {
       throw new HttpException(e.response, e.status);
     }
