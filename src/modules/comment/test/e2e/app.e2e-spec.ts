@@ -34,24 +34,14 @@ describe('CommentController (e2e)', () => {
     done()
   })
 
-  it('GET /comment/public/:id', async () => {
+  it('GET /v1/public/comment/publication/:id', async () => {
     const { body } = await supertest
       .agent(app.getHttpServer())
-      .get('/comment/public/2')
+      .get('/comment/publication/1')
       .set('Accept', 'application/json')
       .expect('Content-Type', /json/)
       .expect(200);
-      
-      console.log(body)
-      expect(body.results).toEqual([
-        {
-          id: 2,
-          comment: 'Esse vídeo é tão bom, que atrai até minhas cachorras pra procurar kkkk super funciona pra gatos e cachorros',
-          timestamp: 'Sun Jan 23 2022 00:34:25 GMT-0300 (GMT-03:00)',
-          publication_id: 1,
-          user_id: 2
-        }
-      ]);
+      expect(body.statusCode).toEqual(200);
   });
 
 });

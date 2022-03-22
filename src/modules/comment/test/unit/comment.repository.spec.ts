@@ -49,12 +49,12 @@ describe('CommentRepository', () => {
 
   describe('listByUserId', () => {
     it('SUCCESSFULLY_FOUND', async () => {
-      const comment = await repository.listByUserId(2);
+      const comment = await repository.listByUserId(8);
       await expect(typeof comment).toEqual('object')
     });
 
     it('NOT_FOUND', async () => {
-      const comment = await repository.listByUserId(1);
+      const comment = await repository.listByUserId(0);
       expect(comment).toHaveLength(0)
     });
   });

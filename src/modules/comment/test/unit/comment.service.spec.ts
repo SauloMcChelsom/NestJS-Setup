@@ -1,4 +1,4 @@
-import { HttpException } from '@nestjs/common';
+import { HttpException, HttpStatus } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getConnectionManager } from 'typeorm';
@@ -62,7 +62,6 @@ describe('CommentService', () => {
         });
     });
 
-
     describe('publicFindOneById', () => {
         it('DEFAULT', () => {
             const x = 2;
@@ -72,7 +71,7 @@ describe('CommentService', () => {
         });
 
         it('SUCCESSFULLY_FOUND', async () => {
-            const comment = await service.publicFindOneById(2);
+            const comment = await service.publicFindOneById(8);
             await expect(typeof comment).toEqual('object')
         });
     
@@ -80,7 +79,13 @@ describe('CommentService', () => {
             try {
                 await service.publicFindOneById(1);
             } catch (e: any) {
-                await expect(e).toEqual(new HttpException('NOT_FOUND', 404))
+                await expect(e).toEqual(
+                    new HttpException({
+                        code: 'NOT_FOUND',
+                        message: 'not found find one by id',
+                        description: ''
+                      }, HttpStatus.NOT_FOUND)
+                )
             }
         });
     })

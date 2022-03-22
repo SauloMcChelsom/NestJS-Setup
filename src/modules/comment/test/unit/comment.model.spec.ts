@@ -1,4 +1,4 @@
-import { HttpException } from '@nestjs/common';
+import { HttpException, HttpStatus } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getConnectionManager } from 'typeorm';
@@ -12,7 +12,7 @@ import { CommentModel} from '../../comment.model';
 import { CommentRepository } from '../../comment.repository';
 
 describe('CommentModel', () => {
-  let service: CommentModel;
+  let model: CommentModel;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -28,7 +28,7 @@ describe('CommentModel', () => {
         CommentEntity
       ],
     }).compile();
-    service = module.get<CommentModel>(CommentModel);
+    model = module.get<CommentModel>(CommentModel);
   });
 
   beforeAll(done => {
@@ -43,15 +43,21 @@ describe('CommentModel', () => {
   describe('findOneById', () => {
 
     it('SUCCESSFULLY_FOUND', async () => {
-      const comment = await service.findOneById(2);
+      const comment = await model.findOneById(8);
       await expect(typeof comment).toEqual('object')
     });
   
     it('NOT_FOUND', async () => {
       try {
-        await service.findOneById(1);
+        await model.findOneById(1);
       } catch (e: any) {
-        await expect(e).toEqual(new HttpException('NOT_FOUND', 404))
+        await expect(e).toEqual(
+          new HttpException({
+            code: 'NOT_FOUND',
+            message: 'not found find one by id',
+            description: ''
+          }, HttpStatus.NOT_FOUND)
+        )
       }
     });
   })

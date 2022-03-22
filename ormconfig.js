@@ -20,10 +20,16 @@ let ENV = {
 
 const env = process.env.environment
 
-if(env === 'development' || env === 'tests'){
+if(env === 'development'){
   delete ENV.ssl
   delete ENV.extra
   ENV.logging = true
+}
+
+if(env === 'tests'){
+  delete ENV.ssl
+  delete ENV.extra
+  ENV.logging = false
 }
 
 module.exports = ENV
