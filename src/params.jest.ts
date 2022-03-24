@@ -1,4 +1,4 @@
-export const CommentParams = {
+export const GetCommentParams = {
     user_id: 1,
     search: '',
     limit: 3,
@@ -9,3 +9,16 @@ export const CommentParams = {
     timestampEnd: '2022-03-23',
     id:47
 }
+
+export const CreateCommentParams = {
+    user_id:1,
+    comment: 'Test jest post 🎶🔥🎧🤗🎵🎵💯❤️💗💖💖',
+    publication_id: 2
+}
+
+export const UpdateCommentParams = {
+    id:47,
+    comment: 'Test jest post 🎶🔥🎧🤗🎵🎵💯❤️💗💖💖',
+    user_id:1,
+}
+  

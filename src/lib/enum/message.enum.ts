@@ -17,6 +17,7 @@ export enum message {
   SUCCESSFULLY_UPDATED_USER = 'Successfully updated user',
   ERROR_UPDATING_USER = 'Error updating user',
   SUCCESSFULLY_DELETED_USER = 'Successfully deleted user',
+  SUCCESSFULLY_DELETED = 'Successfully deleted',
   ERROR_DELETING_USER = 'Error deleting user',
   TOKEN_INVALID = 'An invalid token was provided',
   TOKEN_IS_NULL = 'Você não passou nenhum token',

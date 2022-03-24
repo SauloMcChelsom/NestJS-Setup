@@ -16,6 +16,16 @@ export class CommentRepository extends AbstractRepository<CommentEntity> {
     timestampStart = '',
     timestampEnd = '',
   ) {
+    console.log(
+      userId,
+      search,
+      limit,
+      offset,
+      order,
+      column,
+      timestampStart,
+      timestampEnd
+    )
     return await this.createQueryBuilder('comment')
       .where('comment.user_id = :userId', { userId: userId })
       .andWhere('comment.comment ILIKE :searchQuery', {
@@ -42,6 +52,7 @@ export class CommentRepository extends AbstractRepository<CommentEntity> {
       .offset(offset)
       .getMany()
       .catch(err => {
+        console.log(err)
         throw new HttpException({
           code : code.QUERY_FAILED,
           message : `${err.detail || err.hint || err.routine}`,

@@ -13,7 +13,7 @@ import { IsValidTimestampService } from '@root/src/lib/utility/is-valid-timestam
 import { EmptyService } from '@root/src/lib/utility/empty/empty.service';
 import { PublicationModel } from '@root/src/modules/publication/publication.model';
 import { PublicationRepository } from '@root/src/modules/publication/publication.repository';
-import { CommentParams } from '@root/src/params.jest'
+import { GetCommentParams } from '@root/src/params.jest'
 
 describe('CommentRepository', () => {
   let repository: CommentRepository;
@@ -51,16 +51,16 @@ describe('CommentRepository', () => {
   describe('listByUserId', () => {
     it('SUCCESSFULLY_FOUND', async () => {
       const comment = await repository.listByUserId(
-        CommentParams.user_id,
-        CommentParams.search, 
-        CommentParams.limit,
-        CommentParams.offset,
-        CommentParams.order,
-        CommentParams.column,
-        CommentParams.timestampStart,
-        CommentParams.timestampEnd
+        GetCommentParams.user_id,
+        GetCommentParams.search, 
+        GetCommentParams.limit,
+        GetCommentParams.offset,
+        GetCommentParams.order,
+        GetCommentParams.column,
+        GetCommentParams.timestampStart,
+        GetCommentParams.timestampEnd
       )
-      await expect(comment[0].user_id).toEqual(CommentParams.user_id)
+      await expect(comment[0].user_id).toEqual(GetCommentParams.user_id)
     });
   });
 });

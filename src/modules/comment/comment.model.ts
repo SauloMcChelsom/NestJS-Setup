@@ -8,7 +8,7 @@ import { EmptyService } from '@root/src/lib/utility/empty/empty.service';
 import { code } from '@root/src/lib/enum';
 
 import { CommentRepository } from './comment.repository';
-import { UpdateInterface } from './interface';
+import { UpdateInterface, CreateInterface } from './interface';
 
 export class CommentModel {
   constructor(
@@ -22,7 +22,7 @@ export class CommentModel {
     private empty: EmptyService,
   ) {}
 
-  public async create(body: any): Promise<CommentEntity> {
+  public async create(body: CreateInterface): Promise<CommentEntity> {
     return await this.repository.save(body).catch((err) => {
       throw new HttpException({
         code : code.QUERY_FAILED,
@@ -30,6 +30,58 @@ export class CommentModel {
         description : ''
       }, HttpStatus.BAD_REQUEST)
     });
+  }
+
+  public async updateById(id: number, body: UpdateInterface): Promise<any> {
+    try {
+      const res = await this.repository.update(id, { ...(body as any) }).catch((err) => {
+        throw new HttpException({
+          code : code.QUERY_FAILED,
+          message : `${err.detail || err.hint || err.routine}`,
+          description : ''
+        }, HttpStatus.BAD_REQUEST)
+      });
+      if (res.affected == 1) {
+        return {
+          code : code.SUCCESSFULLY_UPDATED,
+          message : 'update with sucess',
+          description : ''
+        };
+      }
+      throw new HttpException({
+        code : code.NOT_FOUND,
+        message : 'update, id not found',
+        description : ''
+      }, HttpStatus.NOT_FOUND)
+    } catch (e: any) {
+      throw new HttpException(e.response, e.status);
+    }
+  }
+
+  public async deleteById(id: number) {
+    try {
+      const res = await this.repository.delete(id).catch((err) => {
+        throw new HttpException({
+          code : code.QUERY_FAILED,
+          message : `${err.detail || err.hint || err.routine}`,
+          description : ''
+        }, HttpStatus.BAD_REQUEST)
+      });
+      if (res.affected == 1) {
+        return {
+          code : code.SUCCESSFULLY_DELETED,
+          message : 'delete with sucess',
+          description : ''
+        };
+      }
+      throw new HttpException({
+        code : code.NOT_FOUND,
+        message : 'delete, id not found',
+        description : ''
+      }, HttpStatus.NOT_FOUND)
+    } catch (e: any) {
+      throw new HttpException(e.response, e.status);
+    }
   }
 
   public async findOneById(id: number) {
@@ -49,6 +101,30 @@ export class CommentModel {
         message : 'not found find one by id',
         description : ''
       }, HttpStatus.NOT_FOUND)
+    } catch (e: any) {
+      throw new HttpException(e.response, e.status);
+    }
+  }
+
+  public async validateID(id: number, userId: number) {
+    try {
+      const res = await this.repository.findOne({
+        where: { id: id, user_id: userId },
+      }).catch((err) => {
+        throw new HttpException({
+          code : code.QUERY_FAILED,
+          message : `${err.detail || err.hint || err.routine}`,
+          description : ''
+        }, HttpStatus.BAD_REQUEST)
+      });
+      if (res) {
+        return true;
+      }
+      throw new HttpException({
+        code : code.NOT_FOUND,
+        message : 'validate, id not found',
+        description : ''
+      }, HttpStatus.NOT_FOUND);
     } catch (e: any) {
       throw new HttpException(e.response, e.status);
     }
@@ -102,6 +178,8 @@ export class CommentModel {
         end,
       );
 
+      console.log(res)
+
       if (Object.keys(res).length != 0) {
         return { res: res, count: count };
       }
@@ -113,6 +191,7 @@ export class CommentModel {
       }, HttpStatus.NOT_FOUND);
       
     } catch (e: any) {
+      console.log(e)
       throw new HttpException(e.response, e.status);
     }
   }
@@ -176,64 +255,6 @@ export class CommentModel {
       }, HttpStatus.NOT_FOUND)
     } catch (e: any) {
       throw new HttpException(e.response, e.status)
-    }
-  }
-
-  public async deleteById(id: number) {
-    try {
-      const res = await this.repository.delete(id).catch((err) => {
-        throw new HttpException({
-          code : code.QUERY_FAILED,
-          message : `${err.detail || err.hint || err.routine}`,
-          description : ''
-        }, HttpStatus.BAD_REQUEST)
-      });
-      if (res) {
-        return res;
-      }
-    } catch (e: any) {
-      throw new HttpException(e.response, e.status);
-    }
-  }
-
-  public async updateById(id: number, body: UpdateInterface) {
-    try {
-      const res = await this.repository.update(id, { ...(body as any) }).catch((err) => {
-        throw new HttpException({
-          code : code.QUERY_FAILED,
-          message : `${err.detail || err.hint || err.routine}`,
-          description : ''
-        }, HttpStatus.BAD_REQUEST)
-      });
-      if (res) {
-        return res;
-      }
-    } catch (e: any) {
-      throw new HttpException(e.response, e.status);
-    }
-  }
-
-  public async validateID(id: number, userId: number) {
-    try {
-      const res = await this.repository.findOne({
-        where: { id: id, user_id: userId },
-      }).catch((err) => {
-        throw new HttpException({
-          code : code.QUERY_FAILED,
-          message : `${err.detail || err.hint || err.routine}`,
-          description : ''
-        }, HttpStatus.BAD_REQUEST)
-      });
-      if (res) {
-        return true;
-      }
-      throw new HttpException({
-        code : code.NOT_FOUND,
-        message : 'not found validate id',
-        description : ''
-      }, HttpStatus.NOT_FOUND);
-    } catch (e: any) {
-      throw new HttpException(e.response, e.status);
     }
   }
 }

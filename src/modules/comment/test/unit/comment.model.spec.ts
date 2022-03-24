@@ -7,13 +7,21 @@ import { CommentEntity } from '@entity/comment.entity';
 import { connectionDataBaseForTest } from '@conf/options/options.conf';
 import { IsValidTimestampService } from '@root/src/lib/utility/is-valid-timestamp/is-valid-timestamp.service';
 import { EmptyService } from '@root/src/lib/utility/empty/empty.service';
+import { code } from '@root/src/lib/enum';
+
+import { CommentService } from '@root/src/modules/comment/comment.service';
+import { PublicationService } from '@root/src/modules/publication/publication.service';
+import { PublicationModel } from '@root/src/modules/publication/publication.model';
+import { PublicationRepository } from '@root/src/modules/publication/publication.repository';
 
 import { CommentModel} from '../../comment.model';
 import { CommentRepository } from '../../comment.repository';
-import { CommentParams } from '@root/src/params.jest'
+import { GetCommentParams, CreateCommentParams, UpdateCommentParams } from '@root/src/params.jest'
 
 describe('CommentModel', () => {
   let model: CommentModel;
+  let repository: CommentRepository;
+  let CREATE
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -22,11 +30,14 @@ describe('CommentModel', () => {
         TypeOrmModule.forFeature([CommentEntity, CommentRepository])
       ],
       providers: [
+        CommentService, 
         CommentModel,
+        PublicationService,
+        CommentRepository,
         IsValidTimestampService,
         EmptyService,
-        CommentRepository,
-        CommentEntity
+        PublicationModel,
+        PublicationRepository,
       ],
     }).compile();
     model = module.get<CommentModel>(CommentModel);
@@ -41,13 +52,110 @@ describe('CommentModel', () => {
     done()
   })
 
-  describe('findOneById', () => {
-
+  describe('listByUserId', () => {
     it('SUCCESSFULLY_FOUND', async () => {
-      const comment = await model.findOneById(CommentParams.id);
-      await expect(comment.user_id).toEqual(CommentParams.user_id)
+      try {
+        const comment = await repository.listByUserId(
+          GetCommentParams.user_id,
+          GetCommentParams.search, 
+          GetCommentParams.limit,
+          GetCommentParams.offset,
+          GetCommentParams.order,
+          GetCommentParams.column,
+          GetCommentParams.timestampStart,
+          GetCommentParams.timestampEnd
+        )
+        await expect(comment[0].user_id).toEqual(GetCommentParams.user_id)
+      }catch(e){
+        console.log(e)
+      }
     });
-  
+  })
+  /*
+  describe('create', () => {
+    it('SUCCESSFULLY_CREATE', async () => {
+      const comment = await model.create(CreateCommentParams);
+      CREATE = comment
+      await expect(comment.comment).toEqual(CreateCommentParams.comment)
+    });
+  })
+
+  describe('deleteById', () => {
+    it('SUCCESSFULLY_DELETE', async () => {
+      const comment = await model.deleteById(CREATE.id);
+      await expect(comment.code).toEqual(code.SUCCESSFULLY_DELETED)
+    });
+    it('FAILED_DELETE', async () => {
+      try{
+        await model.deleteById(0);
+      }catch(e){
+        await expect(e).toEqual(
+          new HttpException({
+            code : code.NOT_FOUND,
+            message : 'delete, id not found',
+            description : ''
+          }, HttpStatus.NOT_FOUND)
+        )
+      }
+    });
+  })
+
+  describe('update', () => {
+    it('SUCCESSFULLY_UPDATE', async () => {
+      const comment = await model.updateById(UpdateCommentParams.id, UpdateCommentParams);
+      await expect(comment.code).toEqual(code.SUCCESSFULLY_UPDATED)
+    });
+    it('FAILED_UPDATE', async () => {
+      try{
+        await model.updateById(0, UpdateCommentParams);
+      }catch(e){
+        await expect(e).toEqual(
+          new HttpException({
+            code : code.NOT_FOUND,
+            message : 'update, id not found',
+            description : ''
+          }, HttpStatus.NOT_FOUND)
+        )
+      }
+    });
+    it('POSTGRES_FAILED_UPDATE', async () => {
+      try{
+        await model.updateById(UpdateCommentParams.id, {
+          id:0,
+          comment: '',
+          user_id:0,
+        });
+      }catch(e:any){
+        await expect(e.response.code).toEqual(code.QUERY_FAILED)
+      }
+    });
+  })
+
+  describe('validateID', () => {
+    it('SUCCESSFULLY_FOUND', async () => {
+      const comment = await model.validateID(GetCommentParams.id, GetCommentParams.user_id);
+      await expect(comment).toEqual(true)
+    });
+    it('NOT_FOUND', async () => {
+      try {
+        await model.validateID(GetCommentParams.id, GetCommentParams.user_id)
+      } catch (e: any) {
+        await expect(e).toEqual(
+          new HttpException({
+            code: 'NOT_FOUND',
+            message: 'validate, id not found',
+            description: ''
+          }, HttpStatus.NOT_FOUND)
+        )
+      }
+    });
+  })
+
+  describe('findOneById', () => {
+    it('SUCCESSFULLY_FOUND', async () => {
+      const comment = await model.findOneById(GetCommentParams.id);
+      await expect(comment.user_id).toEqual(GetCommentParams.user_id)
+    });
     it('NOT_FOUND', async () => {
       try {
         await model.findOneById(0);
@@ -61,6 +169,5 @@ describe('CommentModel', () => {
         )
       }
     });
-  })
-
+  })*/
 });
