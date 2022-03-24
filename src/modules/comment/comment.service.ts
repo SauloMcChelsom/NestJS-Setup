@@ -82,6 +82,5 @@ export class CommentService {
     await this.model.validateID(comment_id, user_id);
     const comment = await this.model.findOneById(comment_id);
     await this.model.deleteById(comment_id);
-
   }
 }

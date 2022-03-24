@@ -16,6 +16,10 @@ export class CommentRepository extends AbstractRepository<CommentEntity> {
     timestampStart = '',
     timestampEnd = '',
   ) {
+    console.log(
+      search,
+      timestampEnd
+      )
     return await this.createQueryBuilder('comment')
       .where('comment.user_id = :userId', { userId: userId })
       .andWhere('comment.comment ILIKE :searchQuery', {
