@@ -13,6 +13,7 @@ import { IsValidTimestampService } from '@root/src/lib/utility/is-valid-timestam
 import { EmptyService } from '@root/src/lib/utility/empty/empty.service';
 import { PublicationModel } from '@root/src/modules/publication/publication.model';
 import { PublicationRepository } from '@root/src/modules/publication/publication.repository';
+import { CommentParams } from '@root/src/params.jest'
 
 describe('CommentRepository', () => {
   let repository: CommentRepository;
@@ -31,7 +32,7 @@ describe('CommentRepository', () => {
         IsValidTimestampService,
         EmptyService,
         PublicationModel,
-        PublicationRepository
+        PublicationRepository,
       ],
     })
     .compile();
@@ -49,33 +50,17 @@ describe('CommentRepository', () => {
 
   describe('listByUserId', () => {
     it('SUCCESSFULLY_FOUND', async () => {
-      const comment = await repository.listByUserId(8);
-      await expect(typeof comment).toEqual('object')
-    });
-
-    it('NOT_FOUND', async () => {
-      let body = {
-        userId: 1, 
-        search: 'gat', 
-        limit: 3, 
-        offset: 6, 
-        order: 'asc', 
-        column: 'timestamp', 
-        timestampStart: '2021-03-15', 
-        timestampEnd: '2022-03-15'
-      }
-
-     let params =  Object.values(body)
-      
-      let run = (param0, param1, param2 ) =>{
-        //return param0, param1, param2;
-      }
-
-      const comment = await repository.listByUserId.apply(this, params);
-     // console.log(comment)
-      expect(comment).toHaveLength(0)
+      const comment = await repository.listByUserId(
+        CommentParams.userId,
+        CommentParams.search, 
+        CommentParams.limit,
+        CommentParams.offset,
+        CommentParams.order,
+        CommentParams.column,
+        CommentParams.timestampStart,
+        CommentParams.timestampEnd
+      )
+      await expect(comment[0].user_id).toEqual(CommentParams.userId)
     });
   });
-
-
 });
