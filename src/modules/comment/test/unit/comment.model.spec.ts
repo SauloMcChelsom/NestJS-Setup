@@ -10,6 +10,7 @@ import { EmptyService } from '@root/src/lib/utility/empty/empty.service';
 
 import { CommentModel} from '../../comment.model';
 import { CommentRepository } from '../../comment.repository';
+import { CommentParams } from '@root/src/params.jest'
 
 describe('CommentModel', () => {
   let model: CommentModel;
@@ -43,13 +44,13 @@ describe('CommentModel', () => {
   describe('findOneById', () => {
 
     it('SUCCESSFULLY_FOUND', async () => {
-      const comment = await model.findOneById(8);
-      await expect(typeof comment).toEqual('object')
+      const comment = await model.findOneById(CommentParams.id);
+      await expect(comment.user_id).toEqual(CommentParams.user_id)
     });
   
     it('NOT_FOUND', async () => {
       try {
-        await model.findOneById(1);
+        await model.findOneById(0);
       } catch (e: any) {
         await expect(e).toEqual(
           new HttpException({

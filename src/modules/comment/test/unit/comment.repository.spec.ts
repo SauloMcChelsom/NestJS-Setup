@@ -51,7 +51,7 @@ describe('CommentRepository', () => {
   describe('listByUserId', () => {
     it('SUCCESSFULLY_FOUND', async () => {
       const comment = await repository.listByUserId(
-        CommentParams.userId,
+        CommentParams.user_id,
         CommentParams.search, 
         CommentParams.limit,
         CommentParams.offset,
@@ -60,7 +60,7 @@ describe('CommentRepository', () => {
         CommentParams.timestampStart,
         CommentParams.timestampEnd
       )
-      await expect(comment[0].user_id).toEqual(CommentParams.userId)
+      await expect(comment[0].user_id).toEqual(CommentParams.user_id)
     });
   });
 });

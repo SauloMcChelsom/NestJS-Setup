@@ -45,7 +45,7 @@ export class CommentController {
   constructor(
     private readonly service: CommentService,
     private user: UserService,
-    private createMapper: CreateMapper,
+    private create_mapper: CreateMapper,
     private authListMapper: AuthListMapper,
     private publicListMapper: PublicListMapper,
     private authFindOneMapper: AuthFindOneMapper,
@@ -227,7 +227,7 @@ export class CommentController {
       user_id:user.id
     }
     const res = await this.service.create(commet);
-    const dto = this.createMapper.toMapper(res);
+    const dto = this.create_mapper.toMapper(res);
     return new OK([dto], code.SUCCESSFULLY_CREATED);
   }
 
@@ -242,7 +242,7 @@ export class CommentController {
       user_id:user_id
     }
     const res = await this.service.create(commet);
-    const dto = this.createMapper.toMapper(res);
+    const dto = this.create_mapper.toMapper(res);
     return new OK([dto], code.SUCCESSFULLY_CREATED);
   }
 
