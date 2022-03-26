@@ -18,9 +18,11 @@ import { CommentModel} from '../../comment.model';
 import { CommentRepository } from '../../comment.repository';
 import { GetCommentParams, CreateCommentParams, UpdateCommentParams } from '@root/src/params.jest'
 
+import { EntityRepository, AbstractRepository } from 'typeorm';
+import { Repository } from 'typeorm';
+
 describe('CommentModel', () => {
   let model: CommentModel;
-  let repository: CommentRepository;
   let CREATE
 
   beforeEach(async () => {
@@ -40,7 +42,7 @@ describe('CommentModel', () => {
         PublicationRepository,
       ],
     }).compile();
-    model = module.get<CommentModel>(CommentModel);
+    model = module.get<CommentModel>(CommentModel);    
   });
 
   beforeAll(done => {
@@ -51,27 +53,7 @@ describe('CommentModel', () => {
     getConnectionManager().get().close()
     done()
   })
-
-  describe('listByUserId', () => {
-    it('SUCCESSFULLY_FOUND', async () => {
-      try {
-        const comment = await repository.listByUserId(
-          GetCommentParams.user_id,
-          GetCommentParams.search, 
-          GetCommentParams.limit,
-          GetCommentParams.offset,
-          GetCommentParams.order,
-          GetCommentParams.column,
-          GetCommentParams.timestampStart,
-          GetCommentParams.timestampEnd
-        )
-        await expect(comment[0].user_id).toEqual(GetCommentParams.user_id)
-      }catch(e){
-        console.log(e)
-      }
-    });
-  })
-  /*
+  
   describe('create', () => {
     it('SUCCESSFULLY_CREATE', async () => {
       const comment = await model.create(CreateCommentParams);
@@ -169,5 +151,5 @@ describe('CommentModel', () => {
         )
       }
     });
-  })*/
+  })
 });
