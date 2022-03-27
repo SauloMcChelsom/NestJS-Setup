@@ -63,4 +63,57 @@ describe('CommentRepository', () => {
       await expect(comment[0].user_id).toEqual(GetCommentParams.user_id)
     });
   });
+
+  describe('countListByUserId', () => {
+    it('SUCCESSFULLY_FOUND', async () => {
+      const comment = await repository.countListByUserId(
+        GetCommentParams.user_id,
+        GetCommentParams.search, 
+        GetCommentParams.timestampStart,
+        GetCommentParams.timestampEnd
+      )
+      await expect(comment).isNumber()
+    });
+  });
+
+  describe('listByPublicationId', () => {
+    it('SUCCESSFULLY_FOUND', async () => {
+      const comment = await repository.listByPublicationId(
+        GetCommentParams.publication_id,
+        GetCommentParams.search, 
+        GetCommentParams.limit,
+        GetCommentParams.offset,
+        GetCommentParams.order,
+        GetCommentParams.column,
+        GetCommentParams.timestampStart,
+        GetCommentParams.timestampEnd
+      )
+      await expect(comment[0].publication_id).toEqual(GetCommentParams.publication_id)
+    });
+  });
+
+  describe('countListByPublicationId', () => {
+    it('SUCCESSFULLY_FOUND', async () => {
+      const comment = await repository.countListByPublicationId(
+        GetCommentParams.user_id,
+        GetCommentParams.search, 
+        GetCommentParams.timestampStart,
+        GetCommentParams.timestampEnd
+      )
+      await expect(comment).isNumber()
+    });
+  });
 });
+
+interface CustomMatchers<R = unknown> {
+  toBeWithinRange(floor: number, ceiling: number): R;
+  isNumber(floor?: number): R;
+}
+
+declare global {
+  namespace jest {
+    interface Expect extends CustomMatchers {}
+    interface Matchers<R> extends CustomMatchers<R> {}
+    interface InverseAsymmetricMatchers extends CustomMatchers {}
+  }
+}

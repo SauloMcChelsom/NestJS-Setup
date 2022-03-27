@@ -7,7 +7,8 @@ export const GetCommentParams = {
     column: 'timestamp',
     timestampStart: '2020-03-15',
     timestampEnd: '2022-03-23',
-    id:47
+    id:48,
+    publication_id: 2,
 }
 
 export const CreateCommentParams = {

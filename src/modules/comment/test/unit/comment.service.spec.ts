@@ -53,23 +53,7 @@ describe('CommentService', () => {
         done()
     })
 
-    describe('index', () => {
-        it('DEFAULT', () => {
-            const x = 2;
-            const y = 4;
-            const sum = x + y;
-            expect(sum).toBe(6);
-        });
-    });
-
     describe('publicFindOneById', () => {
-        it('DEFAULT', () => {
-            const x = 2;
-            const y = 4;
-            const sum = x + y;
-            expect(sum).toBe(6);
-        });
-
         it('SUCCESSFULLY_FOUND', async () => {
             const comment = await service.publicFindOneById(8);
             await expect(typeof comment).toEqual('object')
