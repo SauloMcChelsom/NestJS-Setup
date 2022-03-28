@@ -14,7 +14,7 @@ export const GetCommentParams = {
 export const CreateCommentParams = {
     user_id:1,
     comment: 'Test jest post 🎶🔥🎧🤗🎵🎵💯❤️💗💖💖',
-    publication_id: 2
+    publication_id: 1
 }
 
 export const UpdateCommentParams = {

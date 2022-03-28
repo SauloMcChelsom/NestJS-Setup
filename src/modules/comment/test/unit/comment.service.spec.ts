@@ -10,6 +10,10 @@ import { PublicationRepository } from '@root/src/modules/publication/publication
 import { CommentEntity } from '@entity/comment.entity';
 import { IsValidTimestampService } from '@root/src/lib/utility/is-valid-timestamp/is-valid-timestamp.service';
 import { EmptyService } from '@root/src/lib/utility/empty/empty.service';
+import { ClassificationInterface } from '@root/src/lib/interfaces';
+import { GetCommentParams, CreateCommentParams } from '@root/src/params.jest'
+
+import { PublicationEntity } from '@root/src/entity/publication.entity';
 
 import { CommentModel} from '../../comment.model';
 import { CommentService } from '../../comment.service';
@@ -23,7 +27,7 @@ describe('CommentService', () => {
         const module: TestingModule = await Test.createTestingModule({
             imports: [
                 ...connectionDataBaseForTest(), 
-                TypeOrmModule.forFeature([CommentEntity, CommentRepository])
+                TypeOrmModule.forFeature([CommentEntity, CommentRepository, PublicationEntity, PublicationRepository])
             ],
             providers: [
                 CommentRepository,
@@ -38,7 +42,8 @@ describe('CommentService', () => {
                 IsValidTimestampService,
                 EmptyService,
                 PublicationModel,
-                PublicationRepository
+                PublicationRepository,
+                PublicationEntity
             ],
         }).compile();
         service = module.get<CommentService>(CommentService);
@@ -53,25 +58,82 @@ describe('CommentService', () => {
         done()
     })
 
-    describe('publicFindOneById', () => {
+    describe('authListByUserId', () => {
         it('SUCCESSFULLY_FOUND', async () => {
-            const comment = await service.publicFindOneById(8);
-            await expect(typeof comment).toEqual('object')
-        });
-    
-        it('NOT_FOUND', async () => {
-            try {
-                await service.publicFindOneById(1);
-            } catch (e: any) {
-                await expect(e).toEqual(
-                    new HttpException({
-                        code: 'NOT_FOUND',
-                        message: 'not found find one by id',
-                        description: ''
-                      }, HttpStatus.NOT_FOUND)
-                )
-            }
+
+           let cls: ClassificationInterface = {
+            search: GetCommentParams.search,
+            limit: GetCommentParams.limit,
+            offset: GetCommentParams.offset,
+            order: GetCommentParams.order,
+            column: GetCommentParams.column,
+            end: GetCommentParams.timestampStart,
+            start: GetCommentParams.timestampEnd
+           }
+            //const comment = await service.authListByUserId(GetCommentParams.user_id, cls);
+            //await expect(typeof comment).toEqual('object')
         });
     })
+
+    describe('publicListByUserId', () => {
+        it('SUCCESSFULLY_FOUND', async () => {
+            let cls: ClassificationInterface = {
+                search: GetCommentParams.search,
+                limit: GetCommentParams.limit,
+                offset: GetCommentParams.offset,
+                order: GetCommentParams.order,
+                column: GetCommentParams.column,
+                end: GetCommentParams.timestampStart,
+                start: GetCommentParams.timestampEnd
+               }
+                //const comment = await service.publicListByUserId(GetCommentParams.user_id, cls);
+                //await expect(typeof comment).toEqual('object')
+        });
+    })
+
+    describe('publicListByPublicationId', () => {
+        it('SUCCESSFULLY_FOUND', async () => {
+            let cls: ClassificationInterface = {
+                search: GetCommentParams.search,
+                limit: GetCommentParams.limit,
+                offset: GetCommentParams.offset,
+                order: GetCommentParams.order,
+                column: GetCommentParams.column,
+                end: GetCommentParams.timestampStart,
+                start: GetCommentParams.timestampEnd
+               }
+                //const comment = await service.publicListByPublicationId(GetCommentParams.user_id, cls);
+                //await expect(typeof comment).toEqual('object')
+        });
+    })
+
+    describe('authFindOneById', () => {
+        it('SUCCESSFULLY_FOUND', async () => {
+            const comment = await service.authFindOneById(
+                GetCommentParams.id,
+                GetCommentParams.user_id
+            );
+            await expect(typeof comment).toEqual('object')
+        });
+    });
+
+    describe('publicFindOneById', () => {
+        it('SUCCESSFULLY_FOUND', async () => {
+            const comment = await service.publicFindOneById(
+                GetCommentParams.id
+            );
+            await expect(typeof comment).toEqual('object')
+        });
+    });
+
+    describe('create', () => {
+        it('SUCCESSFULLY_CREATE', async () => {
+            const comment = await service.create(
+                CreateCommentParams
+            )
+            console.log(comment)
+            await expect(comment).toHaveProperty('id')
+        });
+    });
 
 });
