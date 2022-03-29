@@ -12,7 +12,11 @@ import { IsValidTimestampService } from '@root/src/lib/utility/is-valid-timestam
 import { EmptyService } from '@root/src/lib/utility/empty/empty.service';
 import { ClassificationInterface } from '@root/src/lib/interfaces';
 import { GetCommentParams, CreateCommentParams } from '@root/src/params.jest'
-
+import { FirebaseModule } from '@modules/firebase/firebase.module';
+import { IsValidTimestampModule } from '@root/src/lib/utility/is-valid-timestamp/is-valid-timestamp.module';
+import { EmptyModule } from '@root/src/lib/utility/empty/empty.module';
+import { UserModule } from '@modules/user/user.module';
+import { PublicationModule } from '@modules/publication/publication.module';
 import { PublicationEntity } from '@root/src/entity/publication.entity';
 
 import { CommentModel} from '../../comment.model';
@@ -22,31 +26,41 @@ import { CommentRepository } from '../../comment.repository';
 
 describe('CommentService', () => {
   let service: CommentService;
+  let publix:PublicationService
+  let publicModel:PublicationModel
 
     beforeEach(async () => {
         const module: TestingModule = await Test.createTestingModule({
             imports: [
                 ...connectionDataBaseForTest(), 
-                TypeOrmModule.forFeature([CommentEntity, CommentRepository, PublicationEntity, PublicationRepository])
+                TypeOrmModule.forFeature([CommentEntity, CommentRepository, PublicationEntity, PublicationRepository]),
+                UserModule,
+                IsValidTimestampModule,
+                EmptyModule,
+                PublicationRepository,
+                PublicationEntity,
+                PublicationModule
             ],
             providers: [
                 CommentRepository,
                 CommentEntity,
                 CommentService,
-                PublicationService,
                 CommentModel,
-                CommentService, 
-                CommentModel,
-                PublicationService,
-                CommentRepository,
                 IsValidTimestampService,
                 EmptyService,
+                PublicationService,
                 PublicationModel,
                 PublicationRepository,
-                PublicationEntity
+                PublicationEntity,
+    
             ],
+            exports:[
+                CommentService
+            ]
         }).compile();
         service = module.get<CommentService>(CommentService);
+        publix = module.get<PublicationService>(PublicationService);
+        publicModel = module.get<PublicationModel>(PublicationModel);
     });
 
     beforeAll(done => {

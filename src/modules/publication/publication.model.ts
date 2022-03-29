@@ -40,6 +40,7 @@ export class PublicationModel {
         });
       }
     } catch (error) {
+      console.log(error)
       throw new HttpException([code.ERROR_GENERIC, message.ERROR_GENERIC], 500);
     }
   }

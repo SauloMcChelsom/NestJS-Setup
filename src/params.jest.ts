@@ -1,3 +1,4 @@
+export const jwtToken = ''
 export const GetCommentParams = {
     user_id: 1,
     search: '',

@@ -9,10 +9,12 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { CommentEntity } from '@entity/comment.entity';
 import { CommentRepository } from '../../comment.repository';
 
+import { CreateCommentParams, jwtToken } from '@root/src/params.jest'
+
 describe('CommentController (e2e)', () => {
   let app: INestApplication;
 
-  beforeEach(async () => {
+  beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [
         ...connectionDataBaseForTest(),
@@ -34,14 +36,27 @@ describe('CommentController (e2e)', () => {
     done()
   })
 
-  it('GET /v1/public/comment/publication/:id', async () => {
-    const { body } = await supertest
-      .agent(app.getHttpServer())
-      .get('/comment/publication/1')
-      .set('Accept', 'application/json')
-      .expect('Content-Type', /json/)
-      .expect(200);
-      expect(body.statusCode).toEqual(200);
-  });
-
+  describe('Authentication', () => {
+    it('GET /v1/public/comment/publication/:id', async () => {
+      const { body } = await supertest
+        .agent(app.getHttpServer())
+        .get('/comment/publication/1')
+        .set('Accept', 'application/json')
+        .set('Content-Type', 'application/json')
+        .expect(200);
+        expect(body.statusCode).toEqual(200);
+    });
+  
+    it('POST /v1/public/comment/user/:id', async () => {
+      const { body } = await supertest
+        .agent(app.getHttpServer())
+        .post(`/comment/user/${CreateCommentParams.user_id}`)
+        .set('Content-Type', 'application/json')
+        .set('Authorization', `Bearer ${jwtToken}`)
+        .send(CreateCommentParams)
+        .expect(201);
+        expect(body.statusCode).toEqual(201);
+    });
+  })
+  
 });
