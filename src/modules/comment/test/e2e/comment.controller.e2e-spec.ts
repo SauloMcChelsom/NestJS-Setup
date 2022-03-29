@@ -2,7 +2,6 @@ import { INestApplication } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getConnectionManager } from 'typeorm';
 import * as supertest from 'supertest';
-import { connectionDataBaseForTest } from '@conf/options/options.conf';
 import { AppModule } from '@root/src/app.module';
 
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -13,11 +12,22 @@ import { CreateCommentParams, jwtToken } from '@root/src/params.jest'
 
 describe('CommentController (e2e)', () => {
   let app: INestApplication;
+  const  TYPEORM_TYPE = 
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [
-        ...connectionDataBaseForTest(),
+        TypeOrmModule.forRoot({
+          name: 'default',
+          type: 'postgres',
+          host: process.env.TYPEORM_HOST,
+          port: Number(process.env.TYPEORM_PORT),
+          username: process.env.TYPEORM_USERNAME,
+          password: process.env.TYPEORM_PASSWORD,
+          database:  process.env.TYPEORM_DATABASE,
+          entities: ['./src/entity/*.entity.ts'],
+          keepConnectionAlive:true
+        }),
         TypeOrmModule.forFeature([CommentEntity, CommentRepository]),
         AppModule
       ],
@@ -47,7 +57,7 @@ describe('CommentController (e2e)', () => {
         expect(body.statusCode).toEqual(200);
     });
   
-    it('POST /v1/public/comment/user/:id', async () => {
+    /*it('POST /v1/public/comment/user/:id', async () => {
       const { body } = await supertest
         .agent(app.getHttpServer())
         .post(`/comment/user/${CreateCommentParams.user_id}`)
@@ -56,7 +66,7 @@ describe('CommentController (e2e)', () => {
         .send(CreateCommentParams)
         .expect(201);
         expect(body.statusCode).toEqual(201);
-    });
+    });*/
   })
   
 });

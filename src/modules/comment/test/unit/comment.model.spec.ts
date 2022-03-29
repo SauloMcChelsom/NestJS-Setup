@@ -4,7 +4,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { getConnectionManager } from 'typeorm';
 
 import { CommentEntity } from '@entity/comment.entity';
-import { connectionDataBaseForTest } from '@conf/options/options.conf';
+import { connectionDataBaseForTest } from '@root/connection-database-for-test-unit';
 import { IsValidTimestampService } from '@root/src/lib/utility/is-valid-timestamp/is-valid-timestamp.service';
 import { EmptyService } from '@root/src/lib/utility/empty/empty.service';
 import { code } from '@root/src/lib/enum';

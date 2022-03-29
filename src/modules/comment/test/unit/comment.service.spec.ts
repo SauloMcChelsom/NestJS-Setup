@@ -3,7 +3,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getConnectionManager } from 'typeorm';
 
-import { connectionDataBaseForTest } from '@conf/options/options.conf';
+import { connectionDataBaseForTest } from '@root/connection-database-for-test-unit';
 import { PublicationService } from '@modules/publication/publication.service';
 import { PublicationModel } from '@modules/publication/publication.model';
 import { PublicationRepository } from '@root/src/modules/publication/publication.repository';
