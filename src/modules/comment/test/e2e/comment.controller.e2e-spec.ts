@@ -8,11 +8,21 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { CommentEntity } from '@entity/comment.entity';
 import { CommentRepository } from '../../comment.repository';
 
-import { CreateCommentParams, jwtToken } from '@root/src/params.jest'
+import { InitializeFirebase } from '@root/src/conf/firebase/initialize-firebase';
+
+import { VersioningType } from '@nestjs/common'
+
+import { 
+  CreateCommentParams,
+  GetCommentParams, 
+  UpdateCommentParams, 
+  jwtToken,
+  jwtTokenExpirationTime 
+} from '@root/src/params.jest'
 
 describe('CommentController (e2e)', () => {
   let app: INestApplication;
-  const  TYPEORM_TYPE = 
+  new InitializeFirebase();
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -29,11 +39,15 @@ describe('CommentController (e2e)', () => {
           keepConnectionAlive:true
         }),
         TypeOrmModule.forFeature([CommentEntity, CommentRepository]),
-        AppModule
+        AppModule,
       ],
     }).compile();
 
     app = moduleFixture.createNestApplication();
+    app.enableVersioning({
+      type: VersioningType.URI,
+      defaultVersion: ['1/private', '1/public'],
+    })
     await app.init();
   });
 
@@ -47,26 +61,42 @@ describe('CommentController (e2e)', () => {
   })
 
   describe('Authentication', () => {
+
+    it('GET /v1/private/comment/user', async () => {
+     // app = moduleRef.createNestApplication<NestExpressApplication>();
+      const { body } = await supertest
+        .agent(app.getHttpServer())
+        .get(`/v1/private/comment/user/${GetCommentParams.user_id}`)
+        .set('Accept', 'application/json')
+        .set('Content-Type', 'application/json')
+        .set('Authorization', `Bearer ${jwtToken}`)
+        //.expect(200);
+        console.log(body)
+        expect(body.statusCode).toEqual(200);
+
+       
+    });
+
     it('GET /v1/public/comment/publication/:id', async () => {
       const { body } = await supertest
         .agent(app.getHttpServer())
-        .get('/comment/publication/1')
+        .get(`/v1/public/comment/publication/${GetCommentParams.publication_id}`)
         .set('Accept', 'application/json')
         .set('Content-Type', 'application/json')
         .expect(200);
         expect(body.statusCode).toEqual(200);
     });
-  
-    /*it('POST /v1/public/comment/user/:id', async () => {
+   
+    it('POST /v1/public/comment/user/:id', async () => {
       const { body } = await supertest
         .agent(app.getHttpServer())
-        .post(`/comment/user/${CreateCommentParams.user_id}`)
+        .post(`/v1/public/comment/user/${CreateCommentParams.user_id}`)
         .set('Content-Type', 'application/json')
         .set('Authorization', `Bearer ${jwtToken}`)
         .send(CreateCommentParams)
         .expect(201);
         expect(body.statusCode).toEqual(201);
-    });*/
+    });
   })
   
 });

@@ -3,6 +3,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getConnectionManager } from 'typeorm';
 
+import { getRepositoryToken } from '@nestjs/typeorm';
+import { Connection, Repository } from 'typeorm'
 import { connectionDataBaseForTest } from '@root/connection-database-for-test-unit';
 import { PublicationService } from '@modules/publication/publication.service';
 import { PublicationModel } from '@modules/publication/publication.model';
@@ -23,23 +25,20 @@ import { CommentModel} from '../../comment.model';
 import { CommentService } from '../../comment.service';
 import { CommentRepository } from '../../comment.repository';
 
+import { AppModule } from '@root/src/app.module'
+
 
 describe('CommentService', () => {
   let service: CommentService;
-  let publix:PublicationService
-  let publicModel:PublicationModel
 
-    beforeEach(async () => {
+
+  beforeAll(async () => {
         const module: TestingModule = await Test.createTestingModule({
             imports: [
                 ...connectionDataBaseForTest(), 
-                TypeOrmModule.forFeature([CommentEntity, CommentRepository, PublicationEntity, PublicationRepository]),
-                UserModule,
-                IsValidTimestampModule,
-                EmptyModule,
-                PublicationRepository,
-                PublicationEntity,
-                PublicationModule
+                TypeOrmModule.forFeature([CommentEntity, CommentRepository]),
+                PublicationEntity, 
+                PublicationRepository
             ],
             providers: [
                 CommentRepository,
@@ -52,22 +51,20 @@ describe('CommentService', () => {
                 PublicationModel,
                 PublicationRepository,
                 PublicationEntity,
-    
             ],
             exports:[
                 CommentService
             ]
         }).compile();
         service = module.get<CommentService>(CommentService);
-        publix = module.get<PublicationService>(PublicationService);
-        publicModel = module.get<PublicationModel>(PublicationModel);
     });
 
     beforeAll(done => {
         done()
     })
-    
+
     afterAll(done => {
+        
         getConnectionManager().get().close()
         done()
     })
