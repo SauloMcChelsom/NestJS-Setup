@@ -178,8 +178,6 @@ export class CommentModel {
         end,
       );
 
-      console.log(res)
-
       if (Object.keys(res).length != 0) {
         return { res: res, count: count };
       }

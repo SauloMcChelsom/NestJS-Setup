@@ -21,6 +21,8 @@ import {
 } from '@root/src/params.jest'
 
 describe('CommentController (e2e)', () => {
+  let PUBLIC_COMMENT_ID:number;
+  let PRIVATE_COMMENT_ID:number;
   let app: INestApplication;
   new InitializeFirebase();
 
@@ -61,20 +63,60 @@ describe('CommentController (e2e)', () => {
   })
 
   describe('Authentication', () => {
-
-    it('GET /v1/private/comment/user', async () => {
-     // app = moduleRef.createNestApplication<NestExpressApplication>();
+    
+    it('POST /v1/private/comment', async () => {
       const { body } = await supertest
         .agent(app.getHttpServer())
-        .get(`/v1/private/comment/user/${GetCommentParams.user_id}`)
-        .set('Accept', 'application/json')
+        .post(`/v1/private/comment/`)
         .set('Content-Type', 'application/json')
         .set('Authorization', `Bearer ${jwtToken}`)
-        //.expect(200);
-        console.log(body)
-        expect(body.statusCode).toEqual(200);
+        .send(CreateCommentParams)
+        .expect(201);
+        PRIVATE_COMMENT_ID = body.results[0].id
+        expect(body.statusCode).toEqual(201);
+    });
+   
+    it('POST /v1/public/comment/user/:id', async () => {
+      const { body } = await supertest
+        .agent(app.getHttpServer())
+        .post(`/v1/public/comment/user/${CreateCommentParams.user_id}`)
+        .set('Content-Type', 'application/json')
+        .send(CreateCommentParams)
+        .expect(201);
+        PUBLIC_COMMENT_ID = body.results[0].id
+        expect(body.statusCode).toEqual(201);
+    });
 
-       
+    it('GET /v1/private/comment/user', async () => {
+      const { body } = await supertest
+      .agent(app.getHttpServer())
+      .get(`/v1/private/comment/user/`)
+      .set('Accept', 'application/json')
+      .set('Content-Type', 'application/json')
+      .set('Authorization', `Bearer ${jwtToken}`)
+      .expect(200);
+      expect(body.statusCode).toEqual(200);
+    });
+
+    it('GET /v1/private/comment/user/:id', async () => {
+      const { body } = await supertest
+      .agent(app.getHttpServer())
+      .get(`/v1/private/comment/user/${GetCommentParams.user_id}`)
+      .set('Accept', 'application/json')
+      .set('Content-Type', 'application/json')
+      .set('Authorization', `Bearer ${jwtToken}`)
+      .expect(200);
+      expect(body.statusCode).toEqual(200);
+    });
+
+    it('GET /v1/public/comment/user/:id', async () => {
+      const { body } = await supertest
+      .agent(app.getHttpServer())
+      .get(`/v1/public/comment/user/${GetCommentParams.user_id}`)
+      .set('Accept', 'application/json')
+      .set('Content-Type', 'application/json')
+      .expect(200);
+      expect(body.statusCode).toEqual(200);
     });
 
     it('GET /v1/public/comment/publication/:id', async () => {
@@ -86,17 +128,69 @@ describe('CommentController (e2e)', () => {
         .expect(200);
         expect(body.statusCode).toEqual(200);
     });
-   
-    it('POST /v1/public/comment/user/:id', async () => {
+
+    it('GET /v1/private/comment/:comment_id', async () => {
+      const comment_id = GetCommentParams.id
+      const { body } = await supertest
+      .agent(app.getHttpServer())
+      .get(`/v1/private/comment/${comment_id}`)
+      .set('Accept', 'application/json')
+      .set('Content-Type', 'application/json')
+      .set('Authorization', `Bearer ${jwtToken}`)
+      .expect(200);
+      expect(body.statusCode).toEqual(200);
+    });
+
+    it('GET /v1/public/comment/:comment_id', async () => {
+      const comment_id = GetCommentParams.id
+      const { body } = await supertest
+      .agent(app.getHttpServer())
+      .get(`/v1/public/comment/${comment_id}`)
+      .set('Accept', 'application/json')
+      .set('Content-Type', 'application/json')
+      .set('Authorization', `Bearer ${jwtToken}`)
+      .expect(200);
+      expect(body.statusCode).toEqual(200);
+    });
+
+    it('PUT /v1/private/comment/:comment_id', async () => {
       const { body } = await supertest
         .agent(app.getHttpServer())
-        .post(`/v1/public/comment/user/${CreateCommentParams.user_id}`)
+        .put(`/v1/private/comment/${GetCommentParams.id}`)
         .set('Content-Type', 'application/json')
         .set('Authorization', `Bearer ${jwtToken}`)
-        .send(CreateCommentParams)
-        .expect(201);
-        expect(body.statusCode).toEqual(201);
+        .send(UpdateCommentParams)
+        .expect(200);
+        expect(body.statusCode).toEqual(200);
     });
+
+    it('PUT /v1/public/comment/:comment_id/user/:user_id/', async () => {
+      const { body } = await supertest
+        .agent(app.getHttpServer())
+        .put(`/v1/public/comment/${GetCommentParams.id}/user/${GetCommentParams.user_id}/`)
+        .set('Content-Type', 'application/json')
+        .send(UpdateCommentParams)
+        expect(body.statusCode).toEqual(200);
+    });
+
+    it('DELETE /v1/private/comment/:comment_id', async () => {
+      const { body } = await supertest
+        .agent(app.getHttpServer())
+        .delete(`/v1/private/comment/${PRIVATE_COMMENT_ID}`)
+        .set('Content-Type', 'application/json')
+        .set('Authorization', `Bearer ${jwtToken}`)
+        .expect(200);
+        expect(body.statusCode).toEqual(200);
+    });
+
+    it('DELETE /v1/public/comment/:comment_id/user/:user_id/', async () => {
+      const { body } = await supertest
+        .agent(app.getHttpServer())
+        .delete(`/v1/public/comment/${PUBLIC_COMMENT_ID}/user/${GetCommentParams.user_id}/`)
+        .set('Content-Type', 'application/json')
+        .expect(200);
+        expect(body.statusCode).toEqual(200);
+    });
+
   })
-  
 });

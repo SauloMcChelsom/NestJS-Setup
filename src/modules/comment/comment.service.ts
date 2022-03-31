@@ -80,7 +80,6 @@ export class CommentService {
 
   public async delete(comment_id: number, user_id: number) {
     await this.model.validateID(comment_id, user_id);
-    const comment = await this.model.findOneById(comment_id);
     await this.model.deleteById(comment_id);
   }
 }
