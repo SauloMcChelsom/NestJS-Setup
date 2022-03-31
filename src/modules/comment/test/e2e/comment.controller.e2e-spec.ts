@@ -73,8 +73,8 @@ describe('CommentController (e2e)', () => {
         .send(CreateCommentParams)
         .expect(201);
         PRIVATE_COMMENT_ID = body.results[0].id
-        expect(body.statusCode).toEqual(201);
-    });
+        expect(body.results[0].id).toEqual(expect.any(Number));
+    }); 
    
     it('POST /v1/public/comment/user/:id', async () => {
       const { body } = await supertest
@@ -84,7 +84,7 @@ describe('CommentController (e2e)', () => {
         .send(CreateCommentParams)
         .expect(201);
         PUBLIC_COMMENT_ID = body.results[0].id
-        expect(body.statusCode).toEqual(201);
+        expect(body.results[0].id).toEqual(expect.any(Number));
     });
 
     it('GET /v1/private/comment/user', async () => {
@@ -94,8 +94,18 @@ describe('CommentController (e2e)', () => {
       .set('Accept', 'application/json')
       .set('Content-Type', 'application/json')
       .set('Authorization', `Bearer ${jwtToken}`)
+      .query({offset:0})
+      .query({order:'ASC'})
+      .query({column:'timestamp'})
+      .query({search:''})
+      .query({start:'2021-03-15'})
+      .query({end:'2022-03-31'})
+      .query({limit:3})
       .expect(200);
       expect(body.statusCode).toEqual(200);
+      expect(body.code).toEqual('SUCCESSFULLY_FOUND');
+      expect(body.results).toHaveLength(3);
+      expect(body.count).toEqual(expect.any(Number));
     });
 
     it('GET /v1/private/comment/user/:id', async () => {
@@ -105,8 +115,19 @@ describe('CommentController (e2e)', () => {
       .set('Accept', 'application/json')
       .set('Content-Type', 'application/json')
       .set('Authorization', `Bearer ${jwtToken}`)
+      .query({offset:0})
+      .query({order:'ASC'})
+      .query({column:'timestamp'})
+      .query({search:''})
+      .query({start:'2021-03-15'})
+      .query({end:'2022-03-31'})
+      .query({limit:3})
       .expect(200);
       expect(body.statusCode).toEqual(200);
+      expect(body.code).toEqual('SUCCESSFULLY_FOUND');
+      expect(body.results).toHaveLength(3);
+      expect(body.count).toEqual(expect.any(Number));
+      expect(body.results[0].user_id).toEqual(GetCommentParams.user_id);
     });
 
     it('GET /v1/public/comment/user/:id', async () => {
@@ -115,8 +136,19 @@ describe('CommentController (e2e)', () => {
       .get(`/v1/public/comment/user/${GetCommentParams.user_id}`)
       .set('Accept', 'application/json')
       .set('Content-Type', 'application/json')
+      .query({offset:0})
+      .query({order:'ASC'})
+      .query({column:'timestamp'})
+      .query({search:''})
+      .query({start:'2021-03-15'})
+      .query({end:'2022-03-31'})
+      .query({limit:3})
       .expect(200);
       expect(body.statusCode).toEqual(200);
+      expect(body.code).toEqual('SUCCESSFULLY_FOUND');
+      expect(body.results).toHaveLength(3);
+      expect(body.count).toEqual(expect.any(Number));
+      expect(body.results[0].user_id).toEqual(GetCommentParams.user_id);
     });
 
     it('GET /v1/public/comment/publication/:id', async () => {
@@ -125,8 +157,19 @@ describe('CommentController (e2e)', () => {
         .get(`/v1/public/comment/publication/${GetCommentParams.publication_id}`)
         .set('Accept', 'application/json')
         .set('Content-Type', 'application/json')
+        .query({offset:0})
+        .query({order:'ASC'})
+        .query({column:'timestamp'})
+        .query({search:''})
+        .query({start:'2021-03-15'})
+        .query({end:'2022-03-31'})
+        .query({limit:3})
         .expect(200);
         expect(body.statusCode).toEqual(200);
+        expect(body.code).toEqual('SUCCESSFULLY_FOUND');
+        expect(body.results).toHaveLength(3);
+        expect(body.count).toEqual(expect.any(Number));
+        expect(body.results[0].publication_id).toEqual(GetCommentParams.publication_id);
     });
 
     it('GET /v1/private/comment/:comment_id', async () => {
@@ -138,6 +181,10 @@ describe('CommentController (e2e)', () => {
       .set('Content-Type', 'application/json')
       .set('Authorization', `Bearer ${jwtToken}`)
       .expect(200);
+      expect(body.statusCode).toEqual(200);
+      expect(body.code).toEqual('SUCCESSFULLY_FOUND');
+      expect(body.results).toHaveLength(1);
+      expect(body.count).toEqual(expect.any(Number));
       expect(body.statusCode).toEqual(200);
     });
 
@@ -151,6 +198,10 @@ describe('CommentController (e2e)', () => {
       .set('Authorization', `Bearer ${jwtToken}`)
       .expect(200);
       expect(body.statusCode).toEqual(200);
+      expect(body.code).toEqual('SUCCESSFULLY_FOUND');
+      expect(body.results).toHaveLength(1);
+      expect(body.count).toEqual(expect.any(Number));
+      expect(body.statusCode).toEqual(200);
     });
 
     it('PUT /v1/private/comment/:comment_id', async () => {
@@ -162,6 +213,7 @@ describe('CommentController (e2e)', () => {
         .send(UpdateCommentParams)
         .expect(200);
         expect(body.statusCode).toEqual(200);
+        expect(body.code).toEqual('SUCCESSFULLY_UPDATED');
     });
 
     it('PUT /v1/public/comment/:comment_id/user/:user_id/', async () => {
@@ -171,6 +223,7 @@ describe('CommentController (e2e)', () => {
         .set('Content-Type', 'application/json')
         .send(UpdateCommentParams)
         expect(body.statusCode).toEqual(200);
+        expect(body.code).toEqual('SUCCESSFULLY_UPDATED');
     });
 
     it('DELETE /v1/private/comment/:comment_id', async () => {
@@ -181,6 +234,7 @@ describe('CommentController (e2e)', () => {
         .set('Authorization', `Bearer ${jwtToken}`)
         .expect(200);
         expect(body.statusCode).toEqual(200);
+        expect(body.code).toEqual('DELETED_SUCCESSFULLY');
     });
 
     it('DELETE /v1/public/comment/:comment_id/user/:user_id/', async () => {
@@ -190,7 +244,21 @@ describe('CommentController (e2e)', () => {
         .set('Content-Type', 'application/json')
         .expect(200);
         expect(body.statusCode).toEqual(200);
+        expect(body.code).toEqual('DELETED_SUCCESSFULLY');
     });
 
   })
 });
+
+interface CustomMatchers<R = unknown> {
+  toBeWithinRange(floor: number, ceiling: number): R;
+  isNumber(floor?: number): R;
+}
+
+declare global {
+  namespace jest {
+    interface Expect extends CustomMatchers {}
+    interface Matchers<R> extends CustomMatchers<R> {}
+    interface InverseAsymmetricMatchers extends CustomMatchers {}
+  }
+}

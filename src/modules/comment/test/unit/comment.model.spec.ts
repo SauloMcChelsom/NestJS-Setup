@@ -18,9 +18,6 @@ import { CommentModel} from '../../comment.model';
 import { CommentRepository } from '../../comment.repository';
 import { GetCommentParams, CreateCommentParams, UpdateCommentParams } from '@root/src/params.jest'
 
-import { EntityRepository, AbstractRepository } from 'typeorm';
-import { Repository } from 'typeorm';
-
 describe('CommentModel', () => {
   let model: CommentModel;
   let CREATE
@@ -58,27 +55,7 @@ describe('CommentModel', () => {
     it('SUCCESSFULLY_CREATE', async () => {
       const comment = await model.create(CreateCommentParams);
       CREATE = comment
-      await expect(comment.comment).toEqual(CreateCommentParams.comment)
-    });
-  })
-
-  describe('deleteById', () => {
-    it('SUCCESSFULLY_DELETE', async () => {
-      const comment = await model.deleteById(CREATE.id);
-      await expect(comment.code).toEqual(code.SUCCESSFULLY_DELETED)
-    });
-    it('FAILED_DELETE', async () => {
-      try{
-        await model.deleteById(0);
-      }catch(e){
-        await expect(e).toEqual(
-          new HttpException({
-            code : code.NOT_FOUND,
-            message : 'delete, id not found',
-            description : ''
-          }, HttpStatus.NOT_FOUND)
-        )
-      }
+      await expect(comment.id).isNumber()
     });
   })
 
@@ -152,4 +129,37 @@ describe('CommentModel', () => {
       }
     });
   })
+
+  describe('deleteById', () => {
+    it('SUCCESSFULLY_DELETE', async () => {
+      const comment = await model.deleteById(CREATE.id);
+      await expect(comment.code).toEqual(code.SUCCESSFULLY_DELETED)
+    });
+    it('FAILED_DELETE', async () => {
+      try{
+        await model.deleteById(0);
+      }catch(e){
+        await expect(e).toEqual(
+          new HttpException({
+            code : code.NOT_FOUND,
+            message : 'delete, id not found',
+            description : ''
+          }, HttpStatus.NOT_FOUND)
+        )
+      }
+    });
+  })
 });
+
+interface CustomMatchers<R = unknown> {
+  toBeWithinRange(floor: number, ceiling: number): R;
+  isNumber(floor?: number): R;
+}
+
+declare global {
+  namespace jest {
+    interface Expect extends CustomMatchers {}
+    interface Matchers<R> extends CustomMatchers<R> {}
+    interface InverseAsymmetricMatchers extends CustomMatchers {}
+  }
+}
