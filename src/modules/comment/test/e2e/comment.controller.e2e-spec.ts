@@ -62,8 +62,7 @@ describe('CommentController (e2e)', () => {
     done()
   })
 
-  describe('Authentication', () => {
-    
+  describe('postar um comentario por uri privado', () => {
     it('POST /v1/private/comment', async () => {
       const { body } = await supertest
         .agent(app.getHttpServer())
@@ -75,7 +74,9 @@ describe('CommentController (e2e)', () => {
         PRIVATE_COMMENT_ID = body.results[0].id
         expect(body.results[0].id).toEqual(expect.any(Number));
     }); 
+  }); 
    
+  describe('postar um comentario por uri publico', () => {
     it('POST /v1/public/comment/user/:id', async () => {
       const { body } = await supertest
         .agent(app.getHttpServer())
@@ -86,7 +87,9 @@ describe('CommentController (e2e)', () => {
         PUBLIC_COMMENT_ID = body.results[0].id
         expect(body.results[0].id).toEqual(expect.any(Number));
     });
+  }); 
 
+  describe('buscar uma lista de comentario pelo token do usuario por uri private', () => {
     it('GET /v1/private/comment/user', async () => {
       const { body } = await supertest
       .agent(app.getHttpServer())
@@ -107,7 +110,9 @@ describe('CommentController (e2e)', () => {
       expect(body.results).toHaveLength(3);
       expect(body.count).toEqual(expect.any(Number));
     });
+  }); 
 
+  describe('buscar uma lista de comentario informando o id do usuario por uri private', () => {
     it('GET /v1/private/comment/user/:id', async () => {
       const { body } = await supertest
       .agent(app.getHttpServer())
@@ -129,7 +134,9 @@ describe('CommentController (e2e)', () => {
       expect(body.count).toEqual(expect.any(Number));
       expect(body.results[0].user_id).toEqual(GetCommentParams.user_id);
     });
+  });
 
+  describe('buscar uma lista de comentario informando o id do usuario por uri publico', () => {
     it('GET /v1/public/comment/user/:id', async () => {
       const { body } = await supertest
       .agent(app.getHttpServer())
@@ -150,28 +157,32 @@ describe('CommentController (e2e)', () => {
       expect(body.count).toEqual(expect.any(Number));
       expect(body.results[0].user_id).toEqual(GetCommentParams.user_id);
     });
+  }); 
 
+  describe('buscar uma lista de comentario informando o id da publicação por uri publico', () => {
     it('GET /v1/public/comment/publication/:id', async () => {
       const { body } = await supertest
-        .agent(app.getHttpServer())
-        .get(`/v1/public/comment/publication/${GetCommentParams.publication_id}`)
-        .set('Accept', 'application/json')
-        .set('Content-Type', 'application/json')
-        .query({offset:0})
-        .query({order:'ASC'})
-        .query({column:'timestamp'})
-        .query({search:''})
-        .query({start:'2021-03-15'})
-        .query({end:'2022-03-31'})
-        .query({limit:3})
-        .expect(200);
-        expect(body.statusCode).toEqual(200);
-        expect(body.code).toEqual('SUCCESSFULLY_FOUND');
-        expect(body.results).toHaveLength(3);
-        expect(body.count).toEqual(expect.any(Number));
-        expect(body.results[0].publication_id).toEqual(GetCommentParams.publication_id);
+      .agent(app.getHttpServer())
+      .get(`/v1/public/comment/publication/${GetCommentParams.publication_id}`)
+      .set('Accept', 'application/json')
+      .set('Content-Type', 'application/json')
+      .query({offset:0})
+      .query({order:'ASC'})
+      .query({column:'timestamp'})
+      .query({search:''})
+      .query({start:'2021-03-15'})
+      .query({end:'2022-03-31'})
+      .query({limit:3})
+      .expect(200);
+      expect(body.statusCode).toEqual(200);
+      expect(body.code).toEqual('SUCCESSFULLY_FOUND');
+      expect(body.results).toHaveLength(3);
+      expect(body.count).toEqual(expect.any(Number));
+      expect(body.results[0].publication_id).toEqual(GetCommentParams.publication_id);
     });
+  });
 
+  describe('buscar um comentario informando o id por uri private', () => {
     it('GET /v1/private/comment/:comment_id', async () => {
       const comment_id = GetCommentParams.id
       const { body } = await supertest
@@ -187,7 +198,9 @@ describe('CommentController (e2e)', () => {
       expect(body.count).toEqual(expect.any(Number));
       expect(body.statusCode).toEqual(200);
     });
+  });
 
+  describe('buscar um comentario informando o id por uri publico', () => {
     it('GET /v1/public/comment/:comment_id', async () => {
       const comment_id = GetCommentParams.id
       const { body } = await supertest
@@ -203,7 +216,9 @@ describe('CommentController (e2e)', () => {
       expect(body.count).toEqual(expect.any(Number));
       expect(body.statusCode).toEqual(200);
     });
+  });
 
+  describe('atualizar um comentario informando o id por uri private', () => {
     it('PUT /v1/private/comment/:comment_id', async () => {
       const { body } = await supertest
         .agent(app.getHttpServer())
@@ -215,7 +230,9 @@ describe('CommentController (e2e)', () => {
         expect(body.statusCode).toEqual(200);
         expect(body.code).toEqual('SUCCESSFULLY_UPDATED');
     });
+  });
 
+  describe('atualizar um comentario informando o id do comentario e o id do usuario por uri public', () => {
     it('PUT /v1/public/comment/:comment_id/user/:user_id/', async () => {
       const { body } = await supertest
         .agent(app.getHttpServer())
@@ -225,7 +242,9 @@ describe('CommentController (e2e)', () => {
         expect(body.statusCode).toEqual(200);
         expect(body.code).toEqual('SUCCESSFULLY_UPDATED');
     });
+  });
 
+  describe('deletar um comentario informando o id por uri private', () => {
     it('DELETE /v1/private/comment/:comment_id', async () => {
       const { body } = await supertest
         .agent(app.getHttpServer())
@@ -236,7 +255,9 @@ describe('CommentController (e2e)', () => {
         expect(body.statusCode).toEqual(200);
         expect(body.code).toEqual('DELETED_SUCCESSFULLY');
     });
+  });
 
+  describe('deletar um comentario informando o id do comentario e o id do usuario por uri public', () => {
     it('DELETE /v1/public/comment/:comment_id/user/:user_id/', async () => {
       const { body } = await supertest
         .agent(app.getHttpServer())
