@@ -8,7 +8,7 @@
   <p align="center">NestJS-Setup é uma infraestrutura back-end para iniciar um projeto sem precisar de configurar</p>
  
 
-# Documentação
+# Documentação Arquitetural do sismtema NestJS-Setup
 
 [NestJS-Setup](https://github.com/nestjs/nest) link para teste online.
 
@@ -88,17 +88,40 @@ arquivos de paginas web para exemplos
 ```
 src/view
 ```
+# Estrutura de convenção
+Segue detalhamento de como deve ser a criação das novas funcionalidades do sistema NestJS-Setup. qualquer coisa fora deste padrão deve ser corrigido.
 
+Convenção
+```bash
+# variavel simples
+let numero_cartao_de_debito = 8425778
 
+# variavel que representa uma entidade, dominio ou objeto deve ser declarodo junto com sua propriedade.
+# sempre respeitando a ordem entidade+propriedade 
+let usuario_nome = 'mary'
+```
 
+```bash
+# metodos
 
+calcularContasDeDebitos(){
+...
+}
+```
 
+```bash
+# classes
 
+class ContasDeDebitos{
+...
+}
+```
 
+```bash
+# arquivos
 
-
-
-
+./contasDeDebitos.components.ts
+```
 
 
 
