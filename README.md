@@ -52,8 +52,54 @@ $ npm run test:e2e
 ```
 
 ## Estrutura de arquivos e diretorios
+
 Arquivos `.jpg` `.png` `.mp4` `.mp3` `.pdf` e outros, enviados pelo usuarios. Todos os arquivos que o usuario subiu com o uploads, são enviados para essa pasta,
 da mesma forma, esse diretorio também e ultilizado para fazer todo processo de download.
 ```
 CDN
 ```
+
+Arquivos de configuração que pode ser ultilizados em outras parte do sistema
+```
+src/config
+```
+
+Todas as entidades do sistema
+```
+src/entity
+```
+
+modulos de funcionalidades, são chamados por construtor para realizar uma função 
+```
+src/lib
+```
+
+modulos principal do sistema
+```
+src/modules
+```
+
+modulos de serviços, são chamados por uri para realizar uma tarefas especificas
+```
+src/services
+```
+
+arquivos de paginas web para exemplos
+```
+src/view
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
