@@ -92,27 +92,27 @@ src/view
 Segue detalhamento de como deve ser a criação das novas funcionalidades do sistema NestJS-Setup. qualquer coisa fora deste padrão deve ser corrigido.
 
 Convenção
-```bash
-# variavel simples
+```js
+// variavel simples
 let numero_cartao_de_debito = 8425778
 
-# variavel que representa uma entidade, dominio ou objeto deve ser declarodo junto com sua propriedade.
-# sempre respeitando a ordem entidade+propriedade 
+// variavel que representa uma entidade, dominio ou objeto deve ser declarodo junto com sua propriedade.
+// sempre respeitando a ordem entidade+propriedade 
 let usuario_nome = 'mary'
 ```
 
-```bash
-# metodos
+```js
+// metodos
 
 calcularContasDeDebitos(){
 ...
 }
 ```
 
-```bash
-# classes
+```js
+// classes
 
-class ContasDeDebitos{
+class ContasDeDebitos {
 ...
 }
 ```
