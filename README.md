@@ -328,16 +328,167 @@ exemplo
     return new OK(dto, code.SUCCESSFULLY_FOUND, null, count);
   }
 ```
+`service`
+o metodo tem o mesmo nome do controller
 
+pouca logica, apenas chama o seu model ou chama um services de outro modulos
 
+interfaciado ou variavel tipadas
 
+retorna uma entidade
 
+```js
+public async create(body: CreateInterface) {
+const create = await this.model.create(body);
+await this.publication.incrementNumberCommentOfPublication(
+   body.publication_id,
+);
+return await this.model.findOneById(create.id);
+```
+`model`
+Construtor existe o repositorio customizado e o local
+ 
+classe tem o mesmo nome, porem sem o sufixo de public ou auth
+ 
+normalmente aonde os orm são executados, ou seja chamada ao banco de dados são feitas
+ 
+returna como erro uma exeção em 2 nivel
+   1 - erro de query -> QUERY_FAILED(400)
+   2 - recurso não encontrado -> NOT_FOUND(404)
+   
+lista são chamado por repositorio customizados, por motivo que nativamente o orm não suporta
+consulta complexas, é obrigatorio ter uma consulta com os mesmo parametros para buscar a conquidade de 
+registro
 
+possui obrigatoriamente validaçãoes
+```bash
+limit > 3 e limit < 15
+```
+```bash
+column recebe id caso não for passado pelo usuario
+```
+```bash
+order recebe ASC caso não for passado pelo usuario
+```
+```bash
+start valida se é uma datatime valida
+```
+```bash
+end valida se é uma datatime valida
+```
 
+```bash
+#os paramentros para o metodo de contagem de registro
+publicationId
+search
+start
+end
+```
+```bash
+#os paramentros para o metodo de lista de registro
+publicationId
+search
+limit
+offset
+order
+column
+start
+end
+```
 
+exemplo
+```js
+public async listByPublicationId(
+    publicationId: number,
+    search = '',
+    limit = 3,
+    offset = 0,
+    order = 'ASC',
+    column = 'id',
+    start = '',
+    end = '',
+  ) {
+    try {
+      if (limit > 15) {
+        limit = 15;
+      }
 
+      if (this.empty.run(column)) {
+        column = 'id';
+      }
 
+      if (!(order === 'ASC' || order === 'DESC')) {
+        order = 'ASC';
+      }
 
+      if (start) {
+        start = this.isValidTimestamp.run(start);
+      }
+
+      if (end) {
+        end = this.isValidTimestamp.run(end);
+      }
+
+      const res = await this.repository_custom.listByPublicationId(
+        publicationId,
+        search,
+        limit,
+        offset,
+        order,
+        column,
+        start,
+        end,
+      );
+      const count = await this.repository_custom.countListByPublicationId(
+        publicationId,
+        search,
+        start,
+        end,
+      );
+
+      if (Object.keys(res).length != 0) {
+        return { res: res, count: count };
+      }
+
+      throw new HttpException({
+        code : code.NOT_FOUND,
+        message : 'not found list by publication id',
+        description : ''
+      }, HttpStatus.NOT_FOUND)
+    } catch (e: any) {
+      throw new HttpException(e.response, e.status)
+    }
+  }
+```
+```js
+ public async findOneById(id: number) {
+    try {
+      const res = await this.repository.findOne(id).catch((err) => {
+        throw new HttpException({
+          code : code.QUERY_FAILED,
+          message : `${err.detail || err.hint || err.routine}`,
+          description : ''
+        }, HttpStatus.BAD_REQUEST)
+      });
+      if (res) {
+        return res;
+      }
+      throw new HttpException({
+        code : code.NOT_FOUND,
+        message : 'not found find one by id',
+        description : ''
+      }, HttpStatus.NOT_FOUND)
+    } catch (e: any) {
+      throw new HttpException(e.response, e.status);
+    }
+  }
+```
+`repositorio`
+repositorio customizado que possui dois medoto comum, o list e o cout
+
+para sucesso retorna uma entidade
+
+para erro retorna uma exeção de QUERY_FAILED
 
 
 
