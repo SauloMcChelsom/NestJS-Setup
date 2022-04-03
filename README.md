@@ -4,22 +4,25 @@
 
 [circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
 [circleci-url]: https://circleci.com/gh/nestjs/nest
-
-<p align="center">NestJS-Setup é uma infraestrutura back-end para iniciar um projeto sem precisar de configurar</p>
   
-<p align="center"><a href="http://nestjs.com/" target="blank">[PT-BR]</a></p>
 
-<p align="center"><a href="http://nestjs.com/" target="blank">[EN-USA]</a></p>
 
-</br></br>
-
-# Documentação
+<p align="center"><h1 align="center">Documentação</h1></p>
 
 </br></br>
 
+<p align="center"><a href="http://nestjs.com/" target="blank">[ PT-BR ]</a></p>
+
+<p align="center"><a href="http://nestjs.com/" target="blank"> EN-USA </a></p>
+
+</br></br>
+<p align="right">Autor<a href="http://nestjs.com/" target="blank"> Saulo McChelsom</a></p>
+
+## Introdução
+NestJS-Setup é uma infraestrutura back-end para iniciar um projeto sem precisar de configurar
 [NestJS-Setup](https://github.com/nestjs/nest) link para teste online.
 
-## Installation
+## Instalação
 
 Cloning the Repository
 ```bash
