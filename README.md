@@ -5,16 +5,17 @@
 [circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
 [circleci-url]: https://circleci.com/gh/nestjs/nest
 
-  <p align="center">NestJS-Setup é uma infraestrutura back-end para iniciar um projeto sem precisar de configurar</p>
- 
+<p align="center">NestJS-Setup é uma infraestrutura back-end para iniciar um projeto sem precisar de configurar</p>
+  
+<p align="center"><a href="http://nestjs.com/" target="blank">[PT-BR]</a></p>
 
+<p align="center"><a href="http://nestjs.com/" target="blank">[EN-USA]</a></p>
 
+</br></br>
 
-<h1 align="center">
-  <p align="center">
-	Documentação Arquitetural do sismtema NestJS-Setup
-  </p>
-</h1>
+# Documentação
+
+</br></br>
 
 [NestJS-Setup](https://github.com/nestjs/nest) link para teste online.
 
@@ -97,16 +98,23 @@ src/view
 ## Estrutura e convenção
 Segue detalhamento de como deve ser a criação das novas funcionalidades do sistema NestJS-Setup. qualquer coisa fora deste padrão deve ser corrigido.
 
-`controller`
+
+`dto`/`user.dto.ts`
+
+`interface`/`user.interface.ts`
+
+`mapper`/`user.mapper.ts`
+
+`user.controller.ts`
 os dados são recebidos por dto, e retorna um mepper
 
-`service` 
+`user.service.ts` 
 um conjuto de varias unidade para a realização de uma tarefas, os metodos são chamados por interface ou variavel tipadas, retorna uma etidade
 
-`model`
+`user.model.ts`
 uma unidade, que realiza uma execução especifica, unica...
 
-`repositorio` 
+`user.repositorio.ts` 
 são classe customizada de acesso ao banco com orm
 
 > se sua classe esta precisando acessar um recurso de outro modulo, sua classe não pode acessa um model ou repositorio, deve sempre acessar o service.
