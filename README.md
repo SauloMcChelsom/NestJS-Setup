@@ -122,7 +122,21 @@ class ContasDeDebitos {
 
 ./contasDeDebitos.components.ts
 ```
+./dto
+```js
+	classe: CreateDto
+	arquivo: create.dto
+	
+	export class CreateDto {
+	  @IsNotEmpty()
+	  @IsNumber()
+	  publication_id: number;
 
+	  @IsNotEmpty()
+	  @MinLength(1)
+	  comment: string;
+	}
+```
 
 
 
