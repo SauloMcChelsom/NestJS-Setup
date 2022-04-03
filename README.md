@@ -101,6 +101,37 @@ src/view
 ## Estrutura e convenção
 Segue detalhamento de como deve ser a criação das novas funcionalidades do sistema NestJS-Setup. qualquer coisa fora deste padrão deve ser corrigido.
 
+- [`./CDN`](#routes)
+- [`./src`](#routes)
+	- [`./config`](#routes)
+	-  [`./entity`](#routes)
+	-  [`./lib`](#routes)
+	-  [`./modules`](#routes)
+		-  [`./user`](#routes)
+			-  [`./dto`](#routes)
+			-  [`./interface`](#routes)
+			-  [`./mapper`](#routes)
+			-  [user.controller.ts](#routes)
+			-  [user.model.ts](#routes)
+			-  [user.module.ts](#routes)
+			-  [user.repository.ts](#routes)
+			-  [user.service.ts](#routes)
+	-  [`./services`](#routes)
+	-  [`./views`](#routes)
+-  [.app.heroku_commands](#routes)
+-  [.env.development](#routes)
+-  [.env.production](#routes)
+-  [.env.tests](#routes)
+-  [.redis.heroku_commands](#routes)
+-  [connection-database-for-test-unit.ts](#routes)
+-  [INSOMNIA_NESTJS_SETUP_V1.json](#routes)
+-  [jest-custom-match.js](#routes)
+-  [jest.config.ts](#routes)
+-  [jest.e2e.ts](#routes)
+-  [npm-install](#routes)
+-  [ormconfig.js](#routes)
+-  [Procfile](#routes)
+-  [tsconfig.json](#routes)
 
 `dto`/`user.dto.ts`
 
@@ -121,6 +152,12 @@ uma unidade, que realiza uma execução especifica, unica...
 são classe customizada de acesso ao banco com orm
 
 > se sua classe esta precisando acessar um recurso de outro modulo, sua classe não pode acessa um model ou repositorio, deve sempre acessar o service.
+
+
+## Routes
+
+Based on the previous `db.json` file, here are all the default routes. You can also add [other routes](#add-custom-routes) using `--routes`.
+
 
 -  **Convenção**
 
