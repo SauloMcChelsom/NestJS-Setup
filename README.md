@@ -63,66 +63,30 @@ $ npm run test:e2e
 
 ## Estrutura de arquivos e diretorios
 
-Arquivos `.jpg` `.png` `.mp4` `.mp3` `.pdf` e outros, enviados pelo usuarios. Todos os arquivos que o usuario subiu com o uploads, são enviados para essa pasta,
-da mesma forma, esse diretorio também e ultilizado para fazer todo processo de download.
-```
-CDN
-```
-
-Arquivos de configuração que pode ser ultilizados em outras parte do sistema
-```
-src/config
-```
-
-Todas as entidades do sistema
-```
-src/entity
-```
-
-modulos de funcionalidades, são chamados por construtor para realizar uma função 
-```
-src/lib
-```
-
-modulos principal do sistema
-```
-src/modules
-```
-
-modulos de serviços, são chamados por uri para realizar uma tarefas especificas
-```
-src/services
-```
-
-arquivos de paginas web para exemplos
-```
-src/view
-```
-## Estrutura e convenção
 Segue detalhamento de como deve ser a criação das novas funcionalidades do sistema NestJS-Setup. qualquer coisa fora deste padrão deve ser corrigido.
 
-- [`./CDN`](#routes)
-- [`./src`](#routes)
-	- [`./config`](#routes)
-	-  [`./entity`](#routes)
-	-  [`./lib`](#routes)
-	-  [`./modules`](#routes)
-		-  [`./user`](#routes)
-			-  [`./dto`](#routes)
-			-  [`./interface`](#routes)
-			-  [`./mapper`](#routes)
-			-  [user.controller.ts](#routes)
-			-  [user.model.ts](#routes)
-			-  [user.module.ts](#routes)
-			-  [user.repository.ts](#routes)
-			-  [user.service.ts](#routes)
-	-  [`./services`](#routes)
-	-  [`./views`](#routes)
--  [.app.heroku_commands](#routes)
--  [.env.development](#routes)
--  [.env.production](#routes)
--  [.env.tests](#routes)
--  [.redis.heroku_commands](#routes)
+- [`./CDN`](#cdn)
+- [`./src`](#src)
+	- [`./config`](#config)
+	-  [`./entity`](#entity)
+	-  [`./lib`](#lib)
+	-  [`./modules`](#modules)
+		-  [`./user`](#user)
+			-  [`./dto`](#dto)
+			-  [`./interface`](#interface)
+			-  [`./mapper`](#mapper)
+			-  [user.controller.ts](#controller)
+			-  [user.model.ts](#model)
+			-  [user.module.ts](#module)
+			-  [user.repository.ts](#repository)
+			-  [user.service.ts](#service)
+	-  [`./services`](#services)
+	-  [`./views`](#views)
+-  [.app.heroku_commands](#heroku_commands)
+-  [.env.development](#development)
+-  [.env.production](#production)
+-  [.env.tests](#tests)
+-  [.redis.heroku_commands](#redis)
 -  [connection-database-for-test-unit.ts](#routes)
 -  [INSOMNIA_NESTJS_SETUP_V1.json](#routes)
 -  [jest-custom-match.js](#routes)
@@ -133,31 +97,109 @@ Segue detalhamento de como deve ser a criação das novas funcionalidades do sis
 -  [Procfile](#routes)
 -  [tsconfig.json](#routes)
 
-`dto`/`user.dto.ts`
+### cdn
+Arquivos `.jpg` `.png` `.mp4` `.mp3` `.pdf` e outros, enviados pelo usuarios. Todos os arquivos que o usuario subiu com o uploads, são enviados para essa pasta,
+da mesma forma, esse diretorio também e ultilizado para fazer todo processo de download.
+```
+CDN
+```
 
-`interface`/`user.interface.ts`
+### src
+Arquivos src
+```
+src
+```
 
-`mapper`/`user.mapper.ts`
+### config
+Arquivos de configuração que pode ser ultilizados em outras parte do sistema
+```
+src/config
+```
 
-`user.controller.ts`
+### entity
+Todas as entidades do sistema
+```
+src/entity
+```
+### lib
+modulos de funcionalidades, são chamados por construtor para realizar uma função 
+```
+src/lib
+```
+### modules
+modulos principal do sistema
+```
+src/modules
+```
+
+### user
+arquivos de paginas web para exemplos
+```
+src/modules/user
+```
+
+### dto
+arquivos de paginas web para exemplos
+```
+src/modules/user/dto
+```
+
+### interface
+arquivos de paginas web para exemplos
+```
+src/modules/user/interface
+```
+
+### mapper
+arquivos de paginas web para exemplos
+```
+src/modules/user/mapper
+```
+
+### controller
 os dados são recebidos por dto, e retorna um mepper
+```
+src/modules/user/controller
+```
 
-`user.service.ts` 
-um conjuto de varias unidade para a realização de uma tarefas, os metodos são chamados por interface ou variavel tipadas, retorna uma etidade
-
-`user.model.ts`
+### model
 uma unidade, que realiza uma execução especifica, unica...
+```
+src/modules/user/model
+```
 
-`user.repositorio.ts` 
+### module
+arquivos de paginas web para exemplos
+```
+src/modules/user/module
+```
+
+### repository
 são classe customizada de acesso ao banco com orm
+```
+src/modules/user/repository
+```
 
+### service
+um conjuto de varias unidade para a realização de uma tarefas, os metodos são chamados por interface ou variavel tipadas, retorna uma etidade
+```
+src/modules/user/service
+```
+
+### services
+modulos de serviços, são chamados por uri para realizar uma tarefas especificas
+```
+src/services
+```
+### views
+arquivos de paginas web para exemplos
+```
+src/view
+```
 > se sua classe esta precisando acessar um recurso de outro modulo, sua classe não pode acessa um model ou repositorio, deve sempre acessar o service.
 
 
-## Routes
-
-Based on the previous `db.json` file, here are all the default routes. You can also add [other routes](#add-custom-routes) using `--routes`.
-
+### Convenção
 
 -  **Convenção**
 
