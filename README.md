@@ -199,40 +199,11 @@ src/view
 > se sua classe esta precisando acessar um recurso de outro modulo, sua classe não pode acessa um model ou repositorio, deve sempre acessar o service.
 
 
-### Convenção
+
 
 -  **Convenção**
 
-```js
-// variavel simples
-let numero_cartao_de_debito = 8425778
 
-// variavel que representa uma entidade, dominio ou objeto deve ser declarodo junto com sua propriedade.
-// sempre respeitando a ordem entidade+propriedade 
-let usuario_nome = 'mary'
-```
-
-```js
-// metodos
-
-calcularContasDeDebitos(){
-...
-}
-```
-
-```js
-// classes
-
-class ContasDeDebitos {
-...
-}
-```
-
-```bash
-# arquivos
-
-./contasDeDebitos.components.ts
-```
 
 -  **Diretorios**
 `./dto`
@@ -571,6 +542,42 @@ repositorio customizado que possui dois medoto comum, o list e o cout
 para sucesso retorna uma entidade
 
 para erro retorna uma exeção de QUERY_FAILED
+
+
+## Convenção
+
+Variavel simples
+```js
+let numero_cartao_de_debito = 8425778
+```
+
+Variavel que representa uma entidade
+```js
+// variavel que representa uma entidade, dominio ou objeto deve ser declarodo junto com sua propriedade.
+// sempre respeitando a ordem entidade+propriedade 
+let usuario_nome = 'mary'
+```
+
+Metodos
+```js
+calcularContasDeDebitos(){
+...
+}
+```
+
+Classes
+```js
+class ContasDeDebitos {
+...
+}
+```
+
+Arquivos
+```bash
+./contasDeDebitos.components.ts
+```
+
+## Get Started
 
 
 
