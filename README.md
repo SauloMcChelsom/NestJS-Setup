@@ -61,7 +61,77 @@ Test e2e
 $ npm run test:e2e
 ```
 
+## Tecnologias utilizadas
+
+-  **PostgreSQL**
+-  **TypeORM**
+-  **Firebase**
+-  **RxJS**
+-  **TypeScript**
+-  **NestJS**
+-  **Jest**
+-  **swagger**
+-  **Heroku**
+-  **Redis**
+
+## Implementações
+
+### FUNDAMENTALS
+-  **Middleware**
+-  **Exception filters**
+-  **Pipes****
+-  **Guards**
+-  **Interceptors**
+-  **Custom decorators**
+-  **Custom providers**
+-  **Asynchronous providers**
+-  **Dynamic modules**
+-  **Injection scopes**
+-  **Circular dependency**
+-  **Module reference**
+-  **Lazy-loading modules**
+-  **Execution context****
+-  **Lifecycle events**
+-  **Platform agnosticism**
+-  **Testing**
+
+### TECHNIQUES
+-  **Database**
+-  **Configuration**
+-  **Validation**
+-  **Caching**
+-  **Serialization**
+-  **Versioning**
+-  **Task scheduling****
+-  **Queues**
+-  **Events****
+-  **Compression**
+-  **File upload**
+-  **Streaming files**
+-  **HTTP module**
+-  **Model-View-Controller**
+-  **Performance (Fastify)**
+-  **Server-Sent Events**
+
+### SECURITY
+-  **Authentication**
+-  **Authorization**
+-  **Encryption and Hashing**
+-  **Helmet**
+-  **CORS**
+-  **CSRF Protection**
+-  **Rate limiting**
+
+### WEBSOCKETS
+-  **Gateways**
+-  **Exception filters
+-  **Pipes**
+-  **Guards**
+-  **Interceptors**
+-  **Adapters**
+
 ## Estrutura de arquivos e diretorios
+
 
 Segue detalhamento de como deve ser a criação das novas funcionalidades do sistema NestJS-Setup. qualquer coisa fora deste padrão deve ser corrigido.
 
@@ -578,6 +648,13 @@ Arquivos
 ```
 
 ## Get Started
+
+### lib
+
+### modules
+
+### services
+
 
 
 
