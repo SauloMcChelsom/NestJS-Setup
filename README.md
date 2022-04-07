@@ -24,6 +24,24 @@ NestJS-Setup é uma infraestrutura back-end para iniciar um projeto sem precisar
 
 ## Instalação
 
+Verificando a versão instalada do NodeJS
+```bash
+# deve ser igual ou superior a v16.13.2
+node --version
+```
+
+Verificando a versão instalada do NPM
+```bash
+# deve ser igual ou superior a 8.3.2
+npm --version
+```
+> caso não tenha o NodeJS instalado na sua maquina, por favor seguir esse [tutorial](https://nodejs.org/en/)
+
+Criar um diretorio para o projeto
+```bash
+mkdir cd C:\workspaces\
+```
+
 Cloning the Repository
 ```bash
 git clone -b develop https://github.com/SauloMcChelsom/NestJS-Setup.git
