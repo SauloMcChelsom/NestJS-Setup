@@ -260,27 +260,186 @@ src/modules/user
 ```
 
 ### dto
-arquivos de paginas web para exemplos
-```
-src/modules/user/dto
+```js
+export class CreateDto {
+	@IsNotEmpty()
+	@IsNumber()
+	publication_id: number;
+
+	@IsNotEmpty()
+	@MinLength(1)
+	comment: string;
+}
 ```
 
 ### interface
-arquivos de paginas web para exemplos
-```
-src/modules/user/interface
+```js
+export interface CreateInterface {
+	comment: string;
+	publication_id: number;
+	user_id: number;
+}
 ```
 
 ### mapper
-arquivos de paginas web para exemplos
+```js
+export class CreateMapper {
+	public toMapper(field: ReturnInterface) {
+		return {
+			id: field.id,
+			user_id: field.user_id,
+			publication_id: field.publication_id,
+			comment: field.comment,
+			timestamp: field.timestamp?.toString(),
+		};
+	}
+}
 ```
-src/modules/user/mapper
+mapper comun
+
+-  **authFindOne.mapper.ts**
+-  **publicFindOne.mapper.ts**
+-  **authList.mapper.ts**
+-  **publicList.mapper.ts**
+-  **create.mapper.ts**
+-  **update.mapper.ts**
+
+## Controller
+os dados são recebidos por dto, e retorna um mepper
+
+como deve ser declarado os nome das classe
+
+-  **se e publica ou privado**
+-  **lista ou singular**
+-  **por entidade+propriedade**
+
+exemplo
+```js
+public async authListByUserId(...){
+...
+}
 ```
 
-### controller
-os dados são recebidos por dto, e retorna um mepper
+todos controller deve conter os decoradores
+```js
+// qual é o verbo http
+@Get('/user/:user_id')
 ```
-src/modules/user/controller
+```js
+// qual a versão da uri e a visibilidade(public ou private)
+@Version('1/private')
+```
+```js
+// opcional
+// tempo de cache em segundos
+@CacheTTL(20)
+```
+```js
+// estrutura de responta para erro
+@UseFilters(HttpExceptions)
+```
+```js
+// estrutura de responta para sucesso
+@UseInterceptors(HttpResponse)
+```
+```js
+// opcional
+// habilitar as respostas de cache automático
+@UseInterceptors(CacheInterceptor)
+```
+para classe auth deve conter o decorador
+```js
+// implementação da rota protegida com firebase
+@UseGuards(JwtAuthGuard)
+```
+para classe que retorna uma lista, os paramentro obrigatorios são
+```js
+// classe com auth
+@Header(new TOKEN()) token: string
+```
+```js
+//buscar por determinada palavra chave da coluna
+@Query('search') search: string
+```
+```js
+//quantidade da lista, minimo 3 maximo 15
+@Query('limit') limit = '3'
+```
+```js
+//posição que representa uma coleção
+@Query('offset') offset = '0'
+```
+```js
+// ordenar por maior ou menor, valores aceitos ASC|DESC
+@Query('order') order: string
+```
+```js
+// coluna que desejar ordenar 
+@Query('column') column: string
+```
+```js
+// coluna datatime inicial
+@Query('start') start: string
+```
+```js
+// coluna datatime final
+@Query('end') end: string
+```
+
+exemplo
+
+```js
+  @Get('/user/:user_id')
+  @Version('1/private')
+  @CacheTTL(20)
+  @UseGuards(JwtAuthGuard)
+  @UseFilters(HttpExceptions)
+  @UseInterceptors(HttpResponse)
+  @UseInterceptors(CacheInterceptor)
+  @ApiOperation({ summary: 'Listar comentarios por id do usuario' })
+  public async authListByUserId(
+    @Param('user_id') user_id: number,
+    @Query('search') search: string,
+    @Query('limit') limit = '3',
+    @Query('offset') offset = '0',
+    @Query('order') order: string,
+    @Query('column') column: string,
+    @Query('start') start: string,
+    @Query('end') end: string,
+  ) {
+    const cls: ClassificationInterface = {
+      search: search,
+      limit: parseInt(limit) ? parseInt(limit) : 5,
+      offset: parseInt(offset) ? parseInt(offset) : 0,
+      order: order,
+      column: column,
+      start: start,
+      end: end,
+    };
+    const { res, count } = await this.service.authListByUserId(user_id, cls);
+    const dto = res.map((r) => this.authListMapper.toMapper(r));
+    return new OK(dto, code.SUCCESSFULLY_FOUND, null, count);
+  }
+```
+
+### service
+um conjuto de varias unidade para a realização de uma tarefas, os metodos são chamados por interface ou variavel tipadas, retorna uma etidade
+
+o metodo tem o mesmo nome do controller
+
+pouca logica, apenas chama o seu model ou chama um services de outro modulos
+
+interfaciado ou variavel tipadas
+
+retorna uma entidade
+
+```js
+public async create(body: CreateInterface) {
+const create = await this.model.create(body);
+await this.publication.incrementNumberCommentOfPublication(
+   body.publication_id,
+);
+return await this.model.findOneById(create.id);
 ```
 
 ### model
@@ -440,12 +599,6 @@ para sucesso retorna uma entidade
 para erro retorna uma exeção de QUERY_FAILED
 ```
 src/modules/user/repository
-```
-
-### service
-um conjuto de varias unidade para a realização de uma tarefas, os metodos são chamados por interface ou variavel tipadas, retorna uma etidade
-```
-src/modules/user/service
 ```
 
 ### services
