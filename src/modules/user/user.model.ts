@@ -1,5 +1,6 @@
 import { HttpException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { hash, compare  } from 'bcryptjs';
 
 import { code, message } from '@root/src/shared/enum';
 
@@ -14,6 +15,14 @@ export class UserModel {
     @InjectRepository(UserRepository)
     private readonly repository: UserRepository,
   ) {}
+
+  public async hashPassword(password: string) {
+    return await hash(password, 12)
+  }
+
+  public async compare(textoLegivel: string, hash: string){
+    return await compare(textoLegivel, hash)
+  }
 
   public async emailAlreadyExist(email: string) {
     try {

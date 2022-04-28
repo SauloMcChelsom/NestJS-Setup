@@ -12,8 +12,7 @@ const cors = () => {
         callback(null, new Error('Not allowed by CORS'));
       }
     },
-    allowedHeaders:
-      'X-Requested-With, X-HTTP-Method-Override, Origin, Content-Type, Accept, Authorization, Observe',
+    allowedHeaders:'X-Requested-With, X-HTTP-Method-Override, Origin, Content-Type, Accept, Authorization, Observe',
     methods: 'GET, PUT, POST, DELETE, UPDATE, OPTIONS',
     preflightContinue: false,
     optionsSuccessStatus: 204,

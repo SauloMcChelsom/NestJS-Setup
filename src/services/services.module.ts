@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { UploadModule } from './upload/upload.module';
 import { StreamModule } from './stream/stream.module';
 import { RedisModule } from './redis/redis.module';
-import { EvenstModule } from './events/events.module';
+import { EventsModule } from './events/events.module';
 import { DownloadModule } from './download/download.module';
 import { ServerSentEventsModule } from './server-sent-events/server-sent-events.module';
 import { WebSocketsModule } from './websockets/websockets.module';
@@ -11,7 +11,7 @@ import { WebSocketsModule } from './websockets/websockets.module';
     UploadModule,
     StreamModule,
     RedisModule,
-    EvenstModule,
+    EventsModule,
     DownloadModule,
     ServerSentEventsModule,
     WebSocketsModule,

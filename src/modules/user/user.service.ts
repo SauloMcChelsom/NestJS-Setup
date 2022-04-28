@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 
 import { FirebaseService } from '@modules/firebase/firebase.service';
-import { CryptUtilityService } from '@root/src/shared/bcrypt/bcrypt.service';
 
 import { UserModel } from './user.model';
 import {
@@ -14,15 +13,14 @@ import {
 export class UserService {
   constructor(
     private model: UserModel,
-    private firebase: FirebaseService,
-    private crypt: CryptUtilityService,
+    private firebase: FirebaseService
   ) {}
 
   public async create(body: CreateInterface) {
     await this.model.emailAlreadyExist(body.email);
     await this.model.uidAlreadyExist(body.uid);
     await this.model.providersIsValid(body.providers);
-    body.password = await this.crypt.hash(body.password);
+    body.password = await this.model.hashPassword(body.password);
     return await this.model.create(body);
   }
 
