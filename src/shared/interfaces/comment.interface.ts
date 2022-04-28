@@ -19,7 +19,7 @@ export interface Comment {
 }
 
 export interface ListComment {
-    res: Comment[];
-    count: number;
+    res: Comment[]
+    count: number
 }
 

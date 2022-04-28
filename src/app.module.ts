@@ -13,7 +13,7 @@ import { TasksModule } from '@root/src/services/tasks/tasks.module';
 import { JobsModule } from '@root/src/services/jobs/jobs.module';
 import { EventsModule } from '@root/src/services/events/events.module';
 import { ServicesModule } from '@root/src/services/services.module';
-import { AxiosModule } from '@root/src/shared/axios/axios.module';
+import { AxiosModule } from '@root/src/services/axios/axios.module';
 
 import { CommentModule } from '@modules/comment/comment.module';
 import { FirebaseModule } from '@modules/firebase/firebase.module';

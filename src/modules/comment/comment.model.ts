@@ -8,7 +8,7 @@ import { EmptyService } from '@root/src/shared/utility/empty/empty.service';
 import { code } from '@root/src/shared/enum';
 
 import { CommentRepository } from './comment.repository';
-import { UpdateComment, CreateComment } from '@shared/interfaces/comment.interface';
+import { UpdateComment, CreateComment, ListComment } from '@shared/interfaces/comment.interface';
 
 export class CommentModel {
   constructor(
@@ -26,7 +26,7 @@ export class CommentModel {
     return await this.repository.save(body).catch((err) => {
       throw new HttpException({
         code : code.QUERY_FAILED,
-        message : `${err.detail || err.hint || err.routine}`,
+        message : `${err}`,
         description : ''
       }, HttpStatus.BAD_REQUEST)
     });
@@ -37,10 +37,19 @@ export class CommentModel {
       const res = await this.repository.update(id, { ...(body as any) }).catch((err) => {
         throw new HttpException({
           code : code.QUERY_FAILED,
-          message : `${err.detail || err.hint || err.routine}`,
+          message : `${err}`,
           description : ''
         }, HttpStatus.BAD_REQUEST)
       });
+
+      if(!res){
+        throw new HttpException({
+          code : code.NOT_FOUND,
+          message : 'update, id not found',
+          description : ''
+        }, HttpStatus.NOT_FOUND)
+      }
+
       if (res.affected == 1) {
         return {
           code : code.SUCCESSFULLY_UPDATED,
@@ -48,11 +57,7 @@ export class CommentModel {
           description : ''
         };
       }
-      throw new HttpException({
-        code : code.NOT_FOUND,
-        message : 'update, id not found',
-        description : ''
-      }, HttpStatus.NOT_FOUND)
+
     } catch (e: any) {
       throw new HttpException(e.response, e.status);
     }
@@ -60,13 +65,23 @@ export class CommentModel {
 
   public async deleteById(id: number) {
     try {
+
       const res = await this.repository.delete(id).catch((err) => {
         throw new HttpException({
           code : code.QUERY_FAILED,
-          message : `${err.detail || err.hint || err.routine}`,
+          message : `${err}`,
           description : ''
         }, HttpStatus.BAD_REQUEST)
       });
+
+      if(!res){
+        throw new HttpException({
+          code : code.NOT_FOUND,
+          message : 'delete, id not found',
+          description : ''
+        }, HttpStatus.NOT_FOUND)
+      }
+
       if (res.affected == 1) {
         return {
           code : code.SUCCESSFULLY_DELETED,
@@ -74,11 +89,7 @@ export class CommentModel {
           description : ''
         };
       }
-      throw new HttpException({
-        code : code.NOT_FOUND,
-        message : 'delete, id not found',
-        description : ''
-      }, HttpStatus.NOT_FOUND)
+
     } catch (e: any) {
       throw new HttpException(e.response, e.status);
     }
@@ -86,21 +97,25 @@ export class CommentModel {
 
   public async findOneById(id: number) {
     try {
+
       const res = await this.repository.findOne(id).catch((err) => {
         throw new HttpException({
           code : code.QUERY_FAILED,
-          message : `${err.detail || err.hint || err.routine}`,
+          message : `${err}`,
           description : ''
         }, HttpStatus.BAD_REQUEST)
-      });
+      })
+
       if (res) {
         return res;
       }
+
       throw new HttpException({
         code : code.NOT_FOUND,
         message : 'not found find one by id',
         description : ''
       }, HttpStatus.NOT_FOUND)
+
     } catch (e: any) {
       throw new HttpException(e.response, e.status);
     }
@@ -108,18 +123,21 @@ export class CommentModel {
 
   public async validateID(id: number, userId: number) {
     try {
+
       const res = await this.repository.findOne({
         where: { id: id, user_id: userId },
       }).catch((err) => {
         throw new HttpException({
           code : code.QUERY_FAILED,
-          message : `${err.detail || err.hint || err.routine}`,
+          message : `${err}`,
           description : ''
         }, HttpStatus.BAD_REQUEST)
-      });
+      })
+
       if (res) {
         return true;
       }
+
       throw new HttpException({
         code : code.NOT_FOUND,
         message : 'validate, id not found',
@@ -179,7 +197,7 @@ export class CommentModel {
       );
 
       if (Object.keys(res).length != 0) {
-        return { res: res, count: count };
+        return<ListComment> { res: res, count: count }
       }
 
       throw new HttpException({
@@ -189,7 +207,6 @@ export class CommentModel {
       }, HttpStatus.NOT_FOUND);
       
     } catch (e: any) {
-      console.log(e)
       throw new HttpException(e.response, e.status);
     }
   }

@@ -12,7 +12,6 @@ import { CommentController } from './comment.controller';
 import { CommentService } from './comment.service';
 import { CommentModel } from './comment.model';
 import { CommentRepository } from './comment.repository';
-
 import { CommentMapper } from './mapper/index.mapper';
 
 @Module({
