@@ -1,7 +1,7 @@
 import { Version, Post, Body, Controller } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 
-import { SendEmailService } from '@root/src/shared/jobs/send-mail/send-mail.service';
+import { SendEmailService } from '@root/src/services/jobs/send-mail/send-mail.service';
 import { CreateDto } from '@root/src/modules/user/dto/create.dto';
 import { code } from '@root/src/shared/enum';
 import { UseInterceptors, UseFilters } from '@nestjs/common';

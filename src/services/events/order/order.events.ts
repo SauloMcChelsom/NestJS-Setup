@@ -3,7 +3,7 @@ import { EventEmitter2, OnEvent } from '@nestjs/event-emitter';
 import {
   CreateOrderEvent,
   UpdateOrderEvent,
-} from '@root/src/shared/interfaces/events/order-event.interface';
+} from '@root/src/shared/interfaces/order-event.interface';
 
 @Injectable()
 export class OrderEvent {

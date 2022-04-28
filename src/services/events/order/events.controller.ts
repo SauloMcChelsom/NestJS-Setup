@@ -1,7 +1,7 @@
 import { Version, Controller, Get } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 
-import { OrderEvent } from '@root/src/shared/events/order/order.events';
+import { OrderEvent } from '@root/src/services/events/order/order.events';
 import { code } from '@root/src/shared/enum';
 import { UseInterceptors, UseFilters } from '@nestjs/common';
 import { HttpExceptions } from '@root/src/shared/http-status/http-exception';
