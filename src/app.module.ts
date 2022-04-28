@@ -24,6 +24,9 @@ import { FollowModule } from '@root/src/modules/follow/follow.module';
 import { PublicationModule } from '@modules/publication/publication.module';
 import { LikeModule } from '@modules/like/like.module';
 import { SeniorModule } from '@modules/senior/senior.module';
+import { AuthModule } from '@modules/auth/auth.module'
+import { RoleModule } from '@modules/role/role.module'
+
 
 @Module({
   imports: [
@@ -105,6 +108,8 @@ import { SeniorModule } from '@modules/senior/senior.module';
     LikeModule,
     CommentModule,
     SeniorModule,
+    AuthModule,
+    RoleModule
   ],
   controllers: [],
   providers: [

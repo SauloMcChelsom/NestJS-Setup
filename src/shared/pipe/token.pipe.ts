@@ -1,16 +1,3 @@
-/*import { Injectable, PipeTransform } from '@nestjs/common';
-
-@Injectable()
-export class CustomPipe implements PipeTransform {
-  constructor() { }
-
-  transform(request: any) {
-    // you can use request, request.query, request.params, request.headers, ...
-    console.log(request)
-    return request;
-  }
-}*/
-
 import { Injectable, PipeTransform } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 
@@ -27,10 +14,6 @@ export class TOKEN implements PipeTransform {
   }
 }
 
-
-/**
- * apos refatora, deletar UID
- */
 @Injectable()
 export class UID implements PipeTransform {
   transform(token: any) {

@@ -90,6 +90,17 @@ async function bootstrap() {
     }),
   );
 
+    //captura erros não tratado
+  //se não tive, o sistema quebra
+  process.on('uncaughtException', (err, origin)=>{
+    console.log(`\n ${origin} signal received. \n${err}`)
+  })
+
+  //se não tiver o sistema joga warn
+  process.on('unhandledRejection', (err)=>{
+    console.log(`\n unhandledRejection signal received. \n${err}`)
+  })
+
   await app.listen(process.env.PORT || 3000);
   console.log('POSTGRES_HOST: ', process.env.TYPEORM_HOST);
   console.log('REDIS_HOST :   ', process.env.REDIS_HOST);

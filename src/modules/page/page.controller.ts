@@ -20,7 +20,7 @@ import { HttpExceptions } from '@root/src/shared/http-status/http-exception';
 import { OK } from '@root/src/shared/http-status/ok';
 import { HttpResponse } from '@root/src/shared/http-status/http-response';
 import { UserService } from '@modules/user/user.service';
-import { ClassificationInterface } from '@root/src/shared/interfaces';
+import { ClassificationInterface } from '@root/src/shared/interfaces/classification.interface';
 import { code } from '@root/src/shared/enum';
 
 import { PageService } from './page.service';

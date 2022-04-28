@@ -5,6 +5,8 @@ import {
   CreateDateColumn,
 } from 'typeorm';
 
+import { Role } from "../shared/enum/role.enum";
+
 @Entity('user')
 export class UserEntity {
   @PrimaryGeneratedColumn()
@@ -27,4 +29,8 @@ export class UserEntity {
 
   @CreateDateColumn({ default: () => 'CURRENT_TIMESTAMP' })
   timestamp: Date;
+
+  @Column({type: 'enum', enum: Role, default: Role.USER})
+  role: Role;
+
 }

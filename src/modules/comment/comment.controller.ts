@@ -20,6 +20,10 @@ import { Header } from '@root/src/shared/decorator/header.decorator';
 
 import { UseInterceptors, UseFilters } from '@nestjs/common';
 import { HttpExceptions } from '@root/src/shared/http-status/http-exception';
+
+import { XHttpError } from '@root/src/shared/http-status/xhttp-error.exception';
+import { XHttpSuccess } from '@root/src/shared/http-status/xhttp-success.interceptor';
+
 import { OK } from '@root/src/shared/http-status/ok';
 import { HttpResponse } from '@root/src/shared/http-status/http-response';
 import { UserService } from '@modules/user/user.service';
@@ -30,6 +34,13 @@ import { CommentService } from './comment.service';
 import { CreateDto, UpdateDto } from './dto/index.dto';
 import { CreateComment, UpdateComment } from '@shared/interfaces/comment.interface';
 import { CommentMapper } from './mapper/index.mapper';
+
+//
+import { hasRoles } from '@root/src/shared/decorator/roles.decorator'
+import { RolesGuard } from '@root/src/shared/guard/roles.guard'
+import { ValidateRefreshTokenGuard } from '@root/src/shared/guard/refresh-token.guard'
+import { UserMachinePropertyGuard } from '@root/src/shared/guard/user-machine-property.guard'
+import { Role } from '../../shared/enum/role.enum'
 
 @Controller('comment')
 @ApiTags('comment')
@@ -45,8 +56,8 @@ export class CommentController {
   @Version('1/private')
   @CacheTTL(20)
   @UseGuards(JwtAuthGuard)
-  @UseFilters(HttpExceptions)
-  @UseInterceptors(HttpResponse)
+  @UseFilters(XHttpError)
+  @UseInterceptors(XHttpSuccess)
   @UseInterceptors(CacheInterceptor)
   @ApiOperation({ summary: 'Listar comentarios pelo token do usuario' })
   public async authListByUserToken(
@@ -186,11 +197,18 @@ export class CommentController {
     return new OK(res, code.SUCCESSFULLY_FOUND);
   }
 
+  /**
+   * 
+   * @param TESTE-------------------> 
+   * @returns 
+   */
   @Get(':comment_id')
   @Version('1/public')
   @CacheTTL(5)
-  @UseFilters(HttpExceptions)
-  @UseInterceptors(HttpResponse)
+  @hasRoles(Role.USER, Role.ADMIN)
+  @UseGuards(JwtAuthGuard, UserMachinePropertyGuard, ValidateRefreshTokenGuard, RolesGuard)
+  @UseFilters(XHttpError)
+  @UseInterceptors(XHttpSuccess)
   @UseInterceptors(CacheInterceptor)
   @ApiOperation({ summary: 'Buscar comentario por id' })
   public async publicFindOneById(@Param('comment_id') comment_id: number) {

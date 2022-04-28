@@ -40,6 +40,12 @@ export class UserService {
     return await this.model.getUserByEmail(email);
   }
 
+  public async findOneUserById(id: number) {
+    let user = await this.model.findOneUserById(id)
+    const {password, ...result} = user;
+    return result;
+}
+
   public async updateByUid(uid: string, body: UpdateInterface) {
     const { id } = await this.model.getUserByUid(uid);
     await this.model.updateUserByUid(id, body);

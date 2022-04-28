@@ -1,4 +1,4 @@
-import { HttpException } from '@nestjs/common';
+import { HttpException, HttpStatus } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { hash, compare  } from 'bcryptjs';
 
@@ -9,6 +9,7 @@ import {
   UpdateInterface,
   UpdateUserUidWithFirebaseUidInterface as UpdateUID,
 } from './interface';
+import { User } from '@root/src/shared/interfaces/user.interface';
 
 export class UserModel {
   constructor(
@@ -75,6 +76,24 @@ export class UserModel {
       throw new HttpException(e.response, e.status);
     }
   }
+
+  public async findOneUserById(id:number){
+    let user:User =  await this.repository.findOne({where: { id: id}}).catch((err) => {
+        throw new HttpException({
+          code : 'QUERY_FAILED',
+          message : `${err.detail || err.hint || err.routine}`,
+        }, HttpStatus.BAD_REQUEST)
+    })
+
+    if(!user) {
+        throw new HttpException({
+            code : 'not_found',
+            message : 'User not found'
+        }, HttpStatus.BAD_REQUEST)
+    }
+
+    return user
+}
 
   public async getUserByEmail(email: string) {
     try {

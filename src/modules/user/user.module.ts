@@ -3,6 +3,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { UserEntity } from '@entity/user.entity';
 import { FirebaseModule } from '@root/src/modules/firebase/firebase.module';
+import { JwtService } from '@nestjs/jwt'
 
 import { UsuariosController } from './user.controller';
 import { UserService } from './user.service';
@@ -26,6 +27,7 @@ import {
   providers: [
     UserService,
     UserModel,
+    JwtService,
     AuthListMapper,
     PublicListMapper,
     AuthFindOneMapper,

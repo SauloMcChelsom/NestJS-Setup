@@ -22,7 +22,7 @@ import { OK } from '@root/src/shared/http-status/ok';
 import { HttpResponse } from '@root/src/shared/http-status/http-response';
 import { FirebaseService } from '@modules/firebase/firebase.service';
 import { UserService } from '@modules/user/user.service';
-import { ClassificationInterface } from '@root/src/shared/interfaces';
+import { ClassificationInterface } from '@root/src/shared/interfaces/classification.interface';
 import { code } from '@root/src/shared/enum';
 
 import { PublicationService } from './publication.service';
