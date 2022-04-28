@@ -6,7 +6,7 @@ import {
   HttpStatus,
 } from '@nestjs/common';
 import { Request, Response } from 'express';
-import { message as text, code as codes } from '@root/src/lib/enum';
+import { message as text, code as codes } from '@root/src/shared/enum';
 
 @Catch(HttpException)
 export class HttpExceptions implements ExceptionFilter {

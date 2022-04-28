@@ -9,11 +9,11 @@ import { MulterModule } from '@nestjs/platform-express';
 import { HttpModule } from '@nestjs/axios';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 
-import { TasksModule } from '@root/src/lib/tasks/tasks.module';
-import { JobsModule } from '@root/src/lib/jobs/jobs.module';
-import { EventModule } from '@root/src/lib/events/events.module';
+import { TasksModule } from '@root/src/shared/tasks/tasks.module';
+import { JobsModule } from '@root/src/shared/jobs/jobs.module';
+import { EventModule } from '@root/src/shared/events/events.module';
 import { ServicesModule } from '@root/src/services/services.module';
-import { AxiosModule } from '@root/src/lib/axios/axios.module';
+import { AxiosModule } from '@root/src/shared/axios/axios.module';
 
 import { CommentModule } from '@modules/comment/comment.module';
 import { FirebaseModule } from '@modules/firebase/firebase.module';

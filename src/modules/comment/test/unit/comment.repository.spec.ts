@@ -9,8 +9,8 @@ import { CommentEntity } from '@root/src/entity/comment.entity';
 import { PublicationService } from '@root/src/modules/publication/publication.service';
 import { CommentModel } from '@root/src/modules/comment/comment.model';
 import { CommentRepository } from '@root/src/modules/comment/comment.repository';
-import { IsValidTimestampService } from '@root/src/lib/utility/is-valid-timestamp/is-valid-timestamp.service';
-import { EmptyService } from '@root/src/lib/utility/empty/empty.service';
+import { IsValidTimestampService } from '@root/src/shared/utility/is-valid-timestamp/is-valid-timestamp.service';
+import { EmptyService } from '@root/src/shared/utility/empty/empty.service';
 import { PublicationModel } from '@root/src/modules/publication/publication.model';
 import { PublicationRepository } from '@root/src/modules/publication/publication.repository';
 import { GetCommentParams } from '@root/src/params.jest'

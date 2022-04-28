@@ -3,12 +3,12 @@ import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 
 import { CommentEntity } from '@entity/comment.entity';
-import { IsValidTimestampService } from '@root/src/lib/utility/is-valid-timestamp/is-valid-timestamp.service';
-import { EmptyService } from '@root/src/lib/utility/empty/empty.service';
-import { code } from '@root/src/lib/enum';
+import { IsValidTimestampService } from '@root/src/shared/utility/is-valid-timestamp/is-valid-timestamp.service';
+import { EmptyService } from '@root/src/shared/utility/empty/empty.service';
+import { code } from '@root/src/shared/enum';
 
 import { CommentRepository } from './comment.repository';
-import { UpdateInterface, CreateInterface } from './interface';
+import { UpdateComment, CreateComment } from '@shared/interfaces/comment.interface';
 
 export class CommentModel {
   constructor(
@@ -22,7 +22,7 @@ export class CommentModel {
     private empty: EmptyService,
   ) {}
 
-  public async create(body: CreateInterface): Promise<CommentEntity> {
+  public async create(body: CreateComment): Promise<CommentEntity> {
     return await this.repository.save(body).catch((err) => {
       throw new HttpException({
         code : code.QUERY_FAILED,
@@ -32,7 +32,7 @@ export class CommentModel {
     });
   }
 
-  public async updateById(id: number, body: UpdateInterface): Promise<any> {
+  public async updateById(id: number, body: UpdateComment): Promise<any> {
     try {
       const res = await this.repository.update(id, { ...(body as any) }).catch((err) => {
         throw new HttpException({

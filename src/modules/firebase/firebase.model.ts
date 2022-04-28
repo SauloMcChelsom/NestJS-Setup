@@ -1,6 +1,6 @@
 import { Injectable, HttpException } from '@nestjs/common';
 import * as firebase from 'firebase-admin';
-import { code } from '@root/src/lib/enum';
+import { code } from '@root/src/shared/enum';
 
 @Injectable()
 export class FirebaseModel {

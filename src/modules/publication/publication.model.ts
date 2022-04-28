@@ -1,9 +1,9 @@
 import { HttpException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
-import { IsValidTimestampService } from '@root/src/lib/utility/is-valid-timestamp/is-valid-timestamp.service';
-import { EmptyService } from '@root/src/lib/utility/empty/empty.service';
-import { code, message } from '@root/src/lib/enum';
+import { IsValidTimestampService } from '@root/src/shared/utility/is-valid-timestamp/is-valid-timestamp.service';
+import { EmptyService } from '@root/src/shared/utility/empty/empty.service';
+import { code, message } from '@root/src/shared/enum';
 
 import { PublicationRepository } from './publication.repository';
 import { UpdateInterface } from './interface';

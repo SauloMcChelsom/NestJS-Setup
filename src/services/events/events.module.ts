@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { EventsController } from './events.controller';
-import { OrderEventModule } from '@root/src/lib/events/order/order.module';
+import { OrderEventModule } from '@root/src/shared/events/order/order.module';
 
 @Module({
   imports: [OrderEventModule],

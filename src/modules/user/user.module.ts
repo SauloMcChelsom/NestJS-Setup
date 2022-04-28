@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
-import { CryptUtilityModule } from '@root/src/lib/bcrypt/bcrypt.module';
+import { CryptUtilityModule } from '@root/src/shared/bcrypt/bcrypt.module';
 import { UserEntity } from '@entity/user.entity';
 import { FirebaseModule } from '@root/src/modules/firebase/firebase.module';
 

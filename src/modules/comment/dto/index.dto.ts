@@ -9,3 +9,11 @@ export class CreateDto {
   @MinLength(1)
   comment: string;
 }
+
+export class UpdateDto {
+    @IsNotEmpty()
+    @IsNotEmpty()
+    @MinLength(1)
+    comment: string;
+}
+  

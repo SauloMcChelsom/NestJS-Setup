@@ -15,7 +15,7 @@ import * as options from '@conf/cors/index.cors';
 import { AppModule } from './app.module';
 import { InitializeFirebase } from '@root/src/conf/firebase/initialize-firebase';
 import { SwaggerDocument } from '@root/src/conf/swagger/swagger.conf';
-import { code } from '@root/src/lib/enum';
+import { code } from '@root/src/shared/enum';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);

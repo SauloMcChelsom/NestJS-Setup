@@ -14,43 +14,31 @@ import {
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { UseGuards } from '@nestjs/common';
 
-import { JwtAuthGuard } from '@lib/guard/jwt-auth.guard';
-import { TOKEN } from '@lib/pipe/token.pipe';
-import { Header } from '@lib/decorator/header.decorator';
+import { JwtAuthGuard } from '@root/src/shared/guard/jwt-auth.guard';
+import { TOKEN } from '@root/src/shared/pipe/token.pipe';
+import { Header } from '@root/src/shared/decorator/header.decorator';
 
 import { UseInterceptors, UseFilters } from '@nestjs/common';
-import { HttpExceptions } from '@root/src/lib/http-status/http-exception';
-import { OK } from '@root/src/lib/http-status/ok';
-import { HttpResponse } from '@root/src/lib/http-status/http-response';
+import { HttpExceptions } from '@root/src/shared/http-status/http-exception';
+import { OK } from '@root/src/shared/http-status/ok';
+import { HttpResponse } from '@root/src/shared/http-status/http-response';
 import { UserService } from '@modules/user/user.service';
-import { ClassificationInterface } from '@root/src/lib/interfaces';
-import { code } from '@root/src/lib/enum';
+import { ClassificationInterface } from '@root/src/shared/interfaces';
+import { code } from '@root/src/shared/enum';
 
 import { CommentService } from './comment.service';
-import { CreateDto } from './dto/create.dto';
-import { UpdateDto } from './dto/update.dto';
-import { CreateInterface, UpdateInterface } from './interface';
-import {
-  CreateMapper,
-  AuthListMapper,
-  PublicListMapper,
-  AuthFindOneMapper,
-  PublicFindOneMapper,
-  UpdateMapper,
-} from './mapper';
+import { CreateDto, UpdateDto } from './dto/index.dto';
+import { CreateComment, UpdateComment } from '@shared/interfaces/comment.interface';
+import { CommentMapper } from './mapper/index.mapper';
 
 @Controller('comment')
 @ApiTags('comment')
 export class CommentController {
+
   constructor(
     private readonly service: CommentService,
     private user: UserService,
-    private create_mapper: CreateMapper,
-    private authListMapper: AuthListMapper,
-    private publicListMapper: PublicListMapper,
-    private authFindOneMapper: AuthFindOneMapper,
-    private publicFindOneMapper: PublicFindOneMapper,
-    private updateMapper: UpdateMapper,
+    private toMapper:CommentMapper
   ) {}
 
   @Get('/user/')
@@ -81,9 +69,8 @@ export class CommentController {
       start: start,
       end: end,
     };
-    const { res, count } = await this.service.authListByUserId(user.id, cls);
-    const dto = res.map((r) => this.authListMapper.toMapper(r));
-    return new OK(dto, code.SUCCESSFULLY_FOUND, null, count);
+    const { res, count } = await this.service.authListByUserId(user.id, cls).then(res => this.toMapper.authList(res))
+    return new OK(res, code.SUCCESSFULLY_FOUND, null, count);
   }
 
   @Get('/user/:user_id')
@@ -113,9 +100,8 @@ export class CommentController {
       start: start,
       end: end,
     };
-    const { res, count } = await this.service.authListByUserId(user_id, cls);
-    const dto = res.map((r) => this.authListMapper.toMapper(r));
-    return new OK(dto, code.SUCCESSFULLY_FOUND, null, count);
+    const { res, count } = await this.service.authListByUserId(user_id, cls).then(res => this.toMapper.authList(res))
+    return new OK(res, code.SUCCESSFULLY_FOUND, null, count);
   }
 
   @Get('/user/:user_id')
@@ -145,9 +131,8 @@ export class CommentController {
       end: end,
     };
 
-    const { res, count } = await this.service.publicListByUserId(user_id, cls);
-    const dto = res.map((r) => this.publicListMapper.toMapper(r));
-    return new OK(dto, code.SUCCESSFULLY_FOUND, null, count);
+    const { res, count } = await this.service.publicListByUserId(user_id, cls).then(res => this.toMapper.authList(res))
+    return new OK(res, code.SUCCESSFULLY_FOUND, null, count);
   }
 
   @Get('/publication/:publication_id')
@@ -179,9 +164,9 @@ export class CommentController {
     const { res, count } = await this.service.publicListByPublicationId(
       publication_id,
       cls,
-    );
-    const dto = res.map((r) => this.publicListMapper.toMapper(r));
-    return new OK(dto, code.SUCCESSFULLY_FOUND, null, count);
+    ).then(res => this.toMapper.authList(res))
+
+    return new OK(res, code.SUCCESSFULLY_FOUND, null, count);
   }
 
   @Get(':comment_id')
@@ -197,9 +182,8 @@ export class CommentController {
     @Header(new TOKEN()) token: string,
   ) {
     const user = await this.user.getUserByUid(token);
-    const res = await this.service.authFindOneById(comment_id, user.id);
-    const dto = this.authFindOneMapper.toMapper(res);
-    return new OK([dto], code.SUCCESSFULLY_FOUND);
+    const res = await this.service.authFindOneById(comment_id, user.id).then(res => this.toMapper.authFindOne(res))
+    return new OK(res, code.SUCCESSFULLY_FOUND);
   }
 
   @Get(':comment_id')
@@ -210,9 +194,8 @@ export class CommentController {
   @UseInterceptors(CacheInterceptor)
   @ApiOperation({ summary: 'Buscar comentario por id' })
   public async publicFindOneById(@Param('comment_id') comment_id: number) {
-    const res = await this.service.publicFindOneById(comment_id);
-    const dto = this.publicFindOneMapper.toMapper(res);
-    return new OK([dto], code.SUCCESSFULLY_FOUND);
+    const res = await this.service.publicFindOneById(comment_id).then(res => this.toMapper.publicFindOne(res))
+    return new OK(res, code.SUCCESSFULLY_FOUND);
   }
 
   @Post()
@@ -222,13 +205,12 @@ export class CommentController {
   @ApiOperation({ summary: 'Criar um comentario' })
   public async create(@Body() body: CreateDto, @Header(new TOKEN()) token: string) {
     const user = await this.user.getUserByUid(token);
-    const commet: CreateInterface = {
+    const commet: CreateComment = {
       ...body,
       user_id:user.id
     }
-    const res = await this.service.create(commet);
-    const dto = this.create_mapper.toMapper(res);
-    return new OK([dto], code.SUCCESSFULLY_CREATED);
+    const res = await this.service.create(commet).then(res => this.toMapper.create(res))
+    return new OK(res, code.SUCCESSFULLY_CREATED);
   }
  
   @Post('user/:user_id')
@@ -237,13 +219,12 @@ export class CommentController {
   @UseInterceptors(HttpResponse)
   @ApiOperation({ summary: 'Criar um comentario' })
   public async createPublic(@Body() body: CreateDto, @Param('user_id') user_id: number) {
-    const commet: CreateInterface = {
+    const commet: CreateComment = {
       ...body,
       user_id:user_id
     }
-    const res = await this.service.create(commet);
-    const dto = this.create_mapper.toMapper(res);
-    return new OK([dto], code.SUCCESSFULLY_CREATED);
+    const res = await this.service.create(commet).then(res => this.toMapper.create(res))
+    return new OK(res, code.SUCCESSFULLY_CREATED);
   }
 
   @Put(':comment_id')
@@ -258,14 +239,13 @@ export class CommentController {
     @Header(new TOKEN()) token: string,
   ) {
     const user = await this.user.getUserByUid(token);
-    const commet: UpdateInterface = { 
+    const commet: UpdateComment = { 
       ...body, 
       id: comment_id, 
       user_id: user.id 
     };
-    const res = await this.service.update(commet);
-    const dto = this.updateMapper.toMapper(res);
-    return new OK([dto], code.SUCCESSFULLY_UPDATED);
+    const res = await this.service.update(commet).then(res => this.toMapper.update(res))
+    return new OK(res, code.SUCCESSFULLY_UPDATED);
   }
 
   @Put(':comment_id/user/:user_id/')
@@ -278,14 +258,13 @@ export class CommentController {
     @Param('comment_id') comment_id: number,
     @Body() body: UpdateDto
   ) {
-    const commet: UpdateInterface = { 
+    const commet: UpdateComment = { 
       ...body, 
       id: comment_id, 
       user_id: user_id 
     };
-    const res = await this.service.update(commet);
-    const dto = this.updateMapper.toMapper(res);
-    return new OK([dto], code.SUCCESSFULLY_UPDATED);
+    const res = await this.service.update(commet).then(res => this.toMapper.update(res))
+    return new OK(res, code.SUCCESSFULLY_UPDATED);
   }
 
   @Delete(':comment_id')
@@ -312,4 +291,5 @@ export class CommentController {
     await this.service.delete(comment_id, user_id);
     return new OK([], code.DELETED_SUCCESSFULLY);
   }
+
 }

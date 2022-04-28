@@ -5,9 +5,9 @@ import { getConnectionManager } from 'typeorm';
 
 import { CommentEntity } from '@entity/comment.entity';
 import { connectionDataBaseForTest } from '@root/connection-database-for-test-unit';
-import { IsValidTimestampService } from '@root/src/lib/utility/is-valid-timestamp/is-valid-timestamp.service';
-import { EmptyService } from '@root/src/lib/utility/empty/empty.service';
-import { code } from '@root/src/lib/enum';
+import { IsValidTimestampService } from '@root/src/shared/utility/is-valid-timestamp/is-valid-timestamp.service';
+import { EmptyService } from '@root/src/shared/utility/empty/empty.service';
+import { code } from '@root/src/shared/enum';
 
 import { CommentService } from '@root/src/modules/comment/comment.service';
 import { PublicationService } from '@root/src/modules/publication/publication.service';

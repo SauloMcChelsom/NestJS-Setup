@@ -1,12 +1,12 @@
 import { Version, Controller, Get } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 
-import { OrderEvent } from '@root/src/lib/events/order/order.events';
-import { code } from '@root/src/lib/enum';
+import { OrderEvent } from '@root/src/shared/events/order/order.events';
+import { code } from '@root/src/shared/enum';
 import { UseInterceptors, UseFilters } from '@nestjs/common';
-import { HttpExceptions } from '@root/src/lib/http-status/http-exception';
-import { OK } from '@root/src/lib/http-status/ok';
-import { HttpResponse } from '@root/src/lib/http-status/http-response';
+import { HttpExceptions } from '@root/src/shared/http-status/http-exception';
+import { OK } from '@root/src/shared/http-status/ok';
+import { HttpResponse } from '@root/src/shared/http-status/http-response';
 
 @Controller('services/event')
 @ApiTags('services/event')

@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 
 import { FirebaseService } from '@modules/firebase/firebase.service';
-import { CryptUtilityService } from '@root/src/lib/bcrypt/bcrypt.service';
+import { CryptUtilityService } from '@root/src/shared/bcrypt/bcrypt.service';
 
 import { UserModel } from './user.model';
 import {

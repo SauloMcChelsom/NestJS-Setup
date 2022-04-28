@@ -1,4 +1,4 @@
-import { message, code as codes } from '@root/src/lib/enum';
+import { message, code as codes } from '@root/src/shared/enum';
 
 export class OK {
   private results;

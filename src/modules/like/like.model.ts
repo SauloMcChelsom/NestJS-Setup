@@ -1,7 +1,7 @@
 import { HttpException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
-import { code, message } from '@root/src/lib/enum';
+import { code, message } from '@root/src/shared/enum';
 import { LikeRepository } from './like.repository';
 import { CreateInterface } from './interface/create.interface';
 

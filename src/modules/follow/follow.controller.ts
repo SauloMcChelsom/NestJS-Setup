@@ -10,17 +10,17 @@ import {
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { UseGuards } from '@nestjs/common';
 
-import { JwtAuthGuard } from '@lib/guard/jwt-auth.guard';
-import { UID } from '@root/src/lib/pipe/token.pipe';
-import { Header } from '@lib/decorator/header.decorator';
+import { JwtAuthGuard } from '@root/src/shared/guard/jwt-auth.guard';
+import { UID } from '@root/src/shared/pipe/token.pipe';
+import { Header } from '@root/src/shared/decorator/header.decorator';
 
 import { UseInterceptors, UseFilters } from '@nestjs/common';
-import { HttpExceptions } from '@root/src/lib/http-status/http-exception';
-import { OK } from '@root/src/lib/http-status/ok';
-import { HttpResponse } from '@root/src/lib/http-status/http-response';
-import { ClassificationInterface } from '@root/src/lib/interfaces';
+import { HttpExceptions } from '@root/src/shared/http-status/http-exception';
+import { OK } from '@root/src/shared/http-status/ok';
+import { HttpResponse } from '@root/src/shared/http-status/http-response';
+import { ClassificationInterface } from '@root/src/shared/interfaces';
 import { UserService } from '@modules/user/user.service';
-import { code } from '@root/src/lib/enum';
+import { code } from '@root/src/shared/enum';
 
 import { FollowService } from './follow.service';
 import { CreateDto } from './dto/create.dto';

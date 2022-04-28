@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { code } from '@root/src/lib/enum';
+import { code } from '@root/src/shared/enum';
 import { HttpException, HttpStatus } from '@nestjs/common';
 
 @Injectable()

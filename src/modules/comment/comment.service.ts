@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
 
-import { ClassificationInterface } from '@root/src/lib/interfaces';
+import { ClassificationInterface } from '@root/src/shared/interfaces';
 import { PublicationService } from '@modules/publication/publication.service';
 
 import { CommentModel } from './comment.model';
-import { CreateInterface, UpdateInterface } from './interface';
+import { UpdateComment, CreateComment } from '@shared/interfaces/comment.interface';
 
 @Injectable()
 export class CommentService {
@@ -64,7 +64,7 @@ export class CommentService {
     return await this.model.findOneById(id);
   }
 
-  public async create(body: CreateInterface) {
+  public async create(body: CreateComment) {
     const create = await this.model.create(body);
     await this.publication.incrementNumberCommentOfPublication(
       body.publication_id,
@@ -72,7 +72,7 @@ export class CommentService {
     return await this.model.findOneById(create.id);
   }
 
-  public async update(body: UpdateInterface) {
+  public async update(body: UpdateComment) {
     await this.model.validateID(body.id, body.user_id);
     await this.model.updateById(body.id, body);
     return await this.model.findOneById(body.id);

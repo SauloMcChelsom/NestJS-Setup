@@ -10,14 +10,14 @@ import { diskStorage } from 'multer';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 
 import { UseInterceptors, UseFilters } from '@nestjs/common';
-import { HttpExceptions } from '@root/src/lib/http-status/http-exception';
-import { OK } from '@root/src/lib/http-status/ok';
-import { HttpResponse } from '@root/src/lib/http-status/http-response';
-import { code } from '@root/src/lib/enum';
+import { HttpExceptions } from '@root/src/shared/http-status/http-exception';
+import { OK } from '@root/src/shared/http-status/ok';
+import { HttpResponse } from '@root/src/shared/http-status/http-response';
+import { code } from '@root/src/shared/enum';
 import {
   filterExtensionFiles,
   editNameFiles,
-} from '@lib/utility/files/files.service';
+} from '@root/src/shared/utility/files/files.service';
 
 @Controller('services/upload')
 @ApiTags('services/upload')

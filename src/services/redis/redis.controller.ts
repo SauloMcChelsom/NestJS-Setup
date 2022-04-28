@@ -1,13 +1,13 @@
 import { Version, Post, Body, Controller } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 
-import { SendEmailService } from '@root/src/lib/jobs/send-mail/send-mail.service';
+import { SendEmailService } from '@root/src/shared/jobs/send-mail/send-mail.service';
 import { CreateDto } from '@root/src/modules/user/dto/create.dto';
-import { code } from '@root/src/lib/enum';
+import { code } from '@root/src/shared/enum';
 import { UseInterceptors, UseFilters } from '@nestjs/common';
-import { HttpExceptions } from '@root/src/lib/http-status/http-exception';
-import { OK } from '@root/src/lib/http-status/ok';
-import { HttpResponse } from '@root/src/lib/http-status/http-response';
+import { HttpExceptions } from '@root/src/shared/http-status/http-exception';
+import { OK } from '@root/src/shared/http-status/ok';
+import { HttpResponse } from '@root/src/shared/http-status/http-response';
 
 @Controller('services/redis')
 @ApiTags('services/redis')
