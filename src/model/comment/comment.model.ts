@@ -121,7 +121,7 @@ export class CommentModel {
     }
   }
 
-  public async validateID(id: number, userId: number) {
+  public async idEqualsUserId(id: number, userId: number) {
     try {
 
       const res = await this.repository.findOne({
@@ -140,7 +140,7 @@ export class CommentModel {
 
       throw new HttpException({
         code : code.NOT_FOUND,
-        message : 'validate, id not found',
+        message : 'ids diferentes',
         description : ''
       }, HttpStatus.NOT_FOUND);
     } catch (e: any) {

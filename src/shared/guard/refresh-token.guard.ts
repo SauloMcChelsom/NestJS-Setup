@@ -14,3 +14,16 @@ export class ValidateRefreshTokenGuard implements CanActivate {
         return true;
     }
 }
+
+@Injectable()
+export class JwtAuthRefreshTokenGuard implements CanActivate {
+    constructor(@Inject(forwardRef(() => AuthorService)) private authService: AuthorService) {}
+
+    async canActivate(context: ExecutionContext) {
+        const request = context.switchToHttp().getRequest();
+        const user: User = request.user;
+
+        await this.authService.validarRefreshToken(user.id)
+        return true;
+    }
+}

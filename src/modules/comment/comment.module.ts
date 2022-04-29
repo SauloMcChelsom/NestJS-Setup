@@ -7,12 +7,14 @@ import { CommentController } from './comment.controller';
 import { CommentService } from './comment.service';
 import { CommentModule as CommentsModule } from '@model/comment/comment.module';
 import { CommentMapper } from './mapper/index.mapper';
+import { UsersModule } from '@model/users/user.module'
 
 @Module({
   imports: [
     AuthorModule,
     CommentsModule,
-    UserModule
+    UserModule,
+    UsersModule
   ],
   controllers: [CommentController],
   providers: [

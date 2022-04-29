@@ -10,54 +10,52 @@ import {
   Body,
   Put,
   Delete,
+  UseGuards, 
+  UseInterceptors, 
+  UseFilters 
 } from '@nestjs/common'
-import { ApiOperation, ApiTags } from '@nestjs/swagger'
-import { UseGuards } from '@nestjs/common'
 
-import { JwtAuthGuard } from '@root/src/shared/guard/jwt-auth.guard'
-import { TOKEN } from '@root/src/shared/pipe/token.pipe'
-import { Header } from '@root/src/shared/decorator/header.decorator'
+import { JwtAuthAccessTokenGuard } from '@shared/guard/jwt-auth.guard'
+import { JwtAuthRefreshTokenGuard } from '@shared/guard/refresh-token.guard'
+import { RolesGuard } from '@shared/guard/roles.guard'
+import { UserMachinePropertyGuard } from '@shared/guard/user-machine-property.guard'
 
-import { UseInterceptors, UseFilters } from '@nestjs/common'
+import { TOKEN } from '@shared/pipe/token.pipe'
 
-import { Error } from '@root/src/shared/response/error.response'
-import { Success } from '@root/src/shared/response/success.response'
-import { OK } from '@root/src/shared/response/ok'
-import { UserService } from '@modules/user/user.service'
-import { ClassificationInterface } from '@root/src/shared/interfaces'
-import { code } from '@root/src/shared/enum'
+import { Header } from '@shared/decorator/header.decorator'
+import { hasRoles } from '@shared/decorator/roles.decorator'
+
+import { Error } from '@shared/response/error.response'
+import { Success } from '@shared/response/success.response'
+import { OK } from '@shared/response/ok'
+
+import { Role, code } from '@shared/enum'
+import { ListFilter, CreateComment, UpdateComment } from '@shared/interfaces'
+
+import { UserModel } from '@model/users/user.model'
 
 import { CommentService } from './comment.service'
 import { CreateDto, UpdateDto } from './dto/index.dto'
-import { CreateComment, UpdateComment } from '@shared/interfaces/comment.interface'
 import { CommentMapper } from './mapper/index.mapper'
 
-//---->
-import { hasRoles } from '@root/src/shared/decorator/roles.decorator'
-import { RolesGuard } from '@root/src/shared/guard/roles.guard'
-import { ValidateRefreshTokenGuard } from '@root/src/shared/guard/refresh-token.guard'
-import { UserMachinePropertyGuard } from '@root/src/shared/guard/user-machine-property.guard'
-import { Role } from '@shared/enum/role.enum'
-
 @Controller('comment')
-@ApiTags('comment')
 export class CommentController {
 
   constructor(
     private readonly service: CommentService,
-    private user: UserService,
+    private userModel: UserModel,
     private toMapper:CommentMapper
   ) {}
 
-  @Get('/user/')
+  @Get('/list-by-acess-token')
   @Version('1/private')
   @CacheTTL(20)
-  @UseGuards(JwtAuthGuard)
+  @hasRoles(Role.USER, Role.ADMIN)
+  @UseGuards(JwtAuthAccessTokenGuard, JwtAuthRefreshTokenGuard, UserMachinePropertyGuard, RolesGuard)
   @UseFilters(Error)
   @UseInterceptors(Success)
   @UseInterceptors(CacheInterceptor)
-  @ApiOperation({ summary: 'Listar comentarios pelo token do usuario' })
-  public async authListByUserToken(
+  public async privateListCommentByAcessToken(
     @Header(new TOKEN()) token: string,
     @Query('search') search: string,
     @Query('limit') limit = '3',
@@ -67,8 +65,8 @@ export class CommentController {
     @Query('start') start: string,
     @Query('end') end: string,
   ) {
-    const user = await this.user.getUserByUid(token)
-    const cls: ClassificationInterface = {
+    const user = await this.userModel.getUserByUid(token)
+    const filter: ListFilter = {
       search: search,
       limit: parseInt(limit) ? parseInt(limit) : 5,
       offset: parseInt(offset) ? parseInt(offset) : 0,
@@ -77,19 +75,19 @@ export class CommentController {
       start: start,
       end: end,
     }
-    const { res, count } = await this.service.authListByUserId(user.id, cls).then(res => this.toMapper.authList(res))
+    const { res, count } = await this.service.listCommentByUserId(user.id, filter).then(res => this.toMapper.privateList(res))
     return new OK(res, code.SUCCESSFULLY_FOUND, null, count)
   }
 
-  @Get('/user/:user_id')
+  @Get('/list-by-user-id/:user_id')
   @Version('1/private')
   @CacheTTL(20)
-  @UseGuards(JwtAuthGuard)
-  @UseFilters(Error) 
+  @hasRoles(Role.USER, Role.ADMIN)
+  @UseGuards(JwtAuthAccessTokenGuard, JwtAuthRefreshTokenGuard, UserMachinePropertyGuard, RolesGuard)
+  @UseFilters(Error)
   @UseInterceptors(Success)
   @UseInterceptors(CacheInterceptor)
-  @ApiOperation({ summary: 'Listar comentarios por id do usuario' })
-  public async authListByUserId(
+  public async privateListCommentByUserId(
     @Param('user_id') user_id: number,
     @Query('search') search: string,
     @Query('limit') limit = '3',
@@ -99,7 +97,7 @@ export class CommentController {
     @Query('start') start: string,
     @Query('end') end: string,
   ) {
-    const cls: ClassificationInterface = {
+    const filter: ListFilter = {
       search: search,
       limit: parseInt(limit) ? parseInt(limit) : 5,
       offset: parseInt(offset) ? parseInt(offset) : 0,
@@ -108,18 +106,17 @@ export class CommentController {
       start: start,
       end: end,
     }
-    const { res, count } = await this.service.authListByUserId(user_id, cls).then(res => this.toMapper.authList(res))
+    const { res, count } = await this.service.listCommentByUserId(user_id, filter).then(res => this.toMapper.privateList(res))
     return new OK(res, code.SUCCESSFULLY_FOUND, null, count)
   }
 
-  @Get('/user/:user_id')
+  @Get('/list-by-user-id/:user_id')
   @Version('1/public')
   @CacheTTL(20)
-  @UseFilters(Error) 
+  @UseFilters(Error)
   @UseInterceptors(Success)
   @UseInterceptors(CacheInterceptor)
-  @ApiOperation({ summary: 'Listar comentarios por id do usuario' })
-  public async publicListByUserId(
+  public async publicListCommentByUserId(
     @Param('user_id') user_id: number,
     @Query('search') search: string,
     @Query('limit') limit = '3',
@@ -129,7 +126,7 @@ export class CommentController {
     @Query('start') start: string,
     @Query('end') end: string,
   ) {
-    const cls: ClassificationInterface = {
+    const filter: ListFilter = {
       search: search,
       limit: parseInt(limit) ? parseInt(limit) : 5,
       offset: parseInt(offset) ? parseInt(offset) : 0,
@@ -139,18 +136,17 @@ export class CommentController {
       end: end,
     }
 
-    const { res, count } = await this.service.publicListByUserId(user_id, cls).then(res => this.toMapper.authList(res))
+    const { res, count } = await this.service.listCommentByUserId(user_id, filter).then(res => this.toMapper.publicList(res))
     return new OK(res, code.SUCCESSFULLY_FOUND, null, count)
   }
 
-  @Get('/publication/:publication_id')
+  @Get('/list-by-publication-id/:publication_id')
   @Version('1/public')
   @CacheTTL(20) 
   @UseFilters(Error) 
   @UseInterceptors(Success)
   @UseInterceptors(CacheInterceptor)
-  @ApiOperation({ summary: 'Listar comentarios por id da publicacao' })
-  public async publicListByPublicationId(
+  public async publicListCommentByPublicationId(
     @Param('publication_id') publication_id: number,
     @Query('search') search: string,
     @Query('limit') limit = '3',
@@ -160,7 +156,7 @@ export class CommentController {
     @Query('start') start: string,
     @Query('end') end: string,
   ) {
-    const cls: ClassificationInterface = {
+    const filter: ListFilter = {
       search: search,
       limit: parseInt(limit) ? parseInt(limit) : 5,
       offset: parseInt(offset) ? parseInt(offset) : 0,
@@ -169,57 +165,46 @@ export class CommentController {
       start: start,
       end: end,
     }
-    const { res, count } = await this.service.publicListByPublicationId(
-      publication_id,
-      cls,
-    ).then(res => this.toMapper.authList(res))
-
+    const { res, count } = await this.service.listCommentByPublicationId(publication_id, filter).then(res => this.toMapper.privateList(res))
     return new OK(res, code.SUCCESSFULLY_FOUND, null, count)
   }
 
-  @Get(':comment_id')
+  @Get(':id')
   @Version('1/private')
-  @CacheTTL(5)
-  @UseGuards(JwtAuthGuard)
-  @UseFilters(Error) 
-  @UseInterceptors(Success)
-  @UseInterceptors(CacheInterceptor)
-  @ApiOperation({ summary: 'Buscar comentario por id' })
-  public async authFindOneCommentById(
-    @Param('comment_id') comment_id: number,
-    @Header(new TOKEN()) token: string,
-  ) {
-    const user = await this.user.getUserByUid(token)
-    const res = await this.service.authFindOneById(comment_id, user.id).then(res => this.toMapper.authFindOne(res))
-    return new OK(res, code.SUCCESSFULLY_FOUND)
-  }
-
-  /**
-   * 
-   * @param TESTE-------------------> 
-   * @returns 
-   */
-  @Get(':comment_id')
-  @Version('1/public')
-  @CacheTTL(5)
+  @CacheTTL(20)
   @hasRoles(Role.USER, Role.ADMIN)
-  @UseGuards(JwtAuthGuard, UserMachinePropertyGuard, ValidateRefreshTokenGuard, RolesGuard)
+  @UseGuards(JwtAuthAccessTokenGuard, JwtAuthRefreshTokenGuard, UserMachinePropertyGuard, RolesGuard)
   @UseFilters(Error)
   @UseInterceptors(Success)
   @UseInterceptors(CacheInterceptor)
-  @ApiOperation({ summary: 'Buscar comentario por id' })
-  public async publicFindOneById(@Param('comment_id') comment_id: number) {
-    const res = await this.service.publicFindOneById(comment_id).then(res => this.toMapper.publicFindOne(res))
+  public async privateFindOneCommentById(
+    @Param('id') id: number,
+    @Header(new TOKEN()) token: string,
+  ) {
+    const user = await this.userModel.getUserByUid(token)
+    const res = await this.service.findOneCommentByIdEndUserId(id, user.id).then(res => this.toMapper.privateFindOne(res))
+    return new OK(res, code.SUCCESSFULLY_FOUND)
+  }
+
+  @Get(':id')
+  @Version('1/public')
+  @CacheTTL(5)
+  @UseFilters(Error)
+  @UseInterceptors(Success)
+  @UseInterceptors(CacheInterceptor)
+  public async publicindOneCommentById(@Param('id') id: number) {
+    const res = await this.service.findOneCommentById(id).then(res => this.toMapper.publicFindOne(res))
     return new OK(res, code.SUCCESSFULLY_FOUND)
   }
 
   @Post()
   @Version('1/private')
-  @UseFilters(Error) 
+  @hasRoles(Role.USER, Role.ADMIN)
+  @UseGuards(JwtAuthAccessTokenGuard, JwtAuthRefreshTokenGuard, UserMachinePropertyGuard, RolesGuard)
+  @UseFilters(Error)
   @UseInterceptors(Success)
-  @ApiOperation({ summary: 'Criar um comentario' })
   public async create(@Body() body: CreateDto, @Header(new TOKEN()) token: string) {
-    const user = await this.user.getUserByUid(token)
+    const user = await this.userModel.getUserByUid(token)
     const commet: CreateComment = {
       ...body,
       user_id:user.id
@@ -228,12 +213,11 @@ export class CommentController {
     return new OK(res, code.SUCCESSFULLY_CREATED)
   }
  
-  @Post('user/:user_id')
+  @Post('create-by-user-id/:user_id')
   @Version('1/public')
   @UseFilters(Error) 
   @UseInterceptors(Success)
-  @ApiOperation({ summary: 'Criar um comentario' })
-  public async createPublic(@Body() body: CreateDto, @Param('user_id') user_id: number) {
+  public async createByUserId(@Body() body: CreateDto, @Param('user_id') user_id: number) {
     const commet: CreateComment = {
       ...body,
       user_id:user_id
@@ -242,21 +226,21 @@ export class CommentController {
     return new OK(res, code.SUCCESSFULLY_CREATED)
   }
 
-  @Put(':comment_id')
+  @Put(':id')
   @Version('1/private')
-  @UseGuards(JwtAuthGuard)
-  @UseFilters(Error) 
+  @hasRoles(Role.USER, Role.ADMIN)
+  @UseGuards(JwtAuthAccessTokenGuard, JwtAuthRefreshTokenGuard, UserMachinePropertyGuard, RolesGuard)
+  @UseFilters(Error)
   @UseInterceptors(Success)
-  @ApiOperation({ summary: 'Atualizar um comentario' })
   public async update(
-    @Param('comment_id') comment_id: number,
+    @Param('id') id: number,
     @Body() body: UpdateDto,
     @Header(new TOKEN()) token: string,
   ) {
-    const user = await this.user.getUserByUid(token)
+    const user = await this.userModel.getUserByUid(token)
     const commet: UpdateComment = { 
       ...body, 
-      id: comment_id, 
+      id: id, 
       user_id: user.id 
     }
     const res = await this.service.update(commet).then(res => this.toMapper.update(res))
@@ -267,8 +251,7 @@ export class CommentController {
   @Version('1/public')
   @UseFilters(Error) 
   @UseInterceptors(Success)
-  @ApiOperation({ summary: 'Atualizar um comentario' })
-  public async updatePublic(
+  public async publicUpdate(
     @Param('user_id') user_id: number,
     @Param('comment_id') comment_id: number,
     @Body() body: UpdateDto
@@ -284,22 +267,21 @@ export class CommentController {
 
   @Delete(':comment_id')
   @Version('1/private')
-  @UseGuards(JwtAuthGuard)
-  @UseFilters(Error) 
+  @hasRoles(Role.USER, Role.ADMIN)
+  @UseGuards(JwtAuthAccessTokenGuard, JwtAuthRefreshTokenGuard, UserMachinePropertyGuard, RolesGuard)
+  @UseFilters(Error)
   @UseInterceptors(Success)
-  @ApiOperation({ summary: 'Deletar um comentario' })
   public async delete(@Param('comment_id') comment_id: number, @Header(new TOKEN()) token: string) {
-    const user = await this.user.getUserByUid(token)
+    const user = await this.userModel.getUserByUid(token)
     await this.service.delete(comment_id, user.id)
     return new OK([], code.DELETED_SUCCESSFULLY)
   }
 
   @Delete(':comment_id/user/:user_id/')
   @Version('1/public')
-  @UseFilters(Error) 
+  @UseFilters(Error)
   @UseInterceptors(Success)
-  @ApiOperation({ summary: 'Deletar um comentario' })
-  public async deletePublic(
+  public async publicDelete(
     @Param('user_id') user_id: number,
     @Param('comment_id') comment_id: number,
   ) {
