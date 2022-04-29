@@ -3,9 +3,9 @@ import { v4 as uuidv4 } from 'uuid';
 
 import { AuthModel } from './auth.model'
 
-import { CreateUser, RefreshToken, UserToken, UserMachineProperty } from '../../shared/interfaces/auth.interface'
-import { User } from '../../shared/interfaces/user.interface'
-import { Role } from '../../shared/enum/role.enum'
+import { CreateUser, RefreshToken, UserToken, UserMachineProperty } from '@shared/interfaces/auth.interface'
+import { User } from '@shared/interfaces/user.interface'
+import { Role } from '@shared/enum/role.enum'
 
 
 @Injectable()

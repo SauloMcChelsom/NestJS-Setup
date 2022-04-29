@@ -31,7 +31,7 @@ export class AuthModel {
     ){}
 
     public async generateJWT(user: User): Promise <string> {
-        return await this.jwtService.signAsync({email:user.email, user})
+        return await this.jwtService.signAsync({user})
     }
 
     public async decodeJWT(token: string){

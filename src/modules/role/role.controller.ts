@@ -1,7 +1,7 @@
 import { Controller, Body, Param, Put, UseGuards } from '@nestjs/common'
 
 import { hasRoles } from '@shared/decorator/roles.decorator'
-import { JwtAuthGuard } from '@shared/guard/jwt-guard'
+import { JwtAuthGuard } from '@shared/guard/jwt-auth.guard'
 import { RolesGuard } from '@shared/guard/roles.guard'
 import { Role } from '@shared/enum/role.enum'
  

@@ -14,16 +14,16 @@ import { JobsModule } from '@root/src/services/jobs/jobs.module';
 import { EventsModule } from '@root/src/services/events/events.module';
 import { ServicesModule } from '@root/src/services/services.module';
 import { AxiosModule } from '@root/src/services/axios/axios.module';
+//import { JwtDecodeModule } from '@shared/utility/jwt-decode/jwt-decode.modele'
 
 import { CommentModule } from '@modules/comment/comment.module';
-import { FirebaseModule } from '@modules/firebase/firebase.module';
 import { ViewsModule } from '@root/src/views/views.module';
 import { UserModule } from '@modules/user/user.module';
-import { PageModule } from '@modules/page/page.module';
+/*import { PageModule } from '@modules/page/page.module';
 import { FollowModule } from '@root/src/modules/follow/follow.module';
 import { PublicationModule } from '@modules/publication/publication.module';
 import { LikeModule } from '@modules/like/like.module';
-import { SeniorModule } from '@modules/senior/senior.module';
+import { SeniorModule } from '@modules/senior/senior.module';*/
 import { AuthModule } from '@modules/auth/auth.module'
 import { RoleModule } from '@modules/role/role.module'
 
@@ -99,17 +99,17 @@ import { RoleModule } from '@modules/role/role.module'
     EventsModule,
     AxiosModule,
     ServicesModule,
-    FirebaseModule,
     ViewsModule,
     UserModule,
-    PageModule,
+    /*PageModule,
     FollowModule,
     PublicationModule,
     LikeModule,
+    SeniorModule,*/
     CommentModule,
-    SeniorModule,
     AuthModule,
-    RoleModule
+    RoleModule,
+    //JwtDecodeModule
   ],
   controllers: [],
   providers: [

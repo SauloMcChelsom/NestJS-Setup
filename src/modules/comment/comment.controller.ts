@@ -35,12 +35,12 @@ import { CreateDto, UpdateDto } from './dto/index.dto';
 import { CreateComment, UpdateComment } from '@shared/interfaces/comment.interface';
 import { CommentMapper } from './mapper/index.mapper';
 
-//
+//---->
 import { hasRoles } from '@root/src/shared/decorator/roles.decorator'
 import { RolesGuard } from '@root/src/shared/guard/roles.guard'
 import { ValidateRefreshTokenGuard } from '@root/src/shared/guard/refresh-token.guard'
 import { UserMachinePropertyGuard } from '@root/src/shared/guard/user-machine-property.guard'
-import { Role } from '../../shared/enum/role.enum'
+import { Role } from '@shared/enum/role.enum'
 
 @Controller('comment')
 @ApiTags('comment')

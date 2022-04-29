@@ -7,7 +7,7 @@ import { UserModule } from 'src/modules/user/user.module'
 import { AuthModel } from 'src/modules/auth/auth.model'
 
 import { RolesGuard } from '@shared/guard/roles.guard'
-import { JwtAuthGuard } from '@shared/guard/jwt-guard'
+import { JwtAuthGuard } from '@shared/guard/jwt-auth.guard'
 import { JwtStrategy } from '@shared/guard/jwt-strategy'
 
 import { UserEntity } from 'src/entity/user.entity'

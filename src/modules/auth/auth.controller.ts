@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Get, Headers, UseGuards, UseInterceptors } from '@nestjs/common'
+import { Controller, Post, Body, Get, Headers, UseGuards, UseInterceptors, Version } from '@nestjs/common'
 
 import { UserMachinePropertyInterceptor } from 'src/shared/interceptor/user-machine-property.interceptor'
 import { JwtAuthGuard } from '@shared/guard/jwt-auth.guard';
@@ -20,9 +20,10 @@ export class AuthController {
     public async create(@Body() user: CreateUserDTO) {
         return await this.authService.create(user).then(user => this.toMapper.create(user))
     }
-
-    @UseInterceptors(UserMachinePropertyInterceptor)
     @Post('login')
+    @Version('1/public')
+    @UseInterceptors(UserMachinePropertyInterceptor)
+   
     public async login(@Body() user: UserDTO) {
         return await this.authService.login(user).then(token => this.toMapper.login(token))
     }

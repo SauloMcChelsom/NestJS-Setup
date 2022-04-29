@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
-import { FirebaseModule } from '@modules/firebase/firebase.module';
+//import { FirebaseModule } from '@modules/firebase/firebase.module';
 import { UserModule } from '@modules/user/user.module';
 import { UploadController } from './upload.controller';
 
 @Module({
-  imports: [UserModule, FirebaseModule],
+  imports: [UserModule],
   controllers: [UploadController],
   providers: [],
   exports: [],

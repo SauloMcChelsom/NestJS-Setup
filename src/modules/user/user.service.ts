@@ -1,7 +1,5 @@
 import { Injectable } from '@nestjs/common';
 
-import { FirebaseService } from '@modules/firebase/firebase.service';
-
 import { UserModel } from './user.model';
 import {
   CreateInterface,
@@ -12,8 +10,7 @@ import {
 @Injectable()
 export class UserService {
   constructor(
-    private model: UserModel,
-    private firebase: FirebaseService
+    private model: UserModel
   ) {}
 
   public async create(body: CreateInterface) {
@@ -60,8 +57,8 @@ export class UserService {
 
   public async deleteByUid(uid: string) {
     const { id } = await this.model.getUserByUid(uid);
-    await this.firebase.revokeRefreshTokens(uid);
-    await this.firebase.deleteUser(uid);
+    //await this.firebase.revokeRefreshTokens(uid);
+    //await this.firebase.deleteUser(uid);
     await this.model.delete(id);
   }
 

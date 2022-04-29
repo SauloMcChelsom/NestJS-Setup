@@ -11,9 +11,9 @@ export class CreateDto {
 }
 
 export class UpdateDto {
-    @IsNotEmpty()
-    @IsNotEmpty()
-    @MinLength(1)
-    comment: string;
+  @IsNotEmpty()
+  @IsNotEmpty()
+  @MinLength(1)
+  comment: string;
 }
   
