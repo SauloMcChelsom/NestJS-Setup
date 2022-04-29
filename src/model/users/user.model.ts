@@ -5,10 +5,6 @@ import { hash, compare  } from 'bcryptjs';
 import { code, message } from '@root/src/shared/enum';
 
 import { UserRepository } from './user.repository';
-import {
-  UpdateInterface,
-  UpdateUserUidWithFirebaseUidInterface as UpdateUID,
-} from '../../modules/user/interface';
 
 import { User } from '@root/src/shared/interfaces/user.interface';
 
@@ -175,7 +171,7 @@ export class UserModel {
     }
   }
 
-  public async updateUserByUid(id: number, body: UpdateInterface | UpdateUID) {
+  public async updateUserByUid(id: number, body: any) {
     try {
       const res = await this.repository.update(id, body);
       if (res) {

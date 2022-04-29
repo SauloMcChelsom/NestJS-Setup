@@ -2,7 +2,7 @@ import { Version, Post, Body, Controller } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 
 import { SendEmailService } from '@root/src/services/jobs/send-mail/send-mail.service';
-import { CreateDto } from '@root/src/modules/user/dto/create.dto';
+import { User } from '@shared/interfaces/user.interface';
 import { code } from '@root/src/shared/enum';
 import { UseInterceptors, UseFilters } from '@nestjs/common';
 import { Error } from '@root/src/shared/response/error.response';
@@ -19,7 +19,7 @@ export class RedisController {
   @UseFilters(Error)
   @UseInterceptors(Success)
   @ApiOperation({ summary: 'Redis adicionado a uma fila' })
-  public async publicSendMail(@Body() create: CreateDto) {
+  public async publicSendMail(@Body() create: User) {
     await this.services.sendMail(create);
     return new OK(
       [{ message: 'Foi adicionado a uma fila' }],

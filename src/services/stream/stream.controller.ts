@@ -1,12 +1,12 @@
 import { Version, Headers, Res, Controller, Param, Get } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 
-import { UserService } from '@modules/user/user.service';
+//import { UserModel } from '@model/users/user.model';
 
 @Controller('services/stream')
 @ApiTags('services/stream')
 export class StreamController {
-  constructor(private user: UserService) {}
+  //constructor(private user: UserModel) {}
 
   @Get('/public/:path')
   @Version('1')
@@ -24,7 +24,7 @@ export class StreamController {
     @Headers('Authorization') authorization: string,
   ) {
     //const decoded = await this.firebase.validateTokenByFirebase(authorization);
-    await this.user.getUserByUid('decoded.uid');
+    //await this.user.getUserByUid('decoded.uid');
 
     return res.sendFile(path, { root: './CDN' });
   }

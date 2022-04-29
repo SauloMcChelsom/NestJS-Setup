@@ -1,14 +1,15 @@
 import { Processor, Process } from '@nestjs/bull';
 import { Job } from 'bull';
 import { Logger } from '@nestjs/common';
-import { CreateDto } from '@modules/user/dto/create.dto';
+import { User } from '@root/src/shared/interfaces/user.interface';
+
 
 @Processor('send-mail')
 export class SendMailComponent {
   private readonly logger = new Logger(SendMailComponent.name);
 
   @Process('send-mail-job')
-  async sendEmailJob(job: Job<CreateDto>) {
+  async sendEmailJob(job: Job<User>) {
     const { data } = job;
 
     const waitFor = (delay) =>

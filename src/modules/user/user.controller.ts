@@ -1,134 +1,109 @@
 import {
   Version,
+  CacheInterceptor,
+  CacheTTL,
   Controller,
   Param,
   Get,
+  Query,
   Post,
   Body,
   Put,
   Delete,
-} from '@nestjs/common';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
-import { UseGuards } from '@nestjs/common';
+  UseGuards, 
+  UseInterceptors, 
+  UseFilters 
+} from '@nestjs/common'
 
-import { UseInterceptors, UseFilters } from '@nestjs/common';
-import { Error } from '@root/src/shared/response/error.response';
-import { OK } from '@root/src/shared/response/ok';
-import { Success } from '@root/src/shared/response/success.response';
-import { JwtAuthGuard } from '@root/src/shared/guard/jwt-auth.guard';
-import { UID } from '@root/src/shared/pipe/token.pipe';
-import { Header } from '@root/src/shared/decorator/header.decorator';
-import { code } from '@root/src/shared/enum';
+import { JwtAuthAccessTokenGuard } from '@shared/guard/jwt-auth.guard'
+import { JwtAuthRefreshTokenGuard } from '@shared/guard/refresh-token.guard'
+import { RolesGuard } from '@shared/guard/roles.guard'
+import { UserMachinePropertyGuard } from '@shared/guard/user-machine-property.guard'
 
-import { UserService } from './user.service';
-import { UpdateDto } from './dto/update.dto';
-import { CreateDto } from './dto/create.dto';
-import { UpdateUserUidWithFirebaseUidDto as UpdateUidDto } from './dto/update-user-uid-with-firebase-uid.dto';
-import { UpdateUserUidWithFirebaseUidInterface as UpdateUidInterface } from './interface';
-import { CreateMapper, AuthFindOneMapper, PublicFindOneMapper } from './mapper';
+import { TOKEN, UID } from '@shared/pipe/token.pipe'
+
+import { Header } from '@shared/decorator/header.decorator'
+import { hasRoles } from '@shared/decorator/roles.decorator'
+
+import { Error } from '@shared/response/error.response'
+import { Success } from '@shared/response/success.response'
+import { OK } from '@shared/response/ok'
+
+import { Role, code } from '@shared/enum'
+import { ListFilter, CreateComment, UpdateComment } from '@shared/interfaces'
+
+import { UserService } from './user.service'
+import { IsEmailDTO, IsUIDDTO } from './dto/index'
+import { UserMapper } from './mapper/index'
+
+
 
 @Controller('user')
-@ApiTags('user')
 export class UsuariosController {
   constructor(
     private readonly service: UserService,
-    private createMapper: CreateMapper,
-    private authFindOneMapper: AuthFindOneMapper,
-    private publicFindOneMapper: PublicFindOneMapper,
+    private toMapper:UserMapper
   ) {}
 
-  @Get('/auth/uid/')
-  @Version('1')
-  @UseGuards(JwtAuthGuard)
-  @UseFilters(Error) 
+  @Get('/find-by-acess-token')
+  @Version('1/private')
+  @CacheTTL(20)
+  @hasRoles(Role.USER, Role.ADMIN)
+  @UseGuards(JwtAuthAccessTokenGuard, JwtAuthRefreshTokenGuard, UserMachinePropertyGuard, RolesGuard)
+  @UseFilters(Error)
   @UseInterceptors(Success)
-  @ApiOperation({ summary: 'Buscar informação do usuario por uid' })
-  public async authFindOneByUid(@Header(new UID()) uid: string) {
-    const res = await this.service.authFindOneByUid(uid);
-    const dto = this.authFindOneMapper.toMapper(res);
-    return new OK([dto], code.SUCCESSFULLY_FOUND);
+  @UseInterceptors(CacheInterceptor)
+  public async privadoFindOneByAcessToken(@Header(new UID()) param: IsUIDDTO) {
+    const res = await this.service.findOneUsertByUid(param.uid).then(res => this.toMapper.privateFindOne(res))
+    return new OK(res, code.SUCCESSFULLY_FOUND)
   }
 
-  @Get('/public/uid/:uid')
-  @Version('1')
-  @ApiOperation({ summary: 'Buscar informação do usuario por uid' })
-  public async publicFindOneByUid(@Param('uid') uid: string) {
-    const res = await this.service.publicFindOneByUid(uid);
-    const dto = this.publicFindOneMapper.toMapper(res);
-    return new OK([dto], code.SUCCESSFULLY_FOUND);
-  }
-
-  @Get('/auth/email/:email')
-  @Version('1')
-  @UseGuards(JwtAuthGuard)
-  @UseFilters(Error) 
+  @Get('/uid/:uid')
+  @Version('1/public')
+  @CacheTTL(20)
+  @hasRoles(Role.USER, Role.ADMIN)
+  @UseGuards(JwtAuthAccessTokenGuard, JwtAuthRefreshTokenGuard, UserMachinePropertyGuard, RolesGuard)
+  @UseFilters(Error)
   @UseInterceptors(Success)
-  @ApiOperation({ summary: 'Buscar informação do usuario por email' })
-  public async authFindOneByEmail(@Param('email') email: string) {
-    const res = await this.service.authFindOneByEmail(email);
-    const dto = this.publicFindOneMapper.toMapper(res);
-    return new OK([dto], code.SUCCESSFULLY_FOUND);
+  @UseInterceptors(CacheInterceptor)
+  public async publicFindOneByUid(@Param('uid') param: IsUIDDTO) {
+    const res = await this.service.findOneUsertByUid(param.uid).then(res => this.toMapper.publicFindOne(res))
+    return new OK(res, code.SUCCESSFULLY_FOUND)
   }
 
-  @Get('/public/email/:email')
-  @Version('1')
-  @ApiOperation({ summary: 'Buscar informação do usuario por email' })
-  public async publicFindOneByEmail(@Param('email') email: string) {
-    const res = await this.service.publicFindOneByEmail(email);
-    const dto = this.publicFindOneMapper.toMapper(res);
-    return new OK([dto], code.SUCCESSFULLY_FOUND);
-  }
-
-  @Post('/public/')
-  @Version('1')
-  @UseGuards(JwtAuthGuard)
-  @UseFilters(Error) 
+  @Get('/uid/:uid')
+  @Version('1/privado')
+  @CacheTTL(20)
+  @UseFilters(Error)
   @UseInterceptors(Success)
-  @ApiOperation({ summary: 'Criar um usuario' })
-  public async create(@Body() create: CreateDto) {
-    const res = await this.service.create(create);
-    const dto = this.createMapper.toMapper(res);
-    return new OK([dto], code.USER_REGISTERED);
+  @UseInterceptors(CacheInterceptor)
+  public async privadoFindOneByUid(@Param('uid') param: IsUIDDTO) {
+    const res = await this.service.findOneUsertByUid(param.uid).then(res => this.toMapper.publicFindOne(res))
+    return new OK(res, code.SUCCESSFULLY_FOUND)
   }
 
-  @Put('/auth/')
-  @Version('1')
-  @UseGuards(JwtAuthGuard)
-  @UseFilters(Error) 
+  @Get('/email/:email')
+  @Version('1/private')
+  @CacheTTL(20)
+  @hasRoles(Role.USER, Role.ADMIN)
+  @UseGuards(JwtAuthAccessTokenGuard, JwtAuthRefreshTokenGuard, UserMachinePropertyGuard, RolesGuard)
+  @UseFilters(Error)
   @UseInterceptors(Success)
-  @ApiOperation({ summary: 'Atualizar usuario por uid' })
-  public async update(@Body() body: UpdateDto, @Header(new UID()) uid: string) {
-    const res = await this.service.updateByUid(uid, body);
-    const dto = this.authFindOneMapper.toMapper(res);
-    return new OK([dto], code.USER_UPDATED);
+  @UseInterceptors(CacheInterceptor)
+  public async authFindOneUserByEmail(@Param('email') param: IsEmailDTO) {
+    const res = await this.service.findOneUserByEmail(param.email).then(res => this.toMapper.privateFindOne(res))
+    return new OK(res, code.SUCCESSFULLY_FOUND)
   }
 
-  @Put('/auth/uid')
-  @Version('1')
-  @UseGuards(JwtAuthGuard)
-  @UseFilters(Error) 
+  @Get('/email/:email')
+  @Version('1/public')
+  @CacheTTL(20)
+  @UseFilters(Error)
   @UseInterceptors(Success)
-  @ApiOperation({ summary: 'Atualizar uid usuario com  uid firebase' })
-  public async updateUserUidWithFirebaseUid(@Body() body: UpdateUidDto) {
-    const updateUid: UpdateUidInterface = {
-      uid: body.firebaseUid,
-    };
-    const res = await this.service.updateUserUidWithFirebaseUid(
-      body.userUid,
-      updateUid,
-    );
-    const dto = this.authFindOneMapper.toMapper(res);
-    return new OK([dto], code.USER_UPDATED);
+  @UseInterceptors(CacheInterceptor)
+  public async publicFindOneUserByEmail(@Param('email') param: IsEmailDTO) {
+    const res = await this.service.findOneUserByEmail(param.email).then(res => this.toMapper.publicFindOne(res))
+    return new OK(res, code.SUCCESSFULLY_FOUND)
   }
 
-  @Delete('/auth/')
-  @Version('1')
-  @UseGuards(JwtAuthGuard)
-  @UseFilters(Error) 
-  @UseInterceptors(Success)
-  @ApiOperation({ summary: 'Excluir usuario' })
-  public async deleteUserByUid(@Header(new UID()) uid: string) {
-    await this.service.deleteByUid(uid);
-    return new OK([], code.DELETED_SUCCESSFULLY);
-  }
 }

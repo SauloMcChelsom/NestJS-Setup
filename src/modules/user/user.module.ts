@@ -5,13 +5,7 @@ import { UsersModule } from '@model/users/user.module';
 import { UsuariosController } from './user.controller';
 import { UserService } from './user.service';
 
-import {
-  CreateMapper,
-  AuthListMapper,
-  PublicListMapper,
-  AuthFindOneMapper,
-  PublicFindOneMapper,
-} from './mapper';
+import { UserMapper } from './mapper'
 
 @Module({
   imports: [
@@ -21,11 +15,7 @@ import {
   controllers: [UsuariosController],
   providers: [
     UserService,
-    AuthListMapper,
-    PublicListMapper,
-    AuthFindOneMapper,
-    PublicFindOneMapper,
-    CreateMapper,
+    UserMapper
   ],
   exports: [UserService],
 })
