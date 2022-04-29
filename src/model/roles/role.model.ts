@@ -3,8 +3,8 @@ import { HttpException, HttpStatus } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
 
-import { Role } from 'src/shared/enum/role.enum'
-import { UserEntity } from '../../entity/user.entity'
+import { Role } from '@shared/enum/role.enum'
+import { UserEntity } from '@entity/user.entity'
 
 @Injectable()
 export class RoleModel {

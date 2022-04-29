@@ -13,7 +13,7 @@ import { RoleMapper } from './mapper/role.mapper'
 export class RoleController {
 
     constructor(
-        private userService: RoleService,
+        private service: RoleService,
         private toMapper:RoleMapper
     ) {}
 
@@ -21,6 +21,6 @@ export class RoleController {
     @UseGuards(JwtAuthGuard, RolesGuard)
     @Put(':id')
     public async updateRoleOfUser(@Param('id') id: string, @Body() role: UpdateRoleUserDTO) {
-        return await this.userService.updateRoleOfUser(Number(id), role.role).then(() => this.toMapper.updateRole())
+        return await this.service.updateRoleOfUser(Number(id), role.role).then(() => this.toMapper.updateRole())
     }
 }
