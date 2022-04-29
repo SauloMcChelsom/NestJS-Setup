@@ -10,59 +10,58 @@ import {
 @Injectable()
 export class UserService {
   constructor(
-    private model: UserModel
+    private userModel: UserModel
   ) {}
 
   public async create(body: CreateInterface) {
-    await this.model.emailAlreadyExist(body.email);
-    await this.model.uidAlreadyExist(body.uid);
-    await this.model.providersIsValid(body.providers);
-    body.password = await this.model.hashPassword(body.password);
-    return await this.model.create(body);
+    await this.userModel.emailAlreadyExist(body.email);
+    await this.userModel.uidAlreadyExist(body.uid);
+    body.password = await this.userModel.hashPassword(body.password);
+    return await this.userModel.create(body);
   }
 
   public async authFindOneByUid(uid: string) {
-    return await this.model.getUserByUid(uid);
+    return await this.userModel.getUserByUid(uid);
   }
 
   public async publicFindOneByUid(uid: string) {
-    return await this.model.getUserByUid(uid);
+    return await this.userModel.getUserByUid(uid);
   }
 
   public async authFindOneByEmail(email: string) {
-    return await this.model.getUserByEmail(email);
+    return await this.userModel.getUserByEmail(email);
   }
 
   public async publicFindOneByEmail(email: string) {
-    return await this.model.getUserByEmail(email);
+    return await this.userModel.getUserByEmail(email);
   }
 
   public async findOneUserById(id: number) {
-    let user = await this.model.findOneUserById(id)
+    let user = await this.userModel.findOneUserById(id)
     const {password, ...result} = user;
     return result;
 }
 
   public async updateByUid(uid: string, body: UpdateInterface) {
-    const { id } = await this.model.getUserByUid(uid);
-    await this.model.updateUserByUid(id, body);
-    return await this.model.getUserByUid(uid);
+    const { id } = await this.userModel.getUserByUid(uid);
+    await this.userModel.updateUserByUid(id, body);
+    return await this.userModel.getUserByUid(uid);
   }
 
   public async updateUserUidWithFirebaseUid(uid: string, body: UpdateUID) {
-    const { id } = await this.model.getUserByUid(uid);
-    await this.model.updateUserByUid(id, body);
-    return await this.model.getUserByUid(body.uid);
+    const { id } = await this.userModel.getUserByUid(uid);
+    await this.userModel.updateUserByUid(id, body);
+    return await this.userModel.getUserByUid(body.uid);
   }
 
   public async deleteByUid(uid: string) {
-    const { id } = await this.model.getUserByUid(uid);
+    const { id } = await this.userModel.getUserByUid(uid);
     //await this.firebase.revokeRefreshTokens(uid);
     //await this.firebase.deleteUser(uid);
-    await this.model.delete(id);
+    await this.userModel.delete(id);
   }
 
   public async getUserByUid(uid: string) {
-    return await this.model.getUserByUid(uid);
+    return await this.userModel.getUserByUid(uid);
   }
 }

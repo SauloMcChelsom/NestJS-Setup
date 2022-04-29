@@ -21,9 +21,6 @@ export class AuthModel {
         @InjectRepository(RefreshTokenEntity) 
         private readonly refreshTokenEntityRepository: Repository<RefreshTokenEntity>,
 
-        @InjectRepository(UserEntity) 
-        private readonly userRepository: Repository<UserEntity>,
-
         @InjectRepository(UserMachinePropertyEntity) 
         private readonly userMachinePropertyEntity: Repository<UserMachinePropertyEntity>,
 
@@ -37,6 +34,10 @@ export class AuthModel {
     public async decodeJWT(token: string){
         return await this.jwtService.decode(token)
     }
+    
+    public async compare(textoLegivel: string, hash: string){
+        return await compare(textoLegivel, hash)
+    }
 
     public async hashPassword(password: string) {
         return await hash(password, 12)
@@ -44,33 +45,10 @@ export class AuthModel {
 
     public async hashUiid():Promise<string>{
         return await hash(new Date().toString(), 12)
-    }
+    } 
 
-    public async create(user:User){
-        return await this.userRepository.save(user).catch((err) => {
-            throw new HttpException({
-              code : 'QUERY_FAILED',
-              message : `${err.detail || err.hint || err.routine}`,
-            }, HttpStatus.BAD_REQUEST)
-        })
-    }
-
-    public async findOneUserByEmail(email:string){
-        return await <User>this.userRepository.findOne({where: { email: email}}).catch((err) => {
-            throw new HttpException({
-              code : 'QUERY_FAILED',
-              message : err,
-            }, HttpStatus.BAD_REQUEST)
-        })
-    }
-
-    public async findOneUserById(user_id:number){
-        return await this.userRepository.findOne({where: { id: user_id}}).catch((err) => {
-            throw new HttpException({
-              code : 'QUERY_FAILED',
-              message : `${err.detail || err.hint || err.routine}`,
-            }, HttpStatus.BAD_REQUEST)
-        })
+    public async comparePasswords(newPassword: string, passwortHash: string): Promise<any>{
+        return await compare(newPassword, passwortHash)
     }
 
     public async findOneRefreshTokenByUserId(user_id:number){
@@ -130,46 +108,8 @@ export class AuthModel {
         })
     }
 
-    public setDataTime():number{
+    private setDataTime():number{
         return new Date().setMonth(new Date().getMonth() + 1)
-    }
-
-    public async validateEmailPasswordUser(email: string, user_password: string): Promise<User> {
-        let user: User = await this.findOneUserByEmail(email)
-       
-        if(!user) {
-            throw new HttpException({
-                code : 'not_found',
-                message : 'User not found'
-            }, HttpStatus.BAD_REQUEST)
-        }
-
-        let match: boolean = await this.comparePasswords(user_password, user.password)       
-       
-        if(match == false) {
-            throw new HttpException({
-                code : 'different_password',
-                message : 'Different password'
-            }, HttpStatus.BAD_REQUEST)
-        }
-
-        const {password, ...result} = user
-        return result
-    }
-
-    public async validateEmailForCreateNewAccount(email: string) {
-        let user: User = await this.findOneUserByEmail(email)
-            
-        if(user) {
-            throw new HttpException({
-                code : 'user_already_exists',
-                message : 'User already exists'
-            }, HttpStatus.BAD_REQUEST)
-        }
-    }
-
-    public async comparePasswords(newPassword: string, passwortHash: string): Promise<any>{
-        return await compare(newPassword, passwortHash)
     }
 
     public async updateRefreshToken(user_id): Promise<any> {
@@ -243,26 +183,6 @@ export class AuthModel {
                 code : 'token expires',
                 message : ''
             }, HttpStatus.FORBIDDEN)
-        }
-    }
-
-    public async getUser(user_id): Promise<User>{
-        try {
-
-            let user: User = await this.findOneUserById(user_id)
-
-            if(!user){
-                throw new HttpException({
-                    code : 'not found',
-                    message : 'user not found'
-                }, HttpStatus.BAD_REQUEST)
-            }
-
-            const {password, ...result} = user
-            return result
-
-        } catch (e: any) {
-            throw new HttpException(e.response, e.status)
         }
     }
 

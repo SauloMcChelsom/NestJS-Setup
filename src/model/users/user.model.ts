@@ -26,6 +26,109 @@ export class UserModel {
     return await compare(textoLegivel, hash)
   }
 
+  public async comparePasswords(newPassword: string, passwortHash: string): Promise<any>{
+    return await compare(newPassword, passwortHash)
+  }
+
+  public async create(user:User){
+    return await this.repository.save(user).catch((err) => {
+        throw new HttpException({
+          code : 'QUERY_FAILED',
+          message : `${err.detail || err.hint || err.routine}`,
+        }, HttpStatus.BAD_REQUEST)
+    })
+  }
+
+  public async findOneUserByEmail(email:string){
+    return await <User>this.repository.findOne({where: { email: email}}).catch((err) => {
+        throw new HttpException({
+          code : 'QUERY_FAILED',
+          message : err,
+        }, HttpStatus.BAD_REQUEST)
+    })
+  }
+
+  public async validateEmailPasswordUser(email: string, user_password: string): Promise<User> {
+    let user: User = await this.findOneUserByEmail(email)
+   
+    if(!user) {
+        throw new HttpException({
+            code : 'not_found',
+            message : 'User not found'
+        }, HttpStatus.BAD_REQUEST)
+    }
+
+    let match: boolean = await this.comparePasswords(user_password, user.password)       
+   
+    if(match == false) {
+        throw new HttpException({
+            code : 'different_password',
+            message : 'Different password'
+        }, HttpStatus.BAD_REQUEST)
+    }
+
+    const {password, ...result} = user
+    return result
+  }
+
+  public async findOneUserByUserId(user_id:number){
+    return await this.repository.findOne({where: { uid: user_id}}).catch((err) => {
+        throw new HttpException({
+          code : 'QUERY_FAILED',
+          message : `${err.detail || err.hint || err.routine}`,
+        }, HttpStatus.BAD_REQUEST)
+    })
+  }
+
+  public async findOneUserById(id:number){
+    let user:User =  await this.repository.findOne({where: { id: id}}).catch((err) => {
+        throw new HttpException({
+          code : 'QUERY_FAILED',
+          message : `${err.detail || err.hint || err.routine}`,
+        }, HttpStatus.BAD_REQUEST)
+    })
+
+    if(!user) {
+        throw new HttpException({
+            code : 'not_found',
+            message : 'User not found'
+        }, HttpStatus.BAD_REQUEST)
+    }
+
+    return user
+  }
+
+  public async validateEmailForCreateNewAccount(email: string) {
+    let user: User = await this.findOneUserByEmail(email)
+        
+    if(user) {
+        throw new HttpException({
+            code : 'user_already_exists',
+            message : 'User already exists'
+        }, HttpStatus.BAD_REQUEST)
+    }
+  }
+
+  public async getUserById(id): Promise<User>{
+    try {
+
+        let user: User = await this.findOneUserById(id)
+
+        if(!user){
+            throw new HttpException({
+                code : 'not found',
+                message : 'user not found'
+            }, HttpStatus.BAD_REQUEST)
+        }
+
+        const {password, ...result} = user
+        return result
+
+    } catch (e: any) {
+        throw new HttpException(e.response, e.status)
+    }
+  }
+
   public async emailAlreadyExist(email: string) {
     try {
       const res = await this.repository.findOne({ where: { email: email } });
@@ -48,24 +151,6 @@ export class UserModel {
     }
   }
 
-  public async providersIsValid(providers: string) {
-    try {
-      if (providers == 'google.com' || providers == 'email_password') {
-        return;
-      }
-      throw new HttpException(
-        [
-          code.PROVIDERS_USER_IS_INVALID,
-          message.PROVIDERS_USER_IS_INVALID,
-          'usuario autenticou com o google.com ou email/senha? example: google ou email_password',
-        ],
-        400,
-      );
-    } catch (e: any) {
-      throw new HttpException(e.response, e.status);
-    }
-  }
-
   public async getUserByUid(uid: string) {
     try {
       const res = await this.repository.findOne({ where: { uid: uid } });
@@ -77,24 +162,6 @@ export class UserModel {
       throw new HttpException(e.response, e.status);
     }
   }
-
-  public async findOneUserById(id:number){
-    let user:User =  await this.repository.findOne({where: { id: id}}).catch((err) => {
-        throw new HttpException({
-          code : 'QUERY_FAILED',
-          message : `${err.detail || err.hint || err.routine}`,
-        }, HttpStatus.BAD_REQUEST)
-    })
-
-    if(!user) {
-        throw new HttpException({
-            code : 'not_found',
-            message : 'User not found'
-        }, HttpStatus.BAD_REQUEST)
-    }
-
-    return user
-}
 
   public async getUserByEmail(email: string) {
     try {
@@ -123,18 +190,6 @@ export class UserModel {
   public async delete(id: number) {
     try {
       const res = await this.repository.delete(id);
-      if (res) {
-        return res;
-      }
-      throw new HttpException(code.NOT_FOUND, 404);
-    } catch (e: any) {
-      throw new HttpException(e.response, e.status);
-    }
-  }
-
-  public async create(page: any) {
-    try {
-      const res = await this.repository.save(page);
       if (res) {
         return res;
       }
