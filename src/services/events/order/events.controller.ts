@@ -4,9 +4,9 @@ import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { OrderEvent } from '@root/src/services/events/order/order.events';
 import { code } from '@root/src/shared/enum';
 import { UseInterceptors, UseFilters } from '@nestjs/common';
-import { HttpExceptions } from '@root/src/shared/http-status/http-exception';
+import { XHttpError } from '@root/src/shared/http-status/xhttp-error.exception';
+import { XHttpSuccess } from '@root/src/shared/http-status/xhttp-success.interceptor';
 import { OK } from '@root/src/shared/http-status/ok';
-import { HttpResponse } from '@root/src/shared/http-status/http-response';
 
 @Controller('services/event')
 @ApiTags('services/event')
@@ -15,8 +15,8 @@ export class EventsController {
 
   @Get('/public/create')
   @Version('1')
-  @UseFilters(HttpExceptions)
-  @UseInterceptors(HttpResponse)
+  @UseFilters(XHttpError)
+  @UseInterceptors(XHttpSuccess)
   @ApiOperation({ summary: 'Criar um pedido por evento' })
   public createEventOrder() {
     this.services.created({
@@ -34,8 +34,8 @@ export class EventsController {
 
   @Get('/public/update')
   @Version('1')
-  @UseFilters(HttpExceptions)
-  @UseInterceptors(HttpResponse)
+  @UseFilters(XHttpError)
+  @UseInterceptors(XHttpSuccess)
   @ApiOperation({ summary: 'Atualizar o status do pedido por evento' })
   public updateEventOrder() {
     this.services.update({
