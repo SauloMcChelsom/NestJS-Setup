@@ -27,7 +27,8 @@
       "@shared/*": ["src/shared/*"],
       "@entity/*": ["src/entity/*"],
       "@modules/*": ["src/modules/*"],
-      "@views/*": ["src/views/*"]
+      "@views/*": ["src/views/*"],
+      "@model/*": ["src/model/*"]
     }
   }
 }

@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { UserEntity } from '@entity/user.entity';
-import { AuthModule } from '../auth/auth.module'
+import { AuthorModule } from '../author/author.module'
 
 import { UsuariosController } from './user.controller';
 import { UserService } from './user.service';
@@ -20,7 +20,7 @@ import {
 @Module({
   imports: [
     TypeOrmModule.forFeature([UserEntity, UserRepository]),
-    AuthModule
+    AuthorModule
   ],
   controllers: [UsuariosController],
   providers: [

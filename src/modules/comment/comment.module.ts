@@ -5,7 +5,7 @@ import { IsValidTimestampModule } from '@root/src/shared/utility/is-valid-timest
 import { EmptyModule } from '@root/src/shared/utility/empty/empty.module';
 import { UserModule } from '@modules/user/user.module';
 //import { PublicationModule } from '@modules/publication/publication.module';
-import { AuthModule } from '@modules/auth/auth.module'
+import { AuthorModule } from '@modules/author/author.module'
 
 import { CommentEntity } from '@entity/comment.entity';
 import { CommentController } from './comment.controller';
@@ -21,7 +21,7 @@ import { CommentMapper } from './mapper/index.mapper';
     IsValidTimestampModule,
     EmptyModule,
     //PublicationModule,
-    AuthModule
+    AuthorModule
   ],
   controllers: [CommentController],
   providers: [
