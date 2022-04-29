@@ -10,27 +10,27 @@ import {
   Body,
   Put,
   Delete,
-} from '@nestjs/common';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
-import { UseGuards } from '@nestjs/common';
+} from '@nestjs/common'
+import { ApiOperation, ApiTags } from '@nestjs/swagger'
+import { UseGuards } from '@nestjs/common'
 
-import { JwtAuthGuard } from '@root/src/shared/guard/jwt-auth.guard';
-import { TOKEN } from '@root/src/shared/pipe/token.pipe';
-import { Header } from '@root/src/shared/decorator/header.decorator';
+import { JwtAuthGuard } from '@root/src/shared/guard/jwt-auth.guard'
+import { TOKEN } from '@root/src/shared/pipe/token.pipe'
+import { Header } from '@root/src/shared/decorator/header.decorator'
 
-import { UseInterceptors, UseFilters } from '@nestjs/common';
+import { UseInterceptors, UseFilters } from '@nestjs/common'
 
-import { XHttpError } from '@root/src/shared/http-status/xhttp-error.exception';
-import { XHttpSuccess } from '@root/src/shared/http-status/xhttp-success.interceptor';
-import { OK } from '@root/src/shared/http-status/ok';
-import { UserService } from '@modules/user/user.service';
-import { ClassificationInterface } from '@root/src/shared/interfaces';
-import { code } from '@root/src/shared/enum';
+import { Error } from '@root/src/shared/response/error.response'
+import { Success } from '@root/src/shared/response/success.response'
+import { OK } from '@root/src/shared/response/ok'
+import { UserService } from '@modules/user/user.service'
+import { ClassificationInterface } from '@root/src/shared/interfaces'
+import { code } from '@root/src/shared/enum'
 
-import { CommentService } from './comment.service';
-import { CreateDto, UpdateDto } from './dto/index.dto';
-import { CreateComment, UpdateComment } from '@shared/interfaces/comment.interface';
-import { CommentMapper } from './mapper/index.mapper';
+import { CommentService } from './comment.service'
+import { CreateDto, UpdateDto } from './dto/index.dto'
+import { CreateComment, UpdateComment } from '@shared/interfaces/comment.interface'
+import { CommentMapper } from './mapper/index.mapper'
 
 //---->
 import { hasRoles } from '@root/src/shared/decorator/roles.decorator'
@@ -53,8 +53,8 @@ export class CommentController {
   @Version('1/private')
   @CacheTTL(20)
   @UseGuards(JwtAuthGuard)
-  @UseFilters(XHttpError)
-  @UseInterceptors(XHttpSuccess)
+  @UseFilters(Error)
+  @UseInterceptors(Success)
   @UseInterceptors(CacheInterceptor)
   @ApiOperation({ summary: 'Listar comentarios pelo token do usuario' })
   public async authListByUserToken(
@@ -67,7 +67,7 @@ export class CommentController {
     @Query('start') start: string,
     @Query('end') end: string,
   ) {
-    const user = await this.user.getUserByUid(token);
+    const user = await this.user.getUserByUid(token)
     const cls: ClassificationInterface = {
       search: search,
       limit: parseInt(limit) ? parseInt(limit) : 5,
@@ -76,17 +76,17 @@ export class CommentController {
       column: column,
       start: start,
       end: end,
-    };
+    }
     const { res, count } = await this.service.authListByUserId(user.id, cls).then(res => this.toMapper.authList(res))
-    return new OK(res, code.SUCCESSFULLY_FOUND, null, count);
+    return new OK(res, code.SUCCESSFULLY_FOUND, null, count)
   }
 
   @Get('/user/:user_id')
   @Version('1/private')
   @CacheTTL(20)
   @UseGuards(JwtAuthGuard)
-  @UseFilters(XHttpError) 
-  @UseInterceptors(XHttpSuccess)
+  @UseFilters(Error) 
+  @UseInterceptors(Success)
   @UseInterceptors(CacheInterceptor)
   @ApiOperation({ summary: 'Listar comentarios por id do usuario' })
   public async authListByUserId(
@@ -107,16 +107,16 @@ export class CommentController {
       column: column,
       start: start,
       end: end,
-    };
+    }
     const { res, count } = await this.service.authListByUserId(user_id, cls).then(res => this.toMapper.authList(res))
-    return new OK(res, code.SUCCESSFULLY_FOUND, null, count);
+    return new OK(res, code.SUCCESSFULLY_FOUND, null, count)
   }
 
   @Get('/user/:user_id')
   @Version('1/public')
   @CacheTTL(20)
-  @UseFilters(XHttpError) 
-  @UseInterceptors(XHttpSuccess)
+  @UseFilters(Error) 
+  @UseInterceptors(Success)
   @UseInterceptors(CacheInterceptor)
   @ApiOperation({ summary: 'Listar comentarios por id do usuario' })
   public async publicListByUserId(
@@ -137,17 +137,17 @@ export class CommentController {
       column: column,
       start: start,
       end: end,
-    };
+    }
 
     const { res, count } = await this.service.publicListByUserId(user_id, cls).then(res => this.toMapper.authList(res))
-    return new OK(res, code.SUCCESSFULLY_FOUND, null, count);
+    return new OK(res, code.SUCCESSFULLY_FOUND, null, count)
   }
 
   @Get('/publication/:publication_id')
   @Version('1/public')
   @CacheTTL(20) 
-  @UseFilters(XHttpError) 
-  @UseInterceptors(XHttpSuccess)
+  @UseFilters(Error) 
+  @UseInterceptors(Success)
   @UseInterceptors(CacheInterceptor)
   @ApiOperation({ summary: 'Listar comentarios por id da publicacao' })
   public async publicListByPublicationId(
@@ -168,30 +168,30 @@ export class CommentController {
       column: column.toLowerCase(),
       start: start,
       end: end,
-    };
+    }
     const { res, count } = await this.service.publicListByPublicationId(
       publication_id,
       cls,
     ).then(res => this.toMapper.authList(res))
 
-    return new OK(res, code.SUCCESSFULLY_FOUND, null, count);
+    return new OK(res, code.SUCCESSFULLY_FOUND, null, count)
   }
 
   @Get(':comment_id')
   @Version('1/private')
   @CacheTTL(5)
   @UseGuards(JwtAuthGuard)
-  @UseFilters(XHttpError) 
-  @UseInterceptors(XHttpSuccess)
+  @UseFilters(Error) 
+  @UseInterceptors(Success)
   @UseInterceptors(CacheInterceptor)
   @ApiOperation({ summary: 'Buscar comentario por id' })
   public async authFindOneCommentById(
     @Param('comment_id') comment_id: number,
     @Header(new TOKEN()) token: string,
   ) {
-    const user = await this.user.getUserByUid(token);
+    const user = await this.user.getUserByUid(token)
     const res = await this.service.authFindOneById(comment_id, user.id).then(res => this.toMapper.authFindOne(res))
-    return new OK(res, code.SUCCESSFULLY_FOUND);
+    return new OK(res, code.SUCCESSFULLY_FOUND)
   }
 
   /**
@@ -204,34 +204,34 @@ export class CommentController {
   @CacheTTL(5)
   @hasRoles(Role.USER, Role.ADMIN)
   @UseGuards(JwtAuthGuard, UserMachinePropertyGuard, ValidateRefreshTokenGuard, RolesGuard)
-  @UseFilters(XHttpError)
-  @UseInterceptors(XHttpSuccess)
+  @UseFilters(Error)
+  @UseInterceptors(Success)
   @UseInterceptors(CacheInterceptor)
   @ApiOperation({ summary: 'Buscar comentario por id' })
   public async publicFindOneById(@Param('comment_id') comment_id: number) {
     const res = await this.service.publicFindOneById(comment_id).then(res => this.toMapper.publicFindOne(res))
-    return new OK(res, code.SUCCESSFULLY_FOUND);
+    return new OK(res, code.SUCCESSFULLY_FOUND)
   }
 
   @Post()
   @Version('1/private')
-  @UseFilters(XHttpError) 
-  @UseInterceptors(XHttpSuccess)
+  @UseFilters(Error) 
+  @UseInterceptors(Success)
   @ApiOperation({ summary: 'Criar um comentario' })
   public async create(@Body() body: CreateDto, @Header(new TOKEN()) token: string) {
-    const user = await this.user.getUserByUid(token);
+    const user = await this.user.getUserByUid(token)
     const commet: CreateComment = {
       ...body,
       user_id:user.id
     }
     const res = await this.service.create(commet).then(res => this.toMapper.create(res))
-    return new OK(res, code.SUCCESSFULLY_CREATED);
+    return new OK(res, code.SUCCESSFULLY_CREATED)
   }
  
   @Post('user/:user_id')
   @Version('1/public')
-  @UseFilters(XHttpError) 
-  @UseInterceptors(XHttpSuccess)
+  @UseFilters(Error) 
+  @UseInterceptors(Success)
   @ApiOperation({ summary: 'Criar um comentario' })
   public async createPublic(@Body() body: CreateDto, @Param('user_id') user_id: number) {
     const commet: CreateComment = {
@@ -239,34 +239,34 @@ export class CommentController {
       user_id:user_id
     }
     const res = await this.service.create(commet).then(res => this.toMapper.create(res))
-    return new OK(res, code.SUCCESSFULLY_CREATED);
+    return new OK(res, code.SUCCESSFULLY_CREATED)
   }
 
   @Put(':comment_id')
   @Version('1/private')
   @UseGuards(JwtAuthGuard)
-  @UseFilters(XHttpError) 
-  @UseInterceptors(XHttpSuccess)
+  @UseFilters(Error) 
+  @UseInterceptors(Success)
   @ApiOperation({ summary: 'Atualizar um comentario' })
   public async update(
     @Param('comment_id') comment_id: number,
     @Body() body: UpdateDto,
     @Header(new TOKEN()) token: string,
   ) {
-    const user = await this.user.getUserByUid(token);
+    const user = await this.user.getUserByUid(token)
     const commet: UpdateComment = { 
       ...body, 
       id: comment_id, 
       user_id: user.id 
-    };
+    }
     const res = await this.service.update(commet).then(res => this.toMapper.update(res))
-    return new OK(res, code.SUCCESSFULLY_UPDATED);
+    return new OK(res, code.SUCCESSFULLY_UPDATED)
   }
 
   @Put(':comment_id/user/:user_id/')
   @Version('1/public')
-  @UseFilters(XHttpError) 
-  @UseInterceptors(XHttpSuccess)
+  @UseFilters(Error) 
+  @UseInterceptors(Success)
   @ApiOperation({ summary: 'Atualizar um comentario' })
   public async updatePublic(
     @Param('user_id') user_id: number,
@@ -277,34 +277,34 @@ export class CommentController {
       ...body, 
       id: comment_id, 
       user_id: user_id 
-    };
+    }
     const res = await this.service.update(commet).then(res => this.toMapper.update(res))
-    return new OK(res, code.SUCCESSFULLY_UPDATED);
+    return new OK(res, code.SUCCESSFULLY_UPDATED)
   }
 
   @Delete(':comment_id')
   @Version('1/private')
   @UseGuards(JwtAuthGuard)
-  @UseFilters(XHttpError) 
-  @UseInterceptors(XHttpSuccess)
+  @UseFilters(Error) 
+  @UseInterceptors(Success)
   @ApiOperation({ summary: 'Deletar um comentario' })
   public async delete(@Param('comment_id') comment_id: number, @Header(new TOKEN()) token: string) {
-    const user = await this.user.getUserByUid(token);
-    await this.service.delete(comment_id, user.id);
-    return new OK([], code.DELETED_SUCCESSFULLY);
+    const user = await this.user.getUserByUid(token)
+    await this.service.delete(comment_id, user.id)
+    return new OK([], code.DELETED_SUCCESSFULLY)
   }
 
   @Delete(':comment_id/user/:user_id/')
   @Version('1/public')
-  @UseFilters(XHttpError) 
-  @UseInterceptors(XHttpSuccess)
+  @UseFilters(Error) 
+  @UseInterceptors(Success)
   @ApiOperation({ summary: 'Deletar um comentario' })
   public async deletePublic(
     @Param('user_id') user_id: number,
     @Param('comment_id') comment_id: number,
   ) {
-    await this.service.delete(comment_id, user_id);
-    return new OK([], code.DELETED_SUCCESSFULLY);
+    await this.service.delete(comment_id, user_id)
+    return new OK([], code.DELETED_SUCCESSFULLY)
   }
 
 }

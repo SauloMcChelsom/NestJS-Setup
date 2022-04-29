@@ -9,7 +9,7 @@ import {
   import { message as text, code as codes } from '@root/src/shared/enum';
   
   @Catch(HttpException)
-  export class XHttpError implements ExceptionFilter {
+  export class Error implements ExceptionFilter {
     catch(exception: HttpException, host: ArgumentsHost) {
       const ctx = host.switchToHttp();
       const response = ctx.getResponse<Response>();

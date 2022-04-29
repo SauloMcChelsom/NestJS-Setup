@@ -10,9 +10,9 @@ import { diskStorage } from 'multer';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 
 import { UseInterceptors, UseFilters } from '@nestjs/common';
-import { XHttpError } from '@root/src/shared/http-status/xhttp-error.exception';
-import { XHttpSuccess } from '@root/src/shared/http-status/xhttp-success.interceptor';
-import { OK } from '@root/src/shared/http-status/ok';
+import { Error } from '@root/src/shared/response/error.response';
+import { Success } from '@root/src/shared/response/success.response';
+import { OK } from '@root/src/shared/response/ok';
 import { code } from '@root/src/shared/enum';
 import {
   filterExtensionFiles,
@@ -33,8 +33,8 @@ export class UploadController {
       fileFilter: filterExtensionFiles,
     }),
   )
-  @UseFilters(XHttpError)
-  @UseInterceptors(XHttpSuccess)
+  @UseFilters(Error)
+  @UseInterceptors(Success)
   @ApiOperation({ summary: 'Upload de um arquivo' })
   public async oneFile(
     @UploadedFile() file: Express.Multer.File,
@@ -61,8 +61,8 @@ export class UploadController {
       fileFilter: filterExtensionFiles,
     }),
   )
-  @UseFilters(XHttpError)
-  @UseInterceptors(XHttpSuccess)
+  @UseFilters(Error)
+  @UseInterceptors(Success)
   @ApiOperation({ summary: 'Upload de até 20 arquivos' })
   async multipleFiles(
     @UploadedFiles() files,

@@ -1,13 +1,9 @@
 import { Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
-
-import { UserEntity } from '@entity/user.entity';
 import { AuthorModule } from '../author/author.module'
+import { UsersModule } from '@model/users/user.module';
 
 import { UsuariosController } from './user.controller';
 import { UserService } from './user.service';
-import { UserModel } from './user.model';
-import { UserRepository } from './user.repository';
 
 import {
   CreateMapper,
@@ -19,13 +15,12 @@ import {
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([UserEntity, UserRepository]),
-    AuthorModule
+    AuthorModule,
+    UsersModule
   ],
   controllers: [UsuariosController],
   providers: [
     UserService,
-    UserModel,
     AuthListMapper,
     PublicListMapper,
     AuthFindOneMapper,

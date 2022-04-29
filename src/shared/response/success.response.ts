@@ -9,7 +9,7 @@ import {
 import { Observable, map } from 'rxjs'
 
 @Injectable()
-export class XHttpSuccess implements NestInterceptor {
+export class Success implements NestInterceptor {
   public intercept(_context: ExecutionContext, next: CallHandler): Observable<any> {
     return next.handle().pipe(
       map((res_count) => {
