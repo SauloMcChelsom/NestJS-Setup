@@ -12,9 +12,9 @@ import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { UseGuards } from '@nestjs/common';
 
 import { UseInterceptors, UseFilters } from '@nestjs/common';
-import { HttpExceptions } from '@root/src/shared/http-status/http-exception';
+import { XHttpError } from '@root/src/shared/http-status/xhttp-error.exception';
 import { OK } from '@root/src/shared/http-status/ok';
-import { HttpResponse } from '@root/src/shared/http-status/http-response';
+import { XHttpSuccess } from '@root/src/shared/http-status/xhttp-success.interceptor';
 import { JwtAuthGuard } from '@root/src/shared/guard/jwt-auth.guard';
 import { UID } from '@root/src/shared/pipe/token.pipe';
 import { Header } from '@root/src/shared/decorator/header.decorator';
@@ -40,8 +40,8 @@ export class UsuariosController {
   @Get('/auth/uid/')
   @Version('1')
   @UseGuards(JwtAuthGuard)
-  @UseFilters(HttpExceptions)
-  @UseInterceptors(HttpResponse)
+  @UseFilters(XHttpError) 
+  @UseInterceptors(XHttpSuccess)
   @ApiOperation({ summary: 'Buscar informação do usuario por uid' })
   public async authFindOneByUid(@Header(new UID()) uid: string) {
     const res = await this.service.authFindOneByUid(uid);
@@ -61,8 +61,8 @@ export class UsuariosController {
   @Get('/auth/email/:email')
   @Version('1')
   @UseGuards(JwtAuthGuard)
-  @UseFilters(HttpExceptions)
-  @UseInterceptors(HttpResponse)
+  @UseFilters(XHttpError) 
+  @UseInterceptors(XHttpSuccess)
   @ApiOperation({ summary: 'Buscar informação do usuario por email' })
   public async authFindOneByEmail(@Param('email') email: string) {
     const res = await this.service.authFindOneByEmail(email);
@@ -82,8 +82,8 @@ export class UsuariosController {
   @Post('/public/')
   @Version('1')
   @UseGuards(JwtAuthGuard)
-  @UseFilters(HttpExceptions)
-  @UseInterceptors(HttpResponse)
+  @UseFilters(XHttpError) 
+  @UseInterceptors(XHttpSuccess)
   @ApiOperation({ summary: 'Criar um usuario' })
   public async create(@Body() create: CreateDto) {
     const res = await this.service.create(create);
@@ -94,8 +94,8 @@ export class UsuariosController {
   @Put('/auth/')
   @Version('1')
   @UseGuards(JwtAuthGuard)
-  @UseFilters(HttpExceptions)
-  @UseInterceptors(HttpResponse)
+  @UseFilters(XHttpError) 
+  @UseInterceptors(XHttpSuccess)
   @ApiOperation({ summary: 'Atualizar usuario por uid' })
   public async update(@Body() body: UpdateDto, @Header(new UID()) uid: string) {
     const res = await this.service.updateByUid(uid, body);
@@ -106,8 +106,8 @@ export class UsuariosController {
   @Put('/auth/uid')
   @Version('1')
   @UseGuards(JwtAuthGuard)
-  @UseFilters(HttpExceptions)
-  @UseInterceptors(HttpResponse)
+  @UseFilters(XHttpError) 
+  @UseInterceptors(XHttpSuccess)
   @ApiOperation({ summary: 'Atualizar uid usuario com  uid firebase' })
   public async updateUserUidWithFirebaseUid(@Body() body: UpdateUidDto) {
     const updateUid: UpdateUidInterface = {
@@ -124,8 +124,8 @@ export class UsuariosController {
   @Delete('/auth/')
   @Version('1')
   @UseGuards(JwtAuthGuard)
-  @UseFilters(HttpExceptions)
-  @UseInterceptors(HttpResponse)
+  @UseFilters(XHttpError) 
+  @UseInterceptors(XHttpSuccess)
   @ApiOperation({ summary: 'Excluir usuario' })
   public async deleteUserByUid(@Header(new UID()) uid: string) {
     await this.service.deleteByUid(uid);

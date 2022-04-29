@@ -5,6 +5,7 @@ import {
   CallHandler,
   ExecutionContext,
 } from '@nestjs/common'
+
 import { Observable, map } from 'rxjs'
 
 @Injectable()
@@ -26,23 +27,25 @@ export class XHttpSuccess implements NestInterceptor {
             '"}',
           )
         }
- 
+     
+        const {code, description, results, count, message, timestamp} = res_count
         const body = {
-          ...res_count,
+          results,
           statusCode: status,
-          limit: 3,
+          code,
+          message,
+          description, 
+          count,
+          limit: parameters.limit || 3,
           offset: parameters.offset || 0,
           order:  parameters.order ? parameters.order.toLowerCase() : 'asc',
           column:  parameters.column ? parameters.column.toLowerCase() : 'id',
           search: parameters.search || null,
           start:  parameters.start || null,
-          end:    parameters.end || null
+          end:    parameters.end || null,
+          timestamp
         }
-        
-        body.count = parseInt(body.count || 0)
-        body.limit = parseInt(body.limit || 0)
-        body.offset = parseInt(body.offset || 0)
-
+      
         return body
       }),
     )
