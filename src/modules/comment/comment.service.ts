@@ -3,7 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { ClassificationInterface } from '@root/src/shared/interfaces';
 //import { PublicationService } from '@modules/publication/publication.service';
 
-import { CommentModel } from './comment.model';
+import { CommentModel } from '@model/comment/comment.model';
 import { UpdateComment, CreateComment } from '@shared/interfaces/comment.interface';
 
 @Injectable()
