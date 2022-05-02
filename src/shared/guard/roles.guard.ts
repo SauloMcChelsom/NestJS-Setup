@@ -1,6 +1,6 @@
 import { Injectable, CanActivate, ExecutionContext, Inject, forwardRef } from "@nestjs/common"
 import { Reflector } from "@nestjs/core"
-import { UserService } from "@root/src/controller/user/user.service"
+import { UserModel } from "@model/users/user.model"
 import { Observable } from "rxjs"
 import { User } from "src/shared/interfaces/user.interface"
 
@@ -9,8 +9,8 @@ export class RolesGuard implements CanActivate {
     constructor(
         private reflector: Reflector,
 
-        @Inject(forwardRef(() => UserService))
-        private userService: UserService
+        @Inject(forwardRef(() => UserModel))
+        private userModel: UserModel
     ) { }
 
     canActivate(context: ExecutionContext): boolean | Promise<boolean> | Observable<boolean> {
@@ -23,7 +23,7 @@ export class RolesGuard implements CanActivate {
         const request = context.switchToHttp().getRequest()
         const user: User = request.user
 
-        return this.userService.findOneUserById(user.id).then(
+        return this.userModel.findOneUserById(user.id).then(
             ((user: User) => {
                 const hasRole = () => roles.indexOf(user.role) > -1
                 let hasPermission: boolean = false

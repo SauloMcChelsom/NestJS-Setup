@@ -1,9 +1,8 @@
 import { Module } from '@nestjs/common';
-import { UserModule } from '@root/src/controller/user/user.module';
 import { DownloadController } from './download.controller';
 
 @Module({
-  imports: [UserModule],
+  imports: [],
   controllers: [DownloadController],
   providers: [],
   exports: [],

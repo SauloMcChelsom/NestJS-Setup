@@ -2,9 +2,7 @@ import { Module, forwardRef } from '@nestjs/common'
 import { TypeOrmModule } from '@nestjs/typeorm'
 import { JwtModule} from '@nestjs/jwt'
 import { ConfigModule, ConfigService } from '@nestjs/config'
-
-import { UserModule } from '@root/src/controller/user/user.module'
-
+import { UsersModule } from '@model/users/user.module'
 import { RolesGuard } from '@shared/guard/roles.guard'
 import { JwtAuthGuard } from '@shared/guard/jwt-auth.guard'
 import { JwtStrategy } from '@root/src/model/jwt-local/jwt-strategy'
@@ -22,7 +20,7 @@ import { JwtLocalModel } from './jwt-local.model'
             RefreshTokenEntity,
             UserMachinePropertyEntity
         ]),
-        forwardRef(() => UserModule),
+        //forwardRef(() => UserModule),
         JwtModule.registerAsync({
             imports: [ConfigModule],
             inject: [ConfigService],
@@ -32,6 +30,7 @@ import { JwtLocalModel } from './jwt-local.model'
             })
         }),
         ConfigModule,
+        UsersModule
     ],
     controllers: [],
     providers: [

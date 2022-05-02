@@ -17,7 +17,7 @@ import { AxiosModule } from '@root/src/services/axios/axios.module';
 
 import { CommentModule } from '@root/src/controller/comment/comment.module';
 import { ViewsModule } from '@root/src/views/views.module';
-import { UserModule } from '@root/src/controller/user/user.module';
+//import { UserModule } from '@root/src/controller/user/user.module';
 /*import { PageModule } from '@modules/page/page.module';
 import { FollowModule } from '@root/src/modules/follow/follow.module';
 import { PublicationModule } from '@modules/publication/publication.module';
@@ -99,7 +99,7 @@ import { RoleModule } from '@root/src/controller/role/role.module'
     AxiosModule,
     ServicesModule,
     ViewsModule,
-    UserModule,
+    //UserModule,
     /*PageModule,
     FollowModule,
     PublicationModule,
