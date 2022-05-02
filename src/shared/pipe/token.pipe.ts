@@ -6,11 +6,11 @@ export class TOKEN implements PipeTransform {
   transform(token: any) {
     const jwt = token.replace('Bearer ', '');
 
-    const { user_id } = new JwtService(null).decode(jwt, { json: true }) as {
-      user_id: string;
+    const { user } = new JwtService(null).decode(jwt, { json: true }) as {
+      user
     };
 
-    return user_id;
+    return user.id;
   }
 }
 
@@ -19,10 +19,10 @@ export class UID implements PipeTransform {
   transform(token: any) {
     const jwt = token.replace('Bearer ', '');
 
-    const { user_id } = new JwtService(null).decode(jwt, { json: true }) as {
-      user_id: string;
+    const { user } = new JwtService(null).decode(jwt, { json: true }) as {
+      user
     };
 
-    return user_id;
+    return user.uid;
   }
 }

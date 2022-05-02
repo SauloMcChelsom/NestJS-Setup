@@ -19,4 +19,9 @@ export class UserService {
   public async findOneUserById(id: number) {
     return await this.userModel.findOneUserById(id)
   }
+
+  public async findAll() {
+    return await this.userModel.findAll()
+  }
+
 }

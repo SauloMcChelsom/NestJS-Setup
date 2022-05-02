@@ -36,10 +36,9 @@ import { UserService } from './user.service'
 import { IsEmailDTO, IsUIDDTO } from './dto/index'
 import { UserMapper } from './mapper/index'
 
-
-
 @Controller('user')
 export class UsuariosController {
+  
   constructor(
     private readonly service: UserService,
     private toMapper:UserMapper
@@ -47,62 +46,68 @@ export class UsuariosController {
 
   @Get('/find-by-acess-token')
   @Version('1/private')
-  @CacheTTL(20)
   @hasRoles(Role.USER, Role.ADMIN)
   @UseGuards(JwtAuthAccessTokenGuard, JwtAuthRefreshTokenGuard, UserMachinePropertyGuard, RolesGuard)
   @UseFilters(Error)
   @UseInterceptors(Success)
-  @UseInterceptors(CacheInterceptor)
-  public async privadoFindOneByAcessToken(@Header(new UID()) param: IsUIDDTO) {
-    const res = await this.service.findOneUsertByUid(param.uid).then(res => this.toMapper.privateFindOne(res))
+  public async privateFindOneByAcessToken(@Header(new UID()) uid: string) {
+    const res = await this.service.findOneUsertByUid(uid).then(res => this.toMapper.privateFindOne(res))
     return new OK(res, code.SUCCESSFULLY_FOUND)
   }
 
   @Get('/uid/:uid')
   @Version('1/public')
-  @CacheTTL(20)
-  @hasRoles(Role.USER, Role.ADMIN)
-  @UseGuards(JwtAuthAccessTokenGuard, JwtAuthRefreshTokenGuard, UserMachinePropertyGuard, RolesGuard)
   @UseFilters(Error)
   @UseInterceptors(Success)
-  @UseInterceptors(CacheInterceptor)
-  public async publicFindOneByUid(@Param('uid') param: IsUIDDTO) {
-    const res = await this.service.findOneUsertByUid(param.uid).then(res => this.toMapper.publicFindOne(res))
+  public async publicFindOneByUid(@Param('uid') uid: string) {
+    const res = await this.service.findOneUsertByUid(uid).then(res => this.toMapper.publicFindOne(res))
     return new OK(res, code.SUCCESSFULLY_FOUND)
   }
 
   @Get('/uid/:uid')
-  @Version('1/privado')
-  @CacheTTL(20)
+  @Version('1/private')
+  @hasRoles(Role.USER, Role.ADMIN)
+  @UseGuards(JwtAuthAccessTokenGuard, JwtAuthRefreshTokenGuard, UserMachinePropertyGuard, RolesGuard)
   @UseFilters(Error)
   @UseInterceptors(Success)
-  @UseInterceptors(CacheInterceptor)
-  public async privadoFindOneByUid(@Param('uid') param: IsUIDDTO) {
-    const res = await this.service.findOneUsertByUid(param.uid).then(res => this.toMapper.publicFindOne(res))
+  public async privateFindOneByUid(@Param('uid') uid: string) {
+    const res = await this.service.findOneUsertByUid(uid).then(res => this.toMapper.publicFindOne(res))
     return new OK(res, code.SUCCESSFULLY_FOUND)
   }
 
   @Get('/email/:email')
   @Version('1/private')
-  @CacheTTL(20)
   @hasRoles(Role.USER, Role.ADMIN)
   @UseGuards(JwtAuthAccessTokenGuard, JwtAuthRefreshTokenGuard, UserMachinePropertyGuard, RolesGuard)
   @UseFilters(Error)
   @UseInterceptors(Success)
-  @UseInterceptors(CacheInterceptor)
-  public async authFindOneUserByEmail(@Param('email') param: IsEmailDTO) {
-    const res = await this.service.findOneUserByEmail(param.email).then(res => this.toMapper.privateFindOne(res))
+  public async privateFindOneUserByEmail(@Param('email') email: string) {
+    const res = await this.service.findOneUserByEmail(email).then(res => this.toMapper.privateFindOne(res))
     return new OK(res, code.SUCCESSFULLY_FOUND)
   }
 
+  /**
+   * 
+   * @CacheTTL(20)
+   * @UseInterceptors(CacheInterceptor) 
+   */
   @Get('/email/:email')
   @Version('1/public')
   @CacheTTL(20)
   @UseFilters(Error)
   @UseInterceptors(Success)
-  @UseInterceptors(CacheInterceptor)
-  public async publicFindOneUserByEmail(@Param('email') param: IsEmailDTO) {
-    const res = await this.service.findOneUserByEmail(param.email).then(res => this.toMapper.publicFindOne(res))
+  @UseInterceptors(CacheInterceptor) 
+  public async publicFindOneUserByEmail(@Param('email') email: string) {
+    const res = await this.service.findOneUserByEmail(email).then(res => this.toMapper.publicFindOne(res))
+    return new OK(res, code.SUCCESSFULLY_FOUND)
+  }
+
+  @Get('all')
+  @Version('1/public')
+  @UseFilters(Error)
+  @UseInterceptors(Success)
+  public async publicFindAllUser() {
+    const res = await this.service.findAll().then(res => this.toMapper.publicList(res))
     return new OK(res, code.SUCCESSFULLY_FOUND)
   }
 

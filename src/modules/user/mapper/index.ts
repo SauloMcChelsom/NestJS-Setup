@@ -24,6 +24,10 @@ export class UserMapper {
         }]
     }
 
+    public publicList(user: User[]) {
+        return <User[]>user.filter(user=> delete user.password)
+    }
+
     public update(field: User) {
         return [{
             id: field.id,

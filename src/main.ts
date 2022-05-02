@@ -90,7 +90,7 @@ async function bootstrap() {
     }),
   );
 
-    //captura erros não tratado
+  //captura erros não tratado
   //se não tive, o sistema quebra
   process.on('uncaughtException', (err, origin)=>{
     console.log(`\n ${origin} signal received. \n${err}`)

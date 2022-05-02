@@ -194,4 +194,22 @@ export class UserModel {
       throw new HttpException(e.response, e.status);
     }
   }
+
+  public async findAll(){
+    let user:User[] =  await this.repository.find().catch((err) => {
+        throw new HttpException({
+          code : 'QUERY_FAILED',
+          message : `${err.detail || err.hint || err.routine}`,
+        }, HttpStatus.BAD_REQUEST)
+    })
+
+    if(!user) {
+        throw new HttpException({
+            code : 'not_found',
+            message : 'User not found'
+        }, HttpStatus.BAD_REQUEST)
+    }
+
+    return user
+  }
 }
