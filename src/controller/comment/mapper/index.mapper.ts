@@ -25,8 +25,9 @@ export class CommentMapper {
     public privateList(field: ListComment) {
         return <ListComment>{
             res:field.res.filter((f)=> {
-                delete f.user_id,
+                //delete f.user_id,
                 f.timestamp.toString()
+                return f
             }),
             count:field.count
         }
@@ -35,8 +36,9 @@ export class CommentMapper {
     public publicList(field: ListComment) {
         return <ListComment>{
             res:field.res.filter((f)=> {
-                delete f.user_id,
+                //delete f.user_id,
                 f.timestamp.toString()
+                return f
             }),
             count:field.count
         }

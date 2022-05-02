@@ -20,7 +20,7 @@ import { JwtAuthRefreshTokenGuard } from '@shared/guard/refresh-token.guard'
 import { RolesGuard } from '@shared/guard/roles.guard'
 import { UserMachinePropertyGuard } from '@shared/guard/user-machine-property.guard'
 
-import { TOKEN, UID } from '@shared/pipe/token.pipe'
+import { UID } from '@shared/pipe/token.pipe'
 
 import { Header } from '@shared/decorator/header.decorator'
 import { hasRoles } from '@shared/decorator/roles.decorator'

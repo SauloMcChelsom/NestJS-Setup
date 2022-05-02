@@ -20,7 +20,7 @@ import { JwtAuthRefreshTokenGuard } from '@shared/guard/refresh-token.guard'
 import { RolesGuard } from '@shared/guard/roles.guard'
 import { UserMachinePropertyGuard } from '@shared/guard/user-machine-property.guard'
 
-import { TOKEN } from '@shared/pipe/token.pipe'
+import { UID } from '@shared/pipe/token.pipe'
 
 import { Header } from '@shared/decorator/header.decorator'
 import { hasRoles } from '@shared/decorator/roles.decorator'
@@ -49,14 +49,12 @@ export class CommentController {
 
   @Get('/list-by-acess-token')
   @Version('1/private')
-  @CacheTTL(20)
   @hasRoles(Role.USER, Role.ADMIN)
   @UseGuards(JwtAuthAccessTokenGuard, JwtAuthRefreshTokenGuard, UserMachinePropertyGuard, RolesGuard)
   @UseFilters(Error)
   @UseInterceptors(Success)
-  @UseInterceptors(CacheInterceptor)
   public async privateListCommentByAcessToken(
-    @Header(new TOKEN()) token: string,
+    @Header(new UID()) uid: string,
     @Query('search') search: string,
     @Query('limit') limit = '3',
     @Query('offset') offset = '0',
@@ -65,7 +63,7 @@ export class CommentController {
     @Query('start') start: string,
     @Query('end') end: string,
   ) {
-    const user = await this.userModel.getUserByUid(token)
+    const user = await this.userModel.getUserByUid(uid)
     const filter: ListFilter = {
       search: search,
       limit: parseInt(limit) ? parseInt(limit) : 5,
@@ -81,12 +79,10 @@ export class CommentController {
 
   @Get('/list-by-user-id/:user_id')
   @Version('1/private')
-  @CacheTTL(20)
   @hasRoles(Role.USER, Role.ADMIN)
   @UseGuards(JwtAuthAccessTokenGuard, JwtAuthRefreshTokenGuard, UserMachinePropertyGuard, RolesGuard)
   @UseFilters(Error)
   @UseInterceptors(Success)
-  @UseInterceptors(CacheInterceptor)
   public async privateListCommentByUserId(
     @Param('user_id') user_id: number,
     @Query('search') search: string,
@@ -112,10 +108,8 @@ export class CommentController {
 
   @Get('/list-by-user-id/:user_id')
   @Version('1/public')
-  @CacheTTL(20)
   @UseFilters(Error)
   @UseInterceptors(Success)
-  @UseInterceptors(CacheInterceptor)
   public async publicListCommentByUserId(
     @Param('user_id') user_id: number,
     @Query('search') search: string,
@@ -142,10 +136,8 @@ export class CommentController {
 
   @Get('/list-by-publication-id/:publication_id')
   @Version('1/public')
-  @CacheTTL(20) 
   @UseFilters(Error) 
   @UseInterceptors(Success)
-  @UseInterceptors(CacheInterceptor)
   public async publicListCommentByPublicationId(
     @Param('publication_id') publication_id: number,
     @Query('search') search: string,
@@ -171,15 +163,13 @@ export class CommentController {
 
   @Get(':id')
   @Version('1/private')
-  @CacheTTL(20)
   @hasRoles(Role.USER, Role.ADMIN)
   @UseGuards(JwtAuthAccessTokenGuard, JwtAuthRefreshTokenGuard, UserMachinePropertyGuard, RolesGuard)
   @UseFilters(Error)
   @UseInterceptors(Success)
-  @UseInterceptors(CacheInterceptor)
   public async privateFindOneCommentById(
     @Param('id') id: number,
-    @Header(new TOKEN()) token: string,
+    @Header(new UID()) token: string,
   ) {
     const user = await this.userModel.getUserByUid(token)
     const res = await this.service.findOneCommentByIdEndUserId(id, user.id).then(res => this.toMapper.privateFindOne(res))
@@ -188,10 +178,8 @@ export class CommentController {
 
   @Get(':id')
   @Version('1/public')
-  @CacheTTL(5)
   @UseFilters(Error)
   @UseInterceptors(Success)
-  @UseInterceptors(CacheInterceptor)
   public async publicindOneCommentById(@Param('id') id: number) {
     const res = await this.service.findOneCommentById(id).then(res => this.toMapper.publicFindOne(res))
     return new OK(res, code.SUCCESSFULLY_FOUND)
@@ -203,7 +191,7 @@ export class CommentController {
   @UseGuards(JwtAuthAccessTokenGuard, JwtAuthRefreshTokenGuard, UserMachinePropertyGuard, RolesGuard)
   @UseFilters(Error)
   @UseInterceptors(Success)
-  public async create(@Body() body: CreateDto, @Header(new TOKEN()) token: string) {
+  public async createNewCommentByAcessToken(@Body() body: CreateDto, @Header(new UID()) token: string) {
     const user = await this.userModel.getUserByUid(token)
     const commet: CreateComment = {
       ...body,
@@ -213,11 +201,11 @@ export class CommentController {
     return new OK(res, code.SUCCESSFULLY_CREATED)
   }
  
-  @Post('create-by-user-id/:user_id')
+  @Post('/create-new-comment-by-user-id/:user_id')
   @Version('1/public')
   @UseFilters(Error) 
   @UseInterceptors(Success)
-  public async createByUserId(@Body() body: CreateDto, @Param('user_id') user_id: number) {
+  public async createNewCommentByUserId(@Body() body: CreateDto, @Param('user_id') user_id: number) {
     const commet: CreateComment = {
       ...body,
       user_id:user_id
@@ -235,7 +223,7 @@ export class CommentController {
   public async update(
     @Param('id') id: number,
     @Body() body: UpdateDto,
-    @Header(new TOKEN()) token: string,
+    @Header(new UID()) token: string,
   ) {
     const user = await this.userModel.getUserByUid(token)
     const commet: UpdateComment = { 
@@ -271,7 +259,7 @@ export class CommentController {
   @UseGuards(JwtAuthAccessTokenGuard, JwtAuthRefreshTokenGuard, UserMachinePropertyGuard, RolesGuard)
   @UseFilters(Error)
   @UseInterceptors(Success)
-  public async delete(@Param('comment_id') comment_id: number, @Header(new TOKEN()) token: string) {
+  public async delete(@Param('comment_id') comment_id: number, @Header(new UID()) token: string) {
     const user = await this.userModel.getUserByUid(token)
     await this.service.delete(comment_id, user.id)
     return new OK([], code.DELETED_SUCCESSFULLY)

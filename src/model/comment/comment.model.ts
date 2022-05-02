@@ -202,7 +202,7 @@ export class CommentModel {
 
       throw new HttpException({
         code : code.NOT_FOUND,
-        message : 'not found list by user id',
+        message : 'not found list',
         description : ''
       }, HttpStatus.NOT_FOUND);
       
