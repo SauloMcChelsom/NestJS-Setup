@@ -7,7 +7,7 @@ import { IsValidTimestampService } from '@root/src/shared/utility/is-valid-times
 import { EmptyService } from '@root/src/shared/utility/empty/empty.service';
 import { code } from '@root/src/shared/enum';
 
-import { CommentRepository } from './comment.repository';
+import { CommentRepository } from './comment-common.repository';
 import { UpdateComment, CreateComment, ListComment } from '@shared/interfaces/comment.interface';
 
 export class CommentModel {

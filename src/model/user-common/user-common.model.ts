@@ -4,7 +4,7 @@ import { hash, compare  } from 'bcryptjs';
 
 import { code, message } from '@root/src/shared/enum';
 
-import { UserRepository } from './user.repository';
+import { UserRepository } from './user-common.repository';
 
 import { User } from '@root/src/shared/interfaces/user.interface';
 

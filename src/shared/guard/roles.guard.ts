@@ -1,6 +1,6 @@
 import { Injectable, CanActivate, ExecutionContext, Inject, forwardRef } from "@nestjs/common"
 import { Reflector } from "@nestjs/core"
-import { UserModel } from "@model/users/user.model"
+import { UserModel } from "@root/src/model/user-common/user-common.model"
 import { Observable } from "rxjs"
 import { User } from "src/shared/interfaces/user.interface"
 

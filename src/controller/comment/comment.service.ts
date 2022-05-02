@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 
 //import { PublicationService } from '@modules/publication/publication.service'
 import { ListFilter, UpdateComment, CreateComment } from '@shared/interfaces'
-import { CommentModel } from '@model/comment/comment.model'
+import { CommentModel } from '@root/src/model/comment-common/comment-common.model'
 
 @Injectable()
 export class CommentService {

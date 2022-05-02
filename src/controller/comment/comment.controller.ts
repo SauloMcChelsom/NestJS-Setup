@@ -32,7 +32,7 @@ import { OK } from '@shared/response/ok'
 import { Role, code } from '@shared/enum'
 import { ListFilter, CreateComment, UpdateComment } from '@shared/interfaces'
 
-import { UserModel } from '@model/users/user.model'
+import { UserModel } from '@root/src/model/user-common/user-common.model'
 
 import { CommentService } from './comment.service'
 import { CreateDto, UpdateDto } from './dto/index.dto'

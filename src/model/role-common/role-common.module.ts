@@ -1,12 +1,12 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
-import { UsersModule } from '@model/users/user.module'
+import { UsersModule } from '@root/src/model/user-common/user-common.module'
 
 import { UserEntity } from '@entity/user.entity';
 import { RefreshTokenEntity } from '@entity/refresh-token.entity';
 
-import { RoleModel } from './role.model'
+import { RoleModel } from './role-common.model'
 
 @Module({
   imports: [

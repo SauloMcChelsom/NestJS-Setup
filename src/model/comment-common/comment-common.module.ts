@@ -6,8 +6,8 @@ import { EmptyModule } from '@root/src/shared/utility/empty/empty.module';
 //import { PublicationModule } from '@modules/publication/publication.module';
 
 import { CommentEntity } from '@entity/comment.entity';
-import { CommentModel } from './comment.model';
-import { CommentRepository } from './comment.repository';
+import { CommentModel } from './comment-common.model';
+import { CommentRepository } from './comment-common.repository';
 
 
 @Module({

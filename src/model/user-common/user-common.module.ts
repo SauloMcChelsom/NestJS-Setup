@@ -3,8 +3,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { UserEntity } from '@entity/user.entity';
 
-import { UserModel } from './user.model';
-import { UserRepository } from './user.repository';
+import { UserModel } from './user-common.model';
+import { UserRepository } from './user-common.repository';
 
 @Module({
   imports: [

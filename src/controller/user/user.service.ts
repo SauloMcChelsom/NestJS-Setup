@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 
-import { UserModel } from '@model/users/user.model';
+import { UserModel } from '@root/src/model/user-common/user-common.model';
 
 
 @Injectable()

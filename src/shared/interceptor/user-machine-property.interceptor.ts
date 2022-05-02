@@ -2,7 +2,7 @@ import { Injectable, NestInterceptor, CallHandler, ExecutionContext, Inject, for
 import { Observable, map } from 'rxjs';
 
 import { JwtLocalModel } from "@model/jwt-local/jwt-local.model"
-import { UserModel } from "@model/users/user.model"
+import { UserModel } from "@root/src/model/user-common/user-common.model"
 import { UserMachineProperty } from 'src/shared/interfaces/auth.interface';
 import { User } from 'src/shared/interfaces/user.interface';
 
