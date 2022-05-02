@@ -16,16 +16,16 @@ import { ServicesModule } from '@root/src/services/services.module';
 import { AxiosModule } from '@root/src/services/axios/axios.module';
 //import { JwtDecodeModule } from '@shared/utility/jwt-decode/jwt-decode.modele'
 
-import { CommentModule } from '@modules/comment/comment.module';
+import { CommentModule } from '@root/src/controller/comment/comment.module';
 import { ViewsModule } from '@root/src/views/views.module';
-import { UserModule } from '@modules/user/user.module';
+import { UserModule } from '@root/src/controller/user/user.module';
 /*import { PageModule } from '@modules/page/page.module';
 import { FollowModule } from '@root/src/modules/follow/follow.module';
 import { PublicationModule } from '@modules/publication/publication.module';
 import { LikeModule } from '@modules/like/like.module';
 import { SeniorModule } from '@modules/senior/senior.module';*/
-import { AuthorModule } from '@modules/author/author.module'
-import { RoleModule } from '@modules/role/role.module'
+import { AuthorModule } from '@root/src/controller/author/author.module'
+import { RoleModule } from '@root/src/controller/role/role.module'
 
 
 @Module({

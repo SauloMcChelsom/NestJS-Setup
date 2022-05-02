@@ -9,7 +9,7 @@ import { IsValidTimestampService } from '@root/src/shared/utility/is-valid-times
 import { EmptyService } from '@root/src/shared/utility/empty/empty.service';
 import { code } from '@root/src/shared/enum';
 
-import { CommentService } from '@root/src/modules/comment/comment.service';
+import { CommentService } from '@root/src/controller/comment/comment.service';
 import { PublicationService } from '@root/src/modules/publication/publication.service';
 import { PublicationModel } from '@root/src/modules/publication/publication.model';
 import { PublicationRepository } from '@root/src/modules/publication/publication.repository';

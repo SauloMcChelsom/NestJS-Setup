@@ -1,7 +1,7 @@
 import { Injectable, NestInterceptor, CallHandler, ExecutionContext, Inject, forwardRef } from '@nestjs/common';
 import { Observable, map } from 'rxjs';
 
-import { AuthorService } from "src/modules/author/author.service";
+import { AuthorService } from "@root/src/controller/author/author.service";
 import { UserMachineProperty } from 'src/shared/interfaces/auth.interface';
 import { User } from 'src/shared/interfaces/user.interface';
 

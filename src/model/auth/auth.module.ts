@@ -3,7 +3,7 @@ import { TypeOrmModule } from '@nestjs/typeorm'
 import { JwtModule} from '@nestjs/jwt'
 import { ConfigModule, ConfigService } from '@nestjs/config'
 
-import { UserModule } from 'src/modules/user/user.module'
+import { UserModule } from '@root/src/controller/user/user.module'
 
 import { RolesGuard } from '@shared/guard/roles.guard'
 import { JwtAuthGuard } from '@shared/guard/jwt-auth.guard'

@@ -26,7 +26,7 @@
       "@conf/*": ["src/conf/*"],
       "@shared/*": ["src/shared/*"],
       "@entity/*": ["src/entity/*"],
-      "@modules/*": ["src/modules/*"],
+      "@controller/*": ["src/controller/*"],
       "@views/*": ["src/views/*"],
       "@model/*": ["src/model/*"]
     }

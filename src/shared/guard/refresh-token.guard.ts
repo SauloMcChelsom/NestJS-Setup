@@ -1,5 +1,5 @@
 import { Injectable, CanActivate, ExecutionContext, Inject, forwardRef } from "@nestjs/common";
-import { AuthorService } from "src/modules/author/author.service";
+import { AuthorService } from "@root/src/controller/author/author.service";
 import { User } from "src/shared/interfaces/user.interface";
 
 @Injectable()

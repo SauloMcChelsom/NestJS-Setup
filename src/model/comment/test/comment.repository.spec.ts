@@ -4,7 +4,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { getConnectionManager } from 'typeorm';
 import { connectionDataBaseForTest } from '@root/connection-database-for-test-unit';
 
-import { CommentService } from '@root/src/modules/comment/comment.service';
+import { CommentService } from '@root/src/controller/comment/comment.service';
 import { CommentEntity } from '@root/src/entity/comment.entity';
 import { PublicationService } from '@root/src/modules/publication/publication.service';
 import { CommentModel } from '@root/src/modules/comment/comment.model';

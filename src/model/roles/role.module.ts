@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
-import { AuthorModule } from '@modules/author/author.module';
-import { UserModule } from '@modules/user/user.module'
+import { AuthorModule } from '@root/src/controller/author/author.module';
+import { UserModule } from '@root/src/controller/user/user.module'
 
 import { UserEntity } from '@entity/user.entity';
 import { RefreshTokenEntity } from '@entity/refresh-token.entity';
