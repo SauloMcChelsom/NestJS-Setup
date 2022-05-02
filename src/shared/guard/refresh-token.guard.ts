@@ -1,10 +1,10 @@
 import { Injectable, CanActivate, ExecutionContext, Inject, forwardRef } from "@nestjs/common";
-import { AuthorService } from "@root/src/controller/author/author.service";
+import { AuthService } from "@root/src/controller/auth/auth.service";
 import { User } from "src/shared/interfaces/user.interface";
 
 @Injectable()
 export class ValidateRefreshTokenGuard implements CanActivate {
-    constructor(@Inject(forwardRef(() => AuthorService)) private authService: AuthorService) {}
+    constructor(@Inject(forwardRef(() => AuthService)) private authService: AuthService) {}
 
     async canActivate(context: ExecutionContext) {
         const request = context.switchToHttp().getRequest();
@@ -17,7 +17,7 @@ export class ValidateRefreshTokenGuard implements CanActivate {
 
 @Injectable()
 export class JwtAuthRefreshTokenGuard implements CanActivate {
-    constructor(@Inject(forwardRef(() => AuthorService)) private authService: AuthorService) {}
+    constructor(@Inject(forwardRef(() => AuthService)) private authService: AuthService) {}
 
     async canActivate(context: ExecutionContext) {
         const request = context.switchToHttp().getRequest();

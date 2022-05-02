@@ -24,7 +24,7 @@ import { FollowModule } from '@root/src/modules/follow/follow.module';
 import { PublicationModule } from '@modules/publication/publication.module';
 import { LikeModule } from '@modules/like/like.module';
 import { SeniorModule } from '@modules/senior/senior.module';*/
-import { AuthorModule } from '@root/src/controller/author/author.module'
+import { AuthModule } from '@root/src/controller/auth/auth.module'
 import { RoleModule } from '@root/src/controller/role/role.module'
 
 
@@ -107,7 +107,7 @@ import { RoleModule } from '@root/src/controller/role/role.module'
     LikeModule,
     SeniorModule,*/
     CommentModule,
-    AuthorModule,
+    AuthModule,
     RoleModule,
     //JwtDecodeModule
   ],

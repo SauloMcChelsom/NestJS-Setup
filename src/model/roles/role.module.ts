@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
-import { AuthorModule } from '@root/src/controller/author/author.module';
+import { AuthModule } from '@root/src/controller/auth/auth.module';
 import { UserModule } from '@root/src/controller/user/user.module'
 
 import { UserEntity } from '@entity/user.entity';
@@ -12,7 +12,7 @@ import { RoleModel } from './role.model'
 @Module({
   imports: [
     TypeOrmModule.forFeature([UserEntity, RefreshTokenEntity]),
-    AuthorModule,
+    AuthModule,
     UserModule
   ],
   providers: [

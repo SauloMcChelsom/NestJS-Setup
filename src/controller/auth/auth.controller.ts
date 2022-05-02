@@ -6,13 +6,13 @@ import { UserMachinePropertyGuard } from '@shared/guard/user-machine-property.gu
  
 import { AuthMapper } from './mapper/index.mapper'
 import { CreateUserDTO, RefreshTokenDTO, UserDTO } from './dto/index.dto'
-import { AuthorService } from './author.service'
+import { AuthService } from './auth.service'
 
-@Controller('author')
-export class AuthorController {
+@Controller('auth')
+export class AuthController {
 
     constructor(
-        private service: AuthorService,
+        private service: AuthService,
         private toMapper:AuthMapper
     ){}
 

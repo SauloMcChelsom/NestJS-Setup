@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { AuthorModule } from '../author/author.module'
+import { AuthModule } from '../auth/auth.module'
 import { UsersModule } from '@model/users/user.module';
 
 import { UsuariosController } from './user.controller';
@@ -9,7 +9,7 @@ import { UserMapper } from './mapper'
 
 @Module({
   imports: [
-    AuthorModule,
+    AuthModule,
     UsersModule
   ],
   controllers: [UsuariosController],

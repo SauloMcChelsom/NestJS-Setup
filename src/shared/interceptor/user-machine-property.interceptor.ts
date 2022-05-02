@@ -1,14 +1,14 @@
 import { Injectable, NestInterceptor, CallHandler, ExecutionContext, Inject, forwardRef } from '@nestjs/common';
 import { Observable, map } from 'rxjs';
 
-import { AuthorService } from "@root/src/controller/author/author.service";
+import { AuthService } from "@root/src/controller/auth/auth.service";
 import { UserMachineProperty } from 'src/shared/interfaces/auth.interface';
 import { User } from 'src/shared/interfaces/user.interface';
 
   @Injectable()
   export class UserMachinePropertyInterceptor implements NestInterceptor {
 
-    constructor(@Inject(forwardRef(() => AuthorService)) private authService: AuthorService) {}
+    constructor(@Inject(forwardRef(() => AuthService)) private authService: AuthService) {}
 
     public intercept(_context: ExecutionContext, next: CallHandler): Observable<any> {
         return next.handle().pipe(map( async(data) => {

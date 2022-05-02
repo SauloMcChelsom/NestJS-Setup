@@ -10,7 +10,7 @@ import { Role } from '@shared/enum/role.enum'
 
 
 @Injectable()
-export class AuthorService {
+export class AuthService {
 
     constructor(
         private jwtLocalModel: JwtLocalModel,
