@@ -7,13 +7,13 @@ import { UserModule } from '@root/src/controller/user/user.module'
 
 import { RolesGuard } from '@shared/guard/roles.guard'
 import { JwtAuthGuard } from '@shared/guard/jwt-auth.guard'
-import { JwtStrategy } from '@root/src/model/auth/jwt-strategy'
+import { JwtStrategy } from '@root/src/model/jwt-local/jwt-strategy'
 
 import { UserEntity } from 'src/entity/user.entity'
 import { RefreshTokenEntity } from 'src/entity/refresh-token.entity'
 import { UserMachinePropertyEntity } from 'src/entity/user-machine-property.entity'
 
-import { AuthModel } from './auth.model'
+import { JwtLocalModel } from './jwt-local.model'
 
 @Module({
     imports: [
@@ -35,11 +35,11 @@ import { AuthModel } from './auth.model'
     ],
     controllers: [],
     providers: [
-        AuthModel, 
+        JwtLocalModel, 
         RolesGuard, 
         JwtAuthGuard, 
         JwtStrategy
     ],
-    exports: [AuthModel]
+    exports: [JwtLocalModel]
 })
-export class AuthModule {}
+export class JwtLocalModule {}

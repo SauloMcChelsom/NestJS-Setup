@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { v4 as uuidv4 } from 'uuid';
 
-import { AuthModel } from '@model/auth/auth.model'
+import { JwtLocalModel } from '@root/src/model/jwt-local/jwt-local.model'
 import { UserModel } from '@model/users/user.model'
 
 import { CreateUser, RefreshToken, UserToken, UserMachineProperty } from '@shared/interfaces/auth.interface'
@@ -13,7 +13,7 @@ import { Role } from '@shared/enum/role.enum'
 export class AuthorService {
 
     constructor(
-        private authModel: AuthModel,
+        private jwtLocalModel: JwtLocalModel,
         private userModel: UserModel,
     ){}
 
@@ -21,17 +21,17 @@ export class AuthorService {
 
         let validate_user:User = await this.userModel.validateEmailPasswordUser(user.email, user.password)
         
-        let refresh_token_of_user:RefreshToken = await this.authModel.findOneRefreshTokenByUserId(validate_user.id)
+        let refresh_token_of_user:RefreshToken = await this.jwtLocalModel.findOneRefreshTokenByUserId(validate_user.id)
 
         //primeiro acesso
         if(refresh_token_of_user == null){
-            await this.authModel.createRefreshToken(validate_user.id)
+            await this.jwtLocalModel.createRefreshToken(validate_user.id)
         }else{
-            await this.authModel.updateRefreshToken(refresh_token_of_user.user_id)
+            await this.jwtLocalModel.updateRefreshToken(refresh_token_of_user.user_id)
         }
 
-        let refresh_token:RefreshToken = await this.authModel.findRefreshTokenByUserId(validate_user.id)
-        let access_token:string = await this.authModel.generateJWT(validate_user)
+        let refresh_token:RefreshToken = await this.jwtLocalModel.findRefreshTokenByUserId(validate_user.id)
+        let access_token:string = await this.jwtLocalModel.generateJWT(validate_user)
 
         let token:UserToken = { 
             access_token: access_token,
@@ -43,7 +43,7 @@ export class AuthorService {
 
     public async createNewAccount(createUser: CreateUser) {
         await  this.userModel.validateEmailForCreateNewAccount(createUser.email)
-        let passwordHash = await this.authModel.hashPassword(createUser.password)
+        let passwordHash = await this.jwtLocalModel.hashPassword(createUser.password)
         const user:User = {
             uid : uuidv4(),
             name : createUser.name,
@@ -57,23 +57,23 @@ export class AuthorService {
 
     public async refreshToken(token) {
         
-        let refresh_token:RefreshToken = await this.authModel.findRefreshTokenByUID(token)
+        let refresh_token:RefreshToken = await this.jwtLocalModel.findRefreshTokenByUID(token)
 
-        this.authModel.refreshTokenIsExpires(refresh_token)
+        this.jwtLocalModel.refreshTokenIsExpires(refresh_token)
   
         let user: User = await this.userModel.getUserById(refresh_token.user_id)
 
-        return await this.authModel.generateJWT(user)
+        return await this.jwtLocalModel.generateJWT(user)
     }
 
     public async revokeToken(uid){
-        let refresh_token:RefreshToken = await this.authModel.findRefreshTokenByUID(uid)
-        return await this.authModel.expiresRefreshTokenById(refresh_token)
+        let refresh_token:RefreshToken = await this.jwtLocalModel.findRefreshTokenByUID(uid)
+        return await this.jwtLocalModel.expiresRefreshTokenById(refresh_token)
     }
 
     public async validarRefreshToken(user_id){
-        let refresh_token:RefreshToken = await this.authModel.findRefreshTokenByUserId(user_id)
-        this.authModel.refreshTokenIsExpires(refresh_token)
+        let refresh_token:RefreshToken = await this.jwtLocalModel.findRefreshTokenByUserId(user_id)
+        this.jwtLocalModel.refreshTokenIsExpires(refresh_token)
     }
 
     public async setUserMachineProperty(property:UserMachineProperty, user:User){
@@ -81,18 +81,18 @@ export class AuthorService {
         property.user_id = user.id
 
         
-        const res:UserMachineProperty = await this.authModel.findOneUserMachinePropertyByUserId(property.user_id)
+        const res:UserMachineProperty = await this.jwtLocalModel.findOneUserMachinePropertyByUserId(property.user_id)
 
         if(res.id == null){
-            await this.authModel.createUserMachineProperty(property)
+            await this.jwtLocalModel.createUserMachineProperty(property)
         }else{
             property.id = res.id
-            await this.authModel.updateUserMachineProperty(property)
+            await this.jwtLocalModel.updateUserMachineProperty(property)
         }
     }
 
     public async findOneUserMachineProperty(user:User){
-        return await this.authModel.findOneUserMachinePropertyByUserId(user.id)
+        return await this.jwtLocalModel.findOneUserMachinePropertyByUserId(user.id)
     }
 
     public async getUserByAccessToken(token:string): Promise<User>{
@@ -100,7 +100,7 @@ export class AuthorService {
             token = token.replace('Bearer ', '');
         }
 
-        let res:any = await this.authModel.decodeJWT(token)
+        let res:any = await this.jwtLocalModel.decodeJWT(token)
 
         return <User> res.user
     }
@@ -110,9 +110,9 @@ export class AuthorService {
         if (token.startsWith('Bearer ') == true) {
            token = token.replace('Bearer ', '');
         }
-        let res:any = await this.authModel.decodeJWT(token)
+        let res:any = await this.jwtLocalModel.decodeJWT(token)
         const user:User = res.user
-        await this.authModel.validateRefreshToken(refresh, user.id)
+        await this.jwtLocalModel.validateRefreshToken(refresh, user.id)
     }
 
 }

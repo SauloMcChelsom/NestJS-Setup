@@ -15,7 +15,7 @@ import { RefreshToken } from '../../shared/interfaces/auth.interface'
 import { UserMachineProperty } from '../../shared/interfaces/auth.interface'
 
 @Injectable()
-export class AuthModel {
+export class JwtLocalModel {
 
     constructor(
         @InjectRepository(RefreshTokenEntity) 
