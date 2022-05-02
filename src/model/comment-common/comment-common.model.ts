@@ -7,13 +7,13 @@ import { IsValidTimestampService } from '@root/src/shared/utility/is-valid-times
 import { EmptyService } from '@root/src/shared/utility/empty/empty.service';
 import { code } from '@root/src/shared/enum';
 
-import { CommentRepository } from './comment-common.repository';
+import { CommentCommonRepository } from './comment-common.repository';
 import { UpdateComment, CreateComment, ListComment } from '@shared/interfaces/comment.interface';
 
-export class CommentModel {
+export class CommentCommonModel {
   constructor(
-    @InjectRepository(CommentRepository)
-    private readonly  repository_custom: CommentRepository,
+    @InjectRepository(CommentCommonRepository)
+    private readonly  repository_custom: CommentCommonRepository,
 
     @InjectRepository(CommentEntity)
     private readonly repository: Repository<CommentEntity>,

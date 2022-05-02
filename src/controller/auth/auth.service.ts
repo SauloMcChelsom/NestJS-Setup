@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { v4 as uuidv4 } from 'uuid';
 
 import { JwtLocalModel } from '@root/src/model/jwt-local/jwt-local.model'
-import { UserModel } from '@root/src/model/user-common/user-common.model'
+import { UserCommonModel } from '@root/src/model/user-common/user-common.model'
 
 import { CreateUser, RefreshToken, UserToken, UserMachineProperty } from '@shared/interfaces/auth.interface'
 import { User } from '@shared/interfaces/user.interface'
@@ -14,7 +14,7 @@ export class AuthService {
 
     constructor(
         private jwtLocalModel: JwtLocalModel,
-        private userModel: UserModel,
+        private userModel: UserCommonModel,
     ){}
 
     public async signIn(user: User): Promise<UserToken> {

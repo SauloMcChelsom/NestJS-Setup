@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common';
 
-import { UserModel } from '@root/src/model/user-common/user-common.model';
+import { UserCommonModel } from '@root/src/model/user-common/user-common.model';
 
 
 @Injectable()
 export class UserService {
 
-  constructor(private userModel: UserModel) {}
+  constructor(private userModel: UserCommonModel) {}
 
   public async findOneUsertByUid(uid: string) {
     return await this.userModel.getUserByUid(uid);

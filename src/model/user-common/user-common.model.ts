@@ -8,7 +8,7 @@ import { UserRepository } from './user-common.repository';
 
 import { User } from '@root/src/shared/interfaces/user.interface';
 
-export class UserModel {
+export class UserCommonModel {
   constructor(
     @InjectRepository(UserRepository)
     private readonly repository: UserRepository,

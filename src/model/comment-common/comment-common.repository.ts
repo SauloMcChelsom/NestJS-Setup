@@ -4,7 +4,7 @@ import { CommentEntity } from '@root/src/entity/comment.entity';
 import { code } from '@root/src/shared/enum';
 
 @EntityRepository(CommentEntity)
-export class CommentRepository extends AbstractRepository<CommentEntity> {
+export class CommentCommonRepository extends AbstractRepository<CommentEntity> {
 
   async listByUserId(
     userId: number,

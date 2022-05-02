@@ -1,12 +1,12 @@
 import { Injectable, CanActivate, Inject, forwardRef, ExecutionContext } from "@nestjs/common"
 import { Observable } from "rxjs"
-import { UserModel } from "@root/src/model/user-common/user-common.model"
+import { UserCommonModel } from "@root/src/model/user-common/user-common.model"
 import { User } from "src/shared/interfaces/user.interface"
 
 @Injectable()
 export class UserIsUserGuard implements CanActivate {
 
-    constructor(@Inject(forwardRef(() => UserModel)) private userModel: UserModel) {}
+    constructor(@Inject(forwardRef(() => UserCommonModel)) private userModel: UserCommonModel) {}
 
     canActivate(context: ExecutionContext): boolean | Promise<boolean> | Observable<boolean> {
         const request = context.switchToHttp().getRequest()
