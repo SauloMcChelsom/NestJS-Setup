@@ -1,14 +1,18 @@
 import { Injectable, NestInterceptor, CallHandler, ExecutionContext, Inject, forwardRef } from '@nestjs/common';
 import { Observable, map } from 'rxjs';
 
-import { AuthService } from "@root/src/controller/auth/auth.service";
+import { JwtLocalModel } from "@model/jwt-local/jwt-local.model"
+import { UserModel } from "@model/users/user.model"
 import { UserMachineProperty } from 'src/shared/interfaces/auth.interface';
 import { User } from 'src/shared/interfaces/user.interface';
 
   @Injectable()
   export class UserMachinePropertyInterceptor implements NestInterceptor {
 
-    constructor(@Inject(forwardRef(() => AuthService)) private authService: AuthService) {}
+    constructor(
+      @Inject(forwardRef(() => JwtLocalModel)) private jwtLocalModel: JwtLocalModel,
+      @Inject(forwardRef(() => UserModel)) private userModel: UserModel
+      ) {}
 
     public intercept(_context: ExecutionContext, next: CallHandler): Observable<any> {
         return next.handle().pipe(map( async(data) => {
@@ -31,10 +35,25 @@ import { User } from 'src/shared/interfaces/user.interface';
             window_screen_pixel_depth: binding.window_screen_pixel_depth || null,
           }
 
-          await this.authService.setUserMachineProperty(property, user)
+          await this.setUserMachineProperty(property, user)
           
           return data
         }) 
       )
     }
+
+    public async setUserMachineProperty(property:UserMachineProperty, user:User){
+      user = await this.userModel.findOneUserByEmail(user.email)
+      property.user_id = user.id
+
+      
+      const res:UserMachineProperty = await this.jwtLocalModel.findOneUserMachinePropertyByUserId(property.user_id)
+
+      if(res.id == null){
+          await this.jwtLocalModel.createUserMachineProperty(property)
+      }else{
+          property.id = res.id
+          await this.jwtLocalModel.updateUserMachineProperty(property)
+      }
+  }
   }

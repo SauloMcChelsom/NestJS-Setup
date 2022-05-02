@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 
 //import { PublicationModule } from '@modules/publication/publication.module';
-import { AuthModule } from '@root/src/controller/auth/auth.module'
+import { JwtLocalModule } from '@model/jwt-local/jwt-local.module';
 import { UserModule } from '@root/src/controller/user/user.module';
 
 import { CommentModule as CommentsModule } from '@model/comment/comment.module';
@@ -14,7 +14,7 @@ import { CommentMapper } from './mapper/index.mapper';
 
 @Module({
   imports: [
-    AuthModule,
+    JwtLocalModule,
     CommentsModule,
     UserModule,
     UsersModule

@@ -14,7 +14,6 @@ import { JobsModule } from '@root/src/services/jobs/jobs.module';
 import { EventsModule } from '@root/src/services/events/events.module';
 import { ServicesModule } from '@root/src/services/services.module';
 import { AxiosModule } from '@root/src/services/axios/axios.module';
-//import { JwtDecodeModule } from '@shared/utility/jwt-decode/jwt-decode.modele'
 
 import { CommentModule } from '@root/src/controller/comment/comment.module';
 import { ViewsModule } from '@root/src/views/views.module';
@@ -108,8 +107,7 @@ import { RoleModule } from '@root/src/controller/role/role.module'
     SeniorModule,*/
     CommentModule,
     AuthModule,
-    RoleModule,
-    //JwtDecodeModule
+    RoleModule
   ],
   controllers: [],
   providers: [
