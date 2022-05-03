@@ -6,7 +6,7 @@ import { UserEntityModule } from '@root/src/model/user-entity/user-entity.module
 import { UserEntity } from '@entity/user.entity';
 import { RefreshTokenEntity } from '@entity/refresh-token.entity';
 
-import { RoleCommonModel } from './role-common.model'
+import { RoleEntityModel } from './role-entity.model'
 
 @Module({
   imports: [
@@ -14,9 +14,9 @@ import { RoleCommonModel } from './role-common.model'
     UserEntityModule
   ],
   providers: [
-    RoleCommonModel
+    RoleEntityModel
   ],
   controllers: [],
-  exports: [RoleCommonModel]
+  exports: [RoleEntityModel]
 })
-export class RolesModule {}
+export class RoleEntityModule {}

@@ -1,9 +1,28 @@
-import { Controller, Body, Param, Put, UseGuards } from '@nestjs/common'
+import {
+    Version,
+    CacheInterceptor,
+    CacheTTL,
+    Controller,
+    Param,
+    Get,
+    Query,
+    Post,
+    Body,
+    Put,
+    Delete,
+    UseGuards, 
+    UseInterceptors, 
+    UseFilters 
+  } from '@nestjs/common'
 
 import { hasRoles } from '@shared/decorator/roles.decorator'
 import { JwtAuthAccessTokenGuard } from '@shared/guard/jwt-auth.guard'
 import { RolesGuard } from '@shared/guard/roles.guard'
 import { Role } from '@shared/enum/role.enum'
+import { code } from '@shared/enum'
+import { Error } from '@shared/response/error.response'
+import { Success } from '@shared/response/success.response'
+import { OK } from '@shared/response/ok'
  
 import { UpdateRoleUserDTO } from './dto/user.dto'
 import { RoleService } from './role.service'
@@ -17,10 +36,14 @@ export class RoleController {
         private toMapper:RoleMapper
     ) {}
 
+    @Put(':id')
+    @Version('1/private')
     @hasRoles(Role.ADMIN)
     @UseGuards(JwtAuthAccessTokenGuard, RolesGuard)
-    @Put(':id')
+    @UseFilters(Error)
+    @UseInterceptors(Success)
     public async updateRoleOfUser(@Param('id') id: string, @Body() role: UpdateRoleUserDTO) {
-        return await this.service.updateRoleOfUser(Number(id), role.role).then(() => this.toMapper.updateRole())
+        await this.service.updateRoleOfUser(Number(id), role.role).then(() => this.toMapper.updateRole())
+        return new OK([], code.SUCCESSFULLY_UPDATED, null, 0)
     }
 }

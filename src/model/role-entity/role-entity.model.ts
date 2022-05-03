@@ -7,7 +7,7 @@ import { Role } from '@shared/enum/role.enum'
 import { UserEntity } from '@entity/user.entity'
 
 @Injectable()
-export class RoleCommonModel {
+export class RoleEntityModel {
 
     constructor(@InjectRepository(UserEntity) private readonly userRepository: Repository<UserEntity>) {}
 

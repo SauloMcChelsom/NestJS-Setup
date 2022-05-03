@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 
-import { RolesModule } from '@root/src/model/role-common/role-common.module'
+import { RoleEntityModule } from '@root/src/model/role-entity/role-entity.module'
 import { UserEntityModule } from "@root/src/model/user-entity/user-entity.module"
 
 import { RoleController } from './role.controller';
@@ -9,7 +9,7 @@ import { RoleMapper } from './mapper/role.mapper'
 
 @Module({
   imports: [
-    RolesModule,
+    RoleEntityModule,
     UserEntityModule
   ],
   providers: [
