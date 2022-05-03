@@ -2,14 +2,14 @@ import { Injectable, CanActivate, ExecutionContext, Inject, forwardRef } from "@
 import { Reflector } from "@nestjs/core"
 import { Observable } from "rxjs"
 
-import { UserCommonModel } from "@model/user-common/user-common.model"
+import { UserEntityModel } from "@root/src/model/user-entity/user-entity.model"
 import { User } from "@shared/interfaces/user.interface"
 
 @Injectable()
 export class RolesGuard implements CanActivate {
     constructor(
-        @Inject(forwardRef(() => UserCommonModel))
-        private userModel: UserCommonModel,
+        @Inject(forwardRef(() => UserEntityModel))
+        private userModel: UserEntityModel,
 
         private reflector: Reflector,
     ) {}

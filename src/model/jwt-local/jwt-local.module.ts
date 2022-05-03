@@ -2,7 +2,7 @@ import { Module, forwardRef } from '@nestjs/common'
 import { TypeOrmModule } from '@nestjs/typeorm'
 import { JwtModule} from '@nestjs/jwt'
 import { ConfigModule, ConfigService } from '@nestjs/config'
-import { UserCommonModule } from '@root/src/model/user-common/user-common.module'
+import { UserEntityModule } from '@root/src/model/user-entity/user-entity.module'
 import { RolesGuard } from '@shared/guard/roles.guard'
 import { JwtAuthAccessTokenGuard } from '@shared/guard/jwt-auth.guard'
 import { JwtStrategy } from '@root/src/model/jwt-local/jwt-strategy'
@@ -30,7 +30,7 @@ import { JwtLocalModel } from './jwt-local.model'
             })
         }),
         ConfigModule,
-        UserCommonModule
+        UserEntityModule
     ],
     controllers: [],
     providers: [

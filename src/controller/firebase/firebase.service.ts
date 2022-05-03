@@ -1,8 +1,7 @@
-import { Injectable } from '@nestjs/common';
-import { v4 as uuidv4 } from 'uuid';
+import { Injectable } from '@nestjs/common'
 
 import { JwtLocalModel } from '@root/src/model/jwt-local/jwt-local.model'
-import { UserCommonModel } from '@root/src/model/user-common/user-common.model'
+import { UserEntityModel } from '@root/src/model/user-entity/user-entity.model'
 
 import { CreateUserFirebase, RefreshToken, UserToken, UserMachineProperty } from '@shared/interfaces/auth.interface'
 import { UserProfile } from '@shared/interfaces/firebase.interface'
@@ -15,7 +14,7 @@ export class FirebaseService {
 
     constructor(
         private jwtLocalModel: JwtLocalModel,
-        private userModel: UserCommonModel,
+        private userModel: UserEntityModel,
     ){}
 
     public async signIn(user: UserProfile): Promise<UserToken> {
@@ -99,7 +98,7 @@ export class FirebaseService {
 
     public async getUserByAccessToken(token:string): Promise<User>{
         if (token.startsWith('Bearer ') == true) {
-            token = token.replace('Bearer ', '');
+            token = token.replace('Bearer ', '')
         }
 
         let res:any = await this.jwtLocalModel.decodeJWT(token)
@@ -110,7 +109,7 @@ export class FirebaseService {
     public async validateRefreshToken(refresh:string, token:string){
 
         if (token.startsWith('Bearer ') == true) {
-           token = token.replace('Bearer ', '');
+           token = token.replace('Bearer ', '')
         }
         let res:any = await this.jwtLocalModel.decodeJWT(token)
         const user:User = res.user

@@ -32,7 +32,7 @@ import { OK } from '@shared/response/ok'
 import { Role, code } from '@shared/enum'
 import { ListFilter, CreateComment, UpdateComment } from '@shared/interfaces'
 
-import { UserCommonModel } from '@root/src/model/user-common/user-common.model'
+import { UserEntityModel } from '@root/src/model/user-entity/user-entity.model'
 
 import { CommentService } from './comment.service'
 import { CreateDto, UpdateDto } from './dto/index.dto'
@@ -43,7 +43,7 @@ export class CommentController {
 
   constructor(
     private readonly service: CommentService,
-    private userModel: UserCommonModel,
+    private userModel: UserEntityModel,
     private toMapper:CommentMapper
   ) {}
 

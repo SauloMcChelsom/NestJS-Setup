@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { UserCommonModule } from '@root/src/model/user-common/user-common.module';
+import { UserEntityModule } from '@root/src/model/user-entity/user-entity.module';
 import { JwtLocalModule } from '@model/jwt-local/jwt-local.module';
 
 import { UserMapper } from './mapper'
@@ -8,7 +8,7 @@ import { UserService } from './user.service';
 
 @Module({
   imports: [
-    UserCommonModule,
+    UserEntityModule,
     JwtLocalModule
   ],
   controllers: [UsuariosController],

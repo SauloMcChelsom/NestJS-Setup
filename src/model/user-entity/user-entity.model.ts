@@ -4,14 +4,14 @@ import { hash, compare  } from 'bcryptjs';
 
 import { code, message } from '@root/src/shared/enum';
 
-import { UserRepository } from './user-common.repository';
+import { UserEntityRepository } from './user-entity.repository';
 
 import { User } from '@root/src/shared/interfaces/user.interface';
 
-export class UserCommonModel {
+export class UserEntityModel {
   constructor(
-    @InjectRepository(UserRepository)
-    private readonly repository: UserRepository,
+    @InjectRepository(UserEntityRepository)
+    private readonly repository: UserEntityRepository,
   ) {}
 
   public async hashPassword(password: string) {

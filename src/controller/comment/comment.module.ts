@@ -4,7 +4,7 @@ import { Module } from '@nestjs/common';
 import { JwtLocalModule } from '@model/jwt-local/jwt-local.module';
 
 import { CommentCommonModule } from '@root/src/model/comment-common/comment-common.module';
-import { UserCommonModule } from '@root/src/model/user-common/user-common.module'
+import { UserEntityModule } from '@root/src/model/user-entity/user-entity.module'
 
 import { CommentController } from './comment.controller';
 import { CommentService } from './comment.service';
@@ -15,7 +15,7 @@ import { CommentMapper } from './mapper/index.mapper';
   imports: [
     JwtLocalModule,
     CommentCommonModule,
-    UserCommonModule
+    UserEntityModule
   ],
   controllers: [CommentController],
   providers: [

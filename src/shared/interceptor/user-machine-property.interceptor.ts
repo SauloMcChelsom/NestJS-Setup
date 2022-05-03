@@ -2,7 +2,7 @@ import { Injectable, NestInterceptor, CallHandler, ExecutionContext, Inject, for
 import { Observable, map } from 'rxjs';
 
 import { JwtLocalModel } from "@model/jwt-local/jwt-local.model"
-import { UserCommonModel } from "@root/src/model/user-common/user-common.model"
+import { UserEntityModel } from "@root/src/model/user-entity/user-entity.model"
 import { UserMachineProperty } from '@shared/interfaces/auth.interface';
 import { User } from '@shared/interfaces/user.interface';
 
@@ -11,7 +11,7 @@ import { User } from '@shared/interfaces/user.interface';
 
     constructor(
       @Inject(forwardRef(() => JwtLocalModel)) private jwtLocalModel: JwtLocalModel,
-      @Inject(forwardRef(() => UserCommonModel)) private userModel: UserCommonModel
+      @Inject(forwardRef(() => UserEntityModel)) private userModel: UserEntityModel
     ) {}
 
     public intercept(_context: ExecutionContext, next: CallHandler): Observable<any> {
