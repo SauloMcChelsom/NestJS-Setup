@@ -31,7 +31,7 @@ export class UploadController {
         filename: editNameFiles,
       }),
       fileFilter: filterExtensionFiles,
-    }),
+    })
   )
   @UseFilters(Error)
   @UseInterceptors(Success)

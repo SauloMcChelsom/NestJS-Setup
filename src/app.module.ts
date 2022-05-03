@@ -23,6 +23,7 @@ import { FollowModule } from '@root/src/modules/follow/follow.module';
 import { PublicationModule } from '@modules/publication/publication.module';
 import { LikeModule } from '@modules/like/like.module';
 import { SeniorModule } from '@modules/senior/senior.module';*/
+import { FirebaseModule } from '@controller/firebase/firebase.module'
 import { AuthModule } from '@root/src/controller/auth/auth.module'
 import { RoleModule } from '@root/src/controller/role/role.module'
 
@@ -107,6 +108,7 @@ import { RoleModule } from '@root/src/controller/role/role.module'
     SeniorModule,*/
     CommentModule,
     AuthModule,
+    FirebaseModule,
     RoleModule
   ],
   controllers: [],

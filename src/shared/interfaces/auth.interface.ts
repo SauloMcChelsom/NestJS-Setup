@@ -21,6 +21,14 @@ export interface CreateUser {
     password: string;
 }
 
+export interface CreateUserFirebase {
+    uid : string,
+    name : string,
+    providers : string,
+    email : string,
+    password : string,
+}
+
 export interface UserMachineProperty {
     id?: number;
     user_agent?: string;
