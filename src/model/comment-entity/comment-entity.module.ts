@@ -6,18 +6,19 @@ import { EmptyModule } from '@root/src/shared/utility/empty/empty.module';
 //import { PublicationModule } from '@modules/publication/publication.module';
 
 import { CommentEntity } from '@entity/comment.entity';
-import { CommentCommonModel } from './comment-common.model';
-import { CommentCommonRepository } from './comment-common.repository';
+import { CommentEntityModel } from './comment-entity.model';
+import { CommentEntityRepository } from './comment-entity.repository';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([CommentEntity, CommentCommonRepository]),
+    TypeOrmModule.forFeature([CommentEntity, CommentEntityRepository]),
     IsValidTimestampModule,
     EmptyModule,
     //PublicationModule
   ],
   controllers: [],
-  providers: [CommentCommonModel],
-  exports: [CommentCommonModel],
+  providers: [CommentEntityModel],
+  exports: [CommentEntityModel],
 })
-export class CommentCommonModule {}
+export class CommentEntityModule
+ {}

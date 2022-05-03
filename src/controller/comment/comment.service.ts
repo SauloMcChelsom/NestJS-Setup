@@ -2,12 +2,13 @@ import { Injectable } from '@nestjs/common';
 
 //import { PublicationService } from '@modules/publication/publication.service'
 import { ListFilter, UpdateComment, CreateComment } from '@shared/interfaces'
-import { CommentCommonModel } from '@root/src/model/comment-common/comment-common.model'
+import { 
+CommentEntityModel } from '@root/src/model/comment-entity/comment-entity.model'
 
 @Injectable()
 export class CommentService {
   constructor(
-    private commentModel: CommentCommonModel,
+    private commentModel: CommentEntityModel,
     //private publication: PublicationService,
   ) {}
 
