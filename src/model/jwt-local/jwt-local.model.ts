@@ -7,12 +7,11 @@ import { Repository } from 'typeorm'
 import { v4 as uuidv4 } from 'uuid'
 import { hash, compare  } from 'bcryptjs';
 
-import { UserMachinePropertyEntity } from '../../entity/user-machine-property.entity'
-import { UserEntity } from '../../entity/user.entity'
-import { RefreshTokenEntity } from '../../entity/refresh-token.entity'
-import { User } from '../../shared/interfaces/user.interface'
-import { RefreshToken } from '../../shared/interfaces/auth.interface'
-import { UserMachineProperty } from '../../shared/interfaces/auth.interface'
+import { UserMachinePropertyEntity } from '@entity/user-machine-property.entity'
+import { RefreshTokenEntity } from '@entity/refresh-token.entity'
+import { User } from '@shared/interfaces/user.interface'
+import { RefreshToken } from '@shared/interfaces/auth.interface'
+import { UserMachineProperty } from '@shared/interfaces/auth.interface'
 
 @Injectable()
 export class JwtLocalModel {

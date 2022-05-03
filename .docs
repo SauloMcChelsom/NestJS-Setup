@@ -1,10 +1,12 @@
+## tutorial de ORM
+https://orkhan.gitbook.io/typeorm/docs/transactions
+https://typeorm.io/#/transactions 
 https://orkhan.gitbook.io/typeorm/docs/select-query-builder
 https://www.tutorialspoint.com/typeorm/typeorm_query_builder.htm
-https://www.npmjs.com/package/class-validator
 https://github.com/typeorm/typeorm/blob/master/docs/find-options.md
-https://jmeter.apache.org/download_jmeter.cgi
 https://www.techiediaries.com/typeorm-fulltext-search/
-https://github.com/benwtrent/WebSocketWebRTCRecorders
+
+## tutorial de streaming
 https://udgwebdev.github.io/video-streaming-com-nodejs/
 https://dev.to/abdisalan_js/how-to-code-a-video-streaming-server-using-nodejs-2o0
 https://docs.microsoft.com/pt-br/azure/media-services/latest/stream-live-tutorial-with-nodejs
@@ -12,10 +14,10 @@ https://github.com/ErickWendel/upload-multiple-files-yt
 https://www.geeksforgeeks.org/how-to-make-a-video-call-app-in-node-js/
 https://levelup.gitconnected.com/building-a-video-chat-app-with-node-js-socket-io-webrtc-26f46b213017
 
+## exemplo de fazer teste 2e2
+https://github.com/p-salmon/nestjs-typeorm-integration-tests/blob/master/src/user/user.e2e-spec.ts
 
-https://orkhan.gitbook.io/typeorm/docs/transactions
-https://typeorm.io/#/transactions 
-
+## funcionalidade desejadas futuras
 Chat
 upload-> video|music|image|files
 download-> video|music|image|files
@@ -26,18 +28,17 @@ imagens exibição
 share screen and video call
 criar audio
 
+## atividades em desenvolvimentos
+apos termino like, page, publication
+falta
+0 testar todos endpoint e organizar o isonimia
+1 response para sucessor e error padrao
+2 services -> testar e refatorar 
+3 teste -> criar os teste
+4 pagina de login
+5 ajustar o readme
 
-#FALTA
--fazer a documentação do projeto
--revisar tutorial em https://docs.nestjs.com/
--verificar importação de modulos, ou coloco no mudulo pricipal ou na modulo que chama
-ex. lib/bcrypt colocar no modulo principal "app.module.ts" ou na chamada "modules/user/user.module.ts"
+revisar 
+returno de ): Promise<Like>
 
--testes
-https://www.youtube.com/watch?v=2G_mWfG0DZE&t=3127s
-https://www.youtube.com/watch?v=VH_RfTFBgKE
-
-
-
-https://github.com/p-salmon/nestjs-typeorm-integration-tests/blob/master/src/user/user.e2e-spec.ts
-
+await
