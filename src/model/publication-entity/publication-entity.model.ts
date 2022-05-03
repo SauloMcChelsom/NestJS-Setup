@@ -232,4 +232,20 @@ export class PublicationEntityModel {
         return false;
     }
   }
+
+  public async incrementNumberLikeOfPublication(id: any) {
+    await this.incrementLikes(id);
+  }
+
+  public async decrementNumberLikeOfPublication(id: any) {
+    await this.decrementLikes(id);
+  }
+
+  public async incrementNumberCommentOfPublication(id: any) {
+    await this.incrementComment(id);
+  }
+
+  public async decrementNumberCommentfPublication(id: any) {
+    await this.decrementComment(id);
+  }
 }

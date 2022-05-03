@@ -4,6 +4,7 @@ import { IsValidTimestampModule } from '@root/src/shared/utility/is-valid-timest
 import { EmptyModule } from '@root/src/shared/utility/empty/empty.module';
 import { FollowEntityModule } from '@model/follow-entity/follow-entity.module'
 import { UserEntityModule } from '@root/src/model/user-entity/user-entity.module'
+import { JwtLocalModule } from '@model/jwt-local/jwt-local.module'
 
 import { FollowController } from './follow.controller';
 import { FollowService } from './follow.service';
@@ -14,7 +15,8 @@ import { FollowMapper } from './mapper';
     IsValidTimestampModule,
     EmptyModule,
     FollowEntityModule,
-    UserEntityModule
+    UserEntityModule,
+    JwtLocalModule
   ],
   controllers: [FollowController],
   providers: [FollowService, FollowMapper],

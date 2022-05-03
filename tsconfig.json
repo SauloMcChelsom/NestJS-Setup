@@ -28,6 +28,7 @@
       "@entity/*": ["src/entity/*"],
       "@controller/*": ["src/controller/*"],
       "@views/*": ["src/views/*"],
+      "@services/*": ["src/services/*"],
       "@model/*": ["src/model/*"]
     }
   }

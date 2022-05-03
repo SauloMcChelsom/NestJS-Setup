@@ -9,24 +9,24 @@ import { MulterModule } from '@nestjs/platform-express';
 import { HttpModule } from '@nestjs/axios';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 
-import { TasksModule } from '@root/src/services/tasks/tasks.module';
-import { JobsModule } from '@root/src/services/jobs/jobs.module';
-import { EventsModule } from '@root/src/services/events/events.module';
-import { ServicesModule } from '@root/src/services/services.module';
-import { AxiosModule } from '@root/src/services/axios/axios.module';
+import { TasksModule } from '@services/tasks/tasks.module';
+import { JobsModule } from '@services/jobs/jobs.module';
+import { EventsModule } from '@services/events/events.module';
+import { ServicesModule } from '@services/services.module';
+import { AxiosModule } from '@services/axios/axios.module';
 
-import { CommentModule } from '@root/src/controller/comment/comment.module';
 import { ViewsModule } from '@root/src/views/views.module';
-import { UserModule } from '@root/src/controller/user/user.module';
-/*import { PageModule } from '@modules/page/page.module';
-import { FollowModule } from '@root/src/modules/follow/follow.module';
-import { PublicationModule } from '@modules/publication/publication.module';
-import { LikeModule } from '@modules/like/like.module';
-import { SeniorModule } from '@modules/senior/senior.module';*/
-import { FirebaseModule } from '@controller/firebase/firebase.module'
-import { AuthModule } from '@root/src/controller/auth/auth.module'
-import { RoleModule } from '@root/src/controller/role/role.module'
 
+import { UserModule } from '@controller/user/user.module';
+import { PageModule } from '@controller/page/page.module';
+import { FollowModule } from '@controller/follow/follow.module';
+import { PublicationModule } from '@controller/publication/publication.module';
+import { LikeModule } from '@controller/like/like.module';
+import { SeniorModule } from '@controller/senior/senior.module';
+import { FirebaseModule } from '@controller/firebase/firebase.module'
+import { AuthModule } from '@controller/auth/auth.module'
+import { RoleModule } from '@controller/role/role.module'
+import { CommentModule } from '@controller/comment/comment.module';
 
 @Module({
   imports: [
@@ -101,11 +101,11 @@ import { RoleModule } from '@root/src/controller/role/role.module'
     ServicesModule,
     ViewsModule,
     UserModule,
-    /*PageModule,
+    PageModule,
     FollowModule,
     PublicationModule,
     LikeModule,
-    SeniorModule,*/
+    SeniorModule,
     CommentModule,
     AuthModule,
     FirebaseModule,
