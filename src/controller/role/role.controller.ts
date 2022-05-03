@@ -1,7 +1,7 @@
 import { Controller, Body, Param, Put, UseGuards } from '@nestjs/common'
 
 import { hasRoles } from '@shared/decorator/roles.decorator'
-import { JwtAuthGuard } from '@shared/guard/jwt-auth.guard'
+import { JwtAuthAccessTokenGuard } from '@shared/guard/jwt-auth.guard'
 import { RolesGuard } from '@shared/guard/roles.guard'
 import { Role } from '@shared/enum/role.enum'
  
@@ -18,7 +18,7 @@ export class RoleController {
     ) {}
 
     @hasRoles(Role.ADMIN)
-    @UseGuards(JwtAuthGuard, RolesGuard)
+    @UseGuards(JwtAuthAccessTokenGuard, RolesGuard)
     @Put(':id')
     public async updateRoleOfUser(@Param('id') id: string, @Body() role: UpdateRoleUserDTO) {
         return await this.service.updateRoleOfUser(Number(id), role.role).then(() => this.toMapper.updateRole())

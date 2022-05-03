@@ -1,7 +1,8 @@
 import { Injectable, CanActivate, ExecutionContext, Inject, forwardRef } from "@nestjs/common";
+
 import { JwtLocalModel } from "@model/jwt-local/jwt-local.model"
-import { User } from "src/shared/interfaces/user.interface";
-import { UserMachineProperty } from "src/shared/interfaces/auth.interface";
+import { User } from "@shared/interfaces/user.interface";
+import { UserMachineProperty } from "@shared/interfaces/auth.interface";
 
 @Injectable()
 export class UserMachinePropertyGuard implements CanActivate {

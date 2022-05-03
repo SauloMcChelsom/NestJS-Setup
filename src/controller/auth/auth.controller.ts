@@ -1,7 +1,7 @@
 import { Controller, Post, Body, Get, Headers, UseGuards, UseInterceptors, Version } from '@nestjs/common'
 
 import { UserMachinePropertyInterceptor } from 'src/shared/interceptor/user-machine-property.interceptor'
-import { JwtAuthGuard } from '@shared/guard/jwt-auth.guard';
+import { JwtAuthAccessTokenGuard } from '@shared/guard/jwt-auth.guard';
 import { UserMachinePropertyGuard } from '@shared/guard/user-machine-property.guard'
  
 import { AuthMapper } from './mapper/index.mapper'
@@ -28,7 +28,7 @@ export class AuthController {
         return await this.service.signIn(user).then(token => this.toMapper.login(token))
     }
 
-    @UseGuards(JwtAuthGuard, UserMachinePropertyGuard)
+    @UseGuards(JwtAuthAccessTokenGuard, UserMachinePropertyGuard)
     @Get('sign-out')
     public async singOut(@Body() body: RefreshTokenDTO, @Headers('authorization') token:any){
         await this.service.validateRefreshToken(body.refresh_token, token)
@@ -42,7 +42,7 @@ export class AuthController {
         return await this.service.refreshToken(body.refresh_token).then(token => this.toMapper.refreshToken(token))
     }
 
-    @UseGuards(JwtAuthGuard, UserMachinePropertyGuard)
+    @UseGuards(JwtAuthAccessTokenGuard, UserMachinePropertyGuard)
     @Get('revoke-token')
     public async revokeToken(@Body() body: RefreshTokenDTO, @Headers('authorization') token:any){
         await this.service.validateRefreshToken(body.refresh_token, token)

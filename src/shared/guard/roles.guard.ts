@@ -1,17 +1,18 @@
 import { Injectable, CanActivate, ExecutionContext, Inject, forwardRef } from "@nestjs/common"
 import { Reflector } from "@nestjs/core"
-import { UserCommonModel } from "@root/src/model/user-common/user-common.model"
 import { Observable } from "rxjs"
-import { User } from "src/shared/interfaces/user.interface"
+
+import { UserCommonModel } from "@model/user-common/user-common.model"
+import { User } from "@shared/interfaces/user.interface"
 
 @Injectable()
 export class RolesGuard implements CanActivate {
     constructor(
-        private reflector: Reflector,
-
         @Inject(forwardRef(() => UserCommonModel))
-        private userModel: UserCommonModel
-    ) { }
+        private userModel: UserCommonModel,
+
+        private reflector: Reflector,
+    ) {}
 
     canActivate(context: ExecutionContext): boolean | Promise<boolean> | Observable<boolean> {
         const roles = this.reflector.get<string[]>('roles', context.getHandler())

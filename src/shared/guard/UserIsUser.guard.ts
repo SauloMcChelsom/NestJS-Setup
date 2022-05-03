@@ -1,7 +1,8 @@
 import { Injectable, CanActivate, Inject, forwardRef, ExecutionContext } from "@nestjs/common"
 import { Observable } from "rxjs"
-import { UserCommonModel } from "@root/src/model/user-common/user-common.model"
-import { User } from "src/shared/interfaces/user.interface"
+
+import { UserCommonModel } from "@model/user-common/user-common.model"
+import { User } from "@shared/interfaces/user.interface"
 
 @Injectable()
 export class UserIsUserGuard implements CanActivate {

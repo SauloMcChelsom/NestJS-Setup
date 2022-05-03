@@ -4,7 +4,7 @@ import { JwtModule} from '@nestjs/jwt'
 import { ConfigModule, ConfigService } from '@nestjs/config'
 import { UserCommonModule } from '@root/src/model/user-common/user-common.module'
 import { RolesGuard } from '@shared/guard/roles.guard'
-import { JwtAuthGuard } from '@shared/guard/jwt-auth.guard'
+import { JwtAuthAccessTokenGuard } from '@shared/guard/jwt-auth.guard'
 import { JwtStrategy } from '@root/src/model/jwt-local/jwt-strategy'
 
 import { UserEntity } from 'src/entity/user.entity'
@@ -36,7 +36,7 @@ import { JwtLocalModel } from './jwt-local.model'
     providers: [
         JwtLocalModel, 
         RolesGuard, 
-        JwtAuthGuard, 
+        JwtAuthAccessTokenGuard, 
         JwtStrategy
     ],
     exports: [JwtLocalModel]
