@@ -18,15 +18,7 @@ export class Success implements NestInterceptor {
         const status = ctx.getResponse().statusCode
         const url = request.url.substring(request.url.lastIndexOf('?') + 1)
 
-        let parameters:any = {}
-
-        if (url.indexOf('=') > -1){
-          parameters = JSON.parse(
-            '{"' +
-              decodeURI(url.replace(/&/g, '","').replace(/=/g, '":"')) +
-            '"}',
-          )
-        }
+        let parameters:any = this.converteUrlParamsToJson(url)
      
         const {code, description, results, count, message, timestamp} = res_count
         const body = {
@@ -49,5 +41,20 @@ export class Success implements NestInterceptor {
         return body
       }),
     )
+  }
+
+  /**
+   * Metodo para converte uma url paramentro em objeto json
+   *
+   *  @param url.string > limit=5&order=id
+   * 
+   *  @return > { limit: '5' : order: 'id'}
+   */
+  private converteUrlParamsToJson(url:string):any{
+    let parameters:any = {}
+    if (url.indexOf('=') > -1){
+      parameters = JSON.parse('{"' +decodeURI(url.replace(/&/g, '","').replace(/=/g, '":"')) + '"}',)
+    }
+    return parameters
   }
 }
