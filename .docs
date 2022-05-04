@@ -29,14 +29,34 @@ share screen and video call
 criar audio
 
 ## atividades em desenvolvimentos
-apos termino like, page, publication
-falta
 0 testar todos endpoint e organizar o isonimia
 1 response para sucessor e error padrao
 2 services -> testar e refatorar 
 3 teste -> criar os teste
 4 pagina de login
 5 ajustar o readme
+
+6 patronizar os HttpException nos models ex:
+C:\workspaces\NestJS-Setup\src\model\user-entity\user-entity.model.ts
+public async getUserByUid(uid: string) {
+    try {
+
+    const res = await this.repository.findOne({ where: { uid: uid } })
+
+    if (res) {
+        return res
+    }
+
+    throw new HttpException({
+        code:code.UID_NOT_FOUND,//codigo da mensagem, para ser manipulada no front
+        message: message.UID_NOT_FOUND,//mensagem a ser exibita ao usuario, como um titulo
+        description: "Must be passed a valid or existing uid",//descrição o detalha do erro e como resolver
+    }, HttpStatus.NOT_FOUND)
+
+    } catch (e: any) {
+    throw new HttpException(e.response, e.status)
+    }
+}
 
 revisar 
 returno de ): Promise<Like>

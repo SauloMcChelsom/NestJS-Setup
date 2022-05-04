@@ -1,5 +1,6 @@
 export enum message {
   EMAIL_ALREADY_IN_USE = 'Este email está sendo usado por outra pessoa',
+  EMAIL_DOES_NOT_EXIST = 'Este email não existe',
   USER_REGISTERED = 'Usuario Registrado com sucesso',
   VERIFY_EMAIL = 'Por favor verique o seu email',
   EMAIL_VERIFIED = 'Usuario com email verificado',
@@ -44,5 +45,9 @@ export enum message {
   BAD_REQUEST = 'Bad Request',
   QUERY_FAILED = 'Falha no processamento da expressão',
   TIMESTAMP_FAILED = 'Falha no processamento da expressão',
-  CLASS_VALIDATOR_FAILED = 'Falha no processamento da expressão'
+  CLASS_VALIDATOR_FAILED = 'Falha no processamento da expressão',
+  UID_NOT_FOUND =  'uid not found',
+  TOKE_EXPIRES = 'Token expires',
+  TOKEN_NOT_UNAUTHORRIZED = 'Você não esta passando um token | o token é invalido | o token esta expirado',
+  USER_FORBIDDEN_RESOURCE = 'As propriedade do browser não confere ou nivel de acesso não é permitido'
 }

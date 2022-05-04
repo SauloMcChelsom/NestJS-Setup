@@ -1,12 +1,12 @@
-import { HttpException, HttpStatus } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { hash, compare  } from 'bcryptjs';
+import { HttpException, HttpStatus } from '@nestjs/common'
+import { InjectRepository } from '@nestjs/typeorm'
+import { hash, compare  } from 'bcryptjs'
 
-import { code, message } from '@root/src/shared/enum';
+import { code, message } from '@root/src/shared/enum'
 
-import { UserEntityRepository } from './user-entity.repository';
+import { UserEntityRepository } from './user-entity.repository'
 
-import { User } from '@root/src/shared/interfaces/user.interface';
+import { User } from '@root/src/shared/interfaces/user.interface'
 
 export class UserEntityModel {
   constructor(
@@ -30,7 +30,8 @@ export class UserEntityModel {
     return await this.repository.save(user).catch((err) => {
         throw new HttpException({
           code : 'QUERY_FAILED',
-          message : `${err.detail || err.hint || err.routine}`,
+          message : err,
+          description: "save failed",
         }, HttpStatus.BAD_REQUEST)
     })
   }
@@ -48,19 +49,21 @@ export class UserEntityModel {
     let user: User = await this.findOneUserByEmail(email)
    
     if(!user) {
-        throw new HttpException({
-            code : 'not_found',
-            message : 'User not found'
-        }, HttpStatus.BAD_REQUEST)
+      throw new HttpException({
+        code:code.NOT_FOUND,
+        message: message.EMAIL_DOES_NOT_EXIST,
+        description: "email not found",
+      }, HttpStatus.BAD_REQUEST)
     }
 
     let match: boolean = await this.comparePasswords(user_password, user.password)       
    
     if(match == false) {
-        throw new HttpException({
-            code : 'different_password',
-            message : 'Different password'
-        }, HttpStatus.BAD_REQUEST)
+      throw new HttpException({
+          code : 'different_password',
+          message : 'Different password',
+          description: "",
+      }, HttpStatus.BAD_REQUEST)
     }
 
     const {password, ...result} = user
@@ -127,71 +130,79 @@ export class UserEntityModel {
 
   public async emailAlreadyExist(email: string) {
     try {
-      const res = await this.repository.findOne({ where: { email: email } });
+      const res = await this.repository.findOne({ where: { email: email } })
       if (res) {
-        throw new HttpException(code.EMAIL_ALREADY_IN_USE, 409);
+        throw new HttpException(code.EMAIL_ALREADY_IN_USE, 409)
       }
     } catch (e: any) {
-      throw new HttpException(e.response, e.status);
+      throw new HttpException(e.response, e.status)
     }
   }
 
   public async uidAlreadyExist(uid: string) {
     try {
-      const res = await this.repository.findOne({ where: { uid: uid } });
+      const res = await this.repository.findOne({ where: { uid: uid } })
       if (res) {
-        throw new HttpException(code.UID_ALREADY_IN_USE, 409);
+        throw new HttpException(code.UID_ALREADY_IN_USE, 409)
       }
     } catch (e: any) {
-      throw new HttpException(e.response, e.status);
+      throw new HttpException(e.response, e.status)
     }
   }
 
   public async getUserByUid(uid: string) {
     try {
-      const res = await this.repository.findOne({ where: { uid: uid } });
+
+      const res = await this.repository.findOne({ where: { uid: uid } })
+
       if (res) {
-        return res;
+        return res
       }
-      throw new HttpException(code.NOT_FOUND, 404);
+
+      throw new HttpException({
+        code:code.UID_NOT_FOUND,
+        message: message.UID_NOT_FOUND,
+        description: "Must be passed a valid or existing uid",
+      }, HttpStatus.NOT_FOUND)
+
     } catch (e: any) {
-      throw new HttpException(e.response, e.status);
+      throw new HttpException(e.response, e.status)
     }
   }
 
   public async getUserByEmail(email: string) {
     try {
-      const res = await this.repository.findOne({ where: { email: email } });
+      const res = await this.repository.findOne({ where: { email: email } })
       if (res) {
-        return res;
+        return res
       }
-      throw new HttpException(code.NOT_FOUND, 404);
+      throw new HttpException(code.NOT_FOUND, 404)
     } catch (e: any) {
-      throw new HttpException(e.response, e.status);
+      throw new HttpException(e.response, e.status)
     }
   }
 
   public async updateUserByUid(id: number, body: any) {
     try {
-      const res = await this.repository.update(id, body);
+      const res = await this.repository.update(id, body)
       if (res) {
-        return res;
+        return res
       }
-      throw new HttpException(code.NOT_FOUND, 404);
+      throw new HttpException(code.NOT_FOUND, 404)
     } catch (e: any) {
-      throw new HttpException(e.response, e.status);
+      throw new HttpException(e.response, e.status)
     }
   }
 
   public async delete(id: number) {
     try {
-      const res = await this.repository.delete(id);
+      const res = await this.repository.delete(id)
       if (res) {
-        return res;
+        return res
       }
-      throw new HttpException(code.NOT_FOUND, 404);
+      throw new HttpException(code.NOT_FOUND, 404)
     } catch (e: any) {
-      throw new HttpException(e.response, e.status);
+      throw new HttpException(e.response, e.status)
     }
   }
 

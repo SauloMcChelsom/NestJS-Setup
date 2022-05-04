@@ -12,6 +12,7 @@ import { RefreshTokenEntity } from '@entity/refresh-token.entity'
 import { User } from '@shared/interfaces/user.interface'
 import { RefreshToken } from '@shared/interfaces/auth.interface'
 import { UserMachineProperty } from '@shared/interfaces/auth.interface'
+import { code, message} from '@shared/enum'
 
 @Injectable()
 export class JwtLocalModel {
@@ -179,9 +180,10 @@ export class JwtLocalModel {
 
         if(today > expires_in){
             throw new HttpException({
-                code : 'token expires',
-                message : ''
-            }, HttpStatus.FORBIDDEN)
+                code:code.TOKE_EXPIRES,
+                message: message.TOKE_EXPIRES,
+                description: "You are passing a token that has expired, to re-access a valid token must be passed, please login with your credentials",
+            }, HttpStatus.UNAUTHORIZED)
         }
     }
 
