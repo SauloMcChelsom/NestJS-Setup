@@ -12,12 +12,13 @@ export class RoleEntityModel {
     constructor(@InjectRepository(UserEntity) private readonly userRepository: Repository<UserEntity>) {}
 
     public async updateRoleOfUser(id, role:Role){
-        return await this.userRepository.update(id, {
+        await this.userRepository.update(id, {
             role:role
         }).catch((err) => {
             throw new HttpException({
               code : 'QUERY_FAILED',
               message : `${err.detail || err.hint || err.routine}`,
+              description: ''
             }, HttpStatus.BAD_REQUEST)
         })
     }

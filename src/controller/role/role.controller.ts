@@ -1,19 +1,13 @@
 import {
     Version,
-    CacheInterceptor,
-    CacheTTL,
     Controller,
     Param,
-    Get,
-    Query,
-    Post,
     Body,
     Put,
-    Delete,
     UseGuards, 
     UseInterceptors, 
     UseFilters 
-  } from '@nestjs/common'
+} from '@nestjs/common'
 
 import { hasRoles } from '@shared/decorator/roles.decorator'
 import { JwtAuthAccessTokenGuard } from '@shared/guard/jwt-auth.guard'
@@ -38,7 +32,7 @@ export class RoleController {
 
     @Put(':id')
     @Version('1/private')
-    @hasRoles(Role.ADMIN)
+    @hasRoles(Role.ADMIN, Role.USER)
     @UseGuards(JwtAuthAccessTokenGuard, RolesGuard)
     @UseFilters(Error)
     @UseInterceptors(Success)
