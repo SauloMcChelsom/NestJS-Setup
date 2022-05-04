@@ -49,5 +49,6 @@ export enum message {
   UID_NOT_FOUND =  'uid not found',
   TOKE_EXPIRES = 'Token expires',
   TOKEN_NOT_UNAUTHORRIZED = 'Você não esta passando um token | o token é invalido | o token esta expirado',
-  USER_FORBIDDEN_RESOURCE = 'As propriedade do browser não confere ou nivel de acesso não é permitido'
+  USER_FORBIDDEN_RESOURCE = 'As propriedade do browser não confere ou nivel de acesso não é permitido',
+  EMAIL_NOT_FOUND = 'email not found',
 }

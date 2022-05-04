@@ -172,15 +172,23 @@ export class UserEntityModel {
 
   public async getUserByEmail(email: string) {
     try {
+
       const res = await this.repository.findOne({ where: { email: email } })
+
       if (res) {
         return res
       }
-      throw new HttpException(code.NOT_FOUND, 404)
+
+      throw new HttpException({
+        code:code.EMAIL_NOT_FOUND,
+        message: message.EMAIL_NOT_FOUND,
+        description: `o email ${email} não foi cadastrado`,
+      }, HttpStatus.NOT_FOUND)
+
     } catch (e: any) {
       throw new HttpException(e.response, e.status)
     }
-  }
+}
 
   public async updateUserByUid(id: number, body: any) {
     try {

@@ -22,7 +22,7 @@ import {
       let statusCode:number = 501
       let code:string = 'INTERNAL_SERVER_ERROR'
       let message:string = 'Houve um error desconhecido'
-      let description = ''
+      let description = 'Esse error não foi tratado pelo desenvolvedor e nem pelo framework'
       let parameters:any = this.converteUrlParamsToJson(url)
 
       //usuario não esta passando o token ou o token e invalido

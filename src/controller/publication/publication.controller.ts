@@ -48,8 +48,31 @@ export class PublicationController {
     private toMapper: PageMapper,
   ) {}
 
-  @Get('/auth/feed')
-  @Version('1')
+  @Get()
+  @Version('1/public')
+  @UseFilters(Error)
+  @UseInterceptors(Success)
+  public async publicListFeed(
+    @Query('limit') limit = '3',
+    @Query('offset') offset = '0',
+    @Query('order') order: string,
+    @Query('column') column: string,
+    @Query('start') start: string,
+    @Query('end') end: string,
+  ) {
+    const cls: ListFilter = {
+      limit: parseInt(limit) ? parseInt(limit) : 5,
+      offset: parseInt(offset) ? parseInt(offset) : 0,
+      order: order,
+      column: column,
+      start: start,
+      end: end,
+    }
+    const { res, count } = await this.service.publicListFeed(cls).then(res => this.toMapper.publicList(res))
+    return new OK(res, code.SUCCESSFULLY_FOUND, null, count)
+  }
+
+  @Get()
   @Version('1/private')
   @hasRoles(Role.USER, Role.ADMIN)
   @UseGuards(JwtAuthAccessTokenGuard, JwtAuthRefreshTokenGuard, UserMachinePropertyGuard, RolesGuard)
@@ -75,33 +98,16 @@ export class PublicationController {
     return new OK(res, code.SUCCESSFULLY_FOUND, null, count)
   }
 
-  @Get('/public/feed')
-  @Version('1/private')
-  @hasRoles(Role.USER, Role.ADMIN)
-  @UseGuards(JwtAuthAccessTokenGuard, JwtAuthRefreshTokenGuard, UserMachinePropertyGuard, RolesGuard)
+  @Get(':id')
+  @Version('1/public')
   @UseFilters(Error)
   @UseInterceptors(Success)
-  public async publicListFeed(
-    @Query('limit') limit = '3',
-    @Query('offset') offset = '0',
-    @Query('order') order: string,
-    @Query('column') column: string,
-    @Query('start') start: string,
-    @Query('end') end: string,
-  ) {
-    const cls: ListFilter = {
-      limit: parseInt(limit) ? parseInt(limit) : 5,
-      offset: parseInt(offset) ? parseInt(offset) : 0,
-      order: order,
-      column: column,
-      start: start,
-      end: end,
-    }
-    const { res, count } = await this.service.publicListFeed(cls).then(res => this.toMapper.publicList(res))
-    return new OK(res, code.SUCCESSFULLY_FOUND, null, count)
+  public async publicfindOneById(@Param('id') id: number) {
+    const res = await this.service.publicfindOneById(id).then(res => this.toMapper.publicFindOne(res))
+    return new OK(res, code.SUCCESSFULLY_FOUND)
   }
 
-  @Get('/auth/:id')
+  @Get(':id')
   @Version('1/private')
   @hasRoles(Role.USER, Role.ADMIN)
   @UseGuards(JwtAuthAccessTokenGuard, JwtAuthRefreshTokenGuard, UserMachinePropertyGuard, RolesGuard)
@@ -112,49 +118,8 @@ export class PublicationController {
     return new OK(res, code.SUCCESSFULLY_FOUND)
   }
 
-  @Get('/public/:id')
-  @Version('1/private')
-  @hasRoles(Role.USER, Role.ADMIN)
-  @UseGuards(JwtAuthAccessTokenGuard, JwtAuthRefreshTokenGuard, UserMachinePropertyGuard, RolesGuard)
-  @UseFilters(Error)
-  @UseInterceptors(Success)
-  public async publicfindOneById(@Param('id') id: number) {
-    const res = await this.service.publicfindOneById(id).then(res => this.toMapper.publicFindOne(res))
-    return new OK(res, code.SUCCESSFULLY_FOUND)
-  }
-
-  @Get('/auth/search/text')
-  @Version('1/private')
-  @hasRoles(Role.USER, Role.ADMIN)
-  @UseGuards(JwtAuthAccessTokenGuard, JwtAuthRefreshTokenGuard, UserMachinePropertyGuard, RolesGuard)
-  @UseFilters(Error)
-  @UseInterceptors(Success)
-  public async authListSearchByText(
-    @Query('text') search: string,
-    @Query('limit') limit = '3',
-    @Query('offset') offset = '0',
-    @Query('order') order: string,
-    @Query('column') column: string,
-    @Query('start') start: string,
-    @Query('end') end: string,
-  ) {
-    const cls: ListFilter = {
-      search: search,
-      limit: parseInt(limit) ? parseInt(limit) : 5,
-      offset: parseInt(offset) ? parseInt(offset) : 0,
-      order: order,
-      column: column,
-      start: start,
-      end: end,
-    }
-    const { res, count } = await this.service.authListSearchByText(cls).then(res => this.toMapper.privateList(res))
-    return new OK(res, code.SUCCESSFULLY_FOUND, null, count)
-  }
-
-  @Get('/public/search/text')
-  @Version('1/private')
-  @hasRoles(Role.USER, Role.ADMIN)
-  @UseGuards(JwtAuthAccessTokenGuard, JwtAuthRefreshTokenGuard, UserMachinePropertyGuard, RolesGuard)
+  @Get('search/text')
+  @Version('1/public')
   @UseFilters(Error)
   @UseInterceptors(Success)
   public async publicListSearchByText(
@@ -179,7 +144,35 @@ export class PublicationController {
     return new OK(res, code.SUCCESSFULLY_FOUND, null, count)
   }
 
-  @Post('/auth/')
+  @Get('search/text')
+  @Version('1/private')
+  @hasRoles(Role.USER, Role.ADMIN)
+  @UseGuards(JwtAuthAccessTokenGuard, JwtAuthRefreshTokenGuard, UserMachinePropertyGuard, RolesGuard)
+  @UseFilters(Error)
+  @UseInterceptors(Success)
+  public async authListSearchByText(
+    @Query('search') search: string,
+    @Query('limit') limit = '3',
+    @Query('offset') offset = '0',
+    @Query('order') order: string,
+    @Query('column') column: string,
+    @Query('start') start: string,
+    @Query('end') end: string,
+  ) {
+    const cls: ListFilter = {
+      search: search,
+      limit: parseInt(limit) ? parseInt(limit) : 5,
+      offset: parseInt(offset) ? parseInt(offset) : 0,
+      order: order,
+      column: column,
+      start: start,
+      end: end,
+    }
+    const { res, count } = await this.service.authListSearchByText(cls).then(res => this.toMapper.privateList(res))
+    return new OK(res, code.SUCCESSFULLY_FOUND, null, count)
+  }
+
+  @Post()
   @Version('1/private')
   @hasRoles(Role.USER, Role.ADMIN)
   @UseGuards(JwtAuthAccessTokenGuard, JwtAuthRefreshTokenGuard, UserMachinePropertyGuard, RolesGuard)
@@ -198,7 +191,7 @@ export class PublicationController {
     return new OK(res, code.SUCCESSFULLY_CREATED)
   }
 
-  @Put('/auth/:id')
+  @Put(':id')
   @Version('1/private')
   @hasRoles(Role.USER, Role.ADMIN)
   @UseGuards(JwtAuthAccessTokenGuard, JwtAuthRefreshTokenGuard, UserMachinePropertyGuard, RolesGuard)
