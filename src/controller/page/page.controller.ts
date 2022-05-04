@@ -47,51 +47,33 @@ export class PageController {
     private toMapper: PageMapper,
   ) {}
 
-  @Get('/auth/name/:page')
-  @Version('1/private')
-  @hasRoles(Role.USER, Role.ADMIN)
-  @UseGuards(JwtAuthAccessTokenGuard, JwtAuthRefreshTokenGuard, UserMachinePropertyGuard, RolesGuard)
+  @Get()
+  @Version('1/public')
   @UseFilters(Error)
   @UseInterceptors(Success)
-  public async authFindOneByName(@Param('page') name: string) {
-    const res = await this.service.authFindOneByName(name).then(res => this.toMapper.privateFindOne(res))
-    return new OK(res, code.SUCCESSFULLY_CREATED)
+  public async publicListAll(
+    @Query('search') search: string,
+    @Query('limit') limit = '3',
+    @Query('offset') offset = '0',
+    @Query('order') order: string,
+    @Query('column') column: string,
+    @Query('start') start: string,
+    @Query('end') end: string,
+  ) {
+    const cls: ListFilter = {
+      search: search,
+      limit: parseInt(limit) ? parseInt(limit) : 5,
+      offset: parseInt(offset) ? parseInt(offset) : 0,
+      order: order,
+      column: column,
+      start: start,
+      end: end,
+    }
+    const { res, count } = await this.service.publicListAll(cls).then(res => this.toMapper.publicList(res))
+    return new OK(res, code.SUCCESSFULLY_FOUND, null, count)
   }
 
-  @Get('/public/name/:page')
-  @Version('1/private')
-  @hasRoles(Role.USER, Role.ADMIN)
-  @UseGuards(JwtAuthAccessTokenGuard, JwtAuthRefreshTokenGuard, UserMachinePropertyGuard, RolesGuard)
-  @UseFilters(Error)
-  @UseInterceptors(Success)
-  public async publicfindOneByName(@Param('page') name: string) {
-    const res = await this.service.publicfindOneByName(name).then(res => this.toMapper.publicFindOne(res))
-    return new OK(res, code.SUCCESSFULLY_FOUND)
-  }
-
-  @Get('/auth/:id')
-  @Version('1/private')
-  @hasRoles(Role.USER, Role.ADMIN)
-  @UseGuards(JwtAuthAccessTokenGuard, JwtAuthRefreshTokenGuard, UserMachinePropertyGuard, RolesGuard)
-  @UseFilters(Error)
-  @UseInterceptors(Success)
-  public async authFindOneById(@Param('id') id: number) {
-    const res = await this.service.authFindOneById(id).then(res => this.toMapper.privateFindOne(res))
-    return new OK(res, code.SUCCESSFULLY_FOUND)
-  }
-
-  @Get('/public/:id')
-  @Version('1/private')
-  @hasRoles(Role.USER, Role.ADMIN)
-  @UseGuards(JwtAuthAccessTokenGuard, JwtAuthRefreshTokenGuard, UserMachinePropertyGuard, RolesGuard)
-  @UseFilters(Error)
-  @UseInterceptors(Success)
-  public async publicfindOneById(@Param('id') id: number) {
-    const res = await this.service.publicfindOneById(id).then(res => this.toMapper.publicFindOne(res))
-    return new OK(res, code.SUCCESSFULLY_FOUND)
-  }
-
-  @Get('/auth/')
+  @Get()
   @Version('1/private')
   @hasRoles(Role.USER, Role.ADMIN)
   @UseGuards(JwtAuthAccessTokenGuard, JwtAuthRefreshTokenGuard, UserMachinePropertyGuard, RolesGuard)
@@ -119,35 +101,47 @@ export class PageController {
     return new OK(res, code.SUCCESSFULLY_FOUND, null, count)
   }
 
-  @Get('/public/')
+  @Get(':id')
+  @Version('1/public')
+  @UseFilters(Error)
+  @UseInterceptors(Success)
+  public async publicfindOneById(@Param('id') id: number) {
+    const res = await this.service.publicfindOneById(id).then(res => this.toMapper.publicFindOne(res))
+    return new OK(res, code.SUCCESSFULLY_FOUND)
+  }
+  
+  @Get(':id')
   @Version('1/private')
   @hasRoles(Role.USER, Role.ADMIN)
   @UseGuards(JwtAuthAccessTokenGuard, JwtAuthRefreshTokenGuard, UserMachinePropertyGuard, RolesGuard)
   @UseFilters(Error)
   @UseInterceptors(Success)
-  public async publicListAll(
-    @Query('search') search: string,
-    @Query('limit') limit = '3',
-    @Query('offset') offset = '0',
-    @Query('order') order: string,
-    @Query('column') column: string,
-    @Query('start') start: string,
-    @Query('end') end: string,
-  ) {
-    const cls: ListFilter = {
-      search: search,
-      limit: parseInt(limit) ? parseInt(limit) : 5,
-      offset: parseInt(offset) ? parseInt(offset) : 0,
-      order: order,
-      column: column,
-      start: start,
-      end: end,
-    }
-    const { res, count } = await this.service.publicListAll(cls).then(res => this.toMapper.publicList(res))
-    return new OK(res, code.SUCCESSFULLY_FOUND, null, count)
+  public async authFindOneById(@Param('id') id: number) {
+    const res = await this.service.authFindOneById(id).then(res => this.toMapper.privateFindOne(res))
+    return new OK(res, code.SUCCESSFULLY_FOUND)
   }
 
-  @Post('/auth')
+  @Get('/page-name/:page')
+  @Version('1/public')
+  @UseFilters(Error)
+  @UseInterceptors(Success)
+  public async publicfindOneByName(@Param('page') name: string) {
+    const res = await this.service.publicfindOneByName(name).then(res => this.toMapper.publicFindOne(res))
+    return new OK(res, code.SUCCESSFULLY_FOUND)
+  }
+
+  @Get('/page-name/:page')
+  @Version('1/private')
+  @hasRoles(Role.USER, Role.ADMIN)
+  @UseGuards(JwtAuthAccessTokenGuard, JwtAuthRefreshTokenGuard, UserMachinePropertyGuard, RolesGuard)
+  @UseFilters(Error)
+  @UseInterceptors(Success)
+  public async authFindOneByName(@Param('page') name: string) {
+    const res = await this.service.authFindOneByName(name).then(res => this.toMapper.privateFindOne(res))
+    return new OK(res, code.SUCCESSFULLY_CREATED)
+  }
+
+  @Post()
   @Version('1/private')
   @hasRoles(Role.USER, Role.ADMIN)
   @UseGuards(JwtAuthAccessTokenGuard, JwtAuthRefreshTokenGuard, UserMachinePropertyGuard, RolesGuard)
@@ -165,7 +159,7 @@ export class PageController {
     return new OK(res, code.SUCCESSFULLY_CREATED)
   }
 
-  @Put('/auth/:id')
+  @Put(':id')
   @Version('1/private')
   @hasRoles(Role.USER, Role.ADMIN)
   @UseGuards(JwtAuthAccessTokenGuard, JwtAuthRefreshTokenGuard, UserMachinePropertyGuard, RolesGuard)
@@ -174,14 +168,17 @@ export class PageController {
   public async update(
     @Body() body: UpdateDto,
     @Param('id') id: number,
-    @Header(new UID()) uid: string,
+    @Header(new UID()) uid: any,
   ) {
+    console.log(uid)
     const user = await this.user.getUserByUid(uid)
+    
     const page: UpdatePage = {
       ...body,
       id: id,
       user_id: user.id,
     }
+    
     const res = await this.service.update(page).then(res => this.toMapper.publicFindOne(res))
     return new OK(res, code.SUCCESSFULLY_UPDATED)
   }

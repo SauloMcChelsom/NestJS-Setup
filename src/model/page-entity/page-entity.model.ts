@@ -1,4 +1,4 @@
-import { HttpException } from '@nestjs/common'
+import { HttpException, HttpStatus } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 
 import { IsValidTimestampService } from '@root/src/shared/utility/is-valid-timestamp/is-valid-timestamp.service'
@@ -20,13 +20,13 @@ export class PageEntityModel {
   public async create(body: CreatePage) {
     await this.pageAlreadyExist(body.page_name);
     body.number_of_followers = 0;
-    return await this.create(body);
+    return await this.save(body);
   }
 
   public async updatePage(body: UpdatePage) {
     await this.findPageByIdOfUserAndIdOfPage(
       body.user_id.toString(),
-      body.toString(),
+      body.id.toString(),
     )
     await this.update(body.id, body)
     return await this.findOneById(body.id)
@@ -46,13 +46,21 @@ export class PageEntityModel {
 
   public async findOneByName(name: string) {
     try {
+
       const res = await this.repository.findOne({ where: { page_name: name } })
-      if (res) {
+
+    if (res) {
         return res
-      }
-      throw new HttpException(code.NOT_FOUND, 404)
+    }
+
+    throw new HttpException({
+        code:code.NOT_FOUND,
+        message: message.NOT_FOUND,
+        description: `A pagina "${name}" não foi encontrada, verifique acentos, espaço, aspas, imojes...`
+    }, HttpStatus.NOT_FOUND)
+
     } catch (e: any) {
-      throw new HttpException(e.response, e.status)
+    throw new HttpException(e.response, e.status)
     }
   }
 

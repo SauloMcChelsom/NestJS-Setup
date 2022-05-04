@@ -26,7 +26,7 @@ import { JwtLocalModel } from './jwt-local.model'
             inject: [ConfigService],
             useFactory: async (configService: ConfigService) => ({
                 secret: configService.get('JWT_SECRET'),
-                signOptions: {expiresIn: '1800s'}//1800s->30min
+                signOptions: {expiresIn: '180000s'}//1800s->30min
             })
         }),
         ConfigModule,
