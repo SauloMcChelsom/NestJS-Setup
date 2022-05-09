@@ -36,25 +36,34 @@ export class UserEntityModel {
     })
   }
 
-  public async findOneUserByEmail(email:string){
-    return await <User>this.repository.findOne({where: { email: email}}).catch((err) => {
+  public async findOneUserByEmail(email:string) {
+    try {
+
+      const res = await this.repository.findOne({where: { email: email}}).catch((err) => {
         throw new HttpException({
-          code : 'QUERY_FAILED',
-          message : err,
+          code : code.QUERY_FAILED,
+          message : `${err}`,
+          description : ''
         }, HttpStatus.BAD_REQUEST)
-    })
+      })
+
+      if (res) {
+        return res
+      }
+
+      throw new HttpException({
+        code : code.NOT_FOUND,
+        message : 'not found user by email',
+        description : `the email '${email}' is not registered`
+      }, HttpStatus.NOT_FOUND)
+
+    } catch (e: any) {
+      throw new HttpException(e.response, e.status);
+    }
   }
 
   public async validateEmailPasswordUser(email: string, user_password: string): Promise<User> {
     let user: User = await this.findOneUserByEmail(email)
-   
-    if(!user) {
-      throw new HttpException({
-        code:code.NOT_FOUND,
-        message: message.EMAIL_DOES_NOT_EXIST,
-        description: "email not found",
-      }, HttpStatus.BAD_REQUEST)
-    }
 
     let match: boolean = await this.comparePasswords(user_password, user.password)       
    
@@ -70,54 +79,99 @@ export class UserEntityModel {
     return result
   }
 
-  public async findOneUserByUserId(user_id:number){
-    return await this.repository.findOne({where: { uid: user_id}}).catch((err) => {
+  public async findUserByUserUid(uid: string) {
+    try {
+
+      const res = await this.repository.findOne({where: { uid: uid}}).catch((err) => {
         throw new HttpException({
-          code : 'QUERY_FAILED',
-          message : `${err.detail || err.hint || err.routine}`,
+          code : code.QUERY_FAILED,
+          message : `${err}`,
+          description : ''
         }, HttpStatus.BAD_REQUEST)
-    })
+      })
+
+      if (res) {
+        return res;
+      }
+
+      throw new HttpException({
+        code : code.NOT_FOUND,
+        message : 'not found user by uid',
+        description : ''
+      }, HttpStatus.NOT_FOUND)
+
+    } catch (e: any) {
+      throw new HttpException(e.response, e.status);
+    }
   }
 
-  public async findOneUserById(id:number){
-    let user:User =  await this.repository.findOne({where: { id: id}}).catch((err) => {
-        throw new HttpException({
-          code : 'QUERY_FAILED',
-          message : `${err.detail || err.hint || err.routine}`,
-        }, HttpStatus.BAD_REQUEST)
-    })
+  public async findOneUserById(id:number) {
+    try {
 
-    if(!user) {
+      const res = await this.repository.findOne({where: { id: id}}).catch((err) => {
         throw new HttpException({
-            code : 'not_found',
-            message : 'User not found'
+          code : code.QUERY_FAILED,
+          message : `${err}`,
+          description : ''
         }, HttpStatus.BAD_REQUEST)
+      })
+
+      if (res) {
+        return res;
+      }
+
+      throw new HttpException({
+        code : code.NOT_FOUND,
+        message : 'not found user by id',
+        description : ''
+      }, HttpStatus.NOT_FOUND)
+
+    } catch (e: any) {
+      throw new HttpException(e.response, e.status);
     }
-
-    return user
   }
 
   public async validateEmailForCreateNewAccount(email: string) {
-    let user: User = await this.findOneUserByEmail(email)
-        
-    if(user) {
+    try {
+
+      const user = await this.repository.findOne({where: { email: email}}).catch((err) => {
         throw new HttpException({
-            code : 'user_already_exists',
-            message : 'User already exists'
+          code : code.QUERY_FAILED,
+          message : `${err}`,
+          description : ''
         }, HttpStatus.BAD_REQUEST)
+      })
+          
+      if(user) {
+        throw new HttpException({
+          code :  code.EMAIL_ALREADY_IN_USE,
+          message : message.EMAIL_ALREADY_IN_USE,
+          description : ''
+        }, HttpStatus.CONFLICT)
+      }
+
+    } catch (e: any) {
+      throw new HttpException(e.response, e.status);
     }
   }
-
+  
   public async getUserById(id): Promise<User>{
     try {
 
-        let user: User = await this.findOneUserById(id)
+        let user: User = await this.findOneUserById(id).catch((err) => {
+          throw new HttpException({
+            code : code.QUERY_FAILED,
+            message : `${err}`,
+            description : ''
+          }, HttpStatus.BAD_REQUEST)
+        })
 
         if(!user){
             throw new HttpException({
-                code : 'not found',
-                message : 'user not found'
-            }, HttpStatus.BAD_REQUEST)
+              code :  code.NOT_FOUND,
+              message : message.NOT_FOUND,
+              description : ''
+            }, HttpStatus.NOT_FOUND)
         }
 
         const {password, ...result} = user
@@ -130,9 +184,19 @@ export class UserEntityModel {
 
   public async emailAlreadyExist(email: string) {
     try {
-      const res = await this.repository.findOne({ where: { email: email } })
+      const res = await this.repository.findOne({ where: { email: email } }).catch((err) => {
+        throw new HttpException({
+          code : code.QUERY_FAILED,
+          message : `${err}`,
+          description : ''
+        }, HttpStatus.BAD_REQUEST)
+      })
       if (res) {
-        throw new HttpException(code.EMAIL_ALREADY_IN_USE, 409)
+        throw new HttpException({
+          code :  code.EMAIL_ALREADY_IN_USE,
+          message : message.EMAIL_ALREADY_IN_USE,
+          description : ''
+        }, HttpStatus.CONFLICT)
       }
     } catch (e: any) {
       throw new HttpException(e.response, e.status)
@@ -141,9 +205,19 @@ export class UserEntityModel {
 
   public async uidAlreadyExist(uid: string) {
     try {
-      const res = await this.repository.findOne({ where: { uid: uid } })
+      const res = await this.repository.findOne({ where: { uid: uid } }).catch((err) => {
+        throw new HttpException({
+          code : code.QUERY_FAILED,
+          message : `${err}`,
+          description : ''
+        }, HttpStatus.BAD_REQUEST)
+      })
       if (res) {
-        throw new HttpException(code.UID_ALREADY_IN_USE, 409)
+        throw new HttpException({
+          code :  code.UID_ALREADY_IN_USE,
+          message : message.UID_ALREADY_IN_USE,
+          description : ''
+        }, HttpStatus.CONFLICT)
       }
     } catch (e: any) {
       throw new HttpException(e.response, e.status)
@@ -153,7 +227,13 @@ export class UserEntityModel {
   public async getUserByUid(uid: string) {
     try {
 
-      const res = await this.repository.findOne({ where: { uid: uid } })
+      const res = await this.repository.findOne({ where: { uid: uid } }).catch((err) => {
+        throw new HttpException({
+          code : code.QUERY_FAILED,
+          message : `${err}`,
+          description : ''
+        }, HttpStatus.BAD_REQUEST)
+      })
 
       if (res) {
         return res
@@ -173,7 +253,13 @@ export class UserEntityModel {
   public async getUserByEmail(email: string) {
     try {
 
-      const res = await this.repository.findOne({ where: { email: email } })
+      const res = await this.repository.findOne({ where: { email: email } }).catch((err) => {
+        throw new HttpException({
+          code : code.QUERY_FAILED,
+          message : `${err}`,
+          description : ''
+        }, HttpStatus.BAD_REQUEST)
+      })
 
       if (res) {
         return res
@@ -192,11 +278,29 @@ export class UserEntityModel {
 
   public async updateUserByUid(id: number, body: any) {
     try {
-      const res = await this.repository.update(id, body)
-      if (res) {
-        return res
+      const res = await this.repository.update(id, body).catch((err) => {
+        throw new HttpException({
+          code : code.QUERY_FAILED,
+          message : `${err}`,
+          description : ''
+        }, HttpStatus.BAD_REQUEST)
+      })
+
+      if(!res){
+        throw new HttpException({
+          code : code.NOT_FOUND,
+          message : 'update, uid not found',
+          description : ''
+        }, HttpStatus.NOT_FOUND)
       }
-      throw new HttpException(code.NOT_FOUND, 404)
+
+      if (res.affected == 1) {
+        return {
+          code : code.SUCCESSFULLY_UPDATED,
+          message : message.SUCCESSFULLY_UPDATED,
+          description : ''
+        }
+      }
     } catch (e: any) {
       throw new HttpException(e.response, e.status)
     }
@@ -204,31 +308,55 @@ export class UserEntityModel {
 
   public async delete(id: number) {
     try {
-      const res = await this.repository.delete(id)
-      if (res) {
-        return res
+
+      const res = await this.repository.delete(id).catch((err) => {
+        throw new HttpException({
+          code : code.QUERY_FAILED,
+          message : `${err}`,
+          description : ''
+        }, HttpStatus.BAD_REQUEST)
+      });
+
+      if(!res){
+        throw new HttpException({
+          code : code.NOT_FOUND,
+          message : 'delete, id not found',
+          description : ''
+        }, HttpStatus.NOT_FOUND)
       }
-      throw new HttpException(code.NOT_FOUND, 404)
+
+      if (res.affected == 1) {
+        return {
+          code : code.SUCCESSFULLY_DELETED,
+          message : message.SUCCESSFULLY_DELETED,
+          description : ''
+        };
+      }
     } catch (e: any) {
-      throw new HttpException(e.response, e.status)
+      throw new HttpException(e.response, e.status);
     }
   }
 
   public async findAll(){
-    let user:User[] =  await this.repository.find().catch((err) => {
+    try {
+      let user:User[] =  await this.repository.find().catch((err) => {
         throw new HttpException({
           code : 'QUERY_FAILED',
           message : `${err.detail || err.hint || err.routine}`,
         }, HttpStatus.BAD_REQUEST)
-    })
+      })
 
-    if(!user) {
+      if(!user) {
         throw new HttpException({
-            code : 'not_found',
-            message : 'User not found'
-        }, HttpStatus.BAD_REQUEST)
-    }
+          code:code.USER_FOUND,
+          message: message.USER_FOUND,
+          description : ''
+        }, HttpStatus.NOT_FOUND)
+      }
 
-    return user
+      return user
+    } catch (e: any) {
+      throw new HttpException(e.response, e.status);
+    }
   }
 }
