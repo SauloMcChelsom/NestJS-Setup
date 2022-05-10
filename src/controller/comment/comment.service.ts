@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 
-//import { PublicationService } from '@modules/publication/publication.service'
+import { PublicationEntityModel } from '@model/publication-entity/publication-entity.model'
 import { ListFilter, UpdateComment, CreateComment } from '@shared/interfaces'
 import { CommentEntityModel } from '@root/src/model/comment-entity/comment-entity.model'
 
@@ -8,7 +8,7 @@ import { CommentEntityModel } from '@root/src/model/comment-entity/comment-entit
 export class CommentService {
   constructor(
     private commentModel: CommentEntityModel,
-    //private publication: PublicationService,
+    private publication: PublicationEntityModel,
   ) {}
 
   public async listCommentByUserId(id: number, filter: ListFilter) {
@@ -51,9 +51,9 @@ export class CommentService {
 
   public async create(body: CreateComment) {
     const create = await this.commentModel.create(body);
-    /*await this.publication.incrementNumberCommentOfPublication(
+    await this.publication.incrementNumberCommentOfPublication(
       body.publication_id,
-    );*/
+    );
     return await this.commentModel.findOneById(create.id);
   }
 

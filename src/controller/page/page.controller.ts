@@ -170,7 +170,6 @@ export class PageController {
     @Param('id') id: number,
     @Header(new UID()) uid: any,
   ) {
-    console.log(uid)
     const user = await this.user.getUserByUid(uid)
     
     const page: UpdatePage = {

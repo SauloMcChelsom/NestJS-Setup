@@ -48,7 +48,7 @@ export class PublicationController {
     private toMapper: PageMapper,
   ) {}
 
-  @Get()
+  @Get('page/:id')
   @Version('1/public')
   @UseFilters(Error)
   @UseInterceptors(Success)
@@ -59,6 +59,7 @@ export class PublicationController {
     @Query('column') column: string,
     @Query('start') start: string,
     @Query('end') end: string,
+    @Param('id') id: number
   ) {
     const cls: ListFilter = {
       limit: parseInt(limit) ? parseInt(limit) : 5,
@@ -68,11 +69,11 @@ export class PublicationController {
       start: start,
       end: end,
     }
-    const { res, count } = await this.service.publicListFeed(cls).then(res => this.toMapper.publicList(res))
+    const { res, count } = await this.service.listPublicationByPage(id, cls).then(res => this.toMapper.publicList(res))
     return new OK(res, code.SUCCESSFULLY_FOUND, null, count)
   }
 
-  @Get()
+  @Get('page/:id')
   @Version('1/private')
   @hasRoles(Role.USER, Role.ADMIN)
   @UseGuards(JwtAuthAccessTokenGuard, JwtAuthRefreshTokenGuard, UserMachinePropertyGuard, RolesGuard)
@@ -85,6 +86,7 @@ export class PublicationController {
     @Query('column') column: string,
     @Query('start') start: string,
     @Query('end') end: string,
+    @Param('id') id: number
   ) {
     const cls: ListFilter = {
       limit: parseInt(limit) ? parseInt(limit) : 5,
@@ -94,7 +96,34 @@ export class PublicationController {
       start: start,
       end: end,
     }
-    const { res, count } = await this.service.authListFeed(cls).then(res => this.toMapper.privateList(res))
+    const { res, count } = await this.service.listPublicationByPage(id, cls).then(res => this.toMapper.privateList(res))
+    return new OK(res, code.SUCCESSFULLY_FOUND, null, count)
+  }
+
+  @Get('feed')
+  @Version('1/private')
+  @hasRoles(Role.USER, Role.ADMIN)
+  @UseGuards(JwtAuthAccessTokenGuard, JwtAuthRefreshTokenGuard, UserMachinePropertyGuard, RolesGuard)
+  @UseFilters(Error)
+  @UseInterceptors(Success)
+  public async listFeed(
+    @Query('limit') limit = '3',
+    @Query('offset') offset = '0',
+    @Query('order') order: string,
+    @Query('column') column: string,
+    @Query('start') start: string,
+    @Query('end') end: string,
+    @Param('id') id: number
+  ) {
+    const cls: ListFilter = {
+      limit: parseInt(limit) ? parseInt(limit) : 5,
+      offset: parseInt(offset) ? parseInt(offset) : 0,
+      order: order,
+      column: column,
+      start: start,
+      end: end,
+    }
+    const { res, count } = await this.service.feed(id, cls).then(res => this.toMapper.privateList(res))
     return new OK(res, code.SUCCESSFULLY_FOUND, null, count)
   }
 

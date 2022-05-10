@@ -34,6 +34,7 @@ export class PublicationEntityModel {
         await this.repository.update(publication.id, {
           number_of_likes: publication.number_of_likes,
         });
+        return
       }
 
       throw new HttpException({
@@ -65,6 +66,7 @@ export class PublicationEntityModel {
         await this.repository.update(publication.id, {
           number_of_comments: publication.number_of_comments,
         });
+        return
       }
 
       throw new HttpException({
@@ -96,6 +98,7 @@ export class PublicationEntityModel {
         await this.repository.update(publication.id, {
           number_of_comments: publication.number_of_comments,
         });
+        return
       }
 
       throw new HttpException({
@@ -127,11 +130,12 @@ export class PublicationEntityModel {
         await this.repository.update(publication.id, {
           number_of_likes: publication.number_of_likes,
         });
+        return
       }
 
       throw new HttpException({
         code : code.DATA_CONFLICT,
-        message : 'not find decrement likes for user',
+        message : 'not find decrement likes for user', 
         description : '',
       }, HttpStatus.CONFLICT)
 
@@ -163,6 +167,72 @@ export class PublicationEntityModel {
 
     } catch (e: any) {
       throw new HttpException(e.response, e.status)
+    }
+  }
+
+  public async listPublicationByPage(
+    
+    id = null,
+    search = '',
+    limit = 3,
+    offset = 0,
+    order = 'ASC',
+    column = 'id',
+    start = '',
+    end = '',
+  ) {
+    try {
+      if(typeof id !== 'number' || Number.isNaN(id) ){
+        throw new HttpException({
+          code : code.NOT_FOUND,
+          message : 'not found id',
+          description : ''
+        }, HttpStatus.NOT_FOUND)
+      }
+
+      if (limit > 15) {
+        limit = 15;
+      }
+
+      if (this.empty.run(column)) {
+        column = 'id';
+      }
+
+      if (!(order === 'ASC' || order === 'DESC')) {
+        order = 'ASC';
+      }
+
+      if (start) {
+        start = this.isValidTimestamp.run(start);
+      }
+
+      if (end) {
+        end = this.isValidTimestamp.run(end);
+      }
+
+      const res = await this.repository.listPublicationByPage(
+        id,
+        limit,
+        offset,
+        order,
+        column,
+        start,
+        end,
+      );
+      const count = await this.repository.countListPublicationByPage(id, search, start);
+
+      if (Object.keys(res).length != 0) {
+        return { res: res, count: count };
+      }
+
+      throw new HttpException({
+        code : code.NOT_FOUND,
+        message : 'not found list feed',
+        description : ''
+      }, HttpStatus.NOT_FOUND)
+
+    } catch (e: any) {
+      throw new HttpException(e.response, e.status);
     }
   }
 

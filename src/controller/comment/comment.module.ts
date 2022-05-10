@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 
-//import { PublicationModule } from '@modules/publication/publication.module';
+import { PublicationEntityModule } from '@model/publication-entity/publication-entity.module'
 import { JwtLocalModule } from '@model/jwt-local/jwt-local.module';
 
 import { CommentEntityModule } from '@root/src/model/comment-entity/comment-entity.module';
@@ -16,7 +16,8 @@ import { CommentMapper } from './mapper/index.mapper';
   imports: [
     JwtLocalModule,
     CommentEntityModule,
-    UserEntityModule
+    UserEntityModule,
+    PublicationEntityModule
   ],
   controllers: [CommentController],
   providers: [

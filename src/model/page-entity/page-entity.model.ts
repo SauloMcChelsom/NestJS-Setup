@@ -249,6 +249,7 @@ export class PageEntityModel {
         await this.repository.update(page.id, {
           number_of_followers: page.number_of_followers,
         })
+        return
       }
 
       throw new HttpException({
@@ -271,6 +272,7 @@ export class PageEntityModel {
         await this.repository.update(page.id, {
           number_of_followers: page.number_of_followers,
         })
+        return
       }
       
       throw new HttpException({

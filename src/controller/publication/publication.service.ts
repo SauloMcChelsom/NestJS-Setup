@@ -25,7 +25,20 @@ export class PublicationService {
     return await this.publication.findOneById(id);
   }
 
-  public async authListFeed(cls: ListFilter) {
+  public async listPublicationByPage(id: number, cls: ListFilter) {
+    return await this.publication.listPublicationByPage(
+      id,
+      cls.search,
+      cls.limit,
+      cls.offset,
+      cls.order,
+      cls.column,
+      cls.start,
+      cls.end,
+    );
+  }
+
+  public async feed(id: number, cls: ListFilter) {
     /**
      * buscar da tabela
      *    pagina
@@ -46,18 +59,6 @@ export class PublicationService {
      *   0 - 5
      *
      */
-    return await this.publication.listFeed(
-      cls.search,
-      cls.limit,
-      cls.offset,
-      cls.order,
-      cls.column,
-      cls.start,
-      cls.end,
-    );
-  }
-
-  public async publicListFeed(cls: ListFilter) {
     return await this.publication.listFeed(
       cls.search,
       cls.limit,

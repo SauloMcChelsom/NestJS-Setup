@@ -42,7 +42,6 @@ export class CommentEntityRepository extends AbstractRepository<CommentEntity> {
       .offset(offset)
       .getMany()
       .catch(err => {
-        console.log(err)
         throw new HttpException({
           code : code.QUERY_FAILED,
           message : `${err.detail || err.hint || err.routine}`,
