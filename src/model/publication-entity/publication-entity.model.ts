@@ -1,4 +1,4 @@
-import { HttpException } from '@nestjs/common';
+import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
 import { IsValidTimestampService } from '@root/src/shared/utility/is-valid-timestamp/is-valid-timestamp.service';
@@ -8,6 +8,7 @@ import { code, message } from '@root/src/shared/enum';
 import { PublicationEntityRepository } from './publication-entity.repository';
 import { CreatePublication, UpdatePublication } from '@shared/interfaces/publication.interface';
 
+@Injectable()
 export class PublicationEntityModel {
   constructor(
     @InjectRepository(PublicationEntityRepository)
@@ -18,71 +19,150 @@ export class PublicationEntityModel {
 
   public async incrementLikes(id: any) {
     try {
-      const publication = await this.repository.findOne({ where: { id: id } });
+      const publication = await this.repository.findOne({
+        where: { id: id } 
+      }).catch((err) => {
+        throw new HttpException({
+          code : code.QUERY_FAILED,
+          message :  `${err.detail || err.hint || err.routine}`,
+          description : ''
+        }, HttpStatus.BAD_REQUEST)
+      })
+
       if (typeof publication?.number_of_likes == 'number') {
         publication.number_of_likes++;
         await this.repository.update(publication.id, {
           number_of_likes: publication.number_of_likes,
         });
       }
-    } catch (error) {
-      throw new HttpException([code.ERROR_GENERIC, message.ERROR_GENERIC], 500);
+
+      throw new HttpException({
+        code : code.DATA_CONFLICT,
+        message : 'not find increment likes for user',
+        description : '',
+      }, HttpStatus.CONFLICT)
+
+    } catch (e: any) {
+      throw new HttpException(e.response, e.status)
     }
   }
 
   public async incrementComment(id: any) {
     try {
-      const publication = await this.repository.findOne({ where: { id: id } });
+
+      const publication = await this.repository.findOne({ 
+        where: { id: id } 
+      }).catch((err) => {
+        throw new HttpException({
+          code : code.QUERY_FAILED,
+          message :  `${err.detail || err.hint || err.routine}`,
+          description : ''
+        }, HttpStatus.BAD_REQUEST)
+      })
+
       if (typeof publication?.number_of_comments == 'number') {
         publication.number_of_comments++;
         await this.repository.update(publication.id, {
           number_of_comments: publication.number_of_comments,
         });
       }
-    } catch (error) {
-      console.log(error)
-      throw new HttpException([code.ERROR_GENERIC, message.ERROR_GENERIC], 500);
+
+      throw new HttpException({
+        code : code.DATA_CONFLICT,
+        message : 'not find increment comment for user',
+        description : '',
+      }, HttpStatus.CONFLICT)
+
+    } catch (e: any) {
+      throw new HttpException(e.response, e.status)
     }
   }
 
   public async decrementComment(id: any) {
-    console.log(id);
     try {
-      const publication = await this.repository.findOne({ where: { id: id } });
+
+      const publication = await this.repository.findOne({ 
+        where: { id: id } 
+      }).catch((err) => {
+        throw new HttpException({
+          code : code.QUERY_FAILED,
+          message :  `${err.detail || err.hint || err.routine}`,
+          description : ''
+        }, HttpStatus.BAD_REQUEST)
+      })
+
       if (typeof publication?.number_of_comments == 'number') {
         publication.number_of_comments--;
         await this.repository.update(publication.id, {
           number_of_comments: publication.number_of_comments,
         });
       }
-    } catch (error) {
-      throw new HttpException([code.ERROR_GENERIC, message.ERROR_GENERIC], 500);
+
+      throw new HttpException({
+        code : code.DATA_CONFLICT,
+        message : 'not find decrement comment for user',
+        description : '',
+      }, HttpStatus.CONFLICT)
+
+    } catch (e: any) {
+      throw new HttpException(e.response, e.status)
     }
   }
 
   public async decrementLikes(id: any) {
     try {
-      const publication = await this.repository.findOne({ where: { id: id } });
+
+      const publication = await this.repository.findOne({ 
+        where: { id: id } 
+      }).catch((err) => {
+        throw new HttpException({
+          code : code.QUERY_FAILED,
+          message :  `${err.detail || err.hint || err.routine}`,
+          description : ''
+        }, HttpStatus.BAD_REQUEST)
+      })
+
       if (typeof publication?.number_of_likes == 'number') {
         publication.number_of_likes--;
         await this.repository.update(publication.id, {
           number_of_likes: publication.number_of_likes,
         });
       }
-    } catch (error) {
-      throw new HttpException([code.ERROR_GENERIC, message.ERROR_GENERIC], 500);
+
+      throw new HttpException({
+        code : code.DATA_CONFLICT,
+        message : 'not find decrement likes for user',
+        description : '',
+      }, HttpStatus.CONFLICT)
+
+    } catch (e: any) {
+      throw new HttpException(e.response, e.status)
     }
   }
 
   public async findOneById(id: number) {
     try {
-      const res = await this.repository.findOne({ where: { id: id } });
+
+      const res = await this.repository.findOne({ where: { id: id } }).catch((err) => {
+        throw new HttpException({
+          code : code.QUERY_FAILED,
+          message :  `${err.detail || err.hint || err.routine}`,
+          description : ''
+        }, HttpStatus.BAD_REQUEST)
+      })
+
       if (res) {
-        return res;
+        return res
       }
-      throw new HttpException(code.NOT_FOUND, 404);
+
+      throw new HttpException({
+        code : code.DATA_CONFLICT,
+        message : 'not find One by id',
+        description : '',
+      }, HttpStatus.CONFLICT)
+
     } catch (e: any) {
-      throw new HttpException(e.response, e.status);
+      throw new HttpException(e.response, e.status)
     }
   }
 
@@ -130,7 +210,12 @@ export class PublicationEntityModel {
         return { res: res, count: count };
       }
 
-      throw new HttpException(code.NOT_FOUND, 404);
+      throw new HttpException({
+        code : code.NOT_FOUND,
+        message : 'not found list feed',
+        description : ''
+      }, HttpStatus.NOT_FOUND)
+
     } catch (e: any) {
       throw new HttpException(e.response, e.status);
     }
@@ -185,7 +270,12 @@ export class PublicationEntityModel {
         return { res: res, count: count };
       }
 
-      throw new HttpException(code.NOT_FOUND, 404);
+      throw new HttpException({
+        code : code.NOT_FOUND,
+        message : 'not found list search by text',
+        description : ''
+      }, HttpStatus.NOT_FOUND)
+
     } catch (e: any) {
       throw new HttpException(e.response, e.status);
     }
@@ -193,43 +283,43 @@ export class PublicationEntityModel {
 
   public async create(body: any) {
     body.number_of_likes = 0;
+    return await this.repository.save(body).catch((err) => {
+      throw new HttpException({
+        code : code.QUERY_FAILED,
+        message : `${err.detail || err.hint || err.routine}`,
+        description : ''
+      }, HttpStatus.BAD_REQUEST)
+    })
+  }
+
+  public async updateById(id: number, body: UpdatePublication){
     try {
-      const res = await this.repository.save(body);
-      if (res) {
-        return res;
+      const res = await this.repository.update(id, { ...(body as any) }).catch((err) => {
+        throw new HttpException({
+          code : code.QUERY_FAILED,
+          message : `${err.detail || err.hint || err.routine}`,
+          description : ``,
+        }, HttpStatus.BAD_REQUEST)
+      })
+
+      if(!res){
+        throw new HttpException({
+          code : code.NOT_FOUND,
+          message : 'update, id not found',
+          description : ''
+        }, HttpStatus.NOT_FOUND)
       }
-      throw new HttpException(code.NOT_FOUND, 404);
+
+      if (res.affected == 1) {
+        return {
+          code : code.SUCCESSFULLY_UPDATED,
+          message : 'update with sucess',
+          description : ''
+        };
+      }
+
     } catch (e: any) {
-      throw new HttpException(e.response, e.status);
-    }
-  }
-
-  public async update(id: number, body: UpdatePublication) {
-    try {
-      const res = await this.repository.update(id, { ...(body as any) });
-      if (res) {
-        return res;
-      }
-    } catch (e) {
-      throw new HttpException([code.ERROR_GENERIC, message.ERROR_GENERIC], 500);
-    }
-  }
-
-  public validateSearchByText(text: any) {
-    if (typeof text === 'number') {
-      return new HttpException(code.NOT_FOUND, 404);
-    }
-    if (typeof text !== 'string') {
-      return new HttpException(code.NOT_FOUND, 404);
-    }
-    text = text.trim();
-    switch (text) {
-      case '':
-      case null:
-      case undefined:
-        return new HttpException(code.NOT_FOUND, 404);
-      default:
-        return false;
+      throw new HttpException(e.response, e.status)
     }
   }
 

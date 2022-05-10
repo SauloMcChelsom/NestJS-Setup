@@ -13,7 +13,7 @@ export class PublicationService {
   }
 
   public async update(body: UpdatePublication) {
-    await this.publication.update(body.id, body);
+    await this.publication.updateById(body.id, body);
     return await this.publication.findOneById(body.id);
   }
 
@@ -70,7 +70,6 @@ export class PublicationService {
   }
 
   public async authListSearchByText(cls: ListFilter) {
-    this.publication.validateSearchByText(cls.search);
     return await this.publication.searchByText(
       cls.search,
       cls.limit,
@@ -83,7 +82,6 @@ export class PublicationService {
   }
 
   public async publicListSearchByText(cls: ListFilter) {
-    this.publication.validateSearchByText(cls.search);
     return await this.publication.searchByText(
       cls.search,
       cls.limit,

@@ -3,7 +3,7 @@ import { FirebaseController } from './firebase.controller'
 import { FirebaseService } from './firebase.service'
 import { JwtLocalModule } from '@model/jwt-local/jwt-local.module'
 import { UserEntityModule } from '@root/src/model/user-entity/user-entity.module'
-import { JwtFirebaseModule } from '@model/jwt-firebase/firebase.module'
+import { JwtFirebaseModule } from '@root/src/model/jwt-firebase/jwt-firebase.module'
 import { FirebaseMapper } from './mapper/index.mapper'
 
 @Module({

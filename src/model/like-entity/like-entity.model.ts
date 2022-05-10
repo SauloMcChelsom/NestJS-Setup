@@ -1,4 +1,4 @@
-import { HttpException } from '@nestjs/common'
+import { Injectable, HttpException, HttpStatus } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 
 import { PublicationEntityModel } from '@model/publication-entity/publication-entity.model'
@@ -7,6 +7,7 @@ import { code, message } from '@root/src/shared/enum'
 import { CreateLike } from '@shared/interfaces/like.interface'
 import { LikeEntityRepository } from './like-entity.repository'
 
+@Injectable()
 export class LikeEntityModel {
   constructor(
     @InjectRepository(LikeEntityRepository)
@@ -16,28 +17,33 @@ export class LikeEntityModel {
 
   public async save(body: CreateLike) {
     try {
-      await this.repository.save(body)
-    } catch (error) {
-      throw new HttpException([code.ERROR_GENERIC, message.ERROR_GENERIC], 500)
+      await this.repository.save(body).catch((err) => {
+        throw new HttpException({
+          code : code.QUERY_FAILED,
+          message :  `${err.detail || err.hint || err.routine}`,
+          description : ''
+        }, HttpStatus.BAD_REQUEST)
+      })
+    } catch (e: any) {
+      throw new HttpException(e.response, e.status)
     }
   }
 
-  public async userAlreadyLikePublication(
-    publicationId: string,
-    userId: string,
-  ) {
-    try {
-      const res = await this.repository.findOne({
-        where: { publication_id: publicationId, user_id: userId },
-      })
+  public async userAlreadyLikePublication(publicationId: string, userId: string ) {
+    const res = await this.repository.findOne({
+      where: { publication_id: publicationId, user_id: userId },
+    }).catch((err) => {
+      throw new HttpException({
+        code : code.QUERY_FAILED,
+        message :  `${err.detail || err.hint || err.routine}`,
+        description : ''
+      }, HttpStatus.BAD_REQUEST)
+    })
 
-      if (res) {
-        return true
-      } else {
-        return false
-      }
-    } catch (error) {
-      throw new HttpException([code.ERROR_GENERIC, message.ERROR_GENERIC], 500)
+    if (res) {
+      return true
+    } else {
+      return false
     }
   }
 
@@ -45,40 +51,86 @@ export class LikeEntityModel {
     try {
       const res = await this.repository.findOne({
         where: { publication_id: publicationId },
+      }).catch((err) => {
+        throw new HttpException({
+          code : code.QUERY_FAILED,
+          message :  `${err.detail || err.hint || err.routine}`,
+          description : ''
+        }, HttpStatus.BAD_REQUEST)
       })
 
       if (res) {
         return true
       }
 
-      throw new HttpException(code.NOT_FOUND, 404)
-    } catch (error) {
-      throw new HttpException([code.ERROR_GENERIC, message.ERROR_GENERIC], 500)
+      throw new HttpException({
+        code : code.NOT_FOUND,
+        message : 'not validate publication exists',
+        description : ''
+      }, HttpStatus.NOT_FOUND)
+
+    } catch (e: any) {
+      throw new HttpException(e.response, e.status);
     }
   }
 
   public async getLike(publication_id: string, userId: string) {
     try {
+
       const res = await this.repository.findOne({
         where: { publication_id: publication_id, user_id: userId },
+      }).catch((err) => {
+        throw new HttpException({
+          code : code.QUERY_FAILED,
+          message :  `${err.detail || err.hint || err.routine}`,
+          description : ''
+        }, HttpStatus.BAD_REQUEST)
       })
+
       if (res) {
         return res
       }
-      throw new HttpException(code.NOT_FOUND, 404)
+
+      throw new HttpException({
+        code : code.NOT_FOUND,
+        message : 'not found like',
+        description : ''
+      }, HttpStatus.NOT_FOUND)
+
     } catch (e: any) {
-      throw new HttpException(e.response, e.status)
+      throw new HttpException(e.response, e.status);
     }
   }
 
   public async updateLike(id: string, body: any) {
     try {
-      const res = await this.repository.update(id, body)
-      if (res) {
-        return res
+      
+      const res = await this.repository.update(id, body).catch((err) => {
+        throw new HttpException({
+          code : code.QUERY_FAILED,
+          message :  `${err.detail || err.hint || err.routine}`,
+          description : ''
+        }, HttpStatus.BAD_REQUEST)
+      })
+
+      if(!res){
+        throw new HttpException({
+          code : code.NOT_FOUND,
+          message : 'delete, id not found',
+          description : ''
+        }, HttpStatus.NOT_FOUND)
       }
-    } catch (error) {
-      throw new HttpException([code.ERROR_GENERIC, message.ERROR_GENERIC], 500)
+
+      if (res.affected == 1) {
+        return {
+          code : code.SUCCESSFULLY_DELETED,
+          message : 'delete with sucess',
+          description : ''
+        };
+      }
+
+    } catch (e: any) {
+      throw new HttpException(e.response, e.status);
     }
   }
 

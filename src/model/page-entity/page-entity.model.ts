@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus } from '@nestjs/common'
+import { Injectable, HttpException, HttpStatus } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 
 import { IsValidTimestampService } from '@root/src/shared/utility/is-valid-timestamp/is-valid-timestamp.service'
@@ -8,6 +8,7 @@ import { code, message } from '@root/src/shared/enum'
 
 import { PageEntityRepository } from './page-entity.repository'
 
+@Injectable()
 export class PageEntityModel {
 
   constructor(
@@ -33,25 +34,29 @@ export class PageEntityModel {
   }
 
   public async save(body: CreatePage) {
-    try {
-      const res = await this.repository.save(body)
-      if (res) {
-        return res
-      }
-      throw new HttpException(code.NOT_FOUND, 404)
-    } catch (e: any) {
-      throw new HttpException(e.response, e.status)
-    }
+    return await this.repository.save(body).catch((err) => {
+      throw new HttpException({
+        code : code.QUERY_FAILED,
+        message :  `${err.detail || err.hint || err.routine}`,
+        description : ''
+      }, HttpStatus.BAD_REQUEST)
+    })
   }
 
   public async findOneByName(name: string) {
     try {
 
-      const res = await this.repository.findOne({ where: { page_name: name } })
+      const res = await this.repository.findOne({ where: { page_name: name } }).catch((err) => {
+        throw new HttpException({
+          code : code.QUERY_FAILED,
+          message :  `${err.detail || err.hint || err.routine}`,
+          description : ''
+        }, HttpStatus.BAD_REQUEST)
+      })
 
-    if (res) {
+      if (res) {
         return res
-    }
+      }
 
     throw new HttpException({
         code:code.NOT_FOUND,
@@ -60,17 +65,30 @@ export class PageEntityModel {
     }, HttpStatus.NOT_FOUND)
 
     } catch (e: any) {
-    throw new HttpException(e.response, e.status)
+      throw new HttpException(e.response, e.status)
     }
   }
 
   public async findOneById(id: number) {
     try {
-      const res = await this.repository.findOne({ where: { id: id } })
+      const res = await this.repository.findOne({ where: { id: id } }).catch((err) => {
+        throw new HttpException({
+          code : code.QUERY_FAILED,
+          message :  `${err.detail || err.hint || err.routine}`,
+          description : ''
+        }, HttpStatus.BAD_REQUEST)
+      })
+
       if (res) {
         return res
       }
-      throw new HttpException(code.NOT_FOUND, 404)
+
+      throw new HttpException({
+        code:code.NOT_FOUND,
+        message: message.NOT_FOUND,
+        description: `not find one by id`
+      }, HttpStatus.NOT_FOUND)
+
     } catch (e: any) {
       throw new HttpException(e.response, e.status)
     }
@@ -121,18 +139,43 @@ export class PageEntityModel {
         return { res: res, count: count }
       }
 
-      throw new HttpException(code.NOT_FOUND, 404)
+      throw new HttpException({
+        code : code.NOT_FOUND,
+        message : 'not found list all',
+        description : ''
+      }, HttpStatus.NOT_FOUND)
+
     } catch (e: any) {
-      throw new HttpException(e.response, e.status)
+      throw new HttpException(e.response, e.status);
     }
   }
 
   public async update(id: number, body: UpdatePage) {
     try {
-      const res = await this.repository.update(id, { ...(body as any) })
-      if (res) {
-        return res
+      const res = await this.repository.update(id, { ...(body as any) }).catch((err) => {
+        throw new HttpException({
+          code : code.QUERY_FAILED,
+          message :  `${err.detail || err.hint || err.routine}`,
+          description : ''
+        }, HttpStatus.BAD_REQUEST)
+      })
+      
+      if(!res){
+        throw new HttpException({
+          code : code.NOT_FOUND,
+          message : 'update, id not found',
+          description : ''
+        }, HttpStatus.NOT_FOUND)
       }
+
+      if (res.affected == 1) {
+        return {
+          code : code.SUCCESSFULLY_UPDATED,
+          message : 'update with sucess',
+          description : ''
+        };
+      }
+
     } catch (e: any) {
       throw new HttpException(e.response, e.status)
     }
@@ -140,9 +183,22 @@ export class PageEntityModel {
 
   public async pageAlreadyExist(name: string) {
     try {
-      const res = await this.repository.findOne({ where: { page_name: name } })
+      const res = await this.repository.findOne({ 
+        where: { page_name: name } 
+      }).catch((err) => {
+        throw new HttpException({
+          code : code.QUERY_FAILED,
+          message :  `${err.detail || err.hint || err.routine}`,
+          description : ''
+        }, HttpStatus.BAD_REQUEST)
+      })
+
       if (res) {
-        throw new HttpException(code.PAGE_ALREADY_IN_USE, 409)
+        throw new HttpException({
+          code : code.PAGE_ALREADY_IN_USE,
+          message : message.PAGE_ALREADY_IN_USE,
+          description : ''
+        }, HttpStatus.CONFLICT)
       }
     } catch (e: any) {
       throw new HttpException(e.response, e.status)
@@ -153,18 +209,24 @@ export class PageEntityModel {
     try {
       const res = await this.repository.findOne({
         where: { user_id: userId, id: pageId },
+      }).catch((err) => {
+        throw new HttpException({
+          code : code.QUERY_FAILED,
+          message :  `${err.detail || err.hint || err.routine}`,
+          description : ''
+        }, HttpStatus.BAD_REQUEST)
       })
+
       if (res) {
         return res
       }
 
-      throw new HttpException(
-        [
-          code.DATA_CONFLICT,
-          'id do usuario e id da pagina, não coincide como chave composta',
-        ],
-        409,
-      )
+      throw new HttpException({
+        code : code.NOT_FOUND,
+        message : 'not find page by id of user end id of page',
+        description : 'id do usuario e id da pagina, não coincide como chave composta',
+      }, HttpStatus.CONFLICT)
+
     } catch (e: any) {
       throw new HttpException(e.response, e.status)
     }
@@ -172,7 +234,15 @@ export class PageEntityModel {
 
   public async increment(id: any) {
     try {
-      const page = await this.repository.findOne({ where: { id: id } })
+      const page = await this.repository.findOne({ 
+        where: { id: id } 
+      }).catch((err) => {
+        throw new HttpException({
+          code : code.QUERY_FAILED,
+          message :  `${err.detail || err.hint || err.routine}`,
+          description : ''
+        }, HttpStatus.BAD_REQUEST)
+      })
 
       if (typeof page?.number_of_followers == 'number') {
         page.number_of_followers++
@@ -180,8 +250,15 @@ export class PageEntityModel {
           number_of_followers: page.number_of_followers,
         })
       }
-    } catch (error) {
-      throw new HttpException([code.ERROR_GENERIC, message.ERROR_GENERIC], 500)
+
+      throw new HttpException({
+        code : code.DATA_CONFLICT,
+        message : 'not find increment for user',
+        description : '',
+      }, HttpStatus.CONFLICT)
+
+    } catch (e: any) {
+      throw new HttpException(e.response, e.status)
     }
   }
 
@@ -195,8 +272,15 @@ export class PageEntityModel {
           number_of_followers: page.number_of_followers,
         })
       }
-    } catch (error) {
-      throw new HttpException([code.ERROR_GENERIC, message.ERROR_GENERIC], 500)
+      
+      throw new HttpException({
+        code : code.DATA_CONFLICT,
+        message : 'not find decrement for user',
+        description : '',
+      }, HttpStatus.CONFLICT)
+
+    } catch (e: any) {
+      throw new HttpException(e.response, e.status)
     }
   }
 

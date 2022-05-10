@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus } from '@nestjs/common';
+import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 
@@ -10,6 +10,7 @@ import { code } from '@root/src/shared/enum';
 import { CommentEntityRepository } from './comment-entity.repository';
 import { UpdateComment, CreateComment, ListComment } from '@shared/interfaces/comment.interface';
 
+@Injectable()
 export class CommentEntityModel {
   constructor(
     @InjectRepository(CommentEntityRepository)
@@ -26,7 +27,7 @@ export class CommentEntityModel {
     return await this.repository.save(body).catch((err) => {
       throw new HttpException({
         code : code.QUERY_FAILED,
-        message : `${err}`,
+        message : `${err.detail || err.hint || err.routine}`,
         description : ''
       }, HttpStatus.BAD_REQUEST)
     });
@@ -37,7 +38,7 @@ export class CommentEntityModel {
       const res = await this.repository.update(id, { ...(body as any) }).catch((err) => {
         throw new HttpException({
           code : code.QUERY_FAILED,
-          message : `${err}`,
+          message : `${err.detail || err.hint || err.routine}`,
           description : ''
         }, HttpStatus.BAD_REQUEST)
       });
@@ -69,7 +70,7 @@ export class CommentEntityModel {
       const res = await this.repository.delete(id).catch((err) => {
         throw new HttpException({
           code : code.QUERY_FAILED,
-          message : `${err}`,
+          message : `${err.detail || err.hint || err.routine}`,
           description : ''
         }, HttpStatus.BAD_REQUEST)
       });
@@ -101,7 +102,7 @@ export class CommentEntityModel {
       const res = await this.repository.findOne(id).catch((err) => {
         throw new HttpException({
           code : code.QUERY_FAILED,
-          message : `${err}`,
+          message : `${err.detail || err.hint || err.routine}`,
           description : ''
         }, HttpStatus.BAD_REQUEST)
       })
@@ -129,7 +130,7 @@ export class CommentEntityModel {
       }).catch((err) => {
         throw new HttpException({
           code : code.QUERY_FAILED,
-          message : `${err}`,
+          message : `${err.detail || err.hint || err.routine}`,
           description : ''
         }, HttpStatus.BAD_REQUEST)
       })
@@ -202,7 +203,7 @@ export class CommentEntityModel {
 
       throw new HttpException({
         code : code.NOT_FOUND,
-        message : 'not found list',
+        message : 'not found list by user id',
         description : ''
       }, HttpStatus.NOT_FOUND);
       

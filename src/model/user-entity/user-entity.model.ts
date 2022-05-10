@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus } from '@nestjs/common'
+import { Injectable,HttpException, HttpStatus } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { hash, compare  } from 'bcryptjs'
 
@@ -8,6 +8,7 @@ import { UserEntityRepository } from './user-entity.repository'
 
 import { User } from '@root/src/shared/interfaces/user.interface'
 
+@Injectable()
 export class UserEntityModel {
   constructor(
     @InjectRepository(UserEntityRepository)
@@ -42,7 +43,7 @@ export class UserEntityModel {
       const res = await this.repository.findOne({where: { email: email}}).catch((err) => {
         throw new HttpException({
           code : code.QUERY_FAILED,
-          message : `${err}`,
+          message : `${err.detail || err.hint || err.routine}`,
           description : ''
         }, HttpStatus.BAD_REQUEST)
       })
@@ -85,7 +86,7 @@ export class UserEntityModel {
       const res = await this.repository.findOne({where: { uid: uid}}).catch((err) => {
         throw new HttpException({
           code : code.QUERY_FAILED,
-          message : `${err}`,
+          message : `${err.detail || err.hint || err.routine}`,
           description : ''
         }, HttpStatus.BAD_REQUEST)
       })
@@ -111,7 +112,7 @@ export class UserEntityModel {
       const res = await this.repository.findOne({where: { id: id}}).catch((err) => {
         throw new HttpException({
           code : code.QUERY_FAILED,
-          message : `${err}`,
+          message : `${err.detail || err.hint || err.routine}`,
           description : ''
         }, HttpStatus.BAD_REQUEST)
       })
@@ -137,7 +138,7 @@ export class UserEntityModel {
       const user = await this.repository.findOne({where: { email: email}}).catch((err) => {
         throw new HttpException({
           code : code.QUERY_FAILED,
-          message : `${err}`,
+          message : `${err.detail || err.hint || err.routine}`,
           description : ''
         }, HttpStatus.BAD_REQUEST)
       })
@@ -161,7 +162,7 @@ export class UserEntityModel {
         let user: User = await this.findOneUserById(id).catch((err) => {
           throw new HttpException({
             code : code.QUERY_FAILED,
-            message : `${err}`,
+            message : `${err.detail || err.hint || err.routine}`,
             description : ''
           }, HttpStatus.BAD_REQUEST)
         })
@@ -187,7 +188,7 @@ export class UserEntityModel {
       const res = await this.repository.findOne({ where: { email: email } }).catch((err) => {
         throw new HttpException({
           code : code.QUERY_FAILED,
-          message : `${err}`,
+          message : `${err.detail || err.hint || err.routine}`,
           description : ''
         }, HttpStatus.BAD_REQUEST)
       })
@@ -208,7 +209,7 @@ export class UserEntityModel {
       const res = await this.repository.findOne({ where: { uid: uid } }).catch((err) => {
         throw new HttpException({
           code : code.QUERY_FAILED,
-          message : `${err}`,
+          message : `${err.detail || err.hint || err.routine}`,
           description : ''
         }, HttpStatus.BAD_REQUEST)
       })
@@ -230,7 +231,7 @@ export class UserEntityModel {
       const res = await this.repository.findOne({ where: { uid: uid } }).catch((err) => {
         throw new HttpException({
           code : code.QUERY_FAILED,
-          message : `${err}`,
+          message : `${err.detail || err.hint || err.routine}`,
           description : ''
         }, HttpStatus.BAD_REQUEST)
       })
@@ -256,7 +257,7 @@ export class UserEntityModel {
       const res = await this.repository.findOne({ where: { email: email } }).catch((err) => {
         throw new HttpException({
           code : code.QUERY_FAILED,
-          message : `${err}`,
+          message : `${err.detail || err.hint || err.routine}`,
           description : ''
         }, HttpStatus.BAD_REQUEST)
       })
@@ -281,7 +282,7 @@ export class UserEntityModel {
       const res = await this.repository.update(id, body).catch((err) => {
         throw new HttpException({
           code : code.QUERY_FAILED,
-          message : `${err}`,
+          message : `${err.detail || err.hint || err.routine}`,
           description : ''
         }, HttpStatus.BAD_REQUEST)
       })
@@ -312,7 +313,7 @@ export class UserEntityModel {
       const res = await this.repository.delete(id).catch((err) => {
         throw new HttpException({
           code : code.QUERY_FAILED,
-          message : `${err}`,
+          message : `${err.detail || err.hint || err.routine}`,
           description : ''
         }, HttpStatus.BAD_REQUEST)
       });

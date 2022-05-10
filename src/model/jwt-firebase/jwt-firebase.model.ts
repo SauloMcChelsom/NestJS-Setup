@@ -1,4 +1,4 @@
-import { Injectable, HttpException } from '@nestjs/common';
+import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { code, message } from '@root/src/shared/enum';
 import { JwtFirebaseUnity } from './jwt-firebase.unity';
 
@@ -27,14 +27,11 @@ export class JwtFirebaseModel {
     const body = await this.model.isToken(token);
     const decoded = await this.model.validateTokenByFirebase(body);
     if (decoded.email != email) {
-      return await new HttpException(
-        [
-          code.EMAIL_INVALID,
-          message.EMAIL_INVALID,
-          message.EMAIL_INVALID_CONFLICT_TOKEN_DESCRIPTION,
-        ],
-        500,
-      );
+      throw new HttpException({
+        code : code.EMAIL_INVALID,
+        message : message.EMAIL_INVALID,
+        description : message.EMAIL_INVALID_CONFLICT_TOKEN_DESCRIPTION,
+      }, HttpStatus.CONFLICT)
     }
     return await this.model.getUserByEmail(email);
   }
@@ -44,14 +41,11 @@ export class JwtFirebaseModel {
     const decoded = await this.model.validateTokenByFirebase(body);
 
     if (decoded.uid != uid) {
-      return await new HttpException(
-        [
-          code.UID_INVALID,
-          message.UID_INVALID,
-          message.UID_INVALID_CONFLICT_TOKEN_DESCRIPTION,
-        ],
-        500,
-      );
+      throw new HttpException({
+        code : code.UID_INVALID,
+        message : message.UID_INVALID,
+        description : message.UID_INVALID_CONFLICT_TOKEN_DESCRIPTION,
+      }, HttpStatus.CONFLICT)
     }
     return await this.model.getUserByUid(uid);
   }

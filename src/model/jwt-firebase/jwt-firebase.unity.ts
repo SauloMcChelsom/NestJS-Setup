@@ -1,59 +1,65 @@
-import { Injectable, HttpException } from '@nestjs/common';
+import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import * as firebase from 'firebase-admin';
-import { code } from '@root/src/shared/enum';
+import { code, message } from '@root/src/shared/enum';
 
 @Injectable()
 export class JwtFirebaseUnity {
   public async isToken(token: string) {
     try {
       if (token == '' || token == null) {
-        throw 'TOKEN_IS_NULL';
+        throw new HttpException({
+          code : code.FIREBASE_FAILED,
+          message : message.TOKEN_IS_NULL,
+          description : ''
+        }, HttpStatus.BAD_REQUEST)
       }
 
       if (token.startsWith('Bearer ') == !true) {
-        throw 'NOT_BEARER';
+        throw new HttpException({
+          code : code.FIREBASE_FAILED,
+          message : message.NOT_BEARER,
+          description : ''
+        }, HttpStatus.BAD_REQUEST)
       }
 
       if (token.length <= 84) {
-        throw 'SMALL_TOKEN';
+        throw new HttpException({
+          code : code.FIREBASE_FAILED,
+          message : message.SMALL_TOKEN,
+          description : ''
+        }, HttpStatus.BAD_REQUEST)
       }
 
       if (token.indexOf('.') == -1) {
-        throw 'TOKEN_MISSING_SPECIAL_CHARACTER';
+        throw new HttpException({
+          code : code.FIREBASE_FAILED,
+          message : message.TOKEN_MISSING_SPECIAL_CHARACTER,
+          description : ''
+        }, HttpStatus.BAD_REQUEST)
       }
 
       return token.replace('Bearer ', '');
-    } catch (error) {
-      if (error == 'TOKEN_IS_NULL') {
-        throw new HttpException(code.TOKEN_IS_NULL, 404);
-      }
-      if (error == 'NOT_BEARER') {
-        throw new HttpException(code.NOT_BEARER, 404);
-      }
-      if (error == 'SMALL_TOKEN') {
-        throw new HttpException(code.SMALL_TOKEN, 404);
-      }
-      if (error == 'TOKEN_MISSING_SPECIAL_CHARACTER') {
-        throw new HttpException(code.TOKEN_MISSING_SPECIAL_CHARACTER, 404);
-      }
-      throw new HttpException(code.ERROR_GENERIC, 500);
+    } catch (e: any) {
+      throw new HttpException(e.response, e.status)
     }
   }
 
   public async validateTokenByFirebase(token: string) {
     try {
-      const decodedToken = await firebase.auth().verifyIdToken(token, true);
+      const decodedToken = await firebase.auth().verifyIdToken(token, true)
 
       if (decodedToken.uid) {
         return decodedToken;
       }
 
-      throw decodedToken;
-    } catch (error: any) {
-      if (error.code) {
-        throw new HttpException(error.message, 409);
-      }
-      throw new HttpException(code.ERROR_GENERIC, 500);
+      throw new HttpException({
+        code : code.FIREBASE_FAILED,
+        message : 'failed in validate token by firebase',
+        description : decodedToken
+      }, HttpStatus.CONFLICT)
+
+    } catch (e: any) {
+      throw new HttpException(e.response, e.status)
     }
   }
 
@@ -62,19 +68,20 @@ export class JwtFirebaseUnity {
       const revoke = await firebase
         .auth()
         .revokeRefreshTokens(uid)
-        .then(() => true);
+        .then(() => true)
+
       if (revoke) {
         return revoke;
       }
-      throw revoke;
-    } catch (error: any) {
-      if (error.code) {
-        throw new HttpException(
-          ['revoke_refresh_tokens'.toUpperCase(), error.message],
-          error.code,
-        );
-      }
-      throw new HttpException(code.ERROR_GENERIC, 500);
+
+      throw new HttpException({
+        code : code.FIREBASE_FAILED,
+        message : 'failed in revoke refresh tokens',
+        description : ''
+      }, HttpStatus.CONFLICT)
+
+    } catch (e: any) {
+      throw new HttpException(e.response, e.status)
     }
   }
 
@@ -84,33 +91,33 @@ export class JwtFirebaseUnity {
       if (user) {
         return user.toJSON();
       }
-      throw user;
-    } catch (error: any) {
-      if (error.code) {
-        throw new HttpException(
-          ['get_user'.toUpperCase(), error.message],
-          error.code,
-        );
-      }
-      throw new HttpException(code.ERROR_GENERIC, 500);
+      throw new HttpException({
+        code : code.FIREBASE_FAILED,
+        message : 'failed in find user by uid',
+        description : ''
+      }, HttpStatus.CONFLICT)
+
+    } catch (e: any) {
+      throw new HttpException(e.response, e.status)
     }
   }
 
   public async getUserByEmail(email: string) {
     try {
       const user = await firebase.auth().getUserByEmail(email);
+      
       if (user) {
         return user.toJSON();
       }
-      throw user;
-    } catch (error: any) {
-      if (error.code) {
-        throw new HttpException(
-          ['get_user_by_email'.toUpperCase(), error.message],
-          error.code,
-        );
-      }
-      throw new HttpException(code.ERROR_GENERIC, 500);
+
+      throw new HttpException({
+        code : code.FIREBASE_FAILED,
+        message : 'failed in find user by email',
+        description : ''
+      }, HttpStatus.CONFLICT)
+
+    } catch (e: any) {
+      throw new HttpException(e.response, e.status)
     }
   }
 
@@ -123,12 +130,13 @@ export class JwtFirebaseUnity {
       if (deleted) {
         return deleted;
       }
-      throw true;
-    } catch (error) {
-      if (error == true) {
-        throw new HttpException(code.NOT_FOUND_USER, 404);
-      }
-      throw new HttpException(code.ERROR_GENERIC, 500);
+      throw new HttpException({
+        code : code.FIREBASE_FAILED,
+        message : 'failed in delete user',
+        description : ''
+      }, HttpStatus.CONFLICT)
+    } catch (e: any) {
+      throw new HttpException(e.response, e.status)
     }
   }
 }

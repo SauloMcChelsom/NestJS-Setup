@@ -1,4 +1,4 @@
-import { HttpException } from '@nestjs/common'
+import {Injectable,  HttpException, HttpStatus } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 
 import { PageEntityModel } from '@model/page-entity/page-entity.model'
@@ -9,6 +9,7 @@ import { EmptyService } from '@root/src/shared/utility/empty/empty.service'
 import { FollowEntityRepository } from './follow-entity.repository'
 import { CreateFollow, Follow } from '@shared/interfaces/follow.interface'
 
+@Injectable()
 export class FollowEntityModel {
 
   constructor(
@@ -69,7 +70,12 @@ export class FollowEntityModel {
         return { res: res, count: count }
       }
 
-      throw new HttpException(code.NOT_FOUND, 404)
+      throw new HttpException({
+        code : code.NOT_FOUND,
+        message : 'not found all user follow page by id of page',
+        description : ''
+      }, HttpStatus.NOT_FOUND)
+
     } catch (e: any) {
       throw new HttpException(e.response, e.status)
     }
@@ -125,7 +131,12 @@ export class FollowEntityModel {
         return { res: res, count: count }
       }
 
-      throw new HttpException(code.NOT_FOUND, 404)
+      throw new HttpException({
+        code : code.NOT_FOUND,
+        message : 'not found all page user follow by id of user',
+        description : ''
+      }, HttpStatus.NOT_FOUND)
+
     } catch (e: any) {
       throw new HttpException(e.response, e.status)
     }
@@ -135,14 +146,21 @@ export class FollowEntityModel {
     try {
       const res = await this.repository.findOne({
         where: { user_id: userId, page_id: pageId },
+      }).catch((err) => {
+        throw new HttpException({
+          code : code.QUERY_FAILED,
+          message : `${err}`,
+          description : `${err.detail || err.hint || err.routine}`,
+        }, HttpStatus.BAD_REQUEST)
       })
+
       if (res) {
         return true
       } else {
         return false
       }
-    } catch (error) {
-      throw new HttpException([code.ERROR_GENERIC, message.ERROR_GENERIC], 500)
+    } catch (e: any) {
+      throw new HttpException(e.response, e.status)
     }
   }
 
@@ -150,12 +168,24 @@ export class FollowEntityModel {
     try {
       const res = await this.repository.findOne({
         where: { user_id: userId, page_id: pageId },
+      }).catch((err) => {
+        throw new HttpException({
+          code : code.QUERY_FAILED,
+          message : `${err}`,
+          description : `${err.detail || err.hint || err.routine}`,
+        }, HttpStatus.BAD_REQUEST)
       })
+
       if (res) {
         return res
       }
 
-      throw new HttpException(code.NOT_FOUND, 404)
+      throw new HttpException({
+        code : code.NOT_FOUND,
+        message : 'not found',
+        description : 'not found page user follow'
+      }, HttpStatus.NOT_FOUND)
+
     } catch (e: any) {
       throw new HttpException(e.response, e.status)
     }
@@ -165,12 +195,24 @@ export class FollowEntityModel {
     try {
       const res = await this.repository.find({
         where: { page_id: id, i_am_following: true },
+      }).catch((err) => {
+        throw new HttpException({
+          code : code.QUERY_FAILED,
+          message : `${err}`,
+          description : `${err.detail || err.hint || err.routine}`,
+        }, HttpStatus.BAD_REQUEST)
       })
+
       if (res) {
         return res
       }
 
-      throw new HttpException(code.NOT_FOUND, 404)
+      throw new HttpException({
+        code : code.NOT_FOUND,
+        message : 'not found',
+        description : 'not found find by Id page '
+      }, HttpStatus.NOT_FOUND)
+
     } catch (e: any) {
       throw new HttpException(e.response, e.status)
     }
@@ -178,14 +220,27 @@ export class FollowEntityModel {
 
   public async findByIdUser(id: string) {
     try {
+
       const res = await this.repository.find({
         where: { user_id: id, i_am_following: true },
+      }).catch((err) => {
+        throw new HttpException({
+          code : code.QUERY_FAILED,
+          message : `${err}`,
+          description : `${err.detail || err.hint || err.routine}`,
+        }, HttpStatus.BAD_REQUEST)
       })
+
       if (res) {
         return res
       }
 
-      throw new HttpException(code.NOT_FOUND, 404)
+      throw new HttpException({
+        code : code.NOT_FOUND,
+        message : 'not found',
+        description : 'not found find By Id User, with i_am_following = true'
+      }, HttpStatus.NOT_FOUND)
+
     } catch (e: any) {
       throw new HttpException(e.response, e.status)
     }
@@ -193,12 +248,32 @@ export class FollowEntityModel {
 
   public async updateAmFollowing(id: string, body: any) {
     try {
-      const res = await this.repository.update(id, body)
-      if (res) {
-        return res
+      const res = await this.repository.update(id, body).catch((err) => {
+        throw new HttpException({
+          code : code.QUERY_FAILED,
+          message : `${err}`,
+          description : `${err.detail || err.hint || err.routine}`,
+        }, HttpStatus.BAD_REQUEST)
+      })
+
+      if(!res){
+        throw new HttpException({
+          code : code.NOT_FOUND,
+          message : 'update, id not found',
+          description : ''
+        }, HttpStatus.NOT_FOUND)
       }
-    } catch (error) {
-      throw new HttpException([code.ERROR_GENERIC, message.ERROR_GENERIC], 500)
+
+      if (res.affected == 1) {
+        return {
+          code : code.SUCCESSFULLY_UPDATED,
+          message : 'update with sucess',
+          description : ''
+        };
+      }
+      
+    } catch (e: any) {
+      throw new HttpException(e.response, e.status)
     }
   }
 
