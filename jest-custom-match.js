@@ -31,4 +31,52 @@ expect.extend({
         };
       }
     },
+    isStrings(received) {
+      const pass = typeof received == 'string'
+      if (pass) {
+        return {
+          message: () =>
+            `expected ${received} not to be string`,
+          pass: true,
+        };
+      } else {
+        return {
+          message: () =>
+            `expected ${received} to be string`,
+          pass: false,
+        };
+      }
+    },
+    isDataTime(received) {
+      const pass = typeof received == 'object'
+      if (pass) {
+        return {
+          message: () =>
+            `expected ${received} not to be DataTime`,
+          pass: true,
+        };
+      } else {
+        return {
+          message: () =>
+            `expected ${received} to be DataTime`,
+          pass: false,
+        };
+      }
+    },
+    isTrue(received) {
+      const pass = typeof received == 'boolean'
+      if (pass == true) {
+        return {
+          message: () =>
+            `expected ${received} not to be true`,
+          pass: true,
+        };
+      } else {
+        return {
+          message: () =>
+            `expected ${received} to be true`,
+          pass: false,
+        };
+      }
+    },
   });

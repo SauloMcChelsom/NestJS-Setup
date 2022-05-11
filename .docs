@@ -34,3 +34,7 @@ criar audio
 2 services -> testar e refatorar 
 4 pagina de login
 5 ajustar o readme
+
+
+## jest test only one file
+npx jest src\model\comment-entity\test\comment.model.spec.ts 

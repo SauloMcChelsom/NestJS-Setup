@@ -1,4 +1,4 @@
-/*import { HttpException, HttpStatus } from '@nestjs/common';
+import { HttpException, HttpStatus } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getConnectionManager } from 'typeorm';
@@ -7,39 +7,30 @@ import { CommentEntity } from '@entity/comment.entity';
 import { connectionDataBaseForTest } from '@root/connection-database-for-test-unit';
 import { IsValidTimestampService } from '@root/src/shared/utility/is-valid-timestamp/is-valid-timestamp.service';
 import { EmptyService } from '@root/src/shared/utility/empty/empty.service';
-import { code } from '@root/src/shared/enum';
 
-import { CommentService } from '@root/src/controller/comment/comment.service';
-import { PublicationService } from '@root/src/modules/publication/publication.service';
-import { PublicationModel } from '@root/src/modules/publication/publication.model';
-import { PublicationRepository } from '@root/src/modules/publication/publication.repository';
 
-import { CommentModel} from '../../comment.model';
-import { CommentRepository } from '../../comment.repository';
-import { GetCommentParams, CreateCommentParams, UpdateCommentParams } from '@root/src/params.jest'
+import { CommentEntityModel} from '../comment-entity.model';
+import { CommentEntityRepository } from '../comment-entity.repository';
+import { CommentBy, CommentCreate } from '@root/src/params.jest'
 
-describe('CommentModel', () => {
-  let model: CommentModel;
+describe('commentModel', () => {
+  let model: CommentEntityModel;
   let CREATE
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
         ...connectionDataBaseForTest(), 
-        TypeOrmModule.forFeature([CommentEntity, CommentRepository])
+        TypeOrmModule.forFeature([CommentEntity, CommentEntityRepository])
       ],
       providers: [
-        CommentService, 
-        CommentModel,
-        PublicationService,
-        CommentRepository,
+        CommentEntityModel,
+        CommentEntityRepository,
         IsValidTimestampService,
-        EmptyService,
-        PublicationModel,
-        PublicationRepository,
+        EmptyService
       ],
     }).compile();
-    model = module.get<CommentModel>(CommentModel);    
+    model = module.get<CommentEntityModel>(CommentEntityModel);    
   });
 
   beforeAll(done => {
@@ -50,110 +41,51 @@ describe('CommentModel', () => {
     getConnectionManager().get().close()
     done()
   })
-  
-  describe('create', () => {
-    it('SUCCESSFULLY_CREATE', async () => {
-      const comment = await model.create(CreateCommentParams);
-      CREATE = comment
-      await expect(comment.id).isNumber()
-    });
-  })
 
-  describe('update', () => {
-    it('SUCCESSFULLY_UPDATE', async () => {
-      const comment = await model.updateById(UpdateCommentParams.id, UpdateCommentParams);
-      await expect(comment.code).toEqual(code.SUCCESSFULLY_UPDATED)
+  describe('', () => {
+    it('findOneById', async () => {
+      const res = await model.findOneById(CommentBy.id);
+      await expect(res.id).isNumber()
+      await expect(res.publication_id).isNumber()
+      await expect(res.user_id).isNumber()
+      await expect(res.timestamp).isDataTime()
+      await expect(res.comment).isStrings()
     });
-    it('FAILED_UPDATE', async () => {
-      try{
-        await model.updateById(0, UpdateCommentParams);
-      }catch(e){
-        await expect(e).toEqual(
-          new HttpException({
-            code : code.NOT_FOUND,
-            message : 'update, id not found',
-            description : ''
-          }, HttpStatus.NOT_FOUND)
-        )
-      }
-    });
-    it('POSTGRES_FAILED_UPDATE', async () => {
-      try{
-        await model.updateById(UpdateCommentParams.id, {
-          id:0,
-          comment: '',
-          user_id:0,
-        });
-      }catch(e:any){
-        await expect(e.response.code).toEqual(code.QUERY_FAILED)
-      }
-    });
-  })
 
-  describe('validateID', () => {
-    it('SUCCESSFULLY_FOUND', async () => {
-      const comment = await model.validateID(GetCommentParams.id, GetCommentParams.user_id);
-      await expect(comment).toEqual(true)
+    it('idEqualsUserId', async () => {
+      const res = await model.idEqualsUserId(CommentBy.id, CommentBy.user_id);
+      await expect(res).isTrue()
     });
-    it('NOT_FOUND', async () => {
-      try {
-        await model.validateID(GetCommentParams.id, GetCommentParams.user_id)
-      } catch (e: any) {
-        await expect(e).toEqual(
-          new HttpException({
-            code: 'NOT_FOUND',
-            message: 'validate, id not found',
-            description: ''
-          }, HttpStatus.NOT_FOUND)
-        )
-      }
-    });
-  })
 
-  describe('findOneById', () => {
-    it('SUCCESSFULLY_FOUND', async () => {
-      const comment = await model.findOneById(GetCommentParams.id);
-      await expect(comment.user_id).toEqual(GetCommentParams.user_id)
+    it('create', async () => {
+      const res = await model.create(CommentCreate);
+      CREATE = res
+      await expect(res.id).isNumber()
+      await expect(res.publication_id).isNumber()
+      await expect(res.user_id).isNumber()
+      await expect(res.timestamp).isDataTime()
+      await expect(res.comment).isStrings()
     });
-    it('NOT_FOUND', async () => {
-      try {
-        await model.findOneById(0);
-      } catch (e: any) {
-        await expect(e).toEqual(
-          new HttpException({
-            code: 'NOT_FOUND',
-            message: 'not found find one by id',
-            description: ''
-          }, HttpStatus.NOT_FOUND)
-        )
-      }
-    });
-  })
 
-  describe('deleteById', () => {
-    it('SUCCESSFULLY_DELETE', async () => {
-      const comment = await model.deleteById(CREATE.id);
-      await expect(comment.code).toEqual(code.SUCCESSFULLY_DELETED)
+    it('updateById', async () => {
+      const res = await model.updateById(CREATE.id, CREATE);
+      await expect(res.code).toBe('SUCCESSFULLY_UPDATED')
     });
-    it('FAILED_DELETE', async () => {
-      try{
-        await model.deleteById(0);
-      }catch(e){
-        await expect(e).toEqual(
-          new HttpException({
-            code : code.NOT_FOUND,
-            message : 'delete, id not found',
-            description : ''
-          }, HttpStatus.NOT_FOUND)
-        )
-      }
+
+    it('deleteById', async () => {
+      const res = await model.deleteById(CREATE.id);
+      await expect(res.code).toBe('SUCCESSFULLY_DELETED')
     });
+
   })
 });
 
 interface CustomMatchers<R = unknown> {
   toBeWithinRange(floor: number, ceiling: number): R;
   isNumber(floor?: number): R;
+  isStrings(floor?: string): R;
+  isDataTime(floor?: Date): R;
+  isTrue(floor?: Date): R;
 }
 
 declare global {
@@ -162,4 +94,4 @@ declare global {
     interface Matchers<R> extends CustomMatchers<R> {}
     interface InverseAsymmetricMatchers extends CustomMatchers {}
   }
-}*/
+}
