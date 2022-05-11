@@ -7,16 +7,16 @@ export class CheckInSeniorEntity {
   id: number;
 
   @Column()
-  adicional_veiculo: boolean;
+  add_car: boolean;
 
   @Column()
-  dataEntrada: Date;
+  dateIn: Date;
 
   @Column()
-  dataSaida: Date;
+  dateOut: Date;
 
   @Column()
-  valor: string;
+  price: string;
 
   @CreateDateColumn({ default: () => 'CURRENT_TIMESTAMP' })
   timestamp: Date;

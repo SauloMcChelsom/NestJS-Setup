@@ -8,6 +8,7 @@ export class SeniorService {
   constructor(private model: SeniorEntityModel) {}
 
   public async create(body:CreateSeniorDto) {
+    await this.model.validarDocumentos(body.documents)
     let create = await this.model.create(body)
     return await this.model.findOneById(create.id)
   }

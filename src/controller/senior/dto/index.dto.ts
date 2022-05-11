@@ -7,17 +7,17 @@ export class CheckInSeniorDto  {
   
   @IsNotEmpty()
   @IsBoolean()
-  adicional_veiculo: boolean;
+  add_car: boolean; 
 
   @IsNotEmpty()
   @IsString()
-  valor: string;
+  price: string;
 
   @IsNotEmpty()
-  dataEntrada: Date;
+  dateIn: Date;
 
   @IsNotEmpty()
-  dataSaida: Date;
+  dateOut: Date;
 }
 
 export class CreateSeniorDto  {
@@ -36,12 +36,4 @@ export class CreateSeniorDto  {
   @MinLength(8)
   phone: string;
 }
-
-export class UpdateSeniorDto  {
-  @IsNotEmpty()
-  @IsNotEmpty()
-  @MinLength(1)
-  comment: string;
-}
-
 

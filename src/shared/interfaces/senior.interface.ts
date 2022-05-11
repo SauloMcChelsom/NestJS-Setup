@@ -1,18 +1,16 @@
 
 export interface CheckInSenior  {
-  senior_id: number
-  adicional_veiculo: boolean
-  valor: string
-  dataEntrada: Date
-  dataSaida: Date
-}
+  id?: number;
+  add_car?: boolean;
+  dateIn?: Date;
+  dateOut?: Date;
+  price?: string;
+  timestamp?: Date;
+  senior_id?: number;
+} 
 
 export interface CreateSenior  {
   documents: string
   name: string
   phone: string
-}
-
-export interface UpdateSenior  {
-  comment: string
 }
