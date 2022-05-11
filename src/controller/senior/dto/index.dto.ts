@@ -14,10 +14,10 @@ export class CheckInSeniorDto  {
   price: string;
 
   @IsNotEmpty()
-  dateIn: Date;
+  date_in: Date;
 
   @IsNotEmpty()
-  dateOut: Date;
+  date_out: Date;
 }
 
 export class CreateSeniorDto  {

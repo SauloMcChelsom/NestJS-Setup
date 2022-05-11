@@ -10,10 +10,10 @@ export class CheckInSeniorEntity {
   add_car: boolean;
 
   @Column()
-  dateIn: Date;
+  date_in: Date;
 
   @Column()
-  dateOut: Date;
+  date_out: Date;
 
   @Column()
   price: string;

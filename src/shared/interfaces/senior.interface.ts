@@ -2,8 +2,8 @@
 export interface CheckInSenior  {
   id?: number;
   add_car?: boolean;
-  dateIn?: Date;
-  dateOut?: Date;
+  date_in?: Date;
+  date_out?: Date;
   price?: string;
   timestamp?: Date;
   senior_id?: number;
