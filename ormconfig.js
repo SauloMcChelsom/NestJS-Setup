@@ -19,6 +19,10 @@ let ENV = {
     './dist/src/entity/*.entity.js',
     './dist/src/entity/senior/*.entity.js'
   ],
+  migrations: ['src/migration/*{.ts,.js}'],
+  cli: {
+    migrationsDir: 'src/migration'
+  },
 }
 
 const env = process.env.environment

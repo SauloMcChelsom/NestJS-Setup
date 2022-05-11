@@ -19,7 +19,12 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "cross-env NODE_ENV=tests jest --config ./jest.e2e.ts"
+    "test:e2e": "cross-env NODE_ENV=tests jest --config ./jest.e2e.ts",
+    "typeorm:cli": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli -f ./ormconfig-migrations.ts",
+    "migration-generate": "cross-env NODE_ENV=development && npm run typeorm:cli -- migration:generate -n",
+    "migration-create":"npx typeorm migration:create -n ArticleTable -d src/migrations",
+    "parentScript": "cross-env GREET=\"Joe\" npm run childScript",
+    "childScript": "cross-env-shell \"echo Hello $GREET\""
   },
   "dependencies": {
     "@nestjs/axios": "^0.0.5",
