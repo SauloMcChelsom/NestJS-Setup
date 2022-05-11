@@ -35,4 +35,26 @@ export const search = {
     end:'2022-03-15',
     limit:3
 }
+
+export const userBy = {
+    id:1,
+    uid:'64eedc87-ad11-480c-94bb-17cab5915f91',
+    email:'tangerino@gmail.com',
+    name:'tangerino',
+    password:'$2a$12$Gd6rtaHR7DQsYQybMYDux.NBR6fPiLcvRRPG1GKAMjLESUwRMcVWS',
+    providers:'local.com',
+    timestamp:'2022-05-03 15:37:00.548',
+    role:'user'
+}
+
+export const userCreate = {
+    id:1,
+    uid:'64eedc87-ad11-480c-94bb-17cab5915f91',
+    email:'tangerino@gmail.com',
+    name:'tangerino',
+    password:'$2a$12$Gd6rtaHR7DQsYQybMYDux.NBR6fPiLcvRRPG1GKAMjLESUwRMcVWS',
+    providers:'local.com',
+    timestamp:'2022-05-03 15:37:00.548',
+    role:'user'
+}
   

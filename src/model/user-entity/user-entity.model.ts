@@ -1,18 +1,17 @@
 import { Injectable,HttpException, HttpStatus } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
+import { Repository } from 'typeorm';
 import { hash, compare  } from 'bcryptjs'
 
 import { code, message } from '@root/src/shared/enum'
-
-import { UserEntityRepository } from './user-entity.repository'
-
+import { UserEntity } from '@entity/user.entity';
 import { User } from '@root/src/shared/interfaces/user.interface'
 
 @Injectable()
 export class UserEntityModel {
   constructor(
-    @InjectRepository(UserEntityRepository)
-    private readonly repository: UserEntityRepository,
+    @InjectRepository(UserEntity)
+    private readonly repository: Repository<UserEntity>,
   ) {}
 
   public async hashPassword(password: string) {
@@ -39,7 +38,6 @@ export class UserEntityModel {
 
   public async findOneUserByEmail(email:string) {
     try {
-
       const res = await this.repository.findOne({where: { email: email}}).catch((err) => {
         throw new HttpException({
           code : code.QUERY_FAILED,
@@ -150,6 +148,8 @@ export class UserEntityModel {
           description : ''
         }, HttpStatus.CONFLICT)
       }
+
+      return code.EMAIL_NOT_FOUND
 
     } catch (e: any) {
       throw new HttpException(e.response, e.status);

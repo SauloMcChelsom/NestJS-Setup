@@ -38,3 +38,6 @@ criar audio
 
 ## jest test only one file
 npx jest src\model\comment-entity\test\comment.model.spec.ts 
+
+##  porcentagem total da cobertura de teste do jest
+jest --coverage --coverageReporters="json-summary"  --coverageReporters="text-summary"

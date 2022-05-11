@@ -33,10 +33,4 @@ if(env === 'development'){
   ENV.logging = true
 }
 
-if(env === 'tests'){
-  delete ENV.ssl
-  delete ENV.extra
-  ENV.logging = false
-}
-
 module.exports = ENV
