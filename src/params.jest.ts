@@ -27,16 +27,6 @@ export const CommentUpdate = {
     user_id:1,
 }
 
-export const search = {
-    offset:0,
-    order:'ASC',
-    column:'timestamp',
-    search:'gat',
-    start:'2021-03-15',
-    end:'2022-03-15',
-    limit:3
-}
-
 export const UserBy = {
     id:1,
     uid:'64eedc87-ad11-480c-94bb-17cab5915f91',
@@ -65,10 +55,14 @@ export const FollowBy = {
     timestamp:'2022-05-10 15:36:19.045',
 }
 
-export const FollowCreate = {
-    id: 2,
-    i_am_following:true,
+export const FollowSearch = {
     page_id:2,
-    user_id:3,
-    timestamp:'2022-05-10 15:36:19.045',
+    user_id: 3,
+    offset:0,
+    order:'ASC',
+    column:'timestamp',
+    search:'',
+    timestampStart: '2020-03-15',
+    timestampEnd: '2022-03-23',
+    limit:3
 }

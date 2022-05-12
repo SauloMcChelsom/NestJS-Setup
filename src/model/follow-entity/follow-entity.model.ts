@@ -130,37 +130,6 @@ export class FollowEntityModel {
     }
   }
 
-  public async updateAmFollowing(id: string, body: any) {
-    try {
-      const res = await this.repository.update(id, body).catch((err) => {
-        throw new HttpException({
-          code : code.QUERY_FAILED,
-          message : `${err}`,
-          description : `${err.detail || err.hint || err.routine}`,
-        }, HttpStatus.BAD_REQUEST)
-      })
-
-      if(!res){
-        throw new HttpException({
-          code : code.NOT_FOUND,
-          message : 'update, id not found',
-          description : ''
-        }, HttpStatus.NOT_FOUND)
-      }
-
-      if (res.affected == 1) {
-        return {
-          code : code.SUCCESSFULLY_UPDATED,
-          message : 'update with sucess',
-          description : ''
-        };
-      }
-      
-    } catch (e: any) {
-      throw new HttpException(e.response, e.status)
-    }
-  }
-
   public async save(body: CreateFollow) {
     body.i_am_following = true
     return await this.repository.save(body)
@@ -214,6 +183,39 @@ export class FollowEntityModel {
       );
     }
   }
+
+  public async updateAmFollowing(id: string, body: any) {
+    try {
+      const res = await this.repository.update(id, body).catch((err) => {
+        throw new HttpException({
+          code : code.QUERY_FAILED,
+          message : `${err}`,
+          description : `${err.detail || err.hint || err.routine}`,
+        }, HttpStatus.BAD_REQUEST)
+      })
+
+      if(!res){
+        throw new HttpException({
+          code : code.NOT_FOUND,
+          message : 'update, id not found',
+          description : ''
+        }, HttpStatus.NOT_FOUND)
+      }
+
+      if (res.affected == 1) {
+        return {
+          code : code.SUCCESSFULLY_UPDATED,
+          message : 'update with sucess',
+          description : ''
+        };
+      }
+      
+    } catch (e: any) {
+      throw new HttpException(e.response, e.status)
+    }
+  }
+
+  
 
   public async listAllUserFollowPageByIdOfPage(
     userId: number,

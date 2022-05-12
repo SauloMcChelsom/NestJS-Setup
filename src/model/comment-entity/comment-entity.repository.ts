@@ -47,7 +47,7 @@ export class CommentEntityRepository extends AbstractRepository<CommentEntity> {
           message : `${err.detail || err.hint || err.routine}`,
           description : ''
         }, HttpStatus.BAD_REQUEST);
-      });
+      })
 
   }
 

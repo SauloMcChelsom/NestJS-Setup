@@ -38,7 +38,14 @@ export class FollowEntityRepository extends AbstractRepository<FollowEntity> {
       .orderBy(`follow.${column}`, order)
       .limit(limit)
       .offset(offset)
-      .getMany();
+      .getMany()
+      .catch(err => {
+        throw new HttpException({
+          code : code.QUERY_FAILED,
+          message : `${err.detail || err.hint || err.routine}`,
+          description : ''
+        }, HttpStatus.BAD_REQUEST);
+      })
   }
 
   async countListAllPageUserFollowByIdOfUser(
@@ -67,7 +74,14 @@ export class FollowEntityRepository extends AbstractRepository<FollowEntity> {
         { timestampEnd: timestampEnd },
       )
       .limit(1)
-      .getCount();
+      .getCount()
+      .catch(err => {
+        throw new HttpException({
+          code : code.QUERY_FAILED,
+          message : `${err.detail || err.hint || err.routine}`,
+          description : ''
+        }, HttpStatus.BAD_REQUEST);
+      })
   }
 
   async listAllUserFollowPageByIdOfPage(
@@ -102,7 +116,14 @@ export class FollowEntityRepository extends AbstractRepository<FollowEntity> {
       .orderBy(`follow.${column}`, order)
       .limit(limit)
       .offset(offset)
-      .getMany();
+      .getMany()
+      .catch(err => {
+        throw new HttpException({
+          code : code.QUERY_FAILED,
+          message : `${err.detail || err.hint || err.routine}`,
+          description : ''
+        }, HttpStatus.BAD_REQUEST);
+      })
   }
 
   async countListAllUserFollowPageByIdOfPage(
@@ -131,6 +152,13 @@ export class FollowEntityRepository extends AbstractRepository<FollowEntity> {
         { timestampEnd: timestampEnd },
       )
       .limit(1)
-      .getCount();
+      .getCount()
+      .catch(err => {
+        throw new HttpException({
+          code : code.QUERY_FAILED,
+          message : `${err.detail || err.hint || err.routine}`,
+          description : ''
+        }, HttpStatus.BAD_REQUEST);
+      })
   }
 }
