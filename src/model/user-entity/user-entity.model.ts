@@ -26,14 +26,27 @@ export class UserEntityModel {
     return await compare(newPassword, passwortHash)
   }
 
-  public async create(user:User){
-    return await this.repository.save(user).catch((err) => {
+  public async findAll(){
+    try {
+      let user:User[] =  await this.repository.find().catch((err) => {
         throw new HttpException({
           code : 'QUERY_FAILED',
-          message : err,
-          description: "save failed",
+          message : `${err.detail || err.hint || err.routine}`,
         }, HttpStatus.BAD_REQUEST)
-    })
+      })
+
+      if(!user) {
+        throw new HttpException({
+          code:code.USER_FOUND,
+          message: message.USER_FOUND,
+          description : ''
+        }, HttpStatus.NOT_FOUND)
+      }
+
+      return user
+    } catch (e: any) {
+      throw new HttpException(e.response, e.status);
+    }
   }
 
   public async findOneUserByEmail(email:string) {
@@ -275,7 +288,17 @@ export class UserEntityModel {
     } catch (e: any) {
       throw new HttpException(e.response, e.status)
     }
-}
+  }
+
+  public async create(user:User){
+    return await this.repository.save(user).catch((err) => {
+        throw new HttpException({
+          code : 'QUERY_FAILED',
+          message : err,
+          description: "save failed",
+        }, HttpStatus.BAD_REQUEST)
+    })
+  }
 
   public async updateUserByUid(id: number, body: any) {
     try {
@@ -338,26 +361,4 @@ export class UserEntityModel {
     }
   }
 
-  public async findAll(){
-    try {
-      let user:User[] =  await this.repository.find().catch((err) => {
-        throw new HttpException({
-          code : 'QUERY_FAILED',
-          message : `${err.detail || err.hint || err.routine}`,
-        }, HttpStatus.BAD_REQUEST)
-      })
-
-      if(!user) {
-        throw new HttpException({
-          code:code.USER_FOUND,
-          message: message.USER_FOUND,
-          description : ''
-        }, HttpStatus.NOT_FOUND)
-      }
-
-      return user
-    } catch (e: any) {
-      throw new HttpException(e.response, e.status);
-    }
-  }
 }

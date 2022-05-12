@@ -1,6 +1,8 @@
 import {Injectable,  HttpException, HttpStatus } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
+import { Repository } from 'typeorm';
 
+import { FollowEntity } from '@entity/follow.entity';
 import { PageEntityModel } from '@model/page-entity/page-entity.model'
 
 import { code, message } from '@root/src/shared/enum'
@@ -11,136 +13,18 @@ import { CreateFollow, Follow } from '@shared/interfaces/follow.interface'
 
 @Injectable()
 export class FollowEntityModel {
-
   constructor(
     @InjectRepository(FollowEntityRepository)
-    private readonly repository: FollowEntityRepository,
+    private readonly repository_custom: FollowEntityRepository,
+
+    @InjectRepository(FollowEntity)
+    private readonly repository: Repository<FollowEntity>,
+
     private isValidTimestamp: IsValidTimestampService,
     private empty: EmptyService,
+    
     private page: PageEntityModel
   ) {}
-
-  public async listAllUserFollowPageByIdOfPage(
-    userId: number,
-    search = '',
-    limit = 3,
-    offset = 0,
-    order = 'ASC',
-    column = 'id',
-    start = '',
-    end = '',
-  ) {
-    try {
-      if (limit > 15) {
-        limit = 15
-      }
-
-      if (this.empty.run(column)) {
-        column = 'id'
-      }
-
-      if (!(order === 'ASC' || order === 'DESC')) {
-        order = 'ASC'
-      }
-
-      if (start) {
-        start = this.isValidTimestamp.run(start)
-      }
-
-      if (end) {
-        end = this.isValidTimestamp.run(end)
-      }
-
-      const res = await this.repository.listAllUserFollowPageByIdOfPage(
-        userId,
-        limit,
-        offset,
-        order,
-        column,
-        start,
-        end,
-      )
-      const count = await this.repository.countListAllUserFollowPageByIdOfPage(
-        userId,
-        start,
-        end,
-      )
-
-      if (Object.keys(res).length != 0) {
-        return { res: res, count: count }
-      }
-
-      throw new HttpException({
-        code : code.NOT_FOUND,
-        message : 'not found all user follow page by id of page',
-        description : ''
-      }, HttpStatus.NOT_FOUND)
-
-    } catch (e: any) {
-      throw new HttpException(e.response, e.status)
-    }
-  }
-
-  public async listAllPageUserFollowByIdOfUser(
-    userId: number,
-    search = '',
-    limit = 3,
-    offset = 0,
-    order = 'ASC',
-    column = 'id',
-    start = '',
-    end = '',
-  ) {
-    try {
-      if (limit > 15) {
-        limit = 15
-      }
-
-      if (this.empty.run(column)) {
-        column = 'id'
-      }
-
-      if (!(order === 'ASC' || order === 'DESC')) {
-        order = 'ASC'
-      }
-
-      if (start) {
-        start = this.isValidTimestamp.run(start)
-      }
-
-      if (end) {
-        end = this.isValidTimestamp.run(end)
-      }
-
-      const res = await this.repository.listAllPageUserFollowByIdOfUser(
-        userId,
-        limit,
-        offset,
-        order,
-        column,
-        start,
-        end,
-      )
-      const count = await this.repository.countListAllPageUserFollowByIdOfUser(
-        userId,
-        start,
-        end,
-      )
-
-      if (Object.keys(res).length != 0) {
-        return { res: res, count: count }
-      }
-
-      throw new HttpException({
-        code : code.NOT_FOUND,
-        message : 'not found all page user follow by id of user',
-        description : ''
-      }, HttpStatus.NOT_FOUND)
-
-    } catch (e: any) {
-      throw new HttpException(e.response, e.status)
-    }
-  }
 
   public async userAlreadyFollowPage(userId: string, pageId: string) {
     try {
@@ -328,6 +212,128 @@ export class FollowEntityModel {
         body.user_id.toString(),
         body.page_id.toString(),
       );
+    }
+  }
+
+  public async listAllUserFollowPageByIdOfPage(
+    userId: number,
+    search = '',
+    limit = 3,
+    offset = 0,
+    order = 'ASC',
+    column = 'id',
+    start = '',
+    end = '',
+  ) {
+    try {
+      if (limit > 15) {
+        limit = 15
+      }
+
+      if (this.empty.run(column)) {
+        column = 'id'
+      }
+
+      if (!(order === 'ASC' || order === 'DESC')) {
+        order = 'ASC'
+      }
+
+      if (start) {
+        start = this.isValidTimestamp.run(start)
+      }
+
+      if (end) {
+        end = this.isValidTimestamp.run(end)
+      }
+
+      const res = await this.repository_custom.listAllUserFollowPageByIdOfPage(
+        userId,
+        limit,
+        offset,
+        order,
+        column,
+        start,
+        end,
+      )
+      const count = await this.repository_custom.countListAllUserFollowPageByIdOfPage(
+        userId,
+        start,
+        end,
+      )
+
+      if (Object.keys(res).length != 0) {
+        return { res: res, count: count }
+      }
+
+      throw new HttpException({
+        code : code.NOT_FOUND,
+        message : 'not found all user follow page by id of page',
+        description : ''
+      }, HttpStatus.NOT_FOUND)
+
+    } catch (e: any) {
+      throw new HttpException(e.response, e.status)
+    }
+  }
+
+  public async listAllPageUserFollowByIdOfUser(
+    userId: number,
+    search = '',
+    limit = 3,
+    offset = 0,
+    order = 'ASC',
+    column = 'id',
+    start = '',
+    end = '',
+  ) {
+    try {
+      if (limit > 15) {
+        limit = 15
+      }
+
+      if (this.empty.run(column)) {
+        column = 'id'
+      }
+
+      if (!(order === 'ASC' || order === 'DESC')) {
+        order = 'ASC'
+      }
+
+      if (start) {
+        start = this.isValidTimestamp.run(start)
+      }
+
+      if (end) {
+        end = this.isValidTimestamp.run(end)
+      }
+
+      const res = await this.repository_custom.listAllPageUserFollowByIdOfUser(
+        userId,
+        limit,
+        offset,
+        order,
+        column,
+        start,
+        end,
+      )
+      const count = await this.repository_custom.countListAllPageUserFollowByIdOfUser(
+        userId,
+        start,
+        end,
+      )
+
+      if (Object.keys(res).length != 0) {
+        return { res: res, count: count }
+      }
+
+      throw new HttpException({
+        code : code.NOT_FOUND,
+        message : 'not found all page user follow by id of user',
+        description : ''
+      }, HttpStatus.NOT_FOUND)
+
+    } catch (e: any) {
+      throw new HttpException(e.response, e.status)
     }
   }
 }

@@ -84,9 +84,10 @@ export default {
     '@root/(.*)': '<rootDir>/$1',
     '@modules/(.*)': '<rootDir>src/modules/$1',
     '@conf/(.*)': '<rootDir>src/conf/$1',
-    '@lib/(.*)': '<rootDir>src/lib/$1',
+    '@shared/(.*)': '<rootDir>src/shared/$1',
     '@entity/(.*)': '<rootDir>src/entity/$1',
     '@views/(.*)': '<rootDir>src/views/$1',
+    '@model/(.*)': '<rootDir>src/model/$1',
   },
 
   // An array of regexp pattern strings, matched against all module paths before considered 'visible' to the module loader

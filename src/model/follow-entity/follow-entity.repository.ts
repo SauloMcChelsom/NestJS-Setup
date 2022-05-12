@@ -1,8 +1,11 @@
-import { EntityRepository, Repository } from 'typeorm';
+import { EntityRepository, AbstractRepository } from 'typeorm';
+import { HttpException, HttpStatus } from '@nestjs/common';
+import { code } from '@root/src/shared/enum';
 import { FollowEntity } from '@entity/follow.entity';
 
 @EntityRepository(FollowEntity)
-export class FollowEntityRepository extends Repository<FollowEntity> {
+export class FollowEntityRepository extends AbstractRepository<FollowEntity> {
+  
   async listAllPageUserFollowByIdOfUser(
     userId: number,
     limit = 3,

@@ -6,13 +6,14 @@ import { IsValidTimestampModule } from '@root/src/shared/utility/is-valid-timest
 import { EmptyModule } from '@root/src/shared/utility/empty/empty.module';
 
 import { PageEntity } from '@entity/page.entity';
-
-import { FollowEntityRepository } from './follow-entity.repository';
+import { FollowEntity } from '@entity/follow.entity';
 import { FollowEntityModel } from './follow-entity.model';
+import { FollowEntityRepository } from './follow-entity.repository';
+
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([PageEntity, FollowEntityRepository]),
+    TypeOrmModule.forFeature([PageEntity, FollowEntity, FollowEntityRepository]),
     IsValidTimestampModule,
     EmptyModule,
     PageEntityModule
