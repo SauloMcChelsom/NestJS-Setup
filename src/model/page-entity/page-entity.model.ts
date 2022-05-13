@@ -1,5 +1,7 @@
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
+import { Repository } from 'typeorm';
+import { PageEntity } from '@entity/page.entity';
 
 import { IsValidTimestampService } from '@root/src/shared/utility/is-valid-timestamp/is-valid-timestamp.service'
 import { EmptyService } from '@root/src/shared/utility/empty/empty.service'
@@ -13,35 +15,14 @@ export class PageEntityModel {
 
   constructor(
     @InjectRepository(PageEntityRepository)
-    private readonly repository: PageEntityRepository,
+    private readonly repository_custom: PageEntityRepository,
+    
+    @InjectRepository(PageEntity)
+    private readonly repository: Repository<PageEntity>,
+
     private isValidTimestamp: IsValidTimestampService,
     private empty: EmptyService,
   ) {}
-
-  public async create(body: CreatePage) {
-    await this.pageAlreadyExist(body.page_name);
-    body.number_of_followers = 0;
-    return await this.save(body);
-  }
-
-  public async updatePage(body: UpdatePage) {
-    await this.findPageByIdOfUserAndIdOfPage(
-      body.user_id.toString(),
-      body.id.toString(),
-    )
-    await this.update(body.id, body)
-    return await this.findOneById(body.id)
-  }
-
-  public async save(body: CreatePage) {
-    return await this.repository.save(body).catch((err) => {
-      throw new HttpException({
-        code : code.QUERY_FAILED,
-        message :  `${err.detail || err.hint || err.routine}`,
-        description : ''
-      }, HttpStatus.BAD_REQUEST)
-    })
-  }
 
   public async findOneByName(name: string) {
     try {
@@ -88,93 +69,6 @@ export class PageEntityModel {
         message: message.NOT_FOUND,
         description: `not find one by id`
       }, HttpStatus.NOT_FOUND)
-
-    } catch (e: any) {
-      throw new HttpException(e.response, e.status)
-    }
-  }
-
-  public async listAll(
-    search = '',
-    limit = 3,
-    offset = 0,
-    order = 'ASC',
-    column = 'id',
-    start = '',
-    end = '',
-  ) {
-    try {
-      if (limit > 15) {
-        limit = 15
-      }
-
-      if (this.empty.run(column)) {
-        column = 'id'
-      }
-
-      if (!(order === 'ASC' || order === 'DESC')) {
-        order = 'ASC'
-      }
-
-      if (start) {
-        start = this.isValidTimestamp.run(start)
-      }
-
-      if (end) {
-        end = this.isValidTimestamp.run(end)
-      }
-
-      const res = await this.repository.listAll(
-        search,
-        limit,
-        offset,
-        order,
-        column,
-        start,
-        end,
-      )
-      const count = await this.repository.countListAll(search, start, end)
-
-      if (Object.keys(res).length != 0) {
-        return { res: res, count: count }
-      }
-
-      throw new HttpException({
-        code : code.NOT_FOUND,
-        message : 'not found list all',
-        description : ''
-      }, HttpStatus.NOT_FOUND)
-
-    } catch (e: any) {
-      throw new HttpException(e.response, e.status);
-    }
-  }
-
-  public async update(id: number, body: UpdatePage) {
-    try {
-      const res = await this.repository.update(id, { ...(body as any) }).catch((err) => {
-        throw new HttpException({
-          code : code.QUERY_FAILED,
-          message :  `${err.detail || err.hint || err.routine}`,
-          description : ''
-        }, HttpStatus.BAD_REQUEST)
-      })
-      
-      if(!res){
-        throw new HttpException({
-          code : code.NOT_FOUND,
-          message : 'update, id not found',
-          description : ''
-        }, HttpStatus.NOT_FOUND)
-      }
-
-      if (res.affected == 1) {
-        return {
-          code : code.SUCCESSFULLY_UPDATED,
-          message : 'update with sucess',
-          description : ''
-        };
-      }
 
     } catch (e: any) {
       throw new HttpException(e.response, e.status)
@@ -249,7 +143,7 @@ export class PageEntityModel {
         await this.repository.update(page.id, {
           number_of_followers: page.number_of_followers,
         })
-        return
+        return page
       }
 
       throw new HttpException({
@@ -272,7 +166,7 @@ export class PageEntityModel {
         await this.repository.update(page.id, {
           number_of_followers: page.number_of_followers,
         })
-        return
+        return page
       }
       
       throw new HttpException({
@@ -292,5 +186,117 @@ export class PageEntityModel {
 
   public async decrementNumberFollowersPage(id: number) {
     await this.decrement(id);
+  }
+
+  public async create(body: CreatePage) {
+    await this.pageAlreadyExist(body.page_name);
+    body.number_of_followers = 0;
+    return await this.save(body);
+  }
+
+  public async updatePage(body: UpdatePage) {
+    await this.findPageByIdOfUserAndIdOfPage(
+      body.user_id.toString(),
+      body.id.toString(),
+    )
+    await this.update(body.id, body)
+    return await this.findOneById(body.id)
+  }
+
+  public async save(body: CreatePage) {
+    return await this.repository.save(body).catch((err) => {
+      throw new HttpException({
+        code : code.QUERY_FAILED,
+        message :  `${err.detail || err.hint || err.routine}`,
+        description : ''
+      }, HttpStatus.BAD_REQUEST)
+    })
+  }
+
+  public async update(id: number, body: UpdatePage) {
+    try {
+      const res = await this.repository.update(id, { ...(body as any) }).catch((err) => {
+        throw new HttpException({
+          code : code.QUERY_FAILED,
+          message :  `${err.detail || err.hint || err.routine}`,
+          description : ''
+        }, HttpStatus.BAD_REQUEST)
+      })
+      
+      if(!res){
+        throw new HttpException({
+          code : code.NOT_FOUND,
+          message : 'update, id not found',
+          description : ''
+        }, HttpStatus.NOT_FOUND)
+      }
+
+      if (res.affected == 1) {
+        return {
+          code : code.SUCCESSFULLY_UPDATED,
+          message : 'update with sucess',
+          description : ''
+        };
+      }
+
+    } catch (e: any) {
+      throw new HttpException(e.response, e.status)
+    }
+  }
+
+  public async listAll(
+    search = '',
+    limit = 3,
+    offset = 0,
+    order = 'ASC',
+    column = 'id',
+    start = '',
+    end = '',
+  ) {
+    try {
+      if (limit > 15) {
+        limit = 15
+      }
+
+      if (this.empty.run(column)) {
+        column = 'id'
+      }
+
+      if (!(order === 'ASC' || order === 'DESC')) {
+        order = 'ASC'
+      }
+
+      if (start) {
+        start = this.isValidTimestamp.run(start)
+      }
+
+      if (end) {
+        end = this.isValidTimestamp.run(end)
+      }
+
+      const res = await this.repository_custom.listAll(
+        search,
+        limit,
+        offset,
+        order,
+        column,
+        start,
+        end,
+      )
+      const count = await this.repository_custom.countListAll(search, start, end)
+
+      if (Object.keys(res).length != 0) {
+        return { res: res, count: count }
+      }
+
+      throw new HttpException({
+        code : code.NOT_FOUND,
+        message : 'not found list all',
+        description : ''
+      }, HttpStatus.NOT_FOUND)
+
+    } catch (e: any) {
+      throw new HttpException(e.response, e.status);
+    }
   }
 }

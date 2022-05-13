@@ -1,5 +1,5 @@
 import { EntityRepository, Repository } from 'typeorm';
-import { PageEntity } from '../../entity/page.entity';
+import { PageEntity } from '@entity/page.entity';
 
 @EntityRepository(PageEntity)
 export class PageEntityRepository extends Repository<PageEntity> {

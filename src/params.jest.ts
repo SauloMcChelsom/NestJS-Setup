@@ -74,3 +74,23 @@ export const LikeBy = {
     user_id:1,
     timestamp:'2022-05-10 15:36:19.045',
 }
+
+export const PageBy = {
+    id:	1,
+    page_description: 'Som de Gato Miando Para Chamar Gato - Som de Miado de Gatos Para Atrair Gatos',
+    page_name: 'Miado de Gato',
+    number_of_followers: 0,
+    timestamp: '2022-05-04 10:06:07.230',
+    user_id: 1
+}
+
+export const PageSearch = {
+    user_id: 1,
+    offset:0,
+    order:'ASC',
+    column:'timestamp',
+    search:'',
+    timestampStart: '2020-03-15',
+    timestampEnd: '2022-03-23',
+    limit:3
+}
