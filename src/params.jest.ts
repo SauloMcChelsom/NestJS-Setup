@@ -66,3 +66,11 @@ export const FollowSearch = {
     timestampEnd: '2022-03-23',
     limit:3
 }
+
+export const LikeBy = {
+    id: 1,
+    i_liked:true,
+    publication_id:4,
+    user_id:1,
+    timestamp:'2022-05-10 15:36:19.045',
+}

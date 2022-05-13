@@ -4,6 +4,7 @@ import {
   PrimaryGeneratedColumn,
   ManyToOne,
   JoinColumn,
+  CreateDateColumn
 } from 'typeorm';
 import { PublicationEntity as Publication } from './publication.entity';
 import { UserEntity as User } from './user.entity';
@@ -25,4 +26,7 @@ export class LikeEntity {
   @JoinColumn({ name: 'user_id' })
   @Column()
   user_id: number;
+
+  @CreateDateColumn({ default: () => 'CURRENT_TIMESTAMP' })
+  timestamp: Date;
 }

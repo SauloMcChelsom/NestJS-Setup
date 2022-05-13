@@ -1,33 +1,20 @@
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
-
+import { Repository } from 'typeorm';
 import { PublicationEntityModel } from '@model/publication-entity/publication-entity.model'
 
 import { code, message } from '@root/src/shared/enum'
 import { CreateLike } from '@shared/interfaces/like.interface'
 import { LikeEntityRepository } from './like-entity.repository'
+import { LikeEntity } from '@root/src/entity/like.entity';
 
 @Injectable()
 export class LikeEntityModel {
   constructor(
-    @InjectRepository(LikeEntityRepository)
-    private readonly repository: LikeEntityRepository,
+    @InjectRepository(LikeEntity)
+    private readonly repository: Repository<LikeEntity>,
     private readonly publication:PublicationEntityModel
   ) {}
-
-  public async save(body: CreateLike) {
-    try {
-      await this.repository.save(body).catch((err) => {
-        throw new HttpException({
-          code : code.QUERY_FAILED,
-          message :  `${err.detail || err.hint || err.routine}`,
-          description : ''
-        }, HttpStatus.BAD_REQUEST)
-      })
-    } catch (e: any) {
-      throw new HttpException(e.response, e.status)
-    }
-  }
 
   public async userAlreadyLikePublication(publicationId: string, userId: string ) {
     const res = await this.repository.findOne({
@@ -131,6 +118,20 @@ export class LikeEntityModel {
 
     } catch (e: any) {
       throw new HttpException(e.response, e.status);
+    }
+  }
+
+  public async save(body: CreateLike) {
+    try {
+      await this.repository.save(body).catch((err) => {
+        throw new HttpException({
+          code : code.QUERY_FAILED,
+          message :  `${err.detail || err.hint || err.routine}`,
+          description : ''
+        }, HttpStatus.BAD_REQUEST)
+      })
+    } catch (e: any) {
+      throw new HttpException(e.response, e.status)
     }
   }
 
