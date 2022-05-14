@@ -104,7 +104,13 @@ export class JwtFirebaseUnity {
 
   public async getUserByEmail(email: string) {
     try {
-      const user = await firebase.auth().getUserByEmail(email);
+      const user = await firebase.auth().getUserByEmail(email).catch((err) => {
+        throw new HttpException({
+          code : code.FIREBASE_FAILED,
+          message :  `${err.errorInfo.code}`,
+          description : `${err.errorInfo.message}`,
+        }, HttpStatus.NOT_FOUND)
+      })
       
       if (user) {
         return user.toJSON();

@@ -4,7 +4,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { JwtLocalModel } from '@root/src/model/jwt-local/jwt-local.model'
 import { UserEntityModel } from '@root/src/model/user-entity/user-entity.model'
 
-import { CreateUser, RefreshToken, UserToken, UserMachineProperty } from '@shared/interfaces/auth.interface'
+import { CreateUser, RefreshToken, UserToken, UserMachineProperty, CreateUserGoogleProvider } from '@shared/interfaces/auth.interface'
 import { User } from '@shared/interfaces/user.interface'
 import { Role } from '@shared/enum/role.enum'
 
@@ -39,6 +39,16 @@ export class AuthService {
         }
 
         return token
+    }
+
+    public async createNewAccountWithGoogleAuthProvider(createUser: CreateUserGoogleProvider) {
+        await  this.userModel.validateEmailForCreateNewAccount(createUser.email)
+        createUser.password = await this.jwtLocalModel.hashPassword(createUser.password)
+        const user = {
+            ...createUser,
+            role : Role.USER
+        }
+        return await this.userModel.create(user)
     }
 
     public async createNewAccount(createUser: CreateUser) {

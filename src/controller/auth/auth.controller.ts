@@ -9,7 +9,7 @@ import { hasRoles } from '@shared/decorator/roles.decorator'
 import { Role } from '@shared/enum'
 
 import { AuthMapper } from './mapper/index.mapper'
-import { CreateUserDTO, RefreshTokenDTO, UserDTO } from './dto/index.dto'
+import { CreateUserDTO, RefreshTokenDTO, UserDTO, CreateUserGoogleProviderDTO } from './dto/index.dto'
 import { AuthService } from './auth.service'
 
 @Controller('auth')
@@ -25,6 +25,13 @@ export class AuthController {
     @UseFilters(Error)
     public async createNewAccount(@Body() user: CreateUserDTO) {
         return await this.service.createNewAccount(user).then(user => this.toMapper.create(user))
+    }
+
+    @Post('create-new-google-auth-provider')
+    @Version('1/public')
+    @UseFilters(Error)
+    public async createNewAccountWithGoogleAuthProvider(@Body() user: CreateUserGoogleProviderDTO) {
+        return await this.service.createNewAccountWithGoogleAuthProvider(user).then(user => this.toMapper.create(user))
     }
 
     @Post('sign-in')

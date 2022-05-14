@@ -101,7 +101,7 @@ export class FirebaseController {
     const newUser:CreateUserFirebase = {
       email:user.email,
       name:user.displayName,
-      password: user.providers == 'sign_in_with_email_password_by_google' ? user.providers: Date().toString(),
+      password: user.providers == 'google_email_password' ? user.providers: Date().toString(),
       providers:user.providers,
       uid:user.uid
     }

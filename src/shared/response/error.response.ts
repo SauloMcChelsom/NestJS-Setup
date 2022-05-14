@@ -16,7 +16,7 @@ import {
       const request = ctx.getRequest<Request>()
       const conf:any = request
       const status = exception.getStatus()
-      const res:any = exception.getResponse()
+      let res:any = exception.getResponse()
       const path = conf._parsedUrl.pathname
       const url = request.url.substring(request.url.lastIndexOf('?') + 1)
       let statusCode:number = 501
@@ -24,6 +24,17 @@ import {
       let message:string = 'Houve um error desconhecido'
       let description = 'Esse error não foi tratado pelo desenvolvedor e nem pelo framework'
       let parameters:any = this.converteUrlParamsToJson(url)
+     
+
+      if(res == undefined){
+        res = {
+          code : null,
+          message : null,
+          description : null,
+          statusCode : null
+        }
+        description = description + ' | A resposta "res" estar undefined'
+      }
 
       //usuario não esta passando o token ou o token e invalido
       //{ statusCode: 401, message: 'Unauthorized' }

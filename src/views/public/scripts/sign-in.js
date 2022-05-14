@@ -9,31 +9,30 @@ class SignIn {
     this.isLogged()
   }
 
-  signInWithEmailAndPassword() {
-    const email = document.getElementById('email').value;
-    const password = document.getElementById('password').value;
-
-    signInLoading.style.display = ''
-    signInBtn.style.display = 'none';
-
-    firebase.auth().signInWithEmailAndPassword(email, password).then(({ user }) => {
-
+  async providersGoogleEmailAndPassword(email, password){
+    //verificar se esta cadastrado no firebase
+    await firebase.auth().signInWithEmailAndPassword(email, password).then(({ user }) => {
       window.location.href = "/home";
-
-    })
-    .catch(async(err) => {
-      let {statusCode, ok, error:_error, message:unknown_message  }  = await this.checkIfUserExistsFaribase(email);
-
+    }).catch(async(err) => {
+      let {statusCode, results, message  }  = await this.checkIfUserExistsFaribase(email);
+   
+      console.log(message)
+      //não existe esse usuario no firebase
       if(statusCode == 404){
         signInBtn.style.display = ''
         signInLoading.style.display = 'none';
         error.style.display = 'block';
-        error.innerHTML = _error.message || `error: ${_error} >--x--< message: ${unknown_message}`;
+        error.innerHTML = message;
+        if(message == 'auth/user-not-found'){
+          error.innerHTML = 'Usuario não cadastrado';
+        }
         return
       }
 
-      let userExists = ok.results[0]
+      //existe esse usuario no firebase, mas não foi cadastrado com email/password
+      let userExists = results[0]
 
+      //usuario cadastrado com o providers do google
       if(userExists.providers == "google.com"){        
         const nomeUser = userExists.displayName
         const textCut = nomeUser.slice(0, nomeUser.lastIndexOf(" "));
@@ -48,11 +47,73 @@ class SignIn {
           signInLoading.style.display = 'none';
         },1000)
       }else{
+        //um outro providers ou um erro de 'providers'
         signInBtn.style.display = ''
         signInLoading.style.display = 'none';
         error.style.display = 'block';
         error.innerHTML = err.message;
       }
+    })
+  }
+
+  async signInWithEmailAndPassword() {
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+
+    signInLoading.style.display = ''
+    signInBtn.style.display = 'none';
+
+    //vefificar se esta cadastrado jwt local
+    let { statusCode, results } =  await this.checkUserExistsByEmail(email)
+
+    if(statusCode == 404){
+      signInBtn.style.display = ''
+      signInLoading.style.display = 'none';
+      error.style.display = 'block';
+      error.innerHTML = `Email <b>${email}</b> não encontrado!`
+      return
+    }    
+
+    if(statusCode == 200){
+      let user = results[0]
+
+      //usuario cadastrado com o providers do google
+      if(user.providers == "local.com"){ 
+        await this.providersLocal(email, password)
+      }
+
+      if(user.providers == "google_email_password"){ 
+        this.providersGoogleEmailAndPassword(email, password)
+      }
+
+    }  
+  }
+
+  async providersLocal(email, password){
+    await this.signInWithEmailAndPasswordJwtLocal(email, password)
+    .then(async res => await res.json())
+    .then(async(res)=>{
+      console.log(res)
+      if (!res.access_token) {
+        throw res
+      }
+      signInBtn.style.display = ''
+      signInLoading.style.display = 'none';
+      error.style.display = 'none';
+      alertSuccess.innerHTML = 'Login Realizado com sucesso';
+      alertSuccess.style.display = 'block';
+      console.log(true)
+      return await res
+    }).catch(async(err) => {
+      if(err.code == "different_password"){
+        error.innerHTML = 'Senha incorreta!';
+      }
+      signInBtn.style.display = ''
+      signInLoading.style.display = 'none';
+      error.style.display = 'block';
+
+      alertSuccess.innerHTML = '';
+      alertSuccess.style.display = 'none';
     });
   }
 
@@ -109,7 +170,7 @@ class SignIn {
   }
 
   async createUserDataBase(user) {
-    await fetch('/user/public/', {
+    await fetch('/v1/public/auth/create-new-account', {
       method: 'POST',
       headers: {
         'Accept': 'application/json',
@@ -139,7 +200,7 @@ class SignIn {
   }
 
   async checkIfUserExistsFaribase(email) {
-    return await fetch(`/firebase/public/user-display-by-email/${email}`, {
+    return await fetch(`/v1/public/firebase/user-display-by-email/${email}`, {
       method: 'GET',
       headers: {
         'Accept': 'application/json',
@@ -158,7 +219,7 @@ class SignIn {
   }
 
   async checkUserExistsByEmail(email) {
-    return await fetch(`/user/public/email/${email}`, {
+    return await fetch(`/v1/public/user/email/${email}`, {
       method: 'GET',
       headers: {
         'Accept': 'application/json',
@@ -174,6 +235,25 @@ class SignIn {
       error.style.display = 'block';
       error.innerHTML = err;
     });
+  }
+
+  async signInWithEmailAndPasswordJwtLocal(email, password) {
+    return await fetch(`/v1/public/auth/sign-in`, {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'user_agent': window.navigator.userAgent,
+        'window_screen_width': screen.width,
+        'window_screen_height': screen.height,
+        'window_screen_color_depth': screen.colorDepth,
+        'window_screen_pixel_depth': screen.pixelDepth,
+      },
+      body: JSON.stringify({
+        email:email,
+        password:password
+      }) 
+    })
   }
 
   cutString(str, cut){

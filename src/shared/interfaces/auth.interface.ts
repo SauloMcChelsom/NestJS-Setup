@@ -21,6 +21,14 @@ export interface CreateUser {
     password: string;
 }
 
+export interface CreateUserGoogleProvider {
+    uid : string;
+    name : string;
+    email: string;
+    password: string;
+    providers:string;
+}
+
 export interface CreateUserFirebase {
     uid : string,
     name : string,
