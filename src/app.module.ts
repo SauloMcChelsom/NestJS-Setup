@@ -92,7 +92,7 @@ import { CommentModule } from '@controller/comment/comment.module';
     }),
     ThrottlerModule.forRoot({
       ttl: 60,
-      limit: 10,
+      limit: 60,//Limitação de taxa por click
     }),
     TasksModule,
     JobsModule,
