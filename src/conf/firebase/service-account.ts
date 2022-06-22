@@ -1,4 +1,4 @@
-export const serviceAccount:any = {
+export const serviceAccount: any = {
   type: process.env.firebas_server_type,
   project_id: process.env.firebase_server_project_id,
   private_key_id: process.env.firebase_server_private_key_id,
@@ -9,4 +9,4 @@ export const serviceAccount:any = {
   token_uri: process.env.firebase_server_token_uri,
   auth_provider_x509_cert_url: process.env.firebase_server_auth_provider_x509_cert_url,
   client_x509_cert_url: process.env.firebase_server_client_x509_cert_url,
-}
+};

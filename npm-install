@@ -4,8 +4,12 @@ npm i @nestjs/swagger
 npm i @nestjs/jwt
 npm i @nestjs/bull
 npm i --save @nestjs/event-emitter
-npm i --save compression
+npm i --save @nestjs/throttler
 npm i --save @nestjs/axios
+npm i --save @nestjs/websockets @nestjs/platform-socket.io
+npm i --save helmet
+npm i --save compression
+npm i --save csurf
 npm i typeorm
 npm i class-validator
 npm i firebase-admin
@@ -18,6 +22,7 @@ npm i bull
 npm install pg --save
 npm install class-transformer
 npm install --save @nestjs/schedule
+npm i --save-dev @nestjs/testing
 npm install cache-manager
 npm i @types/hbs
 npm i @types/bcryptjs

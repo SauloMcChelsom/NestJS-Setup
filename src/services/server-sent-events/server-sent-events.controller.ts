@@ -1,29 +1,26 @@
-import { Version, Sse, MessageEvent, Headers, Res, Controller, Param, Get  } from '@nestjs/common'
-import { ApiOperation, ApiTags } from '@nestjs/swagger'
-import { Observable, interval, map  } from 'rxjs'
+import { Version, Sse, MessageEvent, Controller } from '@nestjs/common';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { Observable, interval, map } from 'rxjs';
 
 @Controller('services/sse')
 @ApiTags('services/sse')
 export class ServerSentEventsController {
-
-  constructor() {}
-
   /**
-   * 
+   *
    * @site
    * https://developer.mozilla.org/en-US/docs/Web/API/EventSource
    */
 
   /**
-   * Ao contrário dos WebSockets , os eventos enviados pelo servidor são unidirecionais; 
-   * ou seja, as mensagens de dados são entregues em uma direção, 
+   * Ao contrário dos WebSockets , os eventos enviados pelo servidor são unidirecionais;
+   * ou seja, as mensagens de dados são entregues em uma direção,
    * do servidor para o cliente
    */
 
   /**
-   * útil para lidar com coisas como atualizações de status de mídia social, 
+   * útil para lidar com coisas como atualizações de status de mídia social,
    * Cotações de ações on-line ou twitters atualizando linha do tempo
-   * feeds de notícias ou entrega de dados em um mecanismo de armazenamento do lado do cliente, 
+   * feeds de notícias ou entrega de dados em um mecanismo de armazenamento do lado do cliente,
    * como IndexedDB ou armazenamento na web.
    */
 
@@ -38,9 +35,8 @@ export class ServerSentEventsController {
   @Version('1')
   @ApiOperation({ summary: 'Enviar para cliente hello world' })
   sendClientHelloWorld(): Observable<MessageEvent> {
-    return interval(1000).pipe(map((_) => ({ data: { hello: 'world' } })));
+    return interval(1000).pipe(map(() => ({ data: { hello: 'world' } })));
   }
-
 }
 
 /**

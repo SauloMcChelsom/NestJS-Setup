@@ -24,10 +24,12 @@
 	"paths": {
       "@root/*": ["./*"],
       "@conf/*": ["src/conf/*"],
-      "@lib/*": ["src/lib/*"],
+      "@shared/*": ["src/shared/*"],
       "@entity/*": ["src/entity/*"],
-      "@modules/*": ["src/modules/*"],
-      "@views/*": ["src/views/*"]
+      "@controller/*": ["src/controller/*"],
+      "@views/*": ["src/views/*"],
+      "@services/*": ["src/services/*"],
+      "@model/*": ["src/model/*"]
     }
   }
 }

@@ -1,14 +1,12 @@
-import { Version, Headers, Res, Controller, Param, Get  } from '@nestjs/common'
-import { ApiOperation, ApiTags } from '@nestjs/swagger'
+import { Version, Headers, Res, Controller, Param, Get } from '@nestjs/common';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
 
-import { FirebaseService } from '@modules/firebase/firebase.service'
-import { UserService } from '@modules/user/user.service'
+//import { UserModel } from '@model/users/user.model';
 
 @Controller('services/stream')
 @ApiTags('services/stream')
 export class StreamController {
-
-  constructor(private firebase:FirebaseService, private user:UserService) {}
+  //constructor(private user: UserModel) {}
 
   @Get('/public/:path')
   @Version('1')
@@ -20,11 +18,14 @@ export class StreamController {
   @Get('/auth/:path')
   @Version('1')
   @ApiOperation({ summary: 'Criar um comentario' })
-  public async authStream(@Param('path') path, @Res() res, @Headers('Authorization') authorization: string) {
-    const decoded = await this.firebase.validateTokenByFirebase(authorization)
-    const user = await this.user.getUserByUid(decoded.uid)
-   
+  public async authStream(
+    @Param('path') path,
+    @Res() res,
+    @Headers('Authorization') authorization: string,
+  ) {
+    //const decoded = await this.firebase.validateTokenByFirebase(authorization);
+    //await this.user.getUserByUid('decoded.uid');
+
     return res.sendFile(path, { root: './CDN' });
   }
-
 }

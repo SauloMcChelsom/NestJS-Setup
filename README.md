@@ -4,70 +4,622 @@
 
 [circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
 [circleci-url]: https://circleci.com/gh/nestjs/nest
+  
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
 
-## Description
+<p align="center"><h1 align="center">Documentação</h1></p>
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+</br></br>
 
-## Installation
+<p align="center"><a href="http://nestjs.com/" target="blank">[ PT-BR ]</a></p>
 
+<p align="center"><a href="http://nestjs.com/" target="blank"> EN-USA </a></p>
+
+</br></br>
+<p align="right">Autor<a href="http://nestjs.com/" target="blank"> Saulo McChelsom</a></p>
+
+## Introdução
+NestJS-Setup é uma infraestrutura back-end para iniciar um projeto sem precisar de configurar
+[NestJS-Setup](https://github.com/nestjs/nest) link para teste online.
+
+## Instalação
+
+Verificando a versão instalada do NodeJS
 ```bash
-$ npm install
+# deve ser igual ou superior a v16.13.2
+node --version
 ```
 
-## Running the app
-
+Verificando a versão instalada do NPM
 ```bash
-# development
-$ npm run start
+# deve ser igual ou superior a 8.3.2
+npm --version
+```
+> caso não tenha o NodeJS instalado na sua maquina, por favor seguir esse [tutorial](https://nodejs.org/en/)
 
-# watch mode
+Criar um diretorio para o projeto
+```bash
+mkdir cd C:\workspaces\
+```
+
+Cloning the Repository
+```bash
+git clone -b develop https://github.com/SauloMcChelsom/NestJS-Setup.git
+```
+
+Entrar na pasta
+```bash
+cd NestJS-Setup
+```
+
+Installing dependencies
+```bash
+npm install
+```
+
+## Inicializar
+
+Running the app mode development
+```bash
 $ npm run start:dev
+```
 
-# production mode
+Running the app mode production
+```bash
 $ npm run start:prod
 ```
 
-## Test
-
+Test unit
 ```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+$ npm run test:unit
 ```
 
-## Support
+Test e2e
+```bash
+$ npm run test:e2e
+```
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+## Tecnologias utilizadas
 
-## Stay in touch
+-  **PostgreSQL**
+-  **TypeORM**
+-  **Firebase**
+-  **RxJS**
+-  **TypeScript**
+-  **NestJS**
+-  **Jest**
+-  **swagger**
+-  **Heroku**
+-  **Redis**
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+## Implementações
 
-## License
+FUNDAMENTALS
+-  **Middleware**
+-  **Exception filters**
+-  **Pipes**
+-  **Guards**
+-  **Interceptors**
+-  **Custom decorators**
+-  **Custom providers**
+-  **Asynchronous providers**
+-  **Dynamic modules**
+-  **Injection scopes**
+-  **Circular dependency**
+-  **Module reference**
+-  **Lazy-loading modules**
+-  **Execution context**
+-  **Lifecycle events**
+-  **Platform agnosticism**
+-  **Testing**
 
-Nest is [MIT licensed](LICENSE).
+TECHNIQUES
+-  **Database**
+-  **Configuration**
+-  **Validation**
+-  **Caching**
+-  **Serialization**
+-  **Versioning**
+-  **Task scheduling**
+-  **Queues**
+-  **Events**
+-  **Compression**
+-  **File upload**
+-  **Streaming files**
+-  **HTTP module**
+-  **Model-View-Controller**
+-  **Performance (Fastify)**
+-  **Server-Sent Events**
+
+SECURITY
+-  **Authentication**
+-  **Authorization**
+-  **Encryption and Hashing**
+-  **Helmet**
+-  **CORS**
+-  **CSRF Protection**
+-  **Rate limiting**
+
+WEBSOCKETS
+-  **Gateways**
+-  **Exception filters**
+-  **Pipes**
+-  **Guards**
+-  **Interceptors**
+-  **Adapters**
+
+## Convenção
+
+Variavel simples
+```js
+let numero_cartao_de_debito = 8425778
+```
+
+Variavel que representa uma entidade
+```js
+// variavel que representa uma entidade, dominio ou objeto deve ser declarodo junto com sua propriedade.
+// sempre respeitando a ordem entidade+propriedade 
+let usuario_nome = 'mary'
+```
+
+Metodos
+```js
+calcularContasDeDebitos(){
+...
+}
+```
+
+Classes
+```js
+class ContasDeDebitos {
+...
+}
+```
+
+Arquivos
+```bash
+./contasDeDebitos.components.ts
+```
+> se sua classe esta precisando acessar um recurso de outro modulo, sua classe não pode acessa um model ou repositorio, deve sempre acessar o service.
+
+## Estrutura de arquivos e diretorios
+
+Segue detalhamento de como deve ser a criação das novas funcionalidades do sistema NestJS-Setup. qualquer coisa fora deste padrão deve ser corrigido.
+
+- [`./CDN`](#cdn)
+- [`./src`](#src)
+	- [`./config`](#config)
+	-  [`./entity`](#entity)
+	-  [`./lib`](#lib)
+	-  [`./modules`](#modules)
+		-  [`./user`](#user)
+			-  [`./dto`](#dto)
+			-  [`./interface`](#interface)
+			-  [`./mapper`](#mapper)
+			-  [user.controller.ts](#controller)
+			-  [user.model.ts](#model)
+			-  [user.module.ts](#module)
+			-  [user.repository.ts](#repository)
+			-  [user.service.ts](#service)
+	-  [`./services`](#services)
+	-  [`./views`](#views)
+-  [.app.heroku_commands](#heroku_commands)
+-  [.env.development](#development)
+-  [.env.production](#production)
+-  [.env.tests](#tests)
+-  [.redis.heroku_commands](#redis)
+-  [connection-database-for-test-unit.ts](#routes)
+-  [INSOMNIA_NESTJS_SETUP_V1.json](#routes)
+-  [jest-custom-match.js](#routes)
+-  [jest.config.ts](#routes)
+-  [jest.e2e.ts](#routes)
+-  [npm-install](#routes)
+-  [ormconfig.js](#routes)
+-  [Procfile](#routes)
+-  [tsconfig.json](#routes)
+
+### cdn
+Arquivos `.jpg` `.png` `.mp4` `.mp3` `.pdf` e outros, enviados pelo usuarios. Todos os arquivos que o usuario subiu com o uploads, são enviados para essa pasta,
+da mesma forma, esse diretorio também e ultilizado para fazer todo processo de download.
+```
+CDN
+```
+
+### src
+Arquivos src
+```
+src
+```
+
+### config
+Arquivos de configuração que pode ser ultilizados em outras parte do sistema
+```
+src/config
+```
+
+### entity
+Todas as entidades do sistema
+```
+src/entity
+```
+### lib
+modulos de funcionalidades, são chamados por construtor para realizar uma função 
+```
+src/lib
+```
+### modules
+modulos principal do sistema
+```
+src/modules
+```
+
+### user
+arquivos de paginas web para exemplos
+```
+src/modules/user
+```
+
+### dto
+```js
+export class CreateDto {
+	@IsNotEmpty()
+	@IsNumber()
+	publication_id: number;
+
+	@IsNotEmpty()
+	@MinLength(1)
+	comment: string;
+}
+```
+
+### interface
+```js
+export interface CreateInterface {
+	comment: string;
+	publication_id: number;
+	user_id: number;
+}
+```
+
+### mapper
+```js
+export class CreateMapper {
+	public toMapper(field: ReturnInterface) {
+		return {
+			id: field.id,
+			user_id: field.user_id,
+			publication_id: field.publication_id,
+			comment: field.comment,
+			timestamp: field.timestamp?.toString(),
+		};
+	}
+}
+```
+mapper comun
+
+-  **authFindOne.mapper.ts**
+-  **publicFindOne.mapper.ts**
+-  **authList.mapper.ts**
+-  **publicList.mapper.ts**
+-  **create.mapper.ts**
+-  **update.mapper.ts**
+
+## Controller
+os dados são recebidos por dto, e retorna um mepper
+
+como deve ser declarado os nome das classe
+
+-  **se e publica ou privado**
+-  **lista ou singular**
+-  **por entidade+propriedade**
+
+exemplo
+```js
+public async authListByUserId(...){
+...
+}
+```
+
+todos controller deve conter os decoradores
+```js
+// qual é o verbo http
+@Get('/user/:user_id')
+```
+```js
+// qual a versão da uri e a visibilidade(public ou private)
+@Version('1/private')
+```
+```js
+// opcional
+// tempo de cache em segundos
+@CacheTTL(20)
+```
+```js
+// estrutura de responta para erro
+@UseFilters(HttpExceptions)
+```
+```js
+// estrutura de responta para sucesso
+@UseInterceptors(HttpResponse)
+```
+```js
+// opcional
+// habilitar as respostas de cache automático
+@UseInterceptors(CacheInterceptor)
+```
+para classe auth deve conter o decorador
+```js
+// implementação da rota protegida com firebase
+@UseGuards(JwtAuthGuard)
+```
+para classe que retorna uma lista, os paramentro obrigatorios são
+```js
+// classe com auth
+@Header(new TOKEN()) token: string
+```
+```js
+//buscar por determinada palavra chave da coluna
+@Query('search') search: string
+```
+```js
+//quantidade da lista, minimo 3 maximo 15
+@Query('limit') limit = '3'
+```
+```js
+//posição que representa uma coleção
+@Query('offset') offset = '0'
+```
+```js
+// ordenar por maior ou menor, valores aceitos ASC|DESC
+@Query('order') order: string
+```
+```js
+// coluna que desejar ordenar 
+@Query('column') column: string
+```
+```js
+// coluna datatime inicial
+@Query('start') start: string
+```
+```js
+// coluna datatime final
+@Query('end') end: string
+```
+
+exemplo
+
+```js
+  @Get('/user/:user_id')
+  @Version('1/private')
+  @CacheTTL(20)
+  @UseGuards(JwtAuthGuard)
+  @UseFilters(HttpExceptions)
+  @UseInterceptors(HttpResponse)
+  @UseInterceptors(CacheInterceptor)
+  @ApiOperation({ summary: 'Listar comentarios por id do usuario' })
+  public async authListByUserId(
+    @Param('user_id') user_id: number,
+    @Query('search') search: string,
+    @Query('limit') limit = '3',
+    @Query('offset') offset = '0',
+    @Query('order') order: string,
+    @Query('column') column: string,
+    @Query('start') start: string,
+    @Query('end') end: string,
+  ) {
+    const cls: ClassificationInterface = {
+      search: search,
+      limit: parseInt(limit) ? parseInt(limit) : 5,
+      offset: parseInt(offset) ? parseInt(offset) : 0,
+      order: order,
+      column: column,
+      start: start,
+      end: end,
+    };
+    const { res, count } = await this.service.authListByUserId(user_id, cls);
+    const dto = res.map((r) => this.authListMapper.toMapper(r));
+    return new OK(dto, code.SUCCESSFULLY_FOUND, null, count);
+  }
+```
+
+### service
+um conjuto de varias unidade para a realização de uma tarefas, os metodos são chamados por interface ou variavel tipadas, retorna uma etidade
+
+o metodo tem o mesmo nome do controller
+
+pouca logica, apenas chama o seu model ou chama um services de outro modulos
+
+interfaciado ou variavel tipadas
+
+retorna uma entidade
+
+```js
+public async create(body: CreateInterface) {
+const create = await this.model.create(body);
+await this.publication.incrementNumberCommentOfPublication(
+   body.publication_id,
+);
+return await this.model.findOneById(create.id);
+```
+
+### model
+uma unidade, que realiza uma execução especifica, unica...
+normalmente aonde os orm são executados, ou seja chamada ao banco de dados são feitas
+
+returna como erro uma exeção em 2 nivel 1 - erro de query -> QUERY_FAILED(400) 2 - recurso não encontrado -> NOT_FOUND(404)
+
+lista são chamado por repositorio customizados, por motivo que nativamente o orm não suporta consulta complexas, é obrigatorio ter uma consulta com os mesmo parametros para buscar a conquidade de registro
+
+possui obrigatoriamente validaçãoes
+
+```
+limit > 3 e limit < 15
+```
+
+```
+column recebe id caso não for passado pelo usuario
+```
+
+```
+order recebe ASC caso não for passado pelo usuario
+```
+
+```
+start valida se é uma datatime valida
+```
+
+```
+end valida se é uma datatime valida
+```
+
+```
+#os paramentros para o metodo de contagem de registro
+publicationId
+search
+start
+end
+```
+
+```
+#os paramentros para o metodo de lista de registro
+publicationId
+search
+limit
+offset
+order
+column
+start
+end
+```
+
+exemplo
+
+```
+public async listByPublicationId(
+    publicationId: number,
+    search = '',
+    limit = 3,
+    offset = 0,
+    order = 'ASC',
+    column = 'id',
+    start = '',
+    end = '',
+  ) {
+    try {
+      if (limit > 15) {
+        limit = 15;
+      }
+
+      if (this.empty.run(column)) {
+        column = 'id';
+      }
+
+      if (!(order === 'ASC' || order === 'DESC')) {
+        order = 'ASC';
+      }
+
+      if (start) {
+        start = this.isValidTimestamp.run(start);
+      }
+
+      if (end) {
+        end = this.isValidTimestamp.run(end);
+      }
+
+      const res = await this.repository_custom.listByPublicationId(
+        publicationId,
+        search,
+        limit,
+        offset,
+        order,
+        column,
+        start,
+        end,
+      );
+      const count = await this.repository_custom.countListByPublicationId(
+        publicationId,
+        search,
+        start,
+        end,
+      );
+
+      if (Object.keys(res).length != 0) {
+        return { res: res, count: count };
+      }
+
+      throw new HttpException({
+        code : code.NOT_FOUND,
+        message : 'not found list by publication id',
+        description : ''
+      }, HttpStatus.NOT_FOUND)
+    } catch (e: any) {
+      throw new HttpException(e.response, e.status)
+    }
+  }
+```
+
+
+```
+ public async findOneById(id: number) {
+    try {
+      const res = await this.repository.findOne(id).catch((err) => {
+        throw new HttpException({
+          code : code.QUERY_FAILED,
+          message : `${err.detail || err.hint || err.routine}`,
+          description : ''
+        }, HttpStatus.BAD_REQUEST)
+      });
+      if (res) {
+        return res;
+      }
+      throw new HttpException({
+        code : code.NOT_FOUND,
+        message : 'not found find one by id',
+        description : ''
+      }, HttpStatus.NOT_FOUND)
+    } catch (e: any) {
+      throw new HttpException(e.response, e.status);
+    }
+  }
+```
+
+### module
+arquivos de paginas web para exemplos
+```
+src/modules/user/module
+```
+
+### repository
+são classe customizada de acesso ao banco com orm
+
+repositorio customizado que possui dois medoto comum, o list e o cout
+
+para sucesso retorna uma entidade
+
+para erro retorna uma exeção de QUERY_FAILED
+```
+src/modules/user/repository
+```
+
+### services
+modulos de serviços, são chamados por uri para realizar uma tarefas especificas
+```
+src/services
+```
+### views
+arquivos de paginas web para exemplos
+```
+src/view
+```
+
+## Get Started
+
+### lib
+
+### modules
+
+### services
+
+
+
+

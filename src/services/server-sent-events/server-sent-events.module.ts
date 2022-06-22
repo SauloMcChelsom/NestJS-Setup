@@ -1,14 +1,10 @@
-import { Module } from '@nestjs/common'
-import { ServerSentEventsController } from './server-sent-events.controller'
+import { Module } from '@nestjs/common';
+import { ServerSentEventsController } from './server-sent-events.controller';
 
 @Module({
   imports: [],
-  controllers: [
-    ServerSentEventsController
-  ],
+  controllers: [ServerSentEventsController],
   providers: [],
-  exports: []
+  exports: [],
 })
 export class ServerSentEventsModule {}
-
-

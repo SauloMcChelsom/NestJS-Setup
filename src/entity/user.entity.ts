@@ -1,4 +1,11 @@
-import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn} from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  CreateDateColumn,
+} from 'typeorm';
+
+import { Role } from "../shared/enum/role.enum";
 
 @Entity('user')
 export class UserEntity {
@@ -22,4 +29,8 @@ export class UserEntity {
 
   @CreateDateColumn({ default: () => 'CURRENT_TIMESTAMP' })
   timestamp: Date;
+
+  @Column({type: 'enum', enum: Role, default: Role.USER})
+  role: Role;
+
 }

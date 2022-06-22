@@ -1,17 +1,11 @@
-import { Module } from '@nestjs/common'
-import { EventsController } from './events.controller'
-import { OrderEventModule } from '@root/src/lib/events/order/order.module'
+import { Module } from '@nestjs/common';
+import { EventsController } from './order/events.controller';
+import { OrderEventModule } from '@root/src/services/events/order/order.module';
 
 @Module({
-  imports: [
-    OrderEventModule
-  ],
-  controllers: [
-    EventsController
-  ],
+  imports: [OrderEventModule],
+  controllers: [EventsController],
   providers: [],
-  exports: []
+  exports: [],
 })
-export class EvenstModule {}
-
-
+export class EventsModule {}
