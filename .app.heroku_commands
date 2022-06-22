@@ -16,6 +16,9 @@
 #listar aplicativos
 heroku apps
 
+#entrar em um aplicativo
+heroku git:remote -a angular-state-managements
+
 #Atualizar
 heroku update
 
@@ -30,6 +33,8 @@ heroku run bash
 
 #Visualize o aplicativo em execução 
 heroku logs --tail
+OU
+heroku logs --tail --app angular-state-managements
 
 # logs de apenas um único dinamômetro e manter o canal aberto, ouvindo outros evento
 heroku logs --ps web.1 --tail
