@@ -6,11 +6,13 @@ import { UserMachinePropertyGuard } from '@shared/guard/user-machine-property.gu
 import { Error } from '@shared/response/error.response'
 import { Success } from '@shared/response/success.response'
 import { hasRoles } from '@shared/decorator/roles.decorator'
-import { Role } from '@shared/enum'
+import { code, Role } from '@shared/enum'
 
 import { AuthMapper } from './mapper/index.mapper'
 import { CreateUserDTO, RefreshTokenDTO, UserDTO, CreateUserGoogleProviderDTO } from './dto/index.dto'
 import { AuthService } from './auth.service'
+import { JwtAuthRefreshTokenGuard } from '@root/src/shared/guard/refresh-token.guard';
+import { OK } from '@root/src/shared/response/ok';
 
 @Controller('auth')
 export class AuthController {
@@ -70,5 +72,14 @@ export class AuthController {
     public async revokeToken(@Body() body: RefreshTokenDTO, @Headers('authorization') token:any){
         await this.service.validateRefreshToken(body.refresh_token, token)
         return await this.service.revokeToken(body.refresh_token).then(() => this.toMapper.revokeToken())
+    }
+
+    @Post('valid-token')
+    @Version('1/private')
+    @UseGuards(JwtAuthAccessTokenGuard, UserMachinePropertyGuard)
+    @UseFilters(Error)
+    public async validToken(@Body() body: RefreshTokenDTO, @Headers('authorization') token:any){
+        await this.service.validateRefreshToken(body.refresh_token, token)
+        return new OK([], code.VALID_TOKEN)
     }
 }
