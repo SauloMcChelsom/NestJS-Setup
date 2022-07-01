@@ -16,8 +16,7 @@ let ENV = {
     }
   },
   entities: [
-    './dist/src/entity/*.entity.js',
-    './dist/src/entity/senior/*.entity.js'
+    './dist/src/entity/*.entity.js'
   ],
   migrations: ['src/migration/*{.ts,.js}'],
   cli: {
