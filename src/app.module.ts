@@ -22,7 +22,6 @@ import { PageModule } from '@controller/page/page.module';
 import { FollowModule } from '@controller/follow/follow.module';
 import { PublicationModule } from '@controller/publication/publication.module';
 import { LikeModule } from '@controller/like/like.module';
-import { SeniorModule } from '@controller/senior/senior.module';
 import { FirebaseModule } from '@controller/firebase/firebase.module'
 import { AuthModule } from '@controller/auth/auth.module'
 import { RoleModule } from '@controller/role/role.module'
@@ -105,7 +104,6 @@ import { CommentModule } from '@controller/comment/comment.module';
     FollowModule,
     PublicationModule,
     LikeModule,
-    SeniorModule,
     CommentModule,
     AuthModule,
     FirebaseModule,
