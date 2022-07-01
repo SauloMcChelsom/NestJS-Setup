@@ -72,6 +72,11 @@ $ npm run start:prod
 Test unit
 ```bash
 $ npm run test:unit
+$ jest test only one file
+npx jest src\model\comment-entity\test\comment.model.spec.ts
+
+$  porcentagem total da cobertura de teste do jest
+jest --coverage --coverageReporters="json-summary" --coverageReporters="text-summary"
 ```
 
 Test e2e

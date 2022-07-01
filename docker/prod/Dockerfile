@@ -1,9 +1,7 @@
 # syntax=docker/dockerfile:1
 FROM node:16.15.1
 
-
 RUN apt-get -y update
-
 
 # Install software 
 RUN apt-get install -y git
