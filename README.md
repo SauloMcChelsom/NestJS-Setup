@@ -620,6 +620,56 @@ src/view
 
 ### services
 
+https://atitudereflexiva.files.wordpress.com/2018/11/refresh_token.png
 
+https://miro.medium.com/max/700/1*JZn_mVY2wIl5bkJFngI82Q.png
+
+Conceito de tokens de atualização
+
+Basicamente, o fluxo de autorização da perspectiva do aplicativo cliente é o seguinte:
+
+1 Para fazer login no aplicativo, envie o nome de usuário e a senha para o back-end
+
+2 A resposta incluirá: um token de acesso de curta duração para acessar recursos restritos, um tempo de expiração (por quanto tempo o token de acesso é válido) e um token de atualização de longa duração para obter um novo token de acesso quando o antigo expirar
+
+3 Sempre que você quiser acessar uma rota restrita, envie o token de acesso ao servidor
+
+4 O servidor retorna um erro de autenticação (por exemplo, 401 Unauthorized) quando o token de acesso não é mais válido (por exemplo, expirou)
+
+5 O cliente envia o token de atualização ao servidor para obter um novo token de acesso
+
+E caso um usuário malicioso capturar o refreshToken, como fica o segurança? Pois teoricamente ele poderia criar accesToken quando quiser
+
+Qual a vantagem em usar um Refresh Token ao invés de somente o Access Token?
+
+Criar unicamente os tokens de acesso com um tempo de vida muito longo — o que não seria viável a nível de segurança, já que caso o token fosse roubado, não haveríamos como cancelá-lo em tempo hábil.
+
+Criar unicamente os tokens de acesso com um tempo de vida muito curto — o que não seria viável a nível de experiência de usuário, já que no caso do roubo desse token, não haveríamos como cancelá-lo em tempo hábil.
+
+Criar um tipo de blacklist que te permite listar tokens que você não quer que sejam mais acessíveis, mesmo antes da expiração. Mas isso não me parece uma boa opção se você está utilizando um stateless token em primeiro lugar, já que traz inúmeros problemas. O maior deles: acabar com a necessidade de usar um stateless token, pois deixa de ser stateless no momento em que a cada requisição você precisa verificar se o token é válido ou não. Sinceramente, nesse caso vale mais a pena recorrer às boas e velhas sessões.
+
+Criar um mecanismo com autenticação a base de dois tokens, um access token e um refresh token. E este é mais viável, já que nos permite criar um token verificável com grande tempo de vida (o refresh token) e um token para acessar de fato a nossa aplicação com um curto tempo de vida (o access token).
+
+Aplicativo seguro com token de atualização
+
+Existem várias possibilidades de como um invasor pode obter acesso a um token de usuário. 1 Hacker tem acesso total ao serverside 2 Hacker tem acesso ao lado do cliente 3 Hacker tem acesso a arquivos de log ou lê o tráfego entre cliente e servidor
+
+Como impedir o uso de tokens por terceiros
+
+Proteção ambiental Você também pode vincular os tokens a outras propriedades do ambiente, como Navegador usado (via User-Agent) Sistema Operacional Usado (via User-Agent) Tamanho da tela Geolocalização (se a permissão for concedida) enviar codigo por e-mail para proseguir quando o refrech-token for expirado
+
+//User-Agent console.log(window.navigator.userAgent)
+
+//Window Screen Width console.log(screen.width)
+
+//Window Screen Height console.log(screen.height)
+
+//Window Screen Color Depth console.log(screen.colorDepth)
+
+//Window Screen Pixel Depth console.log(screen.pixelDepth)
+
+Proteção de IP Uma possibilidade de evitar que o hacker use os tokens é apenas colocar na whitelist o ip do criador. Se uma solicitação chegar com outro IP (por exemplo, IP do invasor), rejeite a solicitação e retorne “401 Unauthorized”.
+
+Objetivo principal O objetivo principal deve ser manter o token de atualização protegido. Se o token de atualização vazar, o hacker pode criar novos tokens de acesso e executar ações restritas em seu nome, a menos que você aplique proteção de IP ou proteção de ambiente ou invalide o token de atualização.
 
 
