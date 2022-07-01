@@ -13,7 +13,7 @@
     "start:heroku": "heroku local web",
     "start:dev": "cross-env NODE_ENV=development nest start --watch",
     "start:web": "cross-env NODE_ENV=production nest start --watch",
-    "start:prod": "cross-env NODE_ENV=production node dist/main.js",
+    "start:prod": "cross-env NODE_ENV=production node dist/src/main.js",
     "lint": "eslint \"{src}/**/*.ts\" \"__tests__/**/*.ts\" --fix",
     "test": "jest --coverage --coverageReporters=\"json-summary\"  --coverageReporters=\"text-summary\"",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",

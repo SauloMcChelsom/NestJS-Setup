@@ -102,7 +102,7 @@ export class UsuariosController {
     return new OK(res, code.SUCCESSFULLY_FOUND)
   }
 
-  @Get('all')
+  @Get('all4')
   @Version('1/public')
   @UseFilters(Error)
   @UseInterceptors(Success)

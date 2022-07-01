@@ -28,8 +28,8 @@ let ENV = {
 const env = process.env.environment
 
 if(env === 'development'){
-  delete ENV.ssl
-  delete ENV.extra
+  //delete ENV.ssl
+  //delete ENV.extra
   ENV.logging = true
 }
 
