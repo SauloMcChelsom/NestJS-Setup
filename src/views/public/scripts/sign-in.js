@@ -7,7 +7,7 @@ class SignIn {
     signInLoading.style.display = 'none';
     showAlertLoginWithGoogle.style.display = 'none';
     this.isLogged()
-  }
+  } 
 
   async providersGoogleEmailAndPassword(email, password){
     //verificar se esta cadastrado no firebase

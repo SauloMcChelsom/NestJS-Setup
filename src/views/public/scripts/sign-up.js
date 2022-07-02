@@ -19,27 +19,47 @@ class SignUp {
         return
       }
 
+      if(password.length < 6){
+        error.style.display = 'block';
+        error.innerHTML = "Password should be at least 6 characters"
+        return
+      }
+
+      let { statusCode } = await this.checkUserExistsByEmail(email)
+
+      if(statusCode == 200){
+        signUpBtn.style.display = ''
+        signUpLoading.style.display = 'none';
+        error.style.display = 'block';
+        error.innerHTML = `The email address is already | local`;
+        return
+      }
+
       signUpLoading.style.display = ''
       signUpBtn.style.display = 'none';
-  
+
       return firebase.auth().createUserWithEmailAndPassword(email, password).then(async({user}) => {
         const createUser = {
           "uid" : user.uid,
           "name" : this.cutString(email,'@'),
           "email": email,
           "password": password,
-          "providers":"email_password"
+          "providers":"google.email.com"
         }
 
-        await this.createUserDataBase(createUser)
+        await this.createUserLocal(createUser)
 
         window.location.href = "/home";
       })
       .catch((err) => {
+        let message = err.message;
+        if(err.code == 'auth/email-already-in-use'){
+          message = 'The email address is already | google'
+        }
         signUpBtn.style.display = ''
         signUpLoading.style.display = 'none';
         error.style.display = 'block';
-        error.innerHTML = err.message;
+        error.innerHTML = message
       });
     }
 
@@ -49,17 +69,10 @@ class SignUp {
       
       return await firebase.auth().signInWithPopup(new firebase.auth.GoogleAuthProvider()).then(async({user}) => {
 
-        let {statusCode, error:_error, message:unknown_message  } = await this.checkUserExistsByEmail(user.email)
+        let { statusCode } = await this.checkUserExistsByEmail(user.email)
 
         if(statusCode == 200){
           window.location.href = "/home";
-          return
-        }
-        if(statusCode == 404 && unknown_message){
-          signUpBtn.style.display = ''
-          signUpLoading.style.display = 'none';
-          error.style.display = 'block';
-          error.innerHTML = _error.message || `error: ${_error} >--x--< message: ${unknown_message}`;
           return
         }
   
@@ -78,10 +91,10 @@ class SignUp {
           "name" : this.cutString(user.email,'@'),
           "email": user.email,
           "password": generateId(10),//ex.: f539241c7b
-          "providers":"google.com"
+          "providers":"google.popup.com"
         }
   
-        await this.createUserDataBase(createUser)
+        await this.createUserLocal(createUser)
   
         window.location.href = "/home";
       
@@ -94,8 +107,8 @@ class SignUp {
       });
     }
 
-    async createUserDataBase(user) {
-      await fetch('/user/public/', {
+    async createUserLocal(user) {
+      await fetch('/v1/public/auth/create-new-google-auth-provider', {
         method: 'POST',
         headers: {
           'Accept': 'application/json',
@@ -103,30 +116,18 @@ class SignUp {
         },
         body: JSON.stringify(user) 
       })
-      .then(async(res) => await res.json())
       .then(async(res)=>{
-        await res
-        if(res.statusCode == 200){
-          return res
-        }else{
-          const user = firebase.auth().currentUser;
-          user.delete().then(() => {
-            signUpBtn.style.display = ''
-            signUpLoading.style.display = 'none';
-            error.style.display = 'block';
-            error.innerHTML = res.error.message;
-          })
-        }
+        return await res
       }).catch((err) => {
-        signUpBtn.style.display = ''
-        signUpLoading.style.display = 'none';
+        signInBtn.style.display = ''
+        signInLoading.style.display = 'none';
         error.style.display = 'block';
         error.innerHTML = err;
       });
     }
 
     async checkUserExistsByEmail(email) {
-      return await fetch(`/user/public/email/${email}`, {
+      return await fetch(`/v1/public/user/email/${email}`, {
         method: 'GET',
         headers: {
           'Accept': 'application/json',
