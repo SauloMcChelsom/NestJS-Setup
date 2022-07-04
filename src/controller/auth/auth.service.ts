@@ -17,6 +17,17 @@ export class AuthService {
         private userModel: UserEntityModel,
     ){}
 
+    public async getUserByUid(uid:string){ 0
+       return await this.userModel.getUserByUid(uid)
+    }
+
+    public async activeAccount(user){
+        await this.userModel.updateUserByUid(user.id,{
+            is_active: !user.is_active,
+            password: await this.jwtLocalModel.hashPassword(new Date().toString())
+        })
+    }
+
     public async signIn(user: User): Promise<UserToken> {
 
         let validate_user:User = await this.userModel.validateEmailPasswordUser(user.email, user.password)
@@ -29,6 +40,10 @@ export class AuthService {
         }else{
             await this.jwtLocalModel.updateRefreshToken(refresh_token_of_user.user_id)
         }
+
+        await this.userModel.updateUserByUid(validate_user.id,{
+            last_login: new Date()
+        })
 
         let refresh_token:RefreshToken = await this.jwtLocalModel.findRefreshTokenByUserId(validate_user.id)
         let access_token:string = await this.jwtLocalModel.generateJWT(validate_user)
@@ -46,7 +61,10 @@ export class AuthService {
         createUser.password = await this.jwtLocalModel.hashPassword(createUser.password)
         const user = {
             ...createUser,
-            role : Role.USER
+            role : Role.USER,
+            last_login: null,
+            is_active: false,
+            updated_at: null
         }
         return await this.userModel.create(user)
     }
@@ -60,7 +78,10 @@ export class AuthService {
             providers : 'local.com',
             email : createUser.email,
             password : passwordHash,
-            role : Role.USER
+            role : Role.USER,
+            last_login: null,
+            is_active: false,
+            updated_at: null
         }
         return await this.userModel.create(user)
     }

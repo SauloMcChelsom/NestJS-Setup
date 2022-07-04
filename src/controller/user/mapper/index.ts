@@ -9,6 +9,9 @@ export class UserMapper {
             name: field.name,
             email: field.email,
             providers: field.providers,
+            last_login: field.last_login,
+            is_active: field.is_active,
+            updated_at: field.updated_at,
             timestamp: field.timestamp?.toString()
         }]
     }
@@ -20,6 +23,9 @@ export class UserMapper {
             name: field.name,
             email: field.email,
             providers: field.providers,
+            last_login: field.last_login,
+            is_active: field.is_active,
+            updated_at: field.updated_at,
             timestamp: field.timestamp?.toString()
         }]
     }

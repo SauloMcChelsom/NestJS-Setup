@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Get, Headers, UseGuards, UseInterceptors, Version, UseFilters } from '@nestjs/common'
+import { Controller, Post, Body, Get, Headers, Param, UseGuards, UseInterceptors, Version, UseFilters } from '@nestjs/common'
 
 import { UserMachinePropertyInterceptor } from 'src/shared/interceptor/user-machine-property.interceptor'
 import { JwtAuthAccessTokenGuard } from '@shared/guard/jwt-auth.guard';
@@ -81,5 +81,13 @@ export class AuthController {
     public async validToken(@Body() body: RefreshTokenDTO, @Headers('authorization') token:any){
         await this.service.validateRefreshToken(body.refresh_token, token)
         return new OK([], code.VALID_TOKEN)
+    }
+
+    @Get('google-auth-provider/active-account/:uid')
+    @Version('1/public')
+    @UseFilters(Error)
+    public async googleAuthProviderActiveAccount(@Param('uid') uid: string) {
+        const user = await this.service.getUserByUid(uid)
+        return await this.service.activeAccount(user)
     }
 }

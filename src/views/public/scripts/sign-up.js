@@ -19,9 +19,9 @@ class SignUp {
         return
       }
 
-      if(password.length < 6){
+      if(password.length < 8){
         error.style.display = 'block';
-        error.innerHTML = "Password should be at least 6 characters"
+        error.innerHTML = "Password should be at least 8 characters"
         return
       }
 
@@ -49,7 +49,7 @@ class SignUp {
 
         await this.createUserLocal(createUser)
 
-        window.location.href = "/home";
+        //window.location.href = "/home";
       })
       .catch((err) => {
         let message = err.message;
@@ -69,13 +69,25 @@ class SignUp {
       
       return await firebase.auth().signInWithPopup(new firebase.auth.GoogleAuthProvider()).then(async({user}) => {
 
-        let { statusCode } = await this.checkUserExistsByEmail(user.email)
+        let { statusCode,  is_active } = await this.checkUserExistsByEmail(user.email)
 
+        /** ativa conta, pois o email ja e valido pelo gmail */
+        if(!is_active){
+          await this.activeAccount(user.uid)
+        }
+
+        /**
+         * Sign in with success
+         */
         if(statusCode == 200){
-          window.location.href = "/home";
+
+          //window.location.href = "/home";
           return
         }
   
+        /**
+         * Create new account
+         */
         function dec2hex (dec) {
           return dec.toString(16).padStart(2, "0")
         }
@@ -96,7 +108,7 @@ class SignUp {
   
         await this.createUserLocal(createUser)
   
-        window.location.href = "/home";
+        //window.location.href = "/home";
       
       })
       .catch((err) => {
@@ -145,6 +157,25 @@ class SignUp {
       });
     }
 
+    async activeAccount(uid) {
+      return await fetch(`/v1/public/auth/google-auth-provider/active-account/${uid}`, {
+        method: 'GET',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        }
+      })
+      .then(res => res.json())
+      .then(async(res)=>{
+        return await res
+      }).catch((err) => {
+        signInBtn.style.display = ''
+        signInLoading.style.display = 'none';
+        error.style.display = 'block';
+        error.innerHTML = err;
+      });
+    }
+
     cutString(str, cut){
       const text = str;
       return text.slice(0, str.lastIndexOf(cut));
@@ -154,7 +185,7 @@ class SignUp {
       firebase.auth().onAuthStateChanged((res) => {
         if(res){
           setTimeout(()=>{
-            window.location.href = "/home";
+            //window.location.href = "/home";
           },5000)//5 segundos
         }else{
           container.style.display = '';
