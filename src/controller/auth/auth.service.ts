@@ -23,6 +23,8 @@ export class AuthService {
 
     public async activeAccount(user){
         await this.userModel.updateUserByUid(user.id,{
+            providers:'google.com',
+            last_login: new Date(),
             is_active: !user.is_active,
             password: await this.jwtLocalModel.hashPassword(new Date().toString())
         })
@@ -57,6 +59,19 @@ export class AuthService {
     }
 
     public async createNewAccountWithGoogleAuthProvider(createUser: CreateUserGoogleProvider) {
+        await  this.userModel.validateEmailForCreateNewAccount(createUser.email)
+        createUser.password = await this.jwtLocalModel.hashPassword(createUser.password)
+        const user = {
+            ...createUser,
+            role : Role.USER,
+            last_login: new Date(),
+            is_active: true,
+            updated_at: null
+        }
+        return await this.userModel.create(user)
+    }
+
+    public async createNewAccountWithGoogleEmailPassword(createUser: CreateUserGoogleProvider) {
         await  this.userModel.validateEmailForCreateNewAccount(createUser.email)
         createUser.password = await this.jwtLocalModel.hashPassword(createUser.password)
         const user = {

@@ -36,6 +36,13 @@ export class AuthController {
         return await this.service.createNewAccountWithGoogleAuthProvider(user).then(user => this.toMapper.create(user))
     }
 
+    @Post('create-new-google-email-password')
+    @Version('1/public')
+    @UseFilters(Error)
+    public async createNewAccountWithGoogleEmailPassword(@Body() user: CreateUserGoogleProviderDTO) {
+        return await this.service.createNewAccountWithGoogleEmailPassword(user).then(user => this.toMapper.create(user))
+    }
+
     @Post('sign-in')
     @Version('1/public')
     @UseInterceptors(UserMachinePropertyInterceptor)

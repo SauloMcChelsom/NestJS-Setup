@@ -44,10 +44,10 @@ class SignUp {
           "name" : this.cutString(email,'@'),
           "email": email,
           "password": password,
-          "providers":"google.email.com"
+          "providers":"local.google.com"
         }
 
-        await this.createUserLocal(createUser)
+        await this.createUserEmailPassword(createUser)
 
         //window.location.href = "/home";
       })
@@ -72,7 +72,7 @@ class SignUp {
         let { statusCode,  is_active } = await this.checkUserExistsByEmail(user.email)
 
         /** ativa conta, pois o email ja e valido pelo gmail */
-        if(!is_active){
+        if(statusCode == 200 && !is_active){
           await this.activeAccount(user.uid)
         }
 
@@ -103,10 +103,10 @@ class SignUp {
           "name" : this.cutString(user.email,'@'),
           "email": user.email,
           "password": generateId(10),//ex.: f539241c7b
-          "providers":"google.popup.com"
+          "providers":"google.com"
         }
   
-        await this.createUserLocal(createUser)
+        await this.createUserAuthProvider(createUser)
   
         //window.location.href = "/home";
       
@@ -119,8 +119,27 @@ class SignUp {
       });
     }
 
-    async createUserLocal(user) {
+    async createUserAuthProvider(user) {
       await fetch('/v1/public/auth/create-new-google-auth-provider', {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(user) 
+      })
+      .then(async(res)=>{
+        return await res
+      }).catch((err) => {
+        signInBtn.style.display = ''
+        signInLoading.style.display = 'none';
+        error.style.display = 'block';
+        error.innerHTML = err;
+      });
+    }
+
+    async createUserEmailPassword(user) {
+      await fetch('/v1/public/auth/create-new-google-email-password', {
         method: 'POST',
         headers: {
           'Accept': 'application/json',
