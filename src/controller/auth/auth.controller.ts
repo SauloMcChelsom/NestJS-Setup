@@ -29,14 +29,14 @@ export class AuthController {
         return await this.service.createNewAccount(user).then(user => this.toMapper.create(user))
     }
 
-    @Post('create-new-google-auth-provider')
+    @Post('create-new-account-with-google-auth-provider')
     @Version('1/public')
     @UseFilters(Error)
     public async createNewAccountWithGoogleAuthProvider(@Body() user: CreateUserGoogleProviderDTO) {
         return await this.service.createNewAccountWithGoogleAuthProvider(user).then(user => this.toMapper.create(user))
     }
 
-    @Post('create-new-google-email-password')
+    @Post('create-new-account-with-google-email-password')
     @Version('1/public')
     @UseFilters(Error)
     public async createNewAccountWithGoogleEmailPassword(@Body() user: CreateUserGoogleProviderDTO) {

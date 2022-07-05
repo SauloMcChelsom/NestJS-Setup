@@ -120,7 +120,7 @@ class SignUp {
     }
 
     async createUserAuthProvider(user) {
-      await fetch('/v1/public/auth/create-new-google-auth-provider', {
+      await fetch('/v1/public/auth/create-new-account-with-google-auth-provider', {
         method: 'POST',
         headers: {
           'Accept': 'application/json',
@@ -139,7 +139,7 @@ class SignUp {
     }
 
     async createUserEmailPassword(user) {
-      await fetch('/v1/public/auth/create-new-google-email-password', {
+      await fetch('/v1/public/auth/create-new-account-with-google-email-password', {
         method: 'POST',
         headers: {
           'Accept': 'application/json',

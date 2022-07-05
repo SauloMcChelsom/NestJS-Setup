@@ -17,19 +17,6 @@ export class AuthService {
         private userModel: UserEntityModel,
     ){}
 
-    public async getUserByUid(uid:string){ 0
-       return await this.userModel.getUserByUid(uid)
-    }
-
-    public async activeAccount(user){
-        await this.userModel.updateUserByUid(user.id,{
-            providers:'google.com',
-            last_login: new Date(),
-            is_active: !user.is_active,
-            password: await this.jwtLocalModel.hashPassword(new Date().toString())
-        })
-    }
-
     public async signIn(user: User): Promise<UserToken> {
 
         let validate_user:User = await this.userModel.validateEmailPasswordUser(user.email, user.password)
@@ -56,6 +43,19 @@ export class AuthService {
         }
 
         return token
+    }
+
+    public async getUserByUid(uid:string){ 0
+        return await this.userModel.getUserByUid(uid)
+    }
+ 
+    public async activeAccount(user){
+        await this.userModel.updateUserByUid(user.id,{
+            providers:'google.com',
+            last_login: new Date(),
+            is_active: !user.is_active,
+            password: await this.jwtLocalModel.hashPassword(new Date().toString())
+        })
     }
 
     public async createNewAccountWithGoogleAuthProvider(createUser: CreateUserGoogleProvider) {
