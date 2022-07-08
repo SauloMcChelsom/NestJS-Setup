@@ -49,7 +49,7 @@ class SignUp {
 
         await this.createUserEmailPassword(createUser)
 
-        //window.location.href = "/home";
+        window.location.href = "/home";
       })
       .catch((err) => {
         let message = err.message;
@@ -71,23 +71,15 @@ class SignUp {
 
         let { statusCode,  is_active } = await this.checkUserExistsByEmail(user.email)
 
-        /** ativa conta, pois o email ja e valido pelo gmail */
         if(statusCode == 200 && !is_active){
           await this.activeAccount(user.uid)
         }
 
-        /**
-         * Sign in with success
-         */
         if(statusCode == 200){
-
-          //window.location.href = "/home";
+          window.location.href = "/home";
           return
         }
   
-        /**
-         * Create new account
-         */
         function dec2hex (dec) {
           return dec.toString(16).padStart(2, "0")
         }
@@ -108,7 +100,7 @@ class SignUp {
   
         await this.createUserAuthProvider(createUser)
   
-        //window.location.href = "/home";
+        window.location.href = "/home";
       
       })
       .catch((err) => {
@@ -158,7 +150,7 @@ class SignUp {
     }
 
     async checkUserExistsByEmail(email) {
-      return await fetch(`/v1/public/user/email/${email}`, {
+      return await fetch(`/v1/public/user/email/${email}`, { 
         method: 'GET',
         headers: {
           'Accept': 'application/json',
@@ -167,13 +159,12 @@ class SignUp {
       })
       .then(res => res.json())
       .then(async(res)=>{
-        return await res
-      }).catch((err) => {
-        signInBtn.style.display = ''
-        signInLoading.style.display = 'none';
-        error.style.display = 'block';
-        error.innerHTML = err;
-      });
+        let is_active = false
+        if(res.statusCode == 200){
+          is_active = res.results[0].is_active
+        }
+        return await { is_active:is_active, statusCode:res.statusCode }
+      })
     }
 
     async activeAccount(uid) {
@@ -186,7 +177,7 @@ class SignUp {
       })
       .then(res => res.json())
       .then(async(res)=>{
-        return await res
+        return await res 
       }).catch((err) => {
         signInBtn.style.display = ''
         signInLoading.style.display = 'none';
@@ -204,7 +195,7 @@ class SignUp {
       firebase.auth().onAuthStateChanged((res) => {
         if(res){
           setTimeout(()=>{
-            //window.location.href = "/home";
+            window.location.href = "/home";
           },5000)//5 segundos
         }else{
           container.style.display = '';

@@ -14,34 +14,23 @@ class Login {
   async authenticationByGoogle() {
     container.style.display = 'none';
     awaits.style.display = '';
-    
+
     return await firebase.auth().signInWithPopup(new firebase.auth.GoogleAuthProvider()).then(async({user}) => {
 
-      let {ok, statusCode, error:_error, message:unknown_message  } = await this.checkUserExistsByEmail(user.email)
+      let {statusCode, is_active } = await this.checkUserExistsByEmail(user.email)
+        
+      if(statusCode == 200 && !is_active){
+        await this.activeAccount(user.uid)
+      }
 
       if(statusCode == 200){
         lottie.style.display = '';
         awaits.style.display = 'none';
-
-        let firebase_uid = user.uid
-        let nestjs_uid = ok.results[0].uid
-  
-        if(firebase_uid != nestjs_uid){
-          this.updateUserUidWithFirebaseUid(nestjs_uid, firebase_uid, user.Aa)
-        }
-
         const player = document.querySelector("lottie-player");
         player.load("https://assets3.lottiefiles.com/packages/lf20_tszzqucf.json");
-        
         setTimeout(()=>{
           this.goHome()
         },5000)//5 segundos
-        return
-      }
-
-      if(statusCode == 404 && unknown_message){
-        error.style.display = 'block';
-        error.innerHTML = _error.message || `error: ${_error} >--x--< message: ${unknown_message}`;
         return
       }
 
@@ -63,7 +52,7 @@ class Login {
         "providers":"google.com"
       }
 
-      await this.createUserDataBase(createUser)
+      await this.createUserAuthProvider(createUser)
 
       lottie.style.display = '';
       awaits.style.display = 'none';
@@ -84,8 +73,8 @@ class Login {
     });
   }
 
-  async createUserDataBase(user) {
-    await fetch('/v1/user/public/', { 
+  async createUserAuthProvider(user) {
+    await fetch('/v1/public/auth/create-new-account-with-google-auth-provider', {
       method: 'POST',
       headers: {
         'Accept': 'application/json',
@@ -93,25 +82,36 @@ class Login {
       },
       body: JSON.stringify(user) 
     })
-    .then(async(res) => await res.json())
     .then(async(res)=>{
-      await res
-      if(res.statusCode == 200){
-        return res
-      }else{
-        const user = firebase.auth().currentUser;
-        user.delete();
-        error.style.display = 'block';
-        error.innerHTML = res.error.message;
-      }
+      return await res
     }).catch((err) => {
+      container.style.display = '';
+      awaits.style.display = 'none';
       error.style.display = 'block';
-      error.innerHTML = err;
+      error.innerHTML = err.message;
     });
   }
 
   async checkUserExistsByEmail(email) {
-    return await fetch(`/v1/user/public/email/${email}`, {
+    return await fetch(`/v1/public/user/email/${email}`, { 
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      }
+    })
+    .then(res => res.json())
+    .then(async(res)=>{
+      let is_active = false
+      if(res.statusCode == 200){
+        is_active = res.results[0].is_active
+      }
+      return await { is_active:is_active, statusCode:res.statusCode }
+    })
+  }
+
+  async activeAccount(uid) {
+    return await fetch(`/v1/public/auth/google-auth-provider/active-account/${uid}`, {
       method: 'GET',
       headers: {
         'Accept': 'application/json',
@@ -122,30 +122,10 @@ class Login {
     .then(async(res)=>{
       return await res
     }).catch((err) => {
+      container.style.display = '';
+      awaits.style.display = 'none';
       error.style.display = 'block';
-      error.innerHTML = err;
-    });
-  }
-
-  async updateUserUidWithFirebaseUid(userUid, firebaseUid, token) {
-
-    const requestOptions = {
-      method: 'PUT',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
-      },
-      body: JSON.stringify({ userUid: userUid,  firebaseUid:firebaseUid})
-    };
-
-    return await fetch(`/v1/user/auth/uid`, requestOptions)
-    .then(res => res.json())
-    .then(async(res)=>{
-      return await res
-    }).catch((err) => {
-      error.style.display = 'block';
-      error.innerHTML = err;
+      error.innerHTML = err.message;
     });
   }
 

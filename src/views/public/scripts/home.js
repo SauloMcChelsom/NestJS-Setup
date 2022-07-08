@@ -24,7 +24,7 @@ class Home {
           nav.style.display = '';
           await.style.display = 'none';
         }else{
-          window.location.href = "/login";
+          window.location.href = "/sign-in";
         }
       });
     }
