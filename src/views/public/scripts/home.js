@@ -18,10 +18,12 @@ class Home {
           if(res.displayName){
             nameAccountGoogle.innerHTML = res.displayName
           }
-          let local =  localStorage.getItem('token')
-          local = JSON.parse(local)
-          access_token.innerHTML =  local.access_token
-          refresh_token.innerHTML = JSON.stringify(local.refresh_token, null, 4)
+          let local = localStorage.getItem('token')
+          if(local){
+            local = JSON.parse(local)
+            access_token.innerHTML =  local.access_token
+            refresh_token.innerHTML = JSON.stringify(local.refresh_token, null, 4)
+          }
           uid.innerHTML = res.uid
           token.innerHTML = res.Aa
           container.style.display = '';

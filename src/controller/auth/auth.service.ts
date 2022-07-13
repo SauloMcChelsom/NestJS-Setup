@@ -45,7 +45,7 @@ export class AuthService {
         return token
     }
 
-    public async getUserByUid(uid:string){ 0
+    public async getUserByUid(uid:string){ 
         return await this.userModel.getUserByUid(uid)
     }
  

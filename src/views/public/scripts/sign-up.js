@@ -48,7 +48,7 @@ class SignUp {
         }
 
         await this.createUserEmailPassword(createUser)
-
+        await this.localEmailAndPassword(email, password)
         window.location.href = "/home";
       })
       .catch((err) => {
@@ -75,7 +75,8 @@ class SignUp {
           await this.activeAccount(user.uid)
         }
 
-        if(statusCode == 200){
+        if(statusCode == 200 && providers == 'google.com'){
+          await this.signInLocalWithUidAndTokenOfGoogleAuthProvider(user.uid, user.Aa)
           window.location.href = "/home";
           return
         }
@@ -99,7 +100,7 @@ class SignUp {
         }
   
         await this.createUserAuthProvider(createUser)
-  
+        await this.signInLocalWithUidAndTokenOfGoogleAuthProvider(user.uid, user.Aa)
         window.location.href = "/home";
       
       })
@@ -108,6 +109,34 @@ class SignUp {
         awaits.style.display = 'none';
         error.style.display = 'block';
         error.innerHTML = err.message;
+      });
+    }
+
+    async localEmailAndPassword(email, password){
+      await this.signInWithEmailAndPasswordJwtLocal(email, password)
+      .then(async res => await res.json())
+      .then(async(res)=>{
+        if (!res.access_token) {
+          throw res
+        }
+        await localStorage.setItem('token', JSON.stringify(res))
+        signInBtn.style.display = ''
+        signInLoading.style.display = 'none';
+        error.style.display = 'none';
+        alertSuccess.innerHTML = 'Login Realizado com sucesso';
+        alertSuccess.style.display = 'block';
+        window.location.href = "/home"
+        return await res
+      }).catch(async(err) => {
+        if(err.code == "different_password"){
+          error.innerHTML = 'Senha incorreta!';
+        }
+        signInBtn.style.display = ''
+        signInLoading.style.display = 'none';
+        error.style.display = 'block';
+  
+        alertSuccess.innerHTML = '';
+        alertSuccess.style.display = 'none';
       });
     }
 
@@ -184,6 +213,46 @@ class SignUp {
         error.style.display = 'block';
         error.innerHTML = err;
       });
+    }
+
+    async signInLocalWithUidAndTokenOfGoogleAuthProvider(uid, token) {
+      return await fetch(`/v1/private/firebase/sign-in-with-token-firebase/${uid}`, {
+        method: 'GET',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        }
+      })
+      .then(res => res.json())
+      .then(async(res)=>{
+        await localStorage.setItem('token', JSON.stringify(res))
+        return await res
+      }).catch((err) => {
+        container.style.display = '';
+        awaits.style.display = 'none';
+        error.style.display = 'block';
+        error.innerHTML = err.message;
+      });
+    }
+
+    async signInWithEmailAndPasswordJwtLocal(email, password) {
+      return await fetch(`/v1/public/auth/sign-in`, {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+          'user_agent': window.navigator.userAgent,
+          'window_screen_width': screen.width,
+          'window_screen_height': screen.height,
+          'window_screen_color_depth': screen.colorDepth,
+          'window_screen_pixel_depth': screen.pixelDepth,
+        },
+        body: JSON.stringify({
+          email:email,
+          password:password
+        }) 
+      })
     }
 
     cutString(str, cut){

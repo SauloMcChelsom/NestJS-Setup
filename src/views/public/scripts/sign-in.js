@@ -162,13 +162,14 @@ class SignIn {
     
     return await firebase.auth().signInWithPopup(new firebase.auth.GoogleAuthProvider()).then(async({user}) => {
 
-      let {statusCode, is_active } = await this.checkUserExistsByEmail(user.email)
+      let {statusCode, is_active, providers } = await this.checkUserExistsByEmail(user.email)
       
       if(statusCode == 200 && !is_active){
         await this.activeAccount(user.uid)
       }
 
-      if(statusCode == 200){
+      if(statusCode == 200 && providers == 'google.com'){
+        await this.signInLocalWithUidAndTokenOfGoogleAuthProvider(user.uid, user.Aa)
         window.location.href = "/home";
         return
       }
@@ -190,9 +191,23 @@ class SignIn {
         "password": generateId(10),//ex.: f539241c7b
         "providers":"google.com"
       }
+ 
+      /**
+       * se estiver cadastro do usuario no local, e não estiver no provider
+       * preciso atualizar
+       * uid
+       * providers
+       * password
+       * is_active
+       * 
+       * nova feature, criar um metodo que atualiza o local se o providers for igual a "local.com"
+       * 
+       * 
+       */
+
 
       await this.createUserAuthProvider(createUser)
-
+      await this.signInLocalWithUidAndTokenOfGoogleAuthProvider(user.uid, user.Aa)
       window.location.href = "/home";
       
     })
@@ -205,7 +220,7 @@ class SignIn {
   }
 
   async createUserAuthProvider(user) {
-    await fetch('/v1/public/auth/create-new-account-with-google-auth-provider', {
+    await fetch('/v1/public/auth/create-new-account-with-google-auth-provider', { 
       method: 'POST',
       headers: {
         'Accept': 'application/json',
@@ -278,6 +293,27 @@ class SignIn {
       signInLoading.style.display = 'none';
       error.style.display = 'block';
       error.innerHTML = err;
+    });
+  }
+
+  async signInLocalWithUidAndTokenOfGoogleAuthProvider(uid, token) {
+    return await fetch(`/v1/private/firebase/sign-in-with-token-firebase/${uid}`, {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      }
+    })
+    .then(res => res.json())
+    .then(async(res)=>{
+      await localStorage.setItem('token', JSON.stringify(res))
+      return await res
+    }).catch((err) => {
+      container.style.display = '';
+      awaits.style.display = 'none';
+      error.style.display = 'block';
+      error.innerHTML = err.message;
     });
   }
 

@@ -23,7 +23,7 @@ class Login {
         await this.activeAccount(user.uid)
       }
 
-      if(statusCode == 200){
+      if(statusCode == 200 && providers == 'google.com'){
         await this.signInLocalWithUidAndTokenOfGoogleAuthProvider(user.uid, user.Aa)
         lottie.style.display = '';
         awaits.style.display = 'none';
