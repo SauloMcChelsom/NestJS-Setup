@@ -32,7 +32,7 @@ export class AuthService {
 
         await this.userModel.updateUserByUid(validate_user.id,{
             last_login: new Date()
-        })
+        }) 
 
         let refresh_token:RefreshToken = await this.jwtLocalModel.findRefreshTokenByUserId(validate_user.id)
         let access_token:string = await this.jwtLocalModel.generateJWT(validate_user)

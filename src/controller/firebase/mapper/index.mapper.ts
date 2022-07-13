@@ -36,7 +36,7 @@ export class FirebaseMapper extends UserProfile{
     } else {
       sign = user
       this.email = sign.email
-      this.providers = 'sign_in_with_email_password_by_google'
+      this.providers = 'local.google.com'
       this.photoURL = ''
       this.displayName = ''
       this.uid = ''
@@ -47,7 +47,7 @@ export class FirebaseMapper extends UserProfile{
       providers: this.providers,
       photoURL: this.photoURL,
       displayName: this.displayName,
-      uid: '',
+      uid: this.uid,
     }
   }
 }

@@ -84,28 +84,9 @@ export class FirebaseController {
   @Get('/sign-in-with-token-firebase/:uid')
   @Version('1/private')
   @UseFilters(Error)
-  @UseInterceptors(Success)
   public async signInWithTokenFirebase(@Param('uid') uid: string, @Headers('Authorization') token: string) {
     const user = await this.jwtFirebaseModel.getUserByUid(uid, token).then(res => this.toMapper.privateUserProfile(res))
     return  await this.firebaseService.signIn(user).then(token => this.toMapper.login(token))
   }
 
-  @Get('/create-new-user-with-token-firebase/:uid')
-  @Version('1/private')
-  @UseFilters(Error)
-  @UseInterceptors(Success)
-  public async createNewUserWithTokenFirebase(@Param('uid') uid: string, @Headers('Authorization') token: string) {
-    
-    const user = await this.jwtFirebaseModel.getUserByUid(uid, token).then(res => this.toMapper.privateUserProfile(res))
-
-    const newUser:CreateUserFirebase = {
-      email:user.email,
-      name:user.displayName,
-      password: user.providers == 'google_email_password' ? user.providers: Date().toString(),
-      providers:user.providers,
-      uid:user.uid
-    }
-
-    return await this.firebaseService.createNewAccount(newUser).then(res => this.toMapper.create(res))
-  }
 }

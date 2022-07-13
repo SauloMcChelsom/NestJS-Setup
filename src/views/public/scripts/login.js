@@ -18,12 +18,13 @@ class Login {
     return await firebase.auth().signInWithPopup(new firebase.auth.GoogleAuthProvider()).then(async({user}) => {
 
       let {statusCode, is_active } = await this.checkUserExistsByEmail(user.email)
-        
+     
       if(statusCode == 200 && !is_active){
         await this.activeAccount(user.uid)
       }
 
       if(statusCode == 200){
+        await this.signInLocalWithUidAndTokenOfGoogleAuthProvider(user.uid, user.Aa)
         lottie.style.display = '';
         awaits.style.display = 'none';
         const player = document.querySelector("lottie-player");
@@ -120,6 +121,27 @@ class Login {
     })
     .then(res => res.json())
     .then(async(res)=>{
+      return await res
+    }).catch((err) => {
+      container.style.display = '';
+      awaits.style.display = 'none';
+      error.style.display = 'block';
+      error.innerHTML = err.message;
+    });
+  }
+
+  async signInLocalWithUidAndTokenOfGoogleAuthProvider(uid, token) {
+    return await fetch(`/v1/private/firebase/sign-in-with-token-firebase/${uid}`, {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      }
+    })
+    .then(res => res.json())
+    .then(async(res)=>{
+      await localStorage.setItem('token', JSON.stringify(res))
       return await res
     }).catch((err) => {
       container.style.display = '';

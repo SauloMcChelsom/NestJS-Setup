@@ -18,6 +18,10 @@ class Home {
           if(res.displayName){
             nameAccountGoogle.innerHTML = res.displayName
           }
+          let local =  localStorage.getItem('token')
+          local = JSON.parse(local)
+          access_token.innerHTML =  local.access_token
+          refresh_token.innerHTML = JSON.stringify(local.refresh_token, null, 4)
           uid.innerHTML = res.uid
           token.innerHTML = res.Aa
           container.style.display = '';
@@ -32,6 +36,7 @@ class Home {
     async logout() {
       confirmText.classList.add("hidden");
       loading.classList.remove("hidden");
+      await localStorage.removeItem('token')
       await firebase.auth().onAuthStateChanged(async(res) => {
         if(res.uid){
           await this.revokeRefreshTokens(res.Aa)

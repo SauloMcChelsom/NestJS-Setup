@@ -31,6 +31,10 @@ export class FirebaseService {
             await this.jwtLocalModel.updateRefreshToken(refresh_token_of_user.user_id)
         }
 
+        await this.userModel.updateUserByUid(user_found.id,{
+            last_login: new Date()
+        })
+
         let refresh_token:RefreshToken = await this.jwtLocalModel.findRefreshTokenByUserId(user_found.id)
         let access_token:string = await this.jwtLocalModel.generateJWT(user_found)
 
@@ -40,20 +44,6 @@ export class FirebaseService {
         }
 
         return token
-    }
-
-    public async createNewAccount(createUser: CreateUserFirebase) {
-        await  this.userModel.validateEmailForCreateNewAccount(createUser.email)
-        let passwordHash = await this.jwtLocalModel.hashPassword(createUser.password)
-        const user:User = {
-            uid : createUser.uid,
-            name : createUser.name,
-            providers : createUser.providers,
-            email : createUser.email,
-            password : passwordHash,
-            role : Role.USER
-        }
-        return await this.userModel.create(user)
     }
 
     public async refreshToken(token) {
