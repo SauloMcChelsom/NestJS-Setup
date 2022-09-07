@@ -8,6 +8,7 @@ export class UserMapper {
             uid: field.uid,
             name: field.name,
             email: field.email,
+            role:field.role,
             providers: field.providers,
             last_login: field.last_login,
             is_active: field.is_active,
