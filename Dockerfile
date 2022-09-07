@@ -15,10 +15,12 @@ RUN npm -v
 # show version git
 RUN git --version
 
-# Clone the conf files into the docker container
-RUN git clone -b develop https://github.com/SauloMcChelsom/NestJS-Setup.git  app
 WORKDIR /app
-RUN git pull
+
+COPY . .
+
 RUN npm i
+
 CMD [ "sh", "-c", "npm run start:dev"]
-EXPOSE 3000
+
+EXPOSE 80
