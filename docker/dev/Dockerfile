@@ -15,14 +15,12 @@ RUN npm -v
 # show version git
 RUN git --version
 
-WORKDIR /Apps
+WORKDIR /app
 
-COPY ../../ /Apps
+COPY . .
 
 RUN npm i
 
-RUN npm run build
-
-CMD [ "sh", "-c", "npm run start:prod"]
+CMD [ "sh", "-c", "npm run start:dev"]
 
 EXPOSE 80
