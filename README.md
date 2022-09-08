@@ -69,6 +69,12 @@ Running the app mode production
 $ npm run start:prod
 ```
 
+Running Doker
+```bash
+$ sudo docker build --no-cache -f ./docker/prod/Dockerfile .
+$ sudo docker run -dp 8081:80 53a90c536830
+```
+
 Test unit
 ```bash
 $ npm run test:unit
