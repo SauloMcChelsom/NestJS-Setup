@@ -1,3 +1,5 @@
+FROM scratch
+
 WORKDIR /Apps
 
 COPY ../../* /Apps
