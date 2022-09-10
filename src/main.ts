@@ -109,10 +109,10 @@ async function bootstrap() {
     console.log(`\n unhandledRejection signal received. \n${err}`)
   })
 
-  await app.listen(process.env.PORT || 80);
+  await app.listen(process.env.PORT || 8080);
   console.log('POSTGRES_HOST: ', process.env.TYPEORM_HOST);
-  console.log('REDIS_HOST :   ', process.env.REDIS_HOST);
-  console.log('ENV:           ', process.env.environment);
+  console.log('SERVER_PORT: ', process.env.PORT);
+  console.log('ENV: ', process.env.environment);
 }
 
 bootstrap();
