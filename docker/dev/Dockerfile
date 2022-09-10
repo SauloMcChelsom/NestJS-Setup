@@ -23,4 +23,4 @@ RUN npm i
 
 CMD [ "sh", "-c", "npm run start:dev"]
 
-EXPOSE 80
+EXPOSE 3000
