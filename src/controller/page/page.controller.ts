@@ -92,7 +92,7 @@ export class PageController {
       search: search,
       limit: parseInt(limit) ? parseInt(limit) : 5,
       offset: parseInt(offset) ? parseInt(offset) : 0,
-      order: order.toUpperCase(),
+      order:  order ? order.toUpperCase() : 'asc',
       column: column,
       start: start,
       end: end,
