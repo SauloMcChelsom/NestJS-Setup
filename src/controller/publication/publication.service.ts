@@ -70,6 +70,38 @@ export class PublicationService {
     );
   }
 
+  public async publicFeed(cls: ListFilter) {
+    /**
+     * buscar da tabela
+     *    pagina
+     *    publicação
+     *
+     * rotina:
+     *   - das paginas que sigo trazer as atuais para as antigas
+     *   - as mais curtidas
+     *   - as paginas com mais seguidores
+     *   - as mais commentadas
+     *
+     *   - das que não sigo, mais esta em alta
+     *   - as mais curtidas
+     *   - as paginas com mais seguidores
+     *   - as mais commentadas
+     *
+     * ordenação:
+     *   0 - 5
+     *
+     */
+    return await this.publication.listFeed(
+      cls.search,
+      cls.limit,
+      cls.offset,
+      cls.order,
+      cls.column,
+      cls.start,
+      cls.end,
+    );
+  }
+
   public async authListSearchByText(cls: ListFilter) {
     return await this.publication.searchByText(
       cls.search,

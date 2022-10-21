@@ -127,6 +127,31 @@ export class PublicationController {
     return new OK(res, code.SUCCESSFULLY_FOUND, null, count)
   }
 
+  @Get('feed')
+  @Version('1/public')
+  @UseFilters(Error)
+  @UseInterceptors(Success)
+  public async PublicListFeed(
+    @Query('limit') limit = '10',
+    @Query('offset') offset = '0',
+    @Query('order') order = 'ASC',
+    @Query('column') column = 'id',
+    @Query('start') start: string,
+    @Query('end') end: string,
+    @Param('id') id: number
+  ) {
+    const cls: ListFilter = {
+      limit: parseInt(limit) ? parseInt(limit) : 5,
+      offset: parseInt(offset) ? parseInt(offset) : 0,
+      order: order.toUpperCase(),
+      column: column,
+      start: start,
+      end: end,
+    }
+    const { res, count } = await this.service.publicFeed(cls).then(res => this.toMapper.privateList(res))
+    return new OK(res, code.SUCCESSFULLY_FOUND, null, count)
+  }
+
   @Get(':id')
   @Version('1/public')
   @UseFilters(Error)
