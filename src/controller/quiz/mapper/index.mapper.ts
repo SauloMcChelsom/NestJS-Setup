@@ -46,7 +46,7 @@ export class QuizMapper {
         }
     }
 
-    public create(field: any) {
+    public create(field: any) { 
         return field;
         /*return [{
             id: field.id,

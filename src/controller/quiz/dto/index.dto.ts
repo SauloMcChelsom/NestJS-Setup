@@ -1,7 +1,7 @@
 import { Level } from '@root/src/shared/enum/quiz.enum';
 import { MinLength, IsNumber, IsNotEmpty, IsBoolean } from 'class-validator';
 
-export class CreateDTO {
+export class CreateDTO { 
   @IsNotEmpty()
   public title = new Title();
 

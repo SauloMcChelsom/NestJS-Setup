@@ -5,7 +5,7 @@ import { ResponseEntityModel } from '@root/src/model/quiz-entity/response/respon
 import { CreateDTO } from './dto/index.dto'
 
 @Injectable()
-export class QuizService {
+export class QuizService { 
   constructor(
     private responseModel: ResponseEntityModel,
     private questionModel: QuestionEntityModel,
