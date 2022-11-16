@@ -26,6 +26,7 @@ import { FirebaseModule } from '@controller/firebase/firebase.module'
 import { AuthModule } from '@controller/auth/auth.module'
 import { RoleModule } from '@controller/role/role.module'
 import { CommentModule } from '@controller/comment/comment.module';
+import { QuizModule } from '@controller/quiz/quiz.module';
 
 @Module({
   imports: [
@@ -105,6 +106,7 @@ import { CommentModule } from '@controller/comment/comment.module';
     PublicationModule,
     LikeModule,
     CommentModule,
+    QuizModule,
     AuthModule,
     FirebaseModule,
     RoleModule
