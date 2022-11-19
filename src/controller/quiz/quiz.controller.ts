@@ -36,6 +36,7 @@ import { UserEntityModel } from '@root/src/model/user-entity/user-entity.model'
 import { QuizService } from './quiz.service'
 import { CreateDTO } from './dto/index.dto'
 import { QuizMapper } from './mapper/index.mapper'
+import { Model } from 'firebase-admin/lib/machine-learning/machine-learning'
 
 @Controller('quiz')
 export class QuizController {
@@ -52,7 +53,7 @@ export class QuizController {
   @UseGuards(JwtAuthAccessTokenGuard, JwtAuthRefreshTokenGuard, UserMachinePropertyGuard, RolesGuard)
   @UseFilters(Error)
   @UseInterceptors(Success)
-  public async createTitle(@Body() body: CreateDTO, @Header(new UID()) token: string){
+  public async createQuiz(@Body() body: CreateDTO, @Header(new UID()) token: string){
     const user = await this.userModel.getUserByUid(token)
     body.title.user_id = user.id
 
@@ -61,3 +62,7 @@ export class QuizController {
   }
 
 }
+/*
+mapper irar fica com a regrada de contar numero de questão respondidas e numeros de questão do titulo 2 de 10,
+não e legal deixar totalizador, transformador, modificador.... em Model, pois o mesmo sera reutilizados por
+outras classes*/

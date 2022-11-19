@@ -13,17 +13,42 @@ export class QuizService {
   ) {}
 
   public async create(body: CreateDTO) {
-    const title = await this.titleModel.create(body.title);
-    body.title = title
-
-    body.question[0].title_id = title.id
-    const questio:any = await this.questionModel.create(body.question[0]);
-    body.question[0] = questio
-
-    body.question[0].response[0].question_id = questio.id
-    const responses:any = await this.responseModel.create(body.question[0].response[0]);
-    body.question[0].response[0] = responses
-    
+    body = await this.createTitle(body);
+    body = await this.createQuestion(body);
+    body = await this.createResponse(body);
     return body
   }
+
+  private async createResponse(body: CreateDTO): Promise<CreateDTO>{
+    let response = []
+    for (const key in body.question) {
+      for (const id in body.question[key].response) {
+        body.question[key].response[id].question_id = body.question[key].id
+        let element = await this.responseModel.create(body.question[key].response[id]);
+        response.push(element)
+      }
+      body.question[key].response = response
+      response = []
+    }  
+    return body;
+  }
+
+  private async createQuestion(body: CreateDTO){
+    let question = []
+    for (const itens in body.question) {
+      body.question[itens].title_id = body.title.id
+      let element = await this.questionModel.create(body.question[itens]);
+      question.push(element)
+    }
+    body.question = question
+    return body
+  }
+
+  private async createTitle(body: CreateDTO): Promise<CreateDTO>{
+    const title = await this.titleModel.create(body.title);
+    body.title = title
+    return body;
+  }
+
+
 }
