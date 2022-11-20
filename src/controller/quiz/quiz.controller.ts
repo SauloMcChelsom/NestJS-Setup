@@ -34,7 +34,7 @@ import { Role, code } from '@shared/enum'
 import { UserEntityModel } from '@root/src/model/user-entity/user-entity.model'
 
 import { QuizService } from './quiz.service'
-import { CreateDTO } from './dto/index.dto'
+import { CreateFDTO } from './dto/index.dto'
 import { QuizMapper } from './mapper/index.mapper'
 import { Model } from 'firebase-admin/lib/machine-learning/machine-learning'
 
@@ -53,12 +53,13 @@ export class QuizController {
   @UseGuards(JwtAuthAccessTokenGuard, JwtAuthRefreshTokenGuard, UserMachinePropertyGuard, RolesGuard)
   @UseFilters(Error)
   @UseInterceptors(Success)
-  public async createQuiz(@Body() body: CreateDTO, @Header(new UID()) token: string){
-    const user = await this.userModel.getUserByUid(token)
+  public async createQuiz(@Body() body: CreateFDTO, @Header(new UID()) token: string){
+    /*const user = await this.userModel.getUserByUid(token)
     body.title.user_id = user.id
 
     const res = await this.service.create(body).then(res => this.toMapper.create(res))
-    return new OK(res, code.SUCCESSFULLY_CREATED)
+    return new OK(res, code.SUCCESSFULLY_CREATED)*/
+    return new OK([body], code.SUCCESSFULLY_CREATED)
   }
 
 }
