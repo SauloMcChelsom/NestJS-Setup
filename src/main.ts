@@ -91,7 +91,7 @@ async function bootstrap() {
         const err = validationErrors;
         throw new HttpException({
           code : code.CLASS_VALIDATOR_FAILED,
-          message : Object.values(err[0].constraints)[0],
+          message : err,
           description : ''
         }, HttpStatus.BAD_REQUEST)
       },

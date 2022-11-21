@@ -25,7 +25,6 @@ import {
       let description = 'Esse error não foi tratado pelo desenvolvedor e nem pelo framework'
       let parameters:any = this.converteUrlParamsToJson(url)
      
-
       if(res == undefined){
         res = {
           code : null,
@@ -36,6 +35,16 @@ import {
         description = description + ' | A resposta "res" estar undefined'
       }
 
+
+      //usuario não esta passando DTO valido
+      //{ statusCode: 400, message: 'Bad Request' }
+      if(res.statusCode == 400 && res.message == 'Bad Request'){
+        code = codes.BAD_REQUEST
+        message = text.BAD_REQUEST
+        description = 'Error generico do envio do DTO ou falha em CLASS-VALIDATOR'
+        statusCode = 400
+      }
+      
       //usuario não esta passando o token ou o token e invalido
       //{ statusCode: 401, message: 'Unauthorized' }
       if(res.statusCode == 401 && res.message == 'Unauthorized'){
