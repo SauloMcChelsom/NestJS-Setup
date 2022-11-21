@@ -10,9 +10,10 @@ import {
   IsArray,
   ArrayNotEmpty,
   ArrayMinSize,
-  ArrayMaxSize
+  ArrayMaxSize,
+  
 } from 'class-validator';
-import { Transform, Type } from "class-transformer";
+import { Transform, Type, Exclude } from "class-transformer";
 
 
 import { registerDecorator, ValidationOptions, ValidationArguments } from 'class-validator';
@@ -180,8 +181,7 @@ export class Title2 {
 
 }
 const transformAnswers = answers => {
-  console.log([answers.value], JSON.stringify(answers.value))
-  return { level: 'EASY', title_name: 'Sobre Java' }
+  return answers.value
 };
 export class CreateFDTO  { 
   /**
@@ -192,19 +192,15 @@ export class CreateFDTO  {
   @IsNonPrimitiveArray()
   @Type(() => Title)
   */
-  //@Transform(transformAnswers, { toClassOnly: true })
+  @IsDefined()
+  @IsNotEmptyObject()
+  @IsObject()
+  @Transform(transformAnswers, { toClassOnly: true })
   @IsNonPrimitiveArray()
-  @ValidateNested({ each: false })
+  @ValidateNested({ each: true })
   @Type(() => Title2)
-  readonly title:Title2
+  title:Title2[]
+
+  @Exclude()
+  readonly id: string;
 }
-/*
- {
-    "title":
-			{
-      	"level":"EASY",
-      	"title_name":"Sobre Java"
-    	}
-		
- }
-*/
