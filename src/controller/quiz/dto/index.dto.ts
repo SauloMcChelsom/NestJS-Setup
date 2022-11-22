@@ -1,5 +1,3 @@
-import { Level } from '@root/src/shared/enum/quiz.enum';
-import { MinLength, IsNumber, IsNotEmpty, IsOptional, IsBoolean, ValidatorConstraint, ValidatorConstraintInterface, Validate } from 'class-validator';
 import {
   MaxLength,
   ValidateNested,
@@ -11,14 +9,21 @@ import {
   ArrayNotEmpty,
   ArrayMinSize,
   ArrayMaxSize,
-  
+  MinLength, 
+  IsNumber, 
+  IsNotEmpty, 
+  IsOptional, 
+  IsBoolean, 
+  ValidatorConstraint, 
+  ValidatorConstraintInterface, 
+  Validate,
+  registerDecorator, 
+  ValidationOptions, 
+  ValidationArguments
 } from 'class-validator';
 import { Transform, Type, Exclude } from "class-transformer";
 
-
-import { registerDecorator, ValidationOptions, ValidationArguments } from 'class-validator';
-
-export function IsNonPrimitiveArray(validationOptions?: ValidationOptions) {
+function IsNonPrimitiveArray(validationOptions?: ValidationOptions) {
   
   return (object: any, propertyName: string) => {
     registerDecorator({
@@ -41,8 +46,8 @@ export function IsNonPrimitiveArray(validationOptions?: ValidationOptions) {
 }
 
 @ValidatorConstraint()
-export class IsTitleArray implements ValidatorConstraintInterface {
-  public async validate(authData: Title2[], args: ValidationArguments) {
+class IsTitleArray implements ValidatorConstraintInterface {
+  public async validate(authData: Title[], args: ValidationArguments) {
       return Array.isArray(authData) && authData.reduce((a, b) => a && (typeof b.level === "string") && typeof b.title_name === "string", true);
   }
 }
@@ -54,8 +59,8 @@ title:IsTitleArray
 */
 
 @ValidatorConstraint()
-export class IsTitle implements ValidatorConstraintInterface {
-  public async validate(authData: Title2, args: ValidationArguments) {
+class IsTitle implements ValidatorConstraintInterface {
+  public async validate(authData: Title, args: ValidationArguments) {
       return ((typeof authData.level === "string") && (typeof authData.title_name === "string"))
   }
 }
@@ -67,7 +72,7 @@ title:Title2
 */
 
 @ValidatorConstraint()
-export class CustomTextLength implements ValidatorConstraintInterface {
+class CustomTextLength implements ValidatorConstraintInterface {
   public async validate(text: string, validationArguments: ValidationArguments) {
     const [min, max] = validationArguments.constraints
     return text.length >= min && text.length <= max
@@ -79,128 +84,95 @@ export class CustomTextLength implements ValidatorConstraintInterface {
 })
 title_name: string;
 */
+const transformAnswers = answers => {
+  return answers.value
+};
 
 class Title {
-  @IsNotEmpty()
-  @IsNumber()
-  public id?: number;
+  @Exclude()
+  id?: number;
+
+  @Exclude()
+  user_id?: number;
 
   @IsNotEmpty()
   @IsString()
   @MinLength(4)
-  @MaxLength(40)
+  @MaxLength(240)
   title_name: string;
 
   @IsNotEmpty()
   @IsString()
   @MinLength(4)
-  @MaxLength(40)
+  @MaxLength(15)
   level: string;
-
-  @IsNotEmpty()
-  @IsNumber()
-  user_id?: number;
 }
 
-export class Response {
-  @IsNotEmpty()
-  id: number;
+class Response {
+  @Exclude()
+  id?: number;
+
+  @Exclude()
+  question_id?: number;
+
+  @Exclude()
+  timestamp?: Date;
 
   @IsNotEmpty()
+  @IsString()
+  @MinLength(2)
+  @MaxLength(600)
   response_name: string;
 
   @IsNotEmpty()
+  @IsBoolean()
   correct: boolean;
-
-  @IsNotEmpty()
-  timestamp: Date;
-
-  @IsNotEmpty()
-  question_id: number;
 }
 
-export class Question {
-  @IsNotEmpty()
-  id: number;
+class Question {
+  @Exclude()
+  id?: number;
 
-  @IsNotEmpty()
+  @Exclude()
+  timestamp?: Date;
+
+  @Exclude()
+  title_id?: number;
+
+  @IsString()
+  @MinLength(4)
+  @MaxLength(240)
   question_name: string;
-
-  @IsNotEmpty()
-  timestamp: Date;
-
-  @IsNotEmpty()
-  title_id: number;
 
   @IsDefined()
   @IsArray()
   @ArrayNotEmpty()
-  @ValidateNested({ each: true })
   @ArrayMinSize(2)
-  @ArrayMaxSize(10)
+  @ArrayMaxSize(5)
+  @ValidateNested({ each: true })
   @Type(() => Response)
   response:Response[];
 }
 
 export class CreateDTO  { 
-  /**
-  @IsDefined()
-  @IsNotEmptyObject()
-  @IsObject()
-  @ValidateNested({ each: true })
-  @IsNonPrimitiveArray()
-  @Type(() => Title)
-   */
-  @IsDefined()
-  @IsNotEmptyObject()
-  @IsObject()
-  @ValidateNested({always: true, each: false, message:'title' })
-  @IsNonPrimitiveArray()
-  @Type(() => Title)
-  title!:Title
-
-  /*@ValidateNested({ each: true })
-  @IsNonPrimitiveArray()
-  @Type(() => Question)*/
-  @IsNotEmpty()
-  public question:Question[]
-}
-
-export class Title2 {
-  @IsNotEmpty()
-  @IsString()
-  @MinLength(4)
-  @MaxLength(40)
-  title_name: string;
-
-  @IsNotEmpty()
-  @IsString()
-  @MinLength(4)
-  @MaxLength(40)
-  level: string;
-
-}
-const transformAnswers = answers => {
-  return answers.value
-};
-export class CreateFDTO  { 
-  /**
-  @IsDefined()
-  @IsNotEmptyObject()
-  @IsObject()
-  @ValidateNested({ each: true })
-  @IsNonPrimitiveArray()
-  @Type(() => Title)
-  */
-  @IsDefined()
-  @IsNotEmptyObject()
-  @IsObject()
-  @Transform(transformAnswers, { toClassOnly: true })
-  @IsNonPrimitiveArray()
-  @ValidateNested({ each: true })
-  @Type(() => Title2)
-  title:Title2[]
-
   @Exclude()
-  readonly id: string;
+  id: string;
+
+  @IsDefined()
+  @IsNotEmptyObject()
+  @IsObject()
+  @Transform(transformAnswers, { toClassOnly: true })//exemplo
+  @IsNonPrimitiveArray()//exemplo
+  @ValidateNested({ each: true })
+  @Type(() => Title)
+  title:Title
+
+  @IsDefined()
+  @IsArray()
+  @ArrayNotEmpty()
+  @ArrayMinSize(1)
+  @ArrayMaxSize(10)
+  @ValidateNested({ each: true })
+  @Type(() => Question)
+  public question:Question[]
 }
