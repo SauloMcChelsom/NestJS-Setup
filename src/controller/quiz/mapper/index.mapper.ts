@@ -48,13 +48,6 @@ export class QuizMapper {
 
     public create(field: any) { 
         return field;
-        /*return [{
-            id: field.id,
-            user_id: field.user_id,
-            title_name: field.title_name,
-            level: field.level,
-            timestamp: field.timestamp?.toString()
-        }]*/
     }
 
     public update(field: Quiz) {

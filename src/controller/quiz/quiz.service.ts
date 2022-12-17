@@ -108,6 +108,4 @@ export class QuizService {
     body.title = title
     return body;
   }
-
-
 }
