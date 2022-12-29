@@ -1,12 +1,27 @@
 import { EntityRepository, AbstractRepository } from 'typeorm';
 import { HttpException, HttpStatus } from '@nestjs/common';
 import { code } from '@root/src/shared/enum';
-import { QuestionEntity } from '@root/src/entity/question.entity';
+import { FormEntity } from '@root/src/entity/form.entity';
 
-@EntityRepository(QuestionEntity)
-export class QuestionEntityRepository extends AbstractRepository<QuestionEntity> {
+@EntityRepository(FormEntity)
+export class FormEntityRepository extends AbstractRepository<FormEntity> {
 
-  async listQuestionByTitleId(titleId: number) {
+  async listFormByfollowerIdAndQuestionId(questionId:number, followerId:number) {
+    return await this.createQueryBuilder('quiz')
+    .where('quiz.question_id = :questionId', { questionId: questionId })
+    .andWhere('quiz.follower_id = :followerId', { followerId: followerId })
+    .orderBy(`quiz.id`, 'ASC')
+    .getMany()
+    .catch(err => {
+      throw new HttpException({
+        code : code.QUERY_FAILED,
+        message : `${err.detail || err.hint || err.routine}`,
+        description : ''
+      }, HttpStatus.BAD_REQUEST);
+    })
+  }
+
+  async listFormByTitleId(titleId: number) {
     return await this.createQueryBuilder('quiz')
     .where('quiz.title_id = :titleId', { titleId: titleId })
     .orderBy(`quiz.id`, 'ASC')
@@ -20,7 +35,7 @@ export class QuestionEntityRepository extends AbstractRepository<QuestionEntity>
     })
   }
 
-  async countListQuestionByTitleId(titleId: number) {
+  async countListFormByTitleId(titleId: number) {
     return await this.createQueryBuilder('quiz')
       .where('quiz.title_id = :titleId', { titleId: titleId })
       .limit(1)

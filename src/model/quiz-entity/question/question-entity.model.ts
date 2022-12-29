@@ -122,6 +122,28 @@ export class QuestionEntityModel {
     }
   }
 
+  public async findQuestionByTitleId(id: number) {
+    try {
+
+      const res = await this.repository_custom.listQuestionByTitleId(id)
+
+      const count = await this.repository_custom.countListQuestionByTitleId(id)
+
+      if (Object.keys(res).length != 0) {
+        return { res: res, count: count };
+      }
+
+      throw new HttpException({
+        code : code.NOT_FOUND,
+        message : 'not found list by publication id',
+        description : ''
+      }, HttpStatus.NOT_FOUND)
+    } catch (e: any) {
+      throw new HttpException(e.question, e.status)
+    }
+
+  }
+
   public async idEqualsUserId(id: number, userId: number) {
     try {
 

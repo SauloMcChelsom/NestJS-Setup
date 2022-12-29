@@ -6,6 +6,34 @@ import { ResponseEntity } from '@root/src/entity/response.entity';
 @EntityRepository(ResponseEntity)
 export class ResponseEntityRepository extends AbstractRepository<ResponseEntity> {
 
+  async listResponseByQuestionId(questionId: number) {
+    return await this.createQueryBuilder('quiz')
+    .where('quiz.question_id = :questionId', { questionId: questionId })
+    .orderBy(`quiz.id`, 'ASC')
+    .getMany()
+    .catch(err => {
+      throw new HttpException({
+        code : code.QUERY_FAILED,
+        message : `${err.detail || err.hint || err.routine}`,
+        description : ''
+      }, HttpStatus.BAD_REQUEST);
+    })
+  }
+
+  async countListResponseByQuestionId(questionId: number) {
+    return await this.createQueryBuilder('quiz')
+    .where('quiz.question_id = :questionId', { questionId: questionId })
+    .limit(1)
+    .getCount()
+    .catch(err => {
+      throw new HttpException({
+        code : code.QUERY_FAILED,
+        message : `${err.detail || err.hint || err.routine}`,
+        description : ''
+      }, HttpStatus.BAD_REQUEST);
+    });
+  }
+
   async listByUserId(
     userId: number,
     search = '',

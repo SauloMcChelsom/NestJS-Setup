@@ -1,32 +1,32 @@
-import { CacheModule, CacheInterceptor, Module } from '@nestjs/common';
-import { APP_INTERCEPTOR, APP_GUARD } from '@nestjs/core';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { ConfigModule } from '@nestjs/config';
-import { ScheduleModule } from '@nestjs/schedule';
-import { BullModule } from '@nestjs/bull';
-import { EventEmitterModule } from '@nestjs/event-emitter';
-import { MulterModule } from '@nestjs/platform-express';
-import { HttpModule } from '@nestjs/axios';
-import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
+import { CacheModule, CacheInterceptor, Module } from '@nestjs/common'
+import { APP_INTERCEPTOR, APP_GUARD } from '@nestjs/core'
+import { TypeOrmModule } from '@nestjs/typeorm'
+import { ConfigModule } from '@nestjs/config'
+import { ScheduleModule } from '@nestjs/schedule'
+import { BullModule } from '@nestjs/bull'
+import { EventEmitterModule } from '@nestjs/event-emitter'
+import { MulterModule } from '@nestjs/platform-express'
+import { HttpModule } from '@nestjs/axios'
+import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler'
 
-import { TasksModule } from '@services/tasks/tasks.module';
-import { JobsModule } from '@services/jobs/jobs.module';
-import { EventsModule } from '@services/events/events.module';
-import { ServicesModule } from '@services/services.module';
-import { AxiosModule } from '@services/axios/axios.module';
+import { TasksModule } from '@services/tasks/tasks.module'
+import { JobsModule } from '@services/jobs/jobs.module'
+import { EventsModule } from '@services/events/events.module'
+import { ServicesModule } from '@services/services.module'
+import { AxiosModule } from '@services/axios/axios.module'
 
-import { ViewsModule } from '@root/src/views/views.module';
+import { ViewsModule } from '@root/src/views/views.module'
 
-import { UserModule } from '@controller/user/user.module';
-import { PageModule } from '@controller/page/page.module';
-import { FollowModule } from '@controller/follow/follow.module';
-import { PublicationModule } from '@controller/publication/publication.module';
+import { UserModule } from '@controller/user/user.module'
+import { PageModule } from '@controller/page/page.module'
+import { FollowModule } from '@controller/follow/follow.module'
+import { PublicationModule } from '@controller/publication/publication.module'
 import { LikeModule } from '@controller/like/like.module';
 import { FirebaseModule } from '@controller/firebase/firebase.module'
 import { AuthModule } from '@controller/auth/auth.module'
 import { RoleModule } from '@controller/role/role.module'
-import { CommentModule } from '@controller/comment/comment.module';
-import { QuizModule } from '@controller/quiz/quiz.module';
+import { CommentModule } from '@controller/comment/comment.module'
+import { QuizModule } from '@controller/quiz/quiz.module'
 
 @Module({
   imports: [

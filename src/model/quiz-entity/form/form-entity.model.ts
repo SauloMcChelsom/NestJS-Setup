@@ -2,50 +2,28 @@ import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 
-import { ResponseEntity } from '@entity/response.entity';
+import { FormEntity } from '@entity/form.entity';
 import { IsValidTimestampService } from '@root/src/shared/utility/is-valid-timestamp/is-valid-timestamp.service';
 import { EmptyService } from '@root/src/shared/utility/empty/empty.service';
 import { code } from '@root/src/shared/enum';
 
-import { ResponseEntityRepository } from './response-entity.repository';
+import { FormEntityRepository } from './form-entity.repository';
 
 
 @Injectable()
-export class ResponseEntityModel {
+export class FormEntityModel {
   constructor(
-    @InjectRepository(ResponseEntityRepository)
-    private readonly  repository_custom: ResponseEntityRepository,
+    @InjectRepository(FormEntityRepository)
+    private readonly  repository_custom: FormEntityRepository,
 
-    @InjectRepository(ResponseEntity)
-    private readonly repository: Repository<ResponseEntity>,
+    @InjectRepository(FormEntity)
+    private readonly repository: Repository<FormEntity>,
     
     private isValidTimestamp: IsValidTimestampService,
     private empty: EmptyService,
   ) {}
 
-  public async findResponseByQuestionId(id: number) {
-    try {
-
-      const res = await this.repository_custom.listResponseByQuestionId(id)
-
-      const count = await this.repository_custom.countListResponseByQuestionId(id)
-
-      if (Object.keys(res).length != 0) {
-        return { res: res, count: count };
-      }
-
-      throw new HttpException({
-        code : code.NOT_FOUND,
-        message : 'not found list by publication id',
-        description : ''
-      }, HttpStatus.NOT_FOUND)
-    } catch (e: any) {
-      throw new HttpException(e.question, e.status)
-    }
-
-  }
-
-  public async create(body: any): Promise<ResponseEntity> {
+  public async create(body: any): Promise<FormEntity> {
     return await this.repository.save(body).catch((err) => {
       throw new HttpException({
         code : code.QUERY_FAILED,
@@ -82,7 +60,7 @@ export class ResponseEntityModel {
       }
 
     } catch (e: any) {
-      throw new HttpException(e.response, e.status);
+      throw new HttpException(e.form, e.status);
     }
   }
 
@@ -114,8 +92,24 @@ export class ResponseEntityModel {
       }
 
     } catch (e: any) {
-      throw new HttpException(e.response, e.status);
+      throw new HttpException(e.form, e.status);
     }
+  }
+
+  public async findFormByfollowerIdAndQuestionId(questionId:number, followerId:number) {
+    try {
+
+      const res = await this.repository_custom.listFormByfollowerIdAndQuestionId(questionId, followerId)
+      
+      if (Object.keys(res).length != 0) {
+        return res 
+      }else{
+        return []
+      }
+    } catch (e: any) {
+      throw new HttpException(e.form, e.status)
+    }
+
   }
 
   public async findOneById(id: number) {
@@ -140,8 +134,30 @@ export class ResponseEntityModel {
       }, HttpStatus.NOT_FOUND)
 
     } catch (e: any) {
-      throw new HttpException(e.response, e.status);
+      throw new HttpException(e.form, e.status);
     }
+  }
+
+  public async findFormByTitleId(id: number) {
+    try {
+
+      const res = await this.repository_custom.listFormByTitleId(id)
+
+      const count = await this.repository_custom.countListFormByTitleId(id)
+
+      if (Object.keys(res).length != 0) {
+        return { res: res, count: count };
+      }
+
+      throw new HttpException({
+        code : code.NOT_FOUND,
+        message : 'not found list by publication id',
+        description : ''
+      }, HttpStatus.NOT_FOUND)
+    } catch (e: any) {
+      throw new HttpException(e.form, e.status)
+    }
+
   }
 
   public async idEqualsUserId(id: number, userId: number) {
@@ -167,7 +183,7 @@ export class ResponseEntityModel {
         description : ''
       }, HttpStatus.NOT_FOUND);
     } catch (e: any) {
-      throw new HttpException(e.response, e.status);
+      throw new HttpException(e.form, e.status);
     }
   }
 
@@ -230,7 +246,7 @@ export class ResponseEntityModel {
       }, HttpStatus.NOT_FOUND);
       
     } catch (e: any) {
-      throw new HttpException(e.response, e.status);
+      throw new HttpException(e.form, e.status);
     }
   }
 
@@ -292,7 +308,7 @@ export class ResponseEntityModel {
         description : ''
       }, HttpStatus.NOT_FOUND)
     } catch (e: any) {
-      throw new HttpException(e.response, e.status)
+      throw new HttpException(e.form, e.status)
     }
   }
 }

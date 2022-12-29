@@ -1,17 +1,67 @@
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { code } from '@root/src/shared/enum';
+import { ListFilter} from '@shared/interfaces'
 import { TitleEntityModel } from '@root/src/model/quiz-entity/title/title-entity.model'
 import { QuestionEntityModel } from '@root/src/model/quiz-entity/question/question-entity.model'
 import { ResponseEntityModel } from '@root/src/model/quiz-entity/response/response-entity.model'
 import { CreateDTO } from './dto/index.dto'
+import { FormEntityModel } from '@root/src/model/quiz-entity/form/form-entity.model';
+import { QuestionEntity } from '@root/src/entity/question.entity';
 
 @Injectable()
 export class QuizService { 
   constructor(
     private responseModel: ResponseEntityModel,
     private questionModel: QuestionEntityModel,
-    private titleModel: TitleEntityModel
+    private titleModel: TitleEntityModel,
+    private formModel: FormEntityModel
   ) {}
+
+  public async newAnswerQuestion(body){
+    return this.formModel.create(body)
+  }
+
+  public async publicAnswerQuestion(title_id:number, follower_id:number){
+    let title =  await this.findTitleById(title_id)
+    let question  = await this.findQuestionById(title.id)
+    let questions = await this.findResponseByQuestionId(question)
+    let forms = await this.findFormByfollowerIdAndQuestionId(question, follower_id)
+    let res:PublicAnswerQuestionInterface
+    res = {
+      title:title,  question:questions, form:forms,
+
+    }
+    return res 
+  }
+
+  private async  findResponseByQuestionId(question:QuestionIF){
+    let questions = []
+    for (const key in question.res) {
+      let question_id = question.res[key].id
+      let response = await this.responseModel.findResponseByQuestionId(question_id)
+      questions.push({ ...question.res[key], response: response.res})
+    }
+    return questions
+  }
+
+  private async findFormByfollowerIdAndQuestionId(question:QuestionIF, follower_id:number){
+    let forms = []
+    for (const key in question.res) {
+      let question_id = question.res[key].id
+      let response = await this.formModel.findFormByfollowerIdAndQuestionId(question_id, follower_id)
+      forms.push(...response)
+    }
+    return forms
+  }
+
+  private async findTitleById(title_id:number){
+    return await this.titleModel.findOneById(title_id)
+  }
+
+  private async findQuestionById(title_id:number){
+    return await this.questionModel.findQuestionByTitleId(title_id)
+  }
+
 
   public async create(body: CreateDTO) {
     this.ValidateAnswerCorrect(body)
@@ -108,4 +158,9 @@ export class QuizService {
     body.title = title
     return body;
   }
+}
+
+interface QuestionIF {
+  res: QuestionEntity[];
+  count: number;
 }

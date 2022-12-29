@@ -6,6 +6,7 @@ import { JwtLocalModule } from '@model/jwt-local/jwt-local.module';
 import { QuestionEntityModule } from '@root/src/model/quiz-entity/question/question-entity.module';
 import { ResponseEntityModule } from '@root/src/model/quiz-entity/response/response-entity.module';
 import { TitleEntityModule } from '@root/src/model/quiz-entity/title/title-entity.module';
+import { FormEntityModule } from '@root/src/model/quiz-entity/form/form-entity.module';
 
 import { UserEntityModule } from '@root/src/model/user-entity/user-entity.module'
 
@@ -20,7 +21,8 @@ import { QuizMapper } from './mapper/index.mapper';
     ResponseEntityModule,
     TitleEntityModule,
     UserEntityModule,
-    PublicationEntityModule
+    PublicationEntityModule,
+    FormEntityModule
   ],
   controllers: [QuizController],
   providers: [

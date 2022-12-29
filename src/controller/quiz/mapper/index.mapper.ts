@@ -1,4 +1,5 @@
 import { Quiz, ListQuiz } from '@shared/interfaces/quiz.interface'
+import { PublicAnswerQuestion } from './public-answer-auestion'
 
 export class QuizMapper {
 
@@ -29,14 +30,18 @@ export class QuizMapper {
         }
     }
 
-    public publicList(field: ListQuiz) {
-        return <ListQuiz>{
-            res:field.res.filter((f)=> {
-                //delete f.user_id,
-                f.timestamp.toString()
-                return f
-            }),
-            count:field.count
+    public publicList(field: any) {
+        return {
+            res:field,
+            count:0
+        }
+    }
+
+    public publicAnswerQuestion(field: PublicAnswerQuestionInterface) {
+        const to =  new PublicAnswerQuestion(field)
+        return {
+            res: to.mapper(),
+            count:0
         }
     }
 

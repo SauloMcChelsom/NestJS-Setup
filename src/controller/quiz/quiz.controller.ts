@@ -30,7 +30,7 @@ import { Success } from '@shared/response/success.response'
 import { OK } from '@shared/response/ok'
 
 import { Role, code } from '@shared/enum'
-
+import { ListFilter} from '@shared/interfaces'
 import { UserEntityModel } from '@root/src/model/user-entity/user-entity.model'
 
 import { QuizService } from './quiz.service'
@@ -46,6 +46,25 @@ export class QuizController {
     private userModel: UserEntityModel,
     private toMapper:QuizMapper
   ) {}
+
+  @Get('/answer-question/title/:title_id/follower/:follower_id')
+  @Version('1/public')
+  @UseFilters(Error)
+  @UseInterceptors(Success)
+  public async publicAnswerQuestion(@Param('title_id') title_id: number, @Param('follower_id') follower_id: number) {
+    const { res, count } = await this.service.publicAnswerQuestion(title_id, follower_id).then(res => this.toMapper.publicAnswerQuestion(res))
+    return new OK(res, code.SUCCESSFULLY_FOUND, null, count)
+  }
+
+  @Post('/answer-question')
+  @Version('1/public')
+  @UseFilters(Error)
+  @UseInterceptors(Success)
+  public async publicNewAnswerQuestion(@Body() body: any) {
+
+    const res = await this.service.newAnswerQuestion(body).then(res => this.toMapper.create(res))
+    return new OK(res, code.SUCCESSFULLY_CREATED)
+  }
 
   @Post()
   @Version('1/private')
