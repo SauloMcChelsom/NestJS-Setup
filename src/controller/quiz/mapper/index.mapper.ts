@@ -36,6 +36,22 @@ export class QuizMapper {
             count:0
         }
     }
+    
+    public publicQuizAll(field: any[]) {
+
+        let res = []
+
+        for (const key in field) {
+            const to =  new PublicAnswerQuestion(field[key])
+            let r = to.mapper()
+            res.push(r[0])
+        }
+       
+        return {
+            res: res,
+            count:0
+        }
+    }
 
     public publicAnswerQuestion(field: PublicAnswerQuestionInterface) {
         const to =  new PublicAnswerQuestion(field)

@@ -23,6 +23,16 @@ export class TitleEntityModel {
     private empty: EmptyService,
   ) {}
 
+  public async find(): Promise<TitleEntity[]> {
+    return await this.repository.find().catch((err) => {
+      throw new HttpException({
+        code : code.QUERY_FAILED,
+        message : `${err.detail || err.hint || err.routine}`,
+        description : ''
+      }, HttpStatus.BAD_REQUEST)
+    });
+  }
+  
   public async create(body: any): Promise<TitleEntity> {
     return await this.repository.save(body).catch((err) => {
       throw new HttpException({

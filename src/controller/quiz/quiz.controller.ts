@@ -47,6 +47,15 @@ export class QuizController {
     private toMapper:QuizMapper
   ) {}
 
+  @Get('/quiz-all/follower/:follower_id')
+  @Version('1/public')
+  @UseFilters(Error)
+  @UseInterceptors(Success)
+  public async publicQuizAll(@Param('follower_id') follower_id: number) {
+    const { res, count } = await this.service.publicQuizAll(follower_id).then(res => this.toMapper.publicQuizAll(res))
+    return new OK(res, code.SUCCESSFULLY_FOUND, null, count)
+  }
+
   @Get('/answer-question/title/:title_id/follower/:follower_id')
   @Version('1/public')
   @UseFilters(Error)

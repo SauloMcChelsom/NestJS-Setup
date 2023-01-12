@@ -21,6 +21,18 @@ export class QuizService {
     return this.formModel.create(body)
   }
 
+  public async publicQuizAll(follower_id:number){
+    let title =  await this.findTitleAll()
+    let titleResponse = []
+
+    for (const key in title) {
+      let q = await this.publicAnswerQuestion(title[key].id, follower_id)
+      titleResponse.push(q)
+    }
+    
+    return titleResponse
+  }
+
   public async publicAnswerQuestion(title_id:number, follower_id:number){
     let title =  await this.findTitleById(title_id)
     let question  = await this.findQuestionById(title.id)
@@ -56,6 +68,10 @@ export class QuizService {
 
   private async findTitleById(title_id:number){
     return await this.titleModel.findOneById(title_id)
+  }
+
+  private async findTitleAll(){
+    return await this.titleModel.find()
   }
 
   private async findQuestionById(title_id:number){
