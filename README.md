@@ -683,4 +683,11 @@ Proteção de IP Uma possibilidade de evitar que o hacker use os tokens é apena
 
 Objetivo principal O objetivo principal deve ser manter o token de atualização protegido. Se o token de atualização vazar, o hacker pode criar novos tokens de acesso e executar ações restritas em seu nome, a menos que você aplique proteção de IP ou proteção de ambiente ou invalide o token de atualização.
 
+## tutorial de ORM
+https://orkhan.gitbook.io/typeorm/docs/transactions
+https://typeorm.io/#/transactions 
+https://orkhan.gitbook.io/typeorm/docs/select-query-builder
+https://www.tutorialspoint.com/typeorm/typeorm_query_builder.htm
+https://github.com/typeorm/typeorm/blob/master/docs/find-options.md
+https://www.techiediaries.com/typeorm-fulltext-search/
 
